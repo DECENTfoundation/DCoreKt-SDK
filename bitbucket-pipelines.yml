@@ -2,7 +2,7 @@ image: uber/android-build-environment:latest
 
 pipelines:
   branches:
-    production:
+    master:
       - step:
           script:
             - ./gradlew build --stacktrace
