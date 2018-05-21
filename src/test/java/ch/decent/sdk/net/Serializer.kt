@@ -1,10 +1,12 @@
 package ch.decent.sdk.net
 
+import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.account
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.GetAccountById
+import ch.decent.sdk.print
 import ch.decent.sdk.socket
 import ch.decent.sdk.utils.hex
 import org.amshove.kluent.`should be equal to`
@@ -58,9 +60,59 @@ class Serializer {
   }
 
   @Test fun `serialize vote`() {
-    val bytes = "0220a1070000000000001e00000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a80300000000000000000000000000000000000000"
+    val bytes = "0220a1070000000000002200000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a803000002000500000008000000000000000000000000000000000000"
 
-    val account = socket.request(GetAccountById(account)).blockingGet().first()
+    val json = """
+      {
+  "id": "1.2.34",
+  "registrar": "1.2.15",
+  "name": "u961279ec8b7ae7bd62f304f7c1c3d345",
+  "owner": {
+    "weight_threshold": 1,
+    "account_auths": [],
+    "key_auths": [
+      [
+        "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+        1
+      ]
+    ]
+  },
+  "active": {
+    "weight_threshold": 1,
+    "account_auths": [],
+    "key_auths": [
+      [
+        "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+        1
+      ]
+    ]
+  },
+  "options": {
+    "memo_key": "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+    "voting_account": "1.2.3",
+    "num_miner": 0,
+    "votes": [
+      "0:5",
+      "0:8"
+    ],
+    "extensions": [],
+    "allow_subscription": false,
+    "price_per_subscribe": {
+      "amount": 0,
+      "asset_id": "1.3.0"
+    },
+    "subscription_period": 0
+  },
+  "rights_to_publish": {
+    "is_publishing_manager": false,
+    "publishing_rights_received": [],
+    "publishing_rights_forwarded": []
+  },
+  "statistics": "2.5.34",
+  "top_n_control_flags": 0
+}
+      """
+    val account = DCoreApi.gsonBuilder.create().fromJson(json, Account::class.java)
 
     val op = AccountUpdateOperation(
         account.id,

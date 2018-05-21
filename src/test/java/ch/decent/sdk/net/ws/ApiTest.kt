@@ -10,6 +10,7 @@ import ch.decent.sdk.utils.publicElGamal
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
+import org.junit.Ignore
 import org.junit.Test
 
 class ApiTest {
@@ -122,7 +123,7 @@ class ApiTest {
 
     val transaction = Transaction(
         BlockData(props),
-        listOf(op.apply { fee = fees.first() }, op.apply { fee = fees.first() })
+        listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
     socket.request(BroadcastTransactionWithCallback(transaction, 27185)).subscribe(observer)
@@ -134,6 +135,8 @@ class ApiTest {
         .assertNoErrors()
   }
 
+  @Ignore
+//  can be bought only once
   @Test fun `buy content`() {
     val observer = TestObserver<TransactionConfirmation>()
 

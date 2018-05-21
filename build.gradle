@@ -10,17 +10,18 @@ buildscript {
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath 'com.selesse:gradle-git-changelog:0.3.0'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'com.selesse.git.changelog'
 apply plugin: 'net.ltgt.errorprone'
+apply plugin: 'com.jfrog.artifactory'
 
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
 
     implementation "org.bouncycastle:bcprov-jdk15on:1.59"
     compile "org.slf4j:slf4j-api:1.7.25"
+    implementation "org.slf4j:slf4j-simple:1.7.25"
     implementation "com.google.guava:guava:25.0-jre"
 
     implementation "com.squareup.retrofit2:retrofit:2.3.0"
@@ -70,4 +72,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+artifactory {
+    contextUrl = System.getenv("ARTIFACTORY_URL")
+    publish {
+        repository {
+            repoKey = System.getProperty("ARTIFACTORY_REPO")
+            username = System.getenv("ARTIFACTORY_USER")
+            password = System.getenv("ARTIFACTORY_PASS")
+            maven = true
+        }
+    }
 }
