@@ -19,7 +19,7 @@ data class Operation(
 */
 
 sealed class BaseOperation(@Transient val type: OperationType) : ByteSerializable {
-  @SerializedName("extensions") val extensions = emptyList<Any>()
+//  @SerializedName("extensions") val extensions = emptyList<Any>()
   @SerializedName("fee") open var fee: AssetAmount = AssetAmount(BigInteger.ZERO)
 }
 

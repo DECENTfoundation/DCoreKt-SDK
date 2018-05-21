@@ -89,7 +89,7 @@ class Scratchpad {
       return data
     }
 
-    println(Hex.decode(Globals.DCT_CHAIN_ID.toUpperCase()).joinToString())
+    println(Hex.decode(Globals.DCT_CHAIN_ID).joinToString())
     println(hexToBytes(Globals.DCT_CHAIN_ID).joinToString())
   }
 
