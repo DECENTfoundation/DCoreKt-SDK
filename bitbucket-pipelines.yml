@@ -4,11 +4,15 @@ pipelines:
   branches:
     master:
       - step:
+          caches:
+            - gradle
           script:
             - ./gradlew build --stacktrace
             - ./gradlew artifactoryPublish -DARTIFACTORY_REPO=gradle-release-local
     develop:
       - step:
+          caches:
+            - gradle
           script:
             - ./gradlew build --stacktrace
             - ./gradlew artifactoryPublish -DARTIFACTORY_REPO=gradle-dev-local
