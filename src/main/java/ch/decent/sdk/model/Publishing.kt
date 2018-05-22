@@ -1,7 +1,7 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.net.model.ByteSerializable
-import ch.decent.sdk.utils.bytes
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 
@@ -14,7 +14,7 @@ data class Publishing(
   override val bytes: ByteArray
     get() = Bytes.concat(
         isPublishingManager.bytes(),
-        ByteArray(1, { 0 }),
-        ByteArray(1, { 0 })
+        byteArrayOf(0),
+        byteArrayOf(0)
     )
 }

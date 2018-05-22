@@ -1,7 +1,7 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.net.model.ByteSerializable
-import ch.decent.sdk.utils.bytes
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 
@@ -19,14 +19,14 @@ data class Account(
 
   override val bytes: ByteArray
     get() = Bytes.concat(
-        id.bytes,
-        registrar.bytes,
+        id.bytes(),
+        registrar.bytes(),
         name.bytes(),
-        owner.bytes,
-        active.bytes,
-        options.bytes,
-        rightsToPublish.bytes,
-        statistics.bytes,
+        owner.bytes(),
+        active.bytes(),
+        options.bytes(),
+        rightsToPublish.bytes(),
+        statistics.bytes(),
         topControlFlags.bytes()
     )
 }

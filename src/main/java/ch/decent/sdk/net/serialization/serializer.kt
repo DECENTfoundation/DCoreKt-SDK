@@ -15,13 +15,21 @@
  * limitations under the License.
  */
 
-package ch.decent.sdk.utils
+package ch.decent.sdk.net.serialization
 
 
+import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.Options
+import ch.decent.sdk.utils.parseVoteId
+import ch.decent.sdk.utils.unhex
+import com.google.common.primitives.Bytes
 import java.io.ByteArrayOutputStream
 import java.io.DataOutput
 import java.io.DataOutputStream
 import java.io.IOException
+import java.math.BigInteger
+import java.nio.ByteBuffer
 
 
 /**
@@ -133,3 +141,79 @@ object Varint {
   }
 
 }
+
+
+// Serialization utils methods
+
+/**
+ * The regular [java.math.BigInteger.toByteArray] includes the sign bit of the number and
+ * might result in an extra byte addition. This method removes this extra byte.
+ *
+ * Assuming only positive numbers, it's possible to discriminate if an extra byte
+ * is added by checking if the first element of the array is 0 (0000_0000).
+ * Due to the minimal representation provided by BigInteger, it means that the bit sign
+ * is the least significant bit 0000_000**0** .
+ * Otherwise the representation is not minimal.
+ * For example, if the sign bit is 0000_00**0**0, then the representation is not minimal due to the rightmost zero.
+ *
+ * @param b the integer to format into a byte array
+ * @param numBytes the desired size of the resulting byte array
+ * @return numBytes byte long array.
+ */
+fun BigInteger.bytes(numBytes: Int): ByteArray {
+  require(signum() >= 0, { "b must be positive or zero" })
+  require(numBytes > 0, { "numBytes must be positive" })
+  val src = toByteArray()
+  val dest = ByteArray(numBytes)
+  val isFirstByteOnlyForSign = src[0].toInt() == 0
+  val length = if (isFirstByteOnlyForSign) src.size - 1 else src.size
+  check(length <= numBytes, { "The given number does not fit in $numBytes" })
+  val srcPos = if (isFirstByteOnlyForSign) 1 else 0
+  val destPos = numBytes - length
+  System.arraycopy(src, srcPos, dest, destPos, length)
+  return dest
+}
+
+/**
+ * Returns an array of bytes with the underlying data used to represent an integer in the reverse form.
+ * This is useful for endianess switches, meaning that if you give this function a big-endian integer
+ * it will return it's little-endian bytes.
+ * @return The array of bytes that represent this value in the reverse format.
+ */
+fun Int.bytes(): ByteArray {
+  return ByteBuffer.allocate(Integer.SIZE / 8).putInt(Integer.reverseBytes(this)).array()
+}
+
+/**
+ * Same operation as in the Int.reverse function, but in this case for a short (2 bytes) value.
+ * @return The array of bytes that represent this value in the reverse format.
+ */
+fun Short.bytes(): ByteArray {
+  return ByteBuffer.allocate(java.lang.Short.SIZE / 8).putShort(java.lang.Short.reverseBytes(this)).array()
+}
+
+/**
+ * Same operation as in the Int.reverse function, but in this case for a long (8 bytes) value.
+ * @return The array of bytes that represent this value in the reverse format.
+ */
+fun Long.bytes(): ByteArray = ByteBuffer.allocate(java.lang.Long.SIZE / 8).putLong(java.lang.Long.reverseBytes(this)).array()
+
+fun String.bytes() = toByteArray().let { Varint.writeUnsignedVarInt(it.size) + it }
+
+fun Boolean.bytes() = byteArrayOf(if (this) 1.toByte() else 0.toByte())
+
+fun List<ByteSerializable>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.bytes() }.toTypedArray())
+
+typealias VoteId = String
+
+fun Set<VoteId>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.parseVoteId() }.toTypedArray())
+
+fun ByteSerializable?.bytes() = this?.let { bytes } ?: ByteArray(0)
+
+fun String.messageBytes(): ByteArray = Bytes.concat(byteArrayOf(unhex().size.toByte()), unhex())
+
+fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 })
+
+fun Authority?.bytes() = this?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte())
+
+fun Options?.bytes() = this?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte())

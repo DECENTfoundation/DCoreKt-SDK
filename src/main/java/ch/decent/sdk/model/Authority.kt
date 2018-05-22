@@ -2,8 +2,8 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.bytes
-import ch.decent.sdk.net.model.ByteSerializable
-import ch.decent.sdk.utils.bytes
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 
@@ -16,10 +16,8 @@ data class Authority(
   override val bytes: ByteArray
     get() = Bytes.concat(
         weightThreshold.bytes(),
-        ByteArray(1, { accountAuths.size.toByte() }),
-        *accountAuths.map { it.bytes }.toTypedArray(),
-        ByteArray(1, { keyAuths.size.toByte() }),
-        *accountAuths.map { it.bytes }.toTypedArray()
+        accountAuths.bytes(),
+        keyAuths.bytes()
     )
 }
 

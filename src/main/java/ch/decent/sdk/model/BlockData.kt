@@ -1,7 +1,7 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.Globals
-import ch.decent.sdk.net.model.ByteSerializable
+import ch.decent.sdk.net.serialization.ByteSerializable
 import com.google.common.primitives.Bytes
 import org.threeten.bp.ZoneOffset
 
