@@ -1,5 +1,6 @@
 package ch.decent.sdk.net.model
 
+import ch.decent.sdk.model.AccountCreateOperation
 import ch.decent.sdk.model.AccountUpdateOperation
 import ch.decent.sdk.model.BuyContentOperation
 import ch.decent.sdk.model.TransferOperation
@@ -9,7 +10,7 @@ import ch.decent.sdk.model.TransferOperation
  */
 enum class OperationType(val clazz: Class<*>? = null) {
   TRANSFER_OPERATION(TransferOperation::class.java),
-  ACCOUNT_CREATE_OPERATION,
+  ACCOUNT_CREATE_OPERATION(AccountCreateOperation::class.java),
   ACCOUNT_UPDATE_OPERATION(AccountUpdateOperation::class.java),
   ASSET_CREATE_OPERATION,
   ASSET_ISSUE_OPERATION,

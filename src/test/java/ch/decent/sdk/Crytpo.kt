@@ -66,13 +66,13 @@ class Crytpo {
   @Test fun `encrypt private key as wallet file`() {
     val pass = "quick brown fox jumped over a lazy dog"
     val key = ECKeyPair.fromBase58(private)
-    val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key), pass)
+    val wallet = Wallet.create(Credentials("1.2.34".toChainObject(), key), pass)
     Wallet.decrypt(wallet, pass).keyPair.private `should equal` key.private
   }
 
   @Test fun `encrypt private key as wallet file with empty password`() {
     val key = ECKeyPair.fromBase58(private)
-    val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key))
+    val wallet = Wallet.create(Credentials("1.2.34".toChainObject(), key))
     Wallet.decrypt(wallet).keyPair.private `should equal` key.private
   }
 
@@ -86,14 +86,14 @@ class Crytpo {
   }
 
   @Test fun `import dcore wallet`() {
-    val account = "1.2.30".toChainObject()
+    val account = "1.2.34".toChainObject()
     val json = """
 {
   "version": 1,
   "update_time": "2018-04-18T09:36:28",
   "chain_id": "17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc",
   "my_accounts": [{
-      "id": "1.2.30",
+      "id": "1.2.34",
       "registrar": "1.2.15",
       "name": "u961279ec8b7ae7bd62f304f7c1c3d345",
       "owner": {
@@ -138,7 +138,7 @@ class Crytpo {
   ],
   "cipher_keys": "9731bf8fe43e4f75bda9623035cfb9afd5238d094b79a5a4e4dba6df89d0c5b0eda3278f5ba998a8917425d19b9e3d1109ef15d7d4bec22aeb473442abbae004767098f23acdec9b9d17f51c90a34a9d424f4accf7575a5fff9e788bc74a3b4350f1dda216c0fa6311f433162363e1b6a2b530d65999516413d6dc0706889a1992d3e7b87ac699f07c11b69cfcf7e2028937962e8f25db8769dcdb3aab9aed464ea6949d0578946adac50bfe3b0da5ff49d1ed7b04422034c5dffa2d0c17f59f76027272dd2a9dbd54e5ebae7a326e755e5984fc36b6d589aa055e2d9078f2ce364a17a0f9e87a90d3b9d1b6efec25c07dad74a1851be7613172a50eb2df2cdaa09545770813e9b9f1e538901b6253790caab5b13a89922841c9a556366cba4263e8da2acfa7fb5bb875f456cb9d3e4958210da8dfaa4cdbac61e19814b35a4db9f493a0770df4e9311d0b67bd13d8ad67462ddfe1f938a4d12e8802614121ca740cb5a71629af63857fe5aeae8d60842afa201445063958f3e7f4eda3b25396209eb79f30935125d0f708e52709be494cf02089724c21fde7d0e29fd28502f6ac470d1ed57a26fbb59d430de7bc42bc1aa25620c2f084f72cef1402eddc75d69ee25a7468d32bc569083074260dfad6bcce761943989e55df406e361e4ab3cc34dfe95a1d6f6b095700d55d1b8ef3257fe5a6d6aefeaef2b825131ca141f5e440f611acb652b1920253952ea469d85dcdcb0b855221a858aa1da8160214eef4a33fbdbaad7aec9c948017ddec07b0d6747ee54df5fd74537e6eecbb19aa22f5e9fd9e542a4ec20650cf9bfefe865699dd74fea33b51a5a5eeb6fb9b2df676569ced5e232501430eb304d05220a9609862b179aa054d13cf630538458b6eb87118e22199f22ccabea811eaed9d9dafa330ce78a97a42c615a443850842d2d3feca23af1dae74f178481414850f20d6857f7ab25a09e25d649df3e865b6b8d51096ef494c38ef5c85f736212a87cea4ead3e147c290fd9ed1b4b19a0ba3fc9b60a9a14d2fb4ea871cbf2fc9197de7968987f23439d860d6c391cd09818126416a20bc9f6e472760261f3bb978202a8b8fa75c7fe483849b7d1ba197deeb55859576a657247b7f27f0919158726f67cd2813bf9d95b2983b320ff1e541ebe61a2de996bb67fa66995db4c9408e374cb8a851b0ec1d144ed7f8f5256c981208d3503ef1f0073110c87829a06bf8b8184ccd",
   "extra_keys": [[
-      "1.2.30",[
+      "1.2.34",[
         "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
         "DCT5Vawkes5PFCa4HMXA7kLKccZJrYCPsXfVfTb4NGuM9uu992PuP",
         "DCT6wkHSfnv9qhMJ3K5QKR8HhdJH33CowCb6EwNRKsYQZ5GBVXxNm"

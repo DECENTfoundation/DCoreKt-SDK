@@ -261,4 +261,20 @@ interface ApiContract {
    * @return a list of miners
    */
   fun getMiners(minerIds: Set<ChainObject>): Single<List<Miner>>
+
+  /**
+   * Creates new account
+   *
+   * @param keyPair private keys
+   * @param userId user ID
+   * @param name user name
+   *
+   * @return a transaction confirmation
+   */
+  fun createAccount(keyPair: ECKeyPair,
+                    userId: ChainObject,
+                    name: String,
+                    owner: Authority,
+                    active: Authority,
+                    options: Options): Single<TransactionConfirmation>
 }

@@ -4,6 +4,7 @@ import ch.decent.sdk.*
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.utils.publicElGamal
@@ -12,6 +13,7 @@ import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Ignore
 import org.junit.Test
+import java.security.SecureRandom
 
 class ApiTest {
 
@@ -136,7 +138,7 @@ class ApiTest {
   }
 
   @Ignore
-//  can be bought only once
+  //  can be bought only once
   @Test fun `buy content`() {
     val observer = TestObserver<TransactionConfirmation>()
 
@@ -195,5 +197,45 @@ class ApiTest {
 
     return socket.request(BroadcastTransactionWithCallback(transaction, 27185))
         .flatMap { socket.request(GetAccountById(account.id)).map { it.first() } }
+  }
+
+  @Ignore
+  //  can be created only once
+  @Test fun `create account`() {
+
+    val observer = TestObserver<TransactionConfirmation>()
+
+    val key = ECKeyPair.fromBase58(private)
+    //val account = socket.request(GetAccountById(account)).blockingGet().first()
+    val privateKey = ECKeyPair(SecureRandom())
+    val op = AccountCreateOperation(
+        account,
+        "mikeeeee",
+        Authority(1, emptyList(), listOf(AuthMap("DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address(), 1))),
+        Authority(1, emptyList(), listOf(AuthMap("DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address(), 1))),
+        Options(
+            "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address(),
+            ChainObject.parse("1.2.3"),
+            0,
+            emptySet(),
+            emptyList(),
+            false,
+            AssetAmount(0),
+            0
+        )
+    )
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
+
+    val transaction = Transaction(
+        BlockData(props),
+        listOf(op.apply { fee = fees.first() })
+    ).withSignature(key)
+
+    socket.request(BroadcastTransactionWithCallback(transaction, 27185)).subscribe(observer)
+
+    observer.awaitTerminalEvent()
+    observer.assertComplete()
+        .assertNoErrors()
   }
 }

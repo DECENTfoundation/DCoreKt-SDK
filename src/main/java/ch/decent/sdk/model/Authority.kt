@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Authority(
     @SerializedName("weight_threshold") val weightThreshold: Int,
-    @SerializedName("account_auths") val accountAuths: List<AuthMap>,
+    @SerializedName("account_auths") val accountAuths: List<Any>,
     @SerializedName("key_auths") val keyAuths: List<AuthMap>
 ) : ByteSerializable {
 
@@ -17,15 +17,14 @@ data class Authority(
     get() = Bytes.concat(
         weightThreshold.bytes(),
         ByteArray(1, { accountAuths.size.toByte() }),
-        *accountAuths.map { it.bytes }.toTypedArray(),
         ByteArray(1, { keyAuths.size.toByte() }),
-        *accountAuths.map { it.bytes }.toTypedArray()
+        *keyAuths.map { it.bytes }.toTypedArray()
     )
 }
 
 data class AuthMap(
     val value: Address,
-    val weight: Int
+    val weight: Short
 ) : ByteSerializable {
 
   override val bytes: ByteArray

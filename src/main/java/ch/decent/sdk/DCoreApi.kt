@@ -71,6 +71,9 @@ class DCoreApi(
   override fun getBalance(accountId: ChainObject): Single<List<AssetAmount>> =
       GetAccountBalances(accountId).toRequest { getAccountBalances(it).map { it.result() } }
 
+  override fun createAccount(keyPair: ECKeyPair, userId: ChainObject, name: String, owner: Authority, active: Authority, options: Options) =
+      makeTransactionWithCallback(keyPair, AccountCreateOperation(registrar = userId, name = name, owner = owner, active = active, options = options))
+
   override fun getAccountByName(name: String): Single<Account> =
       GetAccountByName(name).toRequest { getAccountByName(it).map { it.result() } }
 

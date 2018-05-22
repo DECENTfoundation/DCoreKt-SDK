@@ -19,7 +19,7 @@ data class Operation(
 */
 
 sealed class BaseOperation(@Transient val type: OperationType) : ByteSerializable {
-//  @SerializedName("extensions") val extensions = emptyList<Any>()
+  //  @SerializedName("extensions") val extensions = emptyList<Any>()
   @SerializedName("fee") open var fee: AssetAmount = AssetAmount(BigInteger.ZERO)
 }
 
@@ -92,6 +92,9 @@ data class BuyContentOperation @JvmOverloads constructor(
  * Request to account update operation constructor
  *
  * @param accountId account
+ * @param owner owner authority
+ * @param active active authority
+ * @param options account options
  *
  */
 data class AccountUpdateOperation @JvmOverloads constructor(
@@ -109,6 +112,36 @@ data class AccountUpdateOperation @JvmOverloads constructor(
         owner?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte()),
         active?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte()),
         options?.let { byteArrayOf(1.toByte()) + it.bytes } ?: byteArrayOf(0.toByte()),
+        byteArrayOf(0)
+    )
+}
+
+/**
+ * Request to create account operation constructor
+ *
+ * @param registrar registrar
+ * @param owner owner authority
+ * @param active active authority
+ * @param options account options
+ *
+ */
+data class AccountCreateOperation constructor(
+    @SerializedName("registrar") val registrar: ChainObject,
+    @SerializedName("name") val name: String,
+    @SerializedName("owner") val owner: Authority,
+    @SerializedName("active") val active: Authority,
+    @SerializedName("options") val options: Options
+) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
+
+  override val bytes: ByteArray
+    get() = Bytes.concat(
+        byteArrayOf(type.ordinal.toByte()),
+        fee.bytes,
+        registrar.bytes,
+        name.bytes(),
+        owner.bytes,
+        active.bytes,
+        options.bytes,
         byteArrayOf(0)
     )
 }

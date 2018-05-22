@@ -14,7 +14,7 @@ data class Options(
     @SerializedName("num_miner") val numMiner: Short,
     @SerializedName("votes") val votes: Set<String>,
     @SerializedName("extensions") val extensions: List<Any>,
-    @SerializedName("allow_subscriptions") val allowSubscriptions: Boolean,
+    @SerializedName("allow_subscription") val allowSubscription: Boolean,
     @SerializedName("price_per_subscribe") val pricePerSubscribe: AssetAmount,
     @SerializedName("subscription_period") val subscriptionPeriod: Int
 ) : ByteSerializable {
@@ -27,7 +27,7 @@ data class Options(
         ByteArray(1, { votes.size.toByte() }),
         *votes.map { it.parseVoteId() }.toTypedArray(),
         ByteArray(1, { 0 }),
-        allowSubscriptions.bytes(),
+        allowSubscription.bytes(),
         pricePerSubscribe.bytes,
         subscriptionPeriod.bytes()
     )
