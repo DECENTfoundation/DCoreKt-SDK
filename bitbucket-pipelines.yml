@@ -1,18 +1,10 @@
 image: java:8
 
 pipelines:
-  branches:
-    master:
+  default:
       - step:
           caches:
             - gradle
           script:
             - ./gradlew build --stacktrace
-            - ./gradlew artifactoryPublish -DARTIFACTORY_REPO=gradle-release-local
-    develop:
-      - step:
-          caches:
-            - gradle
-          script:
-            - ./gradlew build --stacktrace
-            - ./gradlew artifactoryPublish -DARTIFACTORY_REPO=gradle-dev-local
+            - ./gradlew artifactoryPublish

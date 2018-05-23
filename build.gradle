@@ -10,7 +10,7 @@ buildscript {
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath 'com.selesse:gradle-git-changelog:0.3.0'
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.16"
         classpath "gradle.plugin.com.palantir.gradle.gitversion:gradle-git-version:0.11.0"
     }
@@ -53,7 +53,14 @@ dependencies {
 }
 
 group = "ch.decent"
-version = gitVersion()
+def d = versionDetails()
+def repo = "lib-release-local"
+version = "$d.lastTag"
+if (d.commitDistance > 0 || !d.isCleanTag || d.branchName != "master") {
+    version = "$d.lastTag-SNAPSHOT"
+    repo = "libs-snapshot-local"
+}
+
 
 changelog {
     markdown {
@@ -98,16 +105,20 @@ publishing {
     }
 }
 
+if (rootProject.file("publish.gradle").exists()) {
+    apply from: rootProject.file("publish.gradle")
+}
+
 artifactory {
-    contextUrl = System.getenv("ARTIFACTORY_URL")
+    contextUrl = "http://ec2-18-196-32-67.eu-central-1.compute.amazonaws.com/artifactory"
     publish {
         defaults {
             publications('mavenJava')
         }
         repository {
-            repoKey = System.getProperty("ARTIFACTORY_REPO")
-            username = System.getenv("ARTIFACTORY_USER")
-            password = System.getenv("ARTIFACTORY_PASS")
+            repoKey = repo
+            username = System.getProperty("ARTIFACTORY_USER")
+            password = System.getProperty("ARTIFACTORY_PASS")
             maven = true
         }
     }
