@@ -19,14 +19,14 @@ data class Account(
 
   override val bytes: ByteArray
     get() = Bytes.concat(
-        id.bytes(),
-        registrar.bytes(),
+        id.bytes,
+        registrar.bytes,
         name.bytes(),
-        owner.bytes(),
-        active.bytes(),
-        options.bytes(),
-        rightsToPublish.bytes(),
-        statistics.bytes(),
+        owner.bytes,
+        active.bytes,
+        options.bytes,
+        rightsToPublish.bytes,
+        statistics.bytes,
         topControlFlags.bytes()
     )
 }

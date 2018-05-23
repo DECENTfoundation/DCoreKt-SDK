@@ -198,22 +198,18 @@ fun Short.bytes(): ByteArray {
  */
 fun Long.bytes(): ByteArray = ByteBuffer.allocate(java.lang.Long.SIZE / 8).putLong(java.lang.Long.reverseBytes(this)).array()
 
-fun String.bytes() = toByteArray().let { Varint.writeUnsignedVarInt(it.size) + it }
+fun String.bytes() = toByteArray().bytes()
 
-fun Boolean.bytes() = byteArrayOf(if (this) 1.toByte() else 0.toByte())
+fun Boolean.bytes() = byteArrayOf(if (this) 1 else 0)
 
-fun List<ByteSerializable>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.bytes() }.toTypedArray())
+fun List<ByteSerializable>.bytes(): ByteArray = if (size == 0) byteArrayOf(0) else Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.bytes }.toTypedArray())
 
 typealias VoteId = String
 
 fun Set<VoteId>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.parseVoteId() }.toTypedArray())
 
-fun ByteSerializable?.bytes() = this?.let { bytes } ?: ByteArray(0)
-
-fun String.messageBytes(): ByteArray = Bytes.concat(byteArrayOf(unhex().size.toByte()), unhex())
+fun ByteArray.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), this)
 
 fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 })
 
-fun Authority?.bytes() = this?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte())
-
-fun Options?.bytes() = this?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte())
+fun ByteSerializable?.optionalBytes() = this?.let { byteArrayOf(1) + bytes } ?: byteArrayOf(0)

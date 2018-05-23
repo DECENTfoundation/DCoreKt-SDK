@@ -27,7 +27,7 @@ data class Transaction @JvmOverloads constructor(
 
   override val bytes: ByteArray
     get() = Bytes.concat(
-        blockData.bytes(),
+        blockData.bytes,
         operations.bytes(),
         byteArrayOf(0) //extensions
     )
@@ -37,7 +37,7 @@ data class Transaction @JvmOverloads constructor(
     var transaction = this
     do {
       transaction = transaction.increment()
-      val hash = Sha256Hash.of(Hex.decode(chainId) + transaction.bytes())
+      val hash = Sha256Hash.of(Hex.decode(chainId) + transaction.bytes)
       signature = keyPair.signature(hash)
     } while (signature.isBlank())
     return transaction.copy(signatures = listOf(signature))

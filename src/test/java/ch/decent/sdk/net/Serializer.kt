@@ -1,8 +1,11 @@
 package ch.decent.sdk.net
 
 import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.account
+import ch.decent.sdk.account2
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.*
 import ch.decent.sdk.utils.hex
 import org.amshove.kluent.`should be equal to`
@@ -115,6 +118,15 @@ class Serializer {
         null,
         null,
         account.options).apply { fee = AssetAmount(500000) }
+
+    op.bytes.hex() `should be equal to` bytes
+  }
+
+  @Test fun `serialize create account`() {
+    val bytes = "0100000000000000000022086d696b656565656501000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010001000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010002a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd330300000000000000000000000000000000000000"
+
+    val op = AccountCreateOperation(account, "mikeeeee", "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address())
+        .apply { fee = AssetAmount(0) }
 
     op.bytes.hex() `should be equal to` bytes
   }

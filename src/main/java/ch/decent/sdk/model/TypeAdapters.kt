@@ -43,7 +43,7 @@ object AddressAdapter : TypeAdapter<Address>() {
 object AuthMapAdapter : TypeAdapter<AuthMap>() {
   override fun read(reader: JsonReader): AuthMap {
     reader.beginArray()
-    val f = AuthMap(reader.nextString().address(), reader.nextInt())
+    val f = AuthMap(reader.nextString().address(), reader.nextInt().toShort())
     reader.endArray()
     return f
   }

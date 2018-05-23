@@ -1,25 +1,17 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.model.OperationType
 import ch.decent.sdk.net.serialization.Varint
 import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.net.serialization.optionalBytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 
-/*
-data class Operation(
-    val type: OperationType,
-    val operation: BaseOperation
-) : ByteSerializable {
-  override val bytes: ByteArray
-    get() = byteArrayOf(type.ordinal.toByte()) + operation.bytes
-}
-*/
-
 sealed class BaseOperation(@Transient val type: OperationType) : ByteSerializable {
-  @SerializedName("extensions") val extensions = emptyList<Any>()
+  //  @SerializedName("extensions") val extensions = emptyList<Any>()
   @SerializedName("fee") open var fee: AssetAmount = AssetAmount(BigInteger.ZERO)
 }
 
@@ -48,11 +40,11 @@ data class TransferOperation @JvmOverloads constructor(
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
-        fee.bytes(),
-        from.bytes(),
-        to.bytes(),
-        amount.bytes(),
-        memo.bytes(),
+        fee.bytes,
+        from.bytes,
+        to.bytes,
+        amount.bytes,
+        memo.optionalBytes(),
         byteArrayOf(0)
     )
 }
@@ -78,13 +70,13 @@ data class BuyContentOperation @JvmOverloads constructor(
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
-        fee.bytes(),
+        fee.bytes,
         Varint.writeUnsignedVarInt(uri.toByteArray().size),
         uri.toByteArray(),
-        consumer.bytes(),
-        price.bytes(),
+        consumer.bytes,
+        price.bytes,
         regionCode.bytes(),
-        publicElGamal.bytes()
+        publicElGamal.bytes
     )
 }
 
@@ -92,6 +84,9 @@ data class BuyContentOperation @JvmOverloads constructor(
  * Request to account update operation constructor
  *
  * @param accountId account
+ * @param owner owner authority
+ * @param active active authority
+ * @param options account options
  *
  */
 data class AccountUpdateOperation @JvmOverloads constructor(
@@ -104,11 +99,43 @@ data class AccountUpdateOperation @JvmOverloads constructor(
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
-        fee.bytes(),
-        accountId.bytes(),
-        owner.bytes(),
-        active.bytes(),
-        options.bytes(),
+        fee.bytes,
+        accountId.bytes,
+        owner.optionalBytes(),
+        active.optionalBytes(),
+        options.optionalBytes(),
+        byteArrayOf(0)
+    )
+}
+
+/**
+ * Request to create account operation constructor
+ *
+ * @param registrar registrar
+ * @param owner owner authority
+ * @param active active authority
+ * @param options account options
+ *
+ */
+data class AccountCreateOperation constructor(
+    @SerializedName("registrar") val registrar: ChainObject,
+    @SerializedName("name") val name: String,
+    @SerializedName("owner") val owner: Authority,
+    @SerializedName("active") val active: Authority,
+    @SerializedName("options") val options: Options
+) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
+
+  constructor(registrar: ChainObject, name: String, public: Address): this(registrar, name, Authority(public), Authority(public), Options(public))
+
+  override val bytes: ByteArray
+    get() = Bytes.concat(
+        byteArrayOf(type.ordinal.toByte()),
+        fee.bytes,
+        registrar.bytes,
+        name.bytes(),
+        owner.bytes,
+        active.bytes,
+        options.bytes,
         byteArrayOf(0)
     )
 }

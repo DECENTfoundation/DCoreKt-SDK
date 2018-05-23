@@ -20,6 +20,6 @@ data class AssetAmount @JvmOverloads constructor(
   }
 
   override val bytes: ByteArray
-    get() = Bytes.concat(amount.toLong().bytes(), assetId.bytes())
+    get() = Bytes.concat(amount.toLong().bytes(), assetId.bytes)
 
 }

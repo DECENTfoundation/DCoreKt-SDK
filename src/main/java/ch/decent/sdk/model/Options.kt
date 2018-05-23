@@ -14,20 +14,31 @@ data class Options(
     @SerializedName("num_miner") val numMiner: Short,
     @SerializedName("votes") val votes: Set<VoteId>,
     @SerializedName("extensions") val extensions: List<Any>,
-    @SerializedName("allow_subscriptions") val allowSubscriptions: Boolean,
+    @SerializedName("allow_subscription") val allowSubscription: Boolean,
     @SerializedName("price_per_subscribe") val pricePerSubscribe: AssetAmount,
     @SerializedName("subscription_period") val subscriptionPeriod: Int
 ) : ByteSerializable {
 
+  constructor(public: Address) : this(
+      public,
+      ChainObject.parse("1.2.3"),
+      0,
+      emptySet(),
+      emptyList(),
+      false,
+      AssetAmount(0),
+      0
+  )
+
   override val bytes: ByteArray
     get() = Bytes.concat(
         memoKey.bytes(),
-        votingAccount.bytes(),
+        votingAccount.bytes,
         numMiner.bytes(),
         votes.bytes(),
         byteArrayOf(0),
-        allowSubscriptions.bytes(),
-        pricePerSubscribe.bytes(),
+        allowSubscription.bytes(),
+        pricePerSubscribe.bytes,
         subscriptionPeriod.bytes()
     )
 }
