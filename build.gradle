@@ -105,7 +105,7 @@ publishing {
     }
 }
 
-if (rootProject.file("publish.gradle").exists()) {
+if (rootProject.file("publish1.gradle").exists()) {
     apply from: rootProject.file("publish.gradle")
 }
 
@@ -117,8 +117,8 @@ artifactory {
         }
         repository {
             repoKey = repo
-            username = System.getProperty("ARTIFACTORY_USER")
-            password = System.getProperty("ARTIFACTORY_PASS")
+            username = artifactoryUser
+            password = artifactoryPass
             maven = true
         }
     }
