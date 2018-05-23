@@ -54,7 +54,7 @@ dependencies {
 
 group = "ch.decent"
 def d = versionDetails()
-def repo = "lib-release-local"
+def repo = "libs-release-local"
 version = "$d.lastTag"
 if (d.commitDistance > 0 || !d.isCleanTag || d.branchName != "master") {
     version = "$d.lastTag-SNAPSHOT"
@@ -105,7 +105,7 @@ publishing {
     }
 }
 
-if (rootProject.file("publish1.gradle").exists()) {
+if (rootProject.file("publish.gradle").exists()) {
     apply from: rootProject.file("publish.gradle")
 }
 
