@@ -6,7 +6,6 @@ import ch.decent.sdk.net.ws.RxWebSocket
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
-import java.util.logging.Logger
 
 val url = "wss://stage.decentgo.com:8090"
 val restUrl = "https://stage.decentgo.com/"

@@ -1,8 +1,9 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.Globals
-import ch.decent.sdk.net.model.ByteSerializable
-import ch.decent.sdk.utils.bytes
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.bytes
+import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 
@@ -19,6 +20,6 @@ data class AssetAmount @JvmOverloads constructor(
   }
 
   override val bytes: ByteArray
-    get() = amount.toLong().bytes() + assetId.bytes
+    get() = Bytes.concat(amount.toLong().bytes(), assetId.bytes())
 
 }

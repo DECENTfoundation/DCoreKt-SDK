@@ -3,7 +3,9 @@ package ch.decent.sdk.model
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.Sha256Hash
-import ch.decent.sdk.net.model.ByteSerializable
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.net.serialization.messageBytes
 import ch.decent.sdk.utils.*
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
@@ -42,11 +44,10 @@ class Memo : ByteSerializable {
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(1),
-        from?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 }),
-        to?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 }),
+        from.bytes(),
+        to.bytes(),
         nonce.toLong().bytes(),
-        byteArrayOf(message.unhex().size.toByte()),
-        message.unhex()
+        message.messageBytes()
     )
 
   fun decrypt(keyPair: ECKeyPair): String {

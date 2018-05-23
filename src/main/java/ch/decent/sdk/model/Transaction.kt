@@ -3,10 +3,10 @@ package ch.decent.sdk.model
 import ch.decent.sdk.Globals
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.Sha256Hash
-import ch.decent.sdk.net.model.ByteSerializable
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.utils.hex
-import ch.decent.sdk.utils.unhex
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
@@ -27,10 +27,9 @@ data class Transaction @JvmOverloads constructor(
 
   override val bytes: ByteArray
     get() = Bytes.concat(
-        blockData.bytes,
-        ByteArray(1, { operations.size.toByte() }),
-        *operations.map { it.bytes }.toTypedArray(),
-        ByteArray(1, { 0 }) //extensions
+        blockData.bytes(),
+        operations.bytes(),
+        byteArrayOf(0) //extensions
     )
 
   fun withSignature(keyPair: ECKeyPair): Transaction {
@@ -38,7 +37,7 @@ data class Transaction @JvmOverloads constructor(
     var transaction = this
     do {
       transaction = transaction.increment()
-      val hash = Sha256Hash.of(chainId.unhex() + transaction.bytes)
+      val hash = Sha256Hash.of(Hex.decode(chainId) + transaction.bytes())
       signature = keyPair.signature(hash)
     } while (signature.isBlank())
     return transaction.copy(signatures = listOf(signature))

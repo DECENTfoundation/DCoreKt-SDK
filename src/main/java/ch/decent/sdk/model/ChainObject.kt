@@ -1,7 +1,7 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.net.model.ByteSerializable
-import ch.decent.sdk.utils.Varint
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.Varint
 
 class ChainObject : ByteSerializable {
 

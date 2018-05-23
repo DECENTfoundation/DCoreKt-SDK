@@ -7,7 +7,7 @@ import ch.decent.sdk.crypto.wrap
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.utils.Hex
-import ch.decent.sdk.utils.bytes
+import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.hex
 import com.google.common.primitives.Bytes
 import org.amshove.kluent.`should be equal to`

@@ -1,9 +1,9 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.net.model.ByteSerializable
+import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.model.OperationType
-import ch.decent.sdk.utils.Varint
-import ch.decent.sdk.utils.bytes
+import ch.decent.sdk.net.serialization.Varint
+import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
@@ -19,7 +19,7 @@ data class Operation(
 */
 
 sealed class BaseOperation(@Transient val type: OperationType) : ByteSerializable {
-//  @SerializedName("extensions") val extensions = emptyList<Any>()
+  @SerializedName("extensions") val extensions = emptyList<Any>()
   @SerializedName("fee") open var fee: AssetAmount = AssetAmount(BigInteger.ZERO)
 }
 
@@ -48,11 +48,11 @@ data class TransferOperation @JvmOverloads constructor(
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        from.bytes,
-        to.bytes,
-        amount.bytes,
-        memo?.bytes ?: byteArrayOf(0),
+        fee.bytes(),
+        from.bytes(),
+        to.bytes(),
+        amount.bytes(),
+        memo.bytes(),
         byteArrayOf(0)
     )
 }
@@ -78,13 +78,13 @@ data class BuyContentOperation @JvmOverloads constructor(
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
+        fee.bytes(),
         Varint.writeUnsignedVarInt(uri.toByteArray().size),
         uri.toByteArray(),
-        consumer.bytes,
-        price.bytes,
+        consumer.bytes(),
+        price.bytes(),
         regionCode.bytes(),
-        publicElGamal.bytes
+        publicElGamal.bytes()
     )
 }
 
@@ -104,11 +104,11 @@ data class AccountUpdateOperation @JvmOverloads constructor(
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        accountId.bytes,
-        owner?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte()),
-        active?.let { byteArrayOf(1.toByte()) + bytes } ?: byteArrayOf(0.toByte()),
-        options?.let { byteArrayOf(1.toByte()) + it.bytes } ?: byteArrayOf(0.toByte()),
+        fee.bytes(),
+        accountId.bytes(),
+        owner.bytes(),
+        active.bytes(),
+        options.bytes(),
         byteArrayOf(0)
     )
 }
