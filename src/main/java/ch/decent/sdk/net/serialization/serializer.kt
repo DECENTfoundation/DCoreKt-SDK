@@ -19,10 +19,7 @@ package ch.decent.sdk.net.serialization
 
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.model.Authority
-import ch.decent.sdk.model.Options
 import ch.decent.sdk.utils.parseVoteId
-import ch.decent.sdk.utils.unhex
 import com.google.common.primitives.Bytes
 import java.io.ByteArrayOutputStream
 import java.io.DataOutput

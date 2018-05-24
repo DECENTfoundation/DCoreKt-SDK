@@ -85,6 +85,23 @@ object OperationTypeFactory : TypeAdapterFactory {
   }
 }
 
+@Suppress("UNCHECKED_CAST")
+object SynopsisAdapterFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (type.rawType == Synopsis::class.java) {
+      val delegate = gson.getDelegateAdapter(this, TypeToken.get(Synopsis::class.java)) as TypeAdapter<T>
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T) {
+          out.value(delegate.toJson(value))
+        }
+
+        override fun read(reader: JsonReader): T = delegate.fromJson(reader.nextString())
+      }
+    }
+    return null
+  }
+}
+
 object PubKeyAdapter : TypeAdapter<PubKey>() {
   override fun read(reader: JsonReader): PubKey {
     reader.beginObject()

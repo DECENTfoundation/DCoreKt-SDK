@@ -138,6 +138,7 @@ class DCoreApi(
     val gsonBuilder = GsonBuilder()
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
+        .registerTypeAdapterFactory(SynopsisAdapterFactory)
         .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
         .registerTypeAdapter(Address::class.java, AddressAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
