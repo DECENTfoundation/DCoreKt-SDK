@@ -1,8 +1,7 @@
 package ch.decent.sdk.net
 
-import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.account
-import ch.decent.sdk.account2
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
@@ -111,7 +110,7 @@ class Serializer {
   "top_n_control_flags": 0
 }
       """
-    val account = DCoreApi.gsonBuilder.create().fromJson(json, Account::class.java)
+    val account = DCoreSdk.gsonBuilder.create().fromJson(json, Account::class.java)
 
     val op = AccountUpdateOperation(
         account.id,

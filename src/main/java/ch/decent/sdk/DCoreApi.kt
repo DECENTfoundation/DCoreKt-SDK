@@ -1,149 +1,338 @@
 package ch.decent.sdk
 
-import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.SearchAccountHistoryOrder
 import ch.decent.sdk.net.model.SearchPurchasesOrder
-import ch.decent.sdk.net.model.request.*
-import ch.decent.sdk.net.rpc.RpcEndpoints
-import ch.decent.sdk.net.ws.RxWebSocket
-import ch.decent.sdk.utils.publicElGamal
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
-import okhttp3.OkHttpClient
-import org.slf4j.Logger
-import org.threeten.bp.LocalDateTime
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import java.net.URL
 
-class DCoreApi(
-    restUrl: String? = null,
-    webSocketUrl: String? = null,
-    private val client: OkHttpClient = OkHttpClient(),
-    gson: Gson = gsonBuilder.create(),
-    private val logger: Logger? = null
-) : ApiContract {
+interface DCoreApi {
 
-  private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gson, logger) }
-  private val service: RpcEndpoints? = restUrl?.let {
-    Retrofit.Builder()
-        .baseUrl(it)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .client(client)
-        .build()
-        .create(RpcEndpoints::class.java)
-  }
+  /**
+   * get account balance
+   *
+   * @param accountId object id of the account, 1.2.*
+   * @return list of amounts for different assets
+   */
+  fun getBalance(accountId: ChainObject): Single<List<AssetAmount>>
 
-  init {
-    require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true, { "at least one url must be set" })
-  }
+  /**
+   * get Account object by name
+   *
+   * @param name the name of the account
+   * @return an account if found, ObjectNotFoundException otherwise
+   */
+  fun getAccountByName(name: String): Single<Account>
 
-  private fun <T, U : BaseRequest<T>> U.toRequest(rpc: (RpcEndpoints.(r: U) -> Single<T>)? = null): Single<T> {
-    return if (rpc != null && service != null && rxWebSocket?.connected == false) {
-      rpc(service, this)
-    } else {
-      rxWebSocket?.request(this) ?: Single.error(IllegalAccessException("websocket API not available, no url set"))
-    }
-  }
+  /**
+   * get Account object by id
+   *
+   * @param accountId object id of the account, 1.2.*
+   * @return an account if found, ObjectNotFoundException otherwise
+   */
+  fun getAccountById(accountId: ChainObject): Single<Account>
 
-  private fun prepareTransaction(op: List<BaseOperation>) =
-      Single.zip(
-          GetDynamicGlobalProps.toRequest(),
-          GetRequiredFees(op).toRequest(),
-          BiFunction { props: DynamicGlobalProps, fees: List<AssetAmount> ->
-            Transaction(BlockData(props), op.mapIndexed { idx, op -> op.apply { fee = fees[idx] } })
-          }
-      )
+  /**
+   * search account history
+   *
+   * @param accountId object id of the account, 1.2.*
+   * @param order
+   * @param from object id of the history object to start from, use 0.0.0 to ignore
+   * @param limit number of entries, max 100
+   */
+  fun searchAccountHistory(
+      accountId: ChainObject,
+      order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
+      from: ChainObject = ChainObject.NONE,
+      limit: Int = 100
+  ): Single<List<TransactionDetail>>
 
-  override fun getFees(op: List<BaseOperation>): Single<List<AssetAmount>> =
-      GetRequiredFees(op).toRequest { this.getFees(it).map { it.result() } }
+  /**
+   * search consumer open and history purchases
+   *
+   * @param consumer object id of the account, 1.2.*
+   * @param order
+   * @param from object id of the history object to start from, use 0.0.0 to ignore
+   * @param limit number of entries, max 100
+   */
+  fun searchPurchases(
+      consumer: ChainObject,
+      order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
+      from: ChainObject = ChainObject.NONE,
+      term: String = "",
+      limit: Int = 100
+  ): Single<List<Purchase>>
 
-  override fun getMiners(minerIds: Set<ChainObject>): Single<List<Miner>> =
-      GetMiners(minerIds).toRequest { getMiners(it).map { it.result() } }
+  /**
+   * get consumer buying by content uri
+   *
+   * @param consumer object id of the account, 1.2.*
+   * @param uri a uri of the content
+   *
+   * @return an account if found, ObjectNotFoundException otherwise
+   */
+  fun getPurchase(
+      consumer: ChainObject,
+      uri: String
+  ): Single<Purchase>
 
-  override fun getBalance(accountId: ChainObject): Single<List<AssetAmount>> =
-      GetAccountBalances(accountId).toRequest { getAccountBalances(it).map { it.result() } }
+  /**
+   * get content by id
+   *
+   * @param contentId object id of the content, 2.13.*
+   *
+   * @return a content if found, ObjectNotFoundException otherwise
+   */
+  fun getContent(contentId: ChainObject): Single<Content>
 
-  override fun createAccount(keyPair: ECKeyPair, userId: ChainObject, name: String, owner: Authority, active: Authority, options: Options) =
-      makeTransactionWithCallback(keyPair, AccountCreateOperation(registrar = userId, name = name, owner = owner, active = active, options = options))
+  /**
+   * get content by uri
+   *
+   * @param uri Uri of the content
+   *
+   * @return a content if found, ObjectNotFoundException otherwise
+   */
+  fun getContent(uri: String): Single<Content>
 
-  override fun getAccountByName(name: String): Single<Account> =
-      GetAccountByName(name).toRequest { getAccountByName(it).map { it.result() } }
+  /**
+   * get account history
+   *
+   * @param accountId object id of the account, 1.2.*
+   * @param limit number of entries, max 100
+   * @param startId id of the history object to start from, use 1.7.0 to ignore
+   * @param stopId id of the history object to stop at, use 1.7.0 to ignore
+   *
+   * @return list of history operations
+   */
+  fun getAccountHistory(
+      accountId: ChainObject,
+      limit: Int = 100,
+      startId: ChainObject = ChainObject.parse("1.7.0"),
+      stopId: ChainObject = ChainObject.parse("1.7.0")
+  ): Single<List<OperationHistory>>
 
-  override fun getAccountById(accountId: ChainObject): Single<Account> =
-      GetAccountById(accountId).toRequest { getAccountById(it).map { it.result() } }.map { it.firstOrNull() ?: throw ObjectNotFoundException() }
+  /**
+   * If the transaction has not expired, this method will return the transaction for the given ID or it will return null if it is not known.
+   * Just because it is not known does not mean it wasn't included in the blockchain.
+   *
+   * @param trxId transaction id
+   *
+   * @return a transaction if found, ObjectNotFoundException otherwise
+   */
+  fun getRecentTransaction(trxId: String): Single<ProcessedTransaction>
 
-  override fun searchAccountHistory(accountId: ChainObject, order: SearchAccountHistoryOrder, from: ChainObject, limit: Int): Single<List<TransactionDetail>> =
-      SearchAccountHistory(accountId, order, from, limit).toRequest { searchAccountHistory(it).map { it.result() } }
+  /**
+   * get account history
+   *
+   * @param account account name
+   *
+   * @return list of history operations, first 100 entries
+   */
+  fun getAccountHistory(
+      account: String
+  ): Single<List<OperationHistory>> = getAccountByName(account).flatMap { getAccountHistory(it.id) }
 
-  override fun searchPurchases(consumer: ChainObject, order: SearchPurchasesOrder, from: ChainObject, term: String, limit: Int): Single<List<Purchase>> =
-      SearchBuyings(consumer, order, from, term, limit).toRequest { searchBuyings(it).map { it.result() } }
+  /**
+   * make a transfer
+   *
+   * @param keyPair private keys
+   * @param from object id of the sender account, 1.2.*
+   * @param to object id of the receiver account, 1.2.*
+   * @param amount amount to send with asset type
+   * @param memo optional message
+   * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+   *
+   * @return a transaction confirmation
+   */
+  fun transfer(
+      keyPair: ECKeyPair,
+      from: ChainObject,
+      to: ChainObject,
+      amount: AssetAmount,
+      memo: String? = null,
+      encrypted: Boolean = true
+  ): Single<TransactionConfirmation>
 
-  override fun getPurchase(consumer: ChainObject, uri: String): Single<Purchase> =
-      GetBuyingByUri(consumer, uri).toRequest { getBuyingsByUri(it).map { it.result() } }
+  /**
+   * make a transfer
+   *
+   * @param credentials user credentials
+   * @param to object id of the receiver account, 1.2.*
+   * @param amount amount to send with asset type
+   * @param memo optional message
+   * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+   *
+   * @return a transaction confirmation
+   */
+  fun transfer(
+      credentials: Credentials,
+      to: ChainObject,
+      amount: AssetAmount,
+      memo: String? = null,
+      encrypted: Boolean = true
+  ): Single<TransactionConfirmation> = transfer(credentials.keyPair, credentials.account, to, amount, memo, encrypted)
 
-  override fun getContent(contentId: ChainObject): Single<Content> =
-      GetContentById(contentId).toRequest { getContent(it).map { it.result() } }.map { it.firstOrNull() ?: throw ObjectNotFoundException() }
+  /**
+   * make a transfer
+   *
+   * @param credentials user credentials
+   * @param to receiver account name
+   * @param amount amount to send in DCT
+   * @param memo optional message
+   * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+   *
+   * @return a transaction confirmation
+   */
+  fun transfer(
+      credentials: Credentials,
+      to: String,
+      amount: Double,
+      memo: String? = null,
+      encrypted: Boolean = true
+  ): Single<TransactionConfirmation> = getAccountByName(to).flatMap { transfer(credentials.keyPair, credentials.account, it.id, Globals.DCT.amount(amount), memo, encrypted) }
 
-  override fun getContent(uri: String): Single<Content> =
-      GetContentByUri(uri).toRequest { getContent(it).map { it.result() } }
+  /**
+   * buy a content
+   *
+   * @param keyPair private keys
+   * @param content
+   * @param consumer object id of the consumer account, 1.2.*
+   *
+   * @return a transaction confirmation
+   */
+  fun buyContent(
+      keyPair: ECKeyPair,
+      content: Content,
+      consumer: ChainObject
+  ): Single<TransactionConfirmation>
 
-  fun getAssets(assets: List<ChainObject>): Single<List<Asset>> =
-      GetAssets(assets).toRequest { getAssets(it).map { it.result() } }
+  /**
+   * buy a content by id
+   *
+   * @param keyPair private keys
+   * @param contentId object id of the content, 2.13.*
+   * @param consumer object id of the consumer account, 1.2.*
+   *
+   * @return a transaction confirmation
+   */
+  fun buyContent(
+      keyPair: ECKeyPair,
+      contentId: ChainObject,
+      consumer: ChainObject
+  ): Single<TransactionConfirmation> = getContent(contentId).flatMap { buyContent(keyPair, it, consumer) }
 
-  override fun transfer(keyPair: ECKeyPair, from: ChainObject, to: ChainObject, amount: AssetAmount, memo: String?, encrypted: Boolean): Single<TransactionConfirmation> =
-      getAccountById(to)
-          .flatMap { recipient ->
-            val msg = if (memo.isNullOrBlank()) null else {
-              if (encrypted) Memo(memo!!, keyPair, recipient.active.keyAuths.first().value) else Memo(memo!!)
-            }
-            makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, msg))
-          }
+  /**
+   * buy a content by uri
+   *
+   * @param keyPair private keys
+   * @param uri Uri of the content
+   * @param consumer object id of the consumer account, 1.2.*
+   *
+   * @return a transaction confirmation
+   */
+  fun buyContent(
+      keyPair: ECKeyPair,
+      uri: String,
+      consumer: ChainObject
+  ): Single<TransactionConfirmation> = getContent(uri).flatMap { buyContent(keyPair, it, consumer) }
 
-  override fun buyContent(keyPair: ECKeyPair, content: Content, consumer: ChainObject): Single<TransactionConfirmation> =
-      makeTransactionWithCallback(keyPair, BuyContentOperation(content.uri, consumer, content.price(),
-          if (URL(content.uri).protocol != "ipfs") PubKey() else keyPair.publicElGamal()))
+  /**
+   * buy a content
+   *
+   * @param credentials user credentials
+   * @param content
+   *
+   * @return a transaction confirmation
+   */
+  fun buyContent(
+      credentials: Credentials,
+      content: Content
+  ): Single<TransactionConfirmation> = buyContent(credentials.keyPair, content, credentials.account)
 
-  override fun voteForMiners(keyPair: ECKeyPair, accountId: ChainObject, voteIds: Set<String>): Single<TransactionConfirmation> =
-      getAccountById(accountId)
-          .flatMap {
-            makeTransactionWithCallback(keyPair, AccountUpdateOperation(
-                it.id, options = it.options.copy(votes = voteIds)
-            ))
-          }
+  /**
+   * Returns fees for operation
+   *
+   * @param op list of operations
+   *
+   * @return a list of fee asset amounts
+   */
+  fun getFees(op: List<BaseOperation>): Single<List<AssetAmount>>
 
-  fun makeTransactionWithCallback(keyPair: ECKeyPair, op: BaseOperation): Single<TransactionConfirmation> = makeTransactionWithCallback(keyPair, listOf(op))
+  /**
+   * Returns fee for operation
+   *
+   * @param op operation
+   *
+   * @return a fee asset amount
+   */
+  fun getFees(op: BaseOperation): Single<AssetAmount> = getFees(listOf(op)).map { it.first() }
 
-  fun makeTransactionWithCallback(keyPair: ECKeyPair, op: List<BaseOperation>): Single<TransactionConfirmation> =
-      prepareTransaction(op)
-          .map { it.withSignature(keyPair) }
-          .flatMap {
-            val callId = rxWebSocket!!.callId
-            rxWebSocket.request(BroadcastTransactionWithCallback(it, callId))
-          }
+  /**
+   * vote for miner
+   *
+   * @param keyPair private keys
+   * @param accountId account id
+   * @param voteIds list of miners ids
+   *
+   * @return a transaction confirmation
+   */
+  fun voteForMiners(
+      keyPair: ECKeyPair,
+      accountId: ChainObject,
+      voteIds: Set<String>
+  ): Single<TransactionConfirmation>
 
-  fun makeTransaction(keyPair: ECKeyPair, op: List<BaseOperation>): Single<Unit> =
-      prepareTransaction(op)
-          .map { it.withSignature(keyPair) }
-          .flatMap { BroadcastTransaction(it).toRequest() }
+  /**
+   * vote for miner
+   *
+   * @param credentials account credentials
+   * @param voteIds list of vote ids
+   *
+   * @return a transaction confirmation
+   */
+  fun voteForMiners(
+      credentials: Credentials,
+      voteIds: Set<String>): Single<TransactionConfirmation> = voteForMiners(credentials.keyPair, credentials.account, voteIds)
 
-  companion object {
-    val gsonBuilder = GsonBuilder()
-        .disableHtmlEscaping()
-        .registerTypeAdapterFactory(OperationTypeFactory)
-        .registerTypeAdapterFactory(SynopsisAdapterFactory)
-        .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
-        .registerTypeAdapter(Address::class.java, AddressAdapter)
-        .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
-        .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)
-        .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
-  }
+  /**
+   * vote for miner
+   *
+   * @param keyPair private keys
+   * @param accountId account id
+   * @param minerIds list of miner ids
+   *
+   * @return a transaction confirmation
+   */
+  fun voteForMinersByIds(
+      keyPair: ECKeyPair,
+      accountId: ChainObject,
+      minerIds: Set<ChainObject>
+  ): Single<TransactionConfirmation> = getMiners(minerIds).map { it.map { it.voteId }.toSet() }.flatMap { voteForMiners(keyPair, accountId, it) }
+
+  /**
+   * Returns list of miners by their Ids
+   *
+   * @param minerIds miner ids
+   *
+   * @return a list of miners
+   */
+  fun getMiners(minerIds: Set<ChainObject>): Single<List<Miner>>
+
+  /**
+   * Creates new account
+   *
+   * @param keyPair private keys
+   * @param userId user ID
+   * @param name user name
+   *
+   * @return a transaction confirmation
+   */
+  fun createAccount(
+      keyPair: ECKeyPair,
+      userId: ChainObject,
+      name: String,
+      owner: Authority,
+      active: Authority,
+      options: Options): Single<TransactionConfirmation>
 }
-

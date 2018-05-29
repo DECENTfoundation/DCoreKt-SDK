@@ -1,6 +1,6 @@
 package ch.decent.sdk.net.rpc
 
-import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.account
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.TransactionDetail
@@ -21,7 +21,7 @@ class RpcApiTest {
   private val service = Retrofit.Builder()
       .baseUrl("https://stage.decentgo.com:8090/")
       .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
-      .addConverterFactory(GsonConverterFactory.create(DCoreApi.gsonBuilder.create()))
+      .addConverterFactory(GsonConverterFactory.create(DCoreSdk.gsonBuilder.create()))
       .client(
           TrustAllCerts.wrap(OkHttpClient.Builder())
               .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))

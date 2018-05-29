@@ -35,8 +35,8 @@ object ChainObjectAdapter : TypeAdapter<ChainObject>() {
 object AddressAdapter : TypeAdapter<Address>() {
   override fun read(reader: JsonReader): Address? = Address.decodeCheckNull(reader.nextString())
 
-  override fun write(out: JsonWriter, value: Address) {
-    out.value(value.encode())
+  override fun write(out: JsonWriter, value: Address?) {
+    out.value(value?.encode())
   }
 }
 

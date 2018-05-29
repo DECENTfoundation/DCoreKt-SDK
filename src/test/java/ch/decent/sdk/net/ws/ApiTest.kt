@@ -116,7 +116,7 @@ class ApiTest {
     val op = TransferOperation(
         account,
         account2,
-        AssetAmount(150000000),
+        AssetAmount(15000000),
         Memo("hello memo here i am", key, Address.decode(public2))
     )
 

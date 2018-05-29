@@ -8,6 +8,7 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 object TrustAllCerts {
+  @JvmStatic
   fun wrap(builder: OkHttpClient.Builder): OkHttpClient.Builder {
     val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
       override fun getAcceptedIssuers(): Array<X509Certificate> = emptyArray()
