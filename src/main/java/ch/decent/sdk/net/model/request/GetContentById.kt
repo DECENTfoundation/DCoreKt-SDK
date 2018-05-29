@@ -5,7 +5,7 @@ import ch.decent.sdk.model.Content
 import ch.decent.sdk.model.ObjectType
 import com.google.gson.reflect.TypeToken
 
-internal class GetContentById(
+class GetContentById(
     contentId: ChainObject
 ) : GetObjects<List<Content>>(
     listOf(contentId),

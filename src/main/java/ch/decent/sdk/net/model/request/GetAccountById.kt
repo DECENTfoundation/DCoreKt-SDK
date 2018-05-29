@@ -5,7 +5,7 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import com.google.gson.reflect.TypeToken
 
-internal class GetAccountById(
+public class GetAccountById(
     accountId: ChainObject
 ) : GetObjects<List<Account>>(
     listOf(accountId),

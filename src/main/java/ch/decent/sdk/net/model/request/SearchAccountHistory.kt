@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 import kotlin.math.max
 import kotlin.math.min
 
-internal class SearchAccountHistory(
+class SearchAccountHistory(
     accountId: ChainObject,
     order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
     startId: ChainObject = ChainObject.NONE,

@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 import kotlin.math.max
 import kotlin.math.min
 
-internal class SearchBuyings(
+class SearchBuyings(
     consumer: ChainObject,
     order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
     startId: ChainObject = ChainObject.NONE,

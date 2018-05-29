@@ -8,7 +8,7 @@ import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-internal interface RpcEndpoints {
+interface RpcEndpoints {
 
 //  cannot be blank url string
   @POST("rpc")

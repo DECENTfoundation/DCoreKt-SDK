@@ -3,7 +3,7 @@ package ch.decent.sdk.net.model.request
 import ch.decent.sdk.net.model.ApiGroup
 import java.lang.reflect.Type
 
-internal abstract class BaseRequest<T>(
+abstract class BaseRequest<T>(
     @Transient val apiGroup: ApiGroup,
     val method: String,
     @Transient val returnClass: Type,

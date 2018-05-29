@@ -50,6 +50,8 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.amshove.kluent:kluent:1.34"
+
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
 }
 
 group = "ch.decent"

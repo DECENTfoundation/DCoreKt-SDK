@@ -27,7 +27,7 @@ import org.slf4j.Logger
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-internal class RxWebSocket(
+class RxWebSocket(
     private val client: OkHttpClient,
     private val url: String,
     private val gson: Gson,
@@ -41,7 +41,7 @@ internal class RxWebSocket(
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
     emitter.setCancellable { webSocket.close(1000, null) }
   }, BackpressureStrategy.ERROR)
-      .share()
+      .publish()
 
   private var webSocketAsync: AsyncProcessor<WebSocket>? = null
   internal var callId: Long = 0
@@ -106,6 +106,7 @@ internal class RxWebSocket(
             .flatMap { ws -> Login().make(ws, callId).map { ws } }
             .subscribe { ws -> webSocketAsync!!.onNext(ws); webSocketAsync!!.onComplete() }
     )
+    events.connect()
   }
 
   internal fun webSocket(): Single<WebSocket> {

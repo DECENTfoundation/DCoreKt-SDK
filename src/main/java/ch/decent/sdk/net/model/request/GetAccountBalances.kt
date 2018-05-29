@@ -6,7 +6,7 @@ import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 
-internal class GetAccountBalances(
+class GetAccountBalances(
     accountId: ChainObject,
     assets: Set<String> = emptySet()
 ): BaseRequest<List<AssetAmount>>(

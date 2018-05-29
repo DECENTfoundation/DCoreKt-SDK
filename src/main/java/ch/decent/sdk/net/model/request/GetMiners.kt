@@ -6,7 +6,7 @@ import ch.decent.sdk.model.Miner
 import ch.decent.sdk.model.ObjectType
 import com.google.gson.reflect.TypeToken
 
-internal class GetMiners(
+class GetMiners(
     contentIds: Set<ChainObject>
 ) : GetObjects<List<Miner>>(
     contentIds.map { it },
