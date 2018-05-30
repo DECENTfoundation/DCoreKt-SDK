@@ -1,6 +1,6 @@
 package ch.decent.sdk.net.ws
 
-import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.client
 import ch.decent.sdk.net.TrustAllCerts
 import ch.decent.sdk.net.model.request.Login
@@ -24,7 +24,7 @@ class ConnectionTest {
         TrustAllCerts.wrap(client).build(),
         url,
         logger = LoggerFactory.getLogger("RxWebSocket"),
-        gson = DCoreApi.gsonBuilder.create()
+        gson = DCoreSdk.gsonBuilder.create()
     )
   }
 

@@ -1,32 +1,33 @@
 package ch.decent.sdk.net.services
 
-import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.client
 import ch.decent.sdk.net.TrustAllCerts
 import ch.decent.sdk.net.ws.RxWebSocket
+import ch.decent.sdk.url
 import org.junit.After
 import org.junit.Before
 import org.slf4j.LoggerFactory
 
-open class BaseWSApiTest {
+abstract class BaseWSApiTest : MockServer {
 
   protected lateinit var socket: RxWebSocket
-  protected lateinit var mockWebServer: CustomWebSocketService
+  protected var mockWebServer: CustomWebSocketService? = null
 
   @Before fun init() {
-    mockWebServer = CustomWebSocketService()
-    mockWebServer.start()
+    val shouldRunMockServer = runMockServer()
+    if (shouldRunMockServer) {
+      mockWebServer = CustomWebSocketService().apply { start() }
+    }
     socket = RxWebSocket(
         TrustAllCerts.wrap(client).build(),
-        mockWebServer.getUrl(),
-        //url,
+        if (shouldRunMockServer) mockWebServer!!.getUrl() else url,
         logger = LoggerFactory.getLogger("RxWebSocket"),
-        gson = DCoreApi.gsonBuilder.create()
+        gson = DCoreSdk.gsonBuilder.create()
     )
   }
 
   @After fun finish() {
-    mockWebServer.shutdown()
+    mockWebServer?.shutdown()
   }
-
 }

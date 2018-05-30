@@ -1,14 +1,10 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.Asset
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.utils.unhex
-import com.google.gson.reflect.TypeToken
 
-internal class GetRecentTransactionById(
+class GetRecentTransactionById(
     id: String
 ) : BaseRequest<ProcessedTransaction>(
     ApiGroup.DATABASE,
