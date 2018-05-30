@@ -1,8 +1,8 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.model.OperationType
+import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.Varint
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.net.serialization.optionalBytes

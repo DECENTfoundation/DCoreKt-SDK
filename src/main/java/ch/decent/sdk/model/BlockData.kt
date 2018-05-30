@@ -1,5 +1,6 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.Globals
 import ch.decent.sdk.net.serialization.ByteSerializable
 import com.google.common.primitives.Bytes
@@ -35,7 +36,7 @@ data class BlockData(
       relativeExpiration
   )
 
-  constructor(props: DynamicGlobalProps) : this(props.headBlockNumber, props.headBlockId, props.time.toEpochSecond(ZoneOffset.UTC) + Globals.DEFAULT_EXPIRATION)
+  constructor(props: DynamicGlobalProps) : this(props.headBlockNumber, props.headBlockId, props.time.toEpochSecond(ZoneOffset.UTC) + DCoreSdk.transactionExpiration)
 
   override val bytes: ByteArray
     get() =

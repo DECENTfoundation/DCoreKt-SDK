@@ -62,7 +62,7 @@ class RxWebSocket(
 
   private fun BaseRequest<*>.json(callId: Long, apiId: Int) = RequestJson(callId, apiId, method, params).let { gson.toJson(it) }
 
-  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long) = json(callId, apiId[apiGroup]!!).let { ws.send(it); logger?.info(it) }
+  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long) = json(callId, apiId[apiGroup]!!).let { logger?.info(it); ws.send(it) }
 
   /**
    * check for callback notice or simple result

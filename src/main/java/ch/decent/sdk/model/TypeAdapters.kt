@@ -35,8 +35,8 @@ object ChainObjectAdapter : TypeAdapter<ChainObject>() {
 object AddressAdapter : TypeAdapter<Address>() {
   override fun read(reader: JsonReader): Address? = Address.decodeCheckNull(reader.nextString())
 
-  override fun write(out: JsonWriter, value: Address) {
-    out.value(value.encode())
+  override fun write(out: JsonWriter, value: Address?) {
+    out.value(value?.encode())
   }
 }
 
@@ -79,6 +79,23 @@ object OperationTypeFactory : TypeAdapterFactory {
             delegate.fromJsonTree(obj) as T?
           } ?: EmptyOperation(op) as T?
         }
+      }
+    }
+    return null
+  }
+}
+
+@Suppress("UNCHECKED_CAST")
+object SynopsisAdapterFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (type.rawType == Synopsis::class.java) {
+      val delegate = gson.getDelegateAdapter(this, TypeToken.get(Synopsis::class.java)) as TypeAdapter<T>
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T) {
+          out.value(delegate.toJson(value))
+        }
+
+        override fun read(reader: JsonReader): T = delegate.fromJson(reader.nextString())
       }
     }
     return null

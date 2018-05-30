@@ -12,9 +12,7 @@ import ch.decent.sdk.utils.publicElGamal
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
-import org.junit.Ignore
 import org.junit.Test
-import org.slf4j.LoggerFactory
 import java.math.BigInteger
 
 class ApiTest : BaseWSApiTest() {
@@ -150,8 +148,8 @@ class ApiTest : BaseWSApiTest() {
     val op = TransferOperation(
         account,
         account2,
-        AssetAmount(1500000),
-        memo
+        AssetAmount(150000000),
+        Memo("hello memo here i am", key, Address.decode(public2))
     )
 
     val props = socket.request(GetDynamicGlobalProps).blockingGet()

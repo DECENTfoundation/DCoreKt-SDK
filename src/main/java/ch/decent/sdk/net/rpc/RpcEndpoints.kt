@@ -47,4 +47,6 @@ interface RpcEndpoints {
   @POST("rpc")
   fun getFees(@Body request: GetRequiredFees): Single<RpcListResponse<AssetAmount>>
 
+  @POST("rpc")
+  fun getRecentTransaction(@Body request: GetRecentTransactionById): Single<RpcResponse<ProcessedTransaction>>
 }

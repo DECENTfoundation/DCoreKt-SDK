@@ -167,7 +167,7 @@ class Crytpo {
 
     val wallet = Wallet.exportDCoreWallet(credentials, account, "pw")
 
-    val gson = DCoreApi.gsonBuilder
+    val gson = DCoreSdk.gsonBuilder
         .registerTypeAdapter(Wallet.ExtraKeys::class.java, ExtraKeysAdapter)
         .registerTypeAdapter(Wallet.CipherKeyPair::class.java, CipherKeyPairAdapter)
         .create()

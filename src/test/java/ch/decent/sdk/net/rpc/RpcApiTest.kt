@@ -1,5 +1,6 @@
 package ch.decent.sdk.net.rpc
 
+import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.account
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.TransactionDetail
@@ -13,6 +14,17 @@ import okhttp3.mockwebserver.MockResponse
 import org.junit.Test
 
 class RpcApiTest : BaseRestApiTest() {
+  private val service = Retrofit.Builder()
+      .baseUrl("https://stage.decentgo.com:8090/")
+      .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
+      .addConverterFactory(GsonConverterFactory.create(DCoreSdk.gsonBuilder.create()))
+      .client(
+          TrustAllCerts.wrap(OkHttpClient.Builder())
+              .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+              .build()
+      )
+      .build()
+      .create(RpcEndpoints::class.java)
 
   @Test fun `lookup all accounts`() {
     mockServer.enqueue(MockResponse().setBody("""{"id":1,"result":[["decent","1.2.15"]]}"""))

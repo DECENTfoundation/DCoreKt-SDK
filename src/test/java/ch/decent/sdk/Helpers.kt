@@ -11,7 +11,7 @@ val url = "wss://stage.decentgo.com:8090"
 val restUrl = "https://stage.decentgo.com/"
 val client: OkHttpClient.Builder = OkHttpClient.Builder()
     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-val api = DCoreApi(
+val api = DCoreSdk.createApi(
 //    restUrl = restUrl,
     restUrl = null,
     webSocketUrl = url,
