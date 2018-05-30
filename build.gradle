@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.41'
+    ext.okhttp_version = '3.10.0'
     repositories {
         mavenCentral()
         jcenter()
@@ -44,14 +45,14 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.3.0"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     compile "com.google.code.gson:gson:2.8.4"
-    compile "com.squareup.okhttp3:okhttp:3.9.1"
-    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
+    compile "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.amshove.kluent:kluent:1.34"
 
-    testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
 }
 
 group = "ch.decent"
