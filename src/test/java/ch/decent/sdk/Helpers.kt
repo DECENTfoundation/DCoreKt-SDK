@@ -17,7 +17,7 @@ val api = DCoreSdk.createApi(
     restUrl = null,
     webSocketUrl = url,
     client = TrustAllCerts.wrap(client).build(),
-    logger = LoggerFactory.getLogger("DCoreApi")
+    logger = LoggerFactory.getLogger("DCoreApiRx")
 )
 val account = ChainObject.parse("1.2.34")
 val account2 = ChainObject.parse("1.2.35")

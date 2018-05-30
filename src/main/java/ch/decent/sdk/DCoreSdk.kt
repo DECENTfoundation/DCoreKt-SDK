@@ -26,7 +26,7 @@ class DCoreSdk private constructor(
     webSocketUrl: String?,
     restUrl: String?,
     private val logger: Logger?
-) : DCoreApi {
+) : DCoreApiRx {
 
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gsonBuilder.create(), logger) }
   private val service: RpcEndpoints? = restUrl?.let {
@@ -141,7 +141,11 @@ class DCoreSdk private constructor(
           .flatMap { BroadcastTransaction(it).toRequest() }
 
   companion object {
-    var transactionExpiration = 30
+    /**
+     * Specifies expiration time of transactions, after expiry the transaction will be removed form recent's pool
+     */
+    @JvmStatic var transactionExpiration = 30
+
     @JvmStatic val gsonBuilder = GsonBuilder()
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
@@ -152,9 +156,14 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
 
-    @JvmOverloads @JvmStatic
-    fun createApi(client: OkHttpClient, webSocketUrl: String? = null, restUrl: String? = null, logger: Logger? = null): DCoreApi =
+    fun createApiRx(client: OkHttpClient, webSocketUrl: String? = null, restUrl: String? = null, logger: Logger? = null): DCoreApiRx =
         DCoreSdk(client, webSocketUrl, restUrl, logger)
+
+    @JvmOverloads @JvmStatic
+    fun createApi(client: OkHttpClient, webSocketUrl: String? = null, restUrl: String? = null, logger: Logger? = null): DCoreApi = object : DCoreApi {
+      override val apiRx: DCoreApiRx = createApiRx(client, webSocketUrl, restUrl, logger)
+    }
+
   }
 }
 
