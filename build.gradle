@@ -38,7 +38,7 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:1.59"
     compile "org.slf4j:slf4j-api:1.7.25"
     implementation "org.slf4j:slf4j-simple:1.7.25"
-    implementation "com.google.guava:guava:25.0-android" //JDK7 support
+    compile "com.google.guava:guava:25.0-android" //JDK7 support
 
     implementation "com.squareup.retrofit2:retrofit:2.3.0"
     implementation "com.squareup.retrofit2:converter-gson:2.3.0"

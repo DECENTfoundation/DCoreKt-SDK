@@ -57,7 +57,7 @@ object Wallet {
   private fun cipher(mode: Int, iv: ByteArray, encryptKey: ByteArray, text: ByteArray): ByteArray {
     try {
       val ivParameterSpec = IvParameterSpec(iv)
-      val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+      val cipher = Cipher.getInstance("AES/CBC/NoPadding")
 
       val secretKeySpec = SecretKeySpec(encryptKey, "AES")
       cipher.init(mode, secretKeySpec, ivParameterSpec)

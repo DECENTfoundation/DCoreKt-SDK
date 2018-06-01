@@ -7,5 +7,5 @@ data class RpcResponse<out T>(
     val result: T?,
     val error: Error?
 ) {
-  fun result(): T = result ?: throw ObjectNotFoundException()
+  fun result(message: String): T = result ?: throw ObjectNotFoundException(message)
 }

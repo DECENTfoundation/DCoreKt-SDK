@@ -12,13 +12,15 @@ val restUrl = "https://stage.decentgo.com/"
 val client: OkHttpClient.Builder = OkHttpClient.Builder()
     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
 internal val socket = RxWebSocket(TrustAllCerts.wrap(client).build(), url, logger = LoggerFactory.getLogger("RxWebSocket"), gson = DCoreSdk.gsonBuilder.create())
-val api = DCoreSdk.createApi(
+val apiSync = DCoreSdk.createApi(
 //    restUrl = restUrl,
     restUrl = null,
     webSocketUrl = url,
     client = TrustAllCerts.wrap(client).build(),
     logger = LoggerFactory.getLogger("DCoreApiRx")
 )
+val api = apiSync.apiRx
+
 val account = ChainObject.parse("1.2.34")
 val account2 = ChainObject.parse("1.2.35")
 val accountName = "u961279ec8b7ae7bd62f304f7c1c3d345"

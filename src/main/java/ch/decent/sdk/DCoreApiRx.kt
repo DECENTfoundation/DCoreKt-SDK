@@ -2,10 +2,12 @@ package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.SearchAccountHistoryOrder
 import ch.decent.sdk.net.model.SearchPurchasesOrder
 import io.reactivex.Single
+import java.math.BigDecimal
 
 interface DCoreApiRx {
 
@@ -25,6 +27,39 @@ interface DCoreApiRx {
    */
   fun getBalance(accountName: String): Single<List<AssetAmount>> =
       getAccountByName(accountName).flatMap { getBalance(it.id) }
+
+  /**
+   * get account balance
+   *
+   * @param accountName name of the account
+   * @param assetSymbol symbol of the asset eg. DCT
+   *
+   * @return amount owned for specified asset or [ch.decent.sdk.exception.ObjectNotFoundException] if asset does not exist
+   */
+  fun getBalance(accountName: String, assetSymbol: String): Single<BigDecimal> =
+      lookupAssets(listOf(assetSymbol))
+          .map { it.first() }
+          .flatMap { asset ->
+            getBalance(accountName).map { it.find { it.assetId == asset.id }?.let { asset.fromBase(it.amount) } ?: BigDecimal.ZERO }
+          }
+
+  /**
+   * get assets by id
+   *
+   * @param assetIds asset id eg. DCT id is 1.3.0
+   *
+   * @return list of assets or empty
+   */
+  fun getAssets(assetIds: List<ChainObject>): Single<List<Asset>>
+
+  /**
+   * lookup assets by symbol
+   *
+   * @param assetSymbols asset symbols eg. DCT
+   *
+   * @return list of assets or empty
+   */
+  fun lookupAssets(assetSymbols: List<String>): Single<List<Asset>>
 
   /**
    * get Account object by name
@@ -131,6 +166,25 @@ interface DCoreApiRx {
    * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun getRecentTransaction(trxId: String): Single<ProcessedTransaction>
+
+  /**
+   * get applied transaction
+   *
+   * @param blockNum block number
+   * @param trxInBlock position of the transaction in block
+   *
+   * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   */
+  fun getTransaction(blockNum: Long, trxInBlock: Long): Single<ProcessedTransaction>
+
+  /**
+   * get applied transaction
+   *
+   * @param confirmation confirmation returned from transaction broadcast
+   *
+   * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   */
+  fun getTransaction(confirmation: TransactionConfirmation): Single<ProcessedTransaction> = getTransaction(confirmation.blockNum, confirmation.trxNum)
 
   /**
    * get account history
