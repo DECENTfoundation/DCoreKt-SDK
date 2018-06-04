@@ -10,4 +10,6 @@ abstract class BaseRequest<T>(
     val params: List<Any> = emptyList(),
     val jsonrpc: String = "2.0",
     val id: Int = 1
-)
+) {
+  fun description() = "method: $method, params: ${params.joinToString()}"
+}

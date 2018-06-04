@@ -30,6 +30,9 @@ interface RpcEndpoints {
   fun getAssets(@Body request: GetAssets): Single<RpcListResponse<Asset>>
 
   @POST("rpc")
+  fun lookupAssets(@Body request: LookupAssets): Single<RpcListResponse<Asset>>
+
+  @POST("rpc")
   fun searchAccountHistory(@Body request: SearchAccountHistory): Single<RpcListResponse<TransactionDetail>>
 
   @POST("rpc")
@@ -49,4 +52,7 @@ interface RpcEndpoints {
 
   @POST("rpc")
   fun getRecentTransaction(@Body request: GetRecentTransactionById): Single<RpcResponse<ProcessedTransaction>>
+
+  @POST("rpc")
+  fun getTransaction(@Body request: GetTransaction): Single<RpcResponse<ProcessedTransaction>>
 }

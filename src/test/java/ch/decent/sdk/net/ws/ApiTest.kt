@@ -5,6 +5,7 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
+import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.services.BaseWSApiTest
 import ch.decent.sdk.net.model.request.*
@@ -287,5 +288,14 @@ class ApiTest : BaseWSApiTest() {
     observer.awaitTerminalEvent()
     observer.assertComplete()
         .assertNoErrors()
+  }
+
+  @Test fun `balance`() {
+    val test = api.getBalance(accountName, "DCT").test()
+    test.awaitTerminalEvent()
+    test.assertNoErrors()
+
+    apiSync.getBalance("as", "DCT")
+    apiSync.createCredentials("u961279ec8b7ae7bd62f304f7c1c3d345", "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn")
   }
 }

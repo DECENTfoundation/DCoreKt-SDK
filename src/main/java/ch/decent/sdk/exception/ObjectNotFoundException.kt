@@ -1,3 +1,5 @@
 package ch.decent.sdk.exception
 
-class ObjectNotFoundException : Exception("object does not exist")
+import ch.decent.sdk.net.model.request.BaseRequest
+
+class ObjectNotFoundException(message: String) : Exception("object does not exist: $message")

@@ -11,6 +11,7 @@ import ch.decent.sdk.net.ws.model.OnOpen
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import ch.decent.sdk.net.ws.model.WebSocketEvent
 import com.google.gson.Gson
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
@@ -83,8 +84,10 @@ class RxWebSocket(
   private fun checkForError(callId: Long, resultId: Long, obj: JsonObject) =
       if (resultId == callId && obj.has("error")) throw Exception(obj.get("error").asJsonObject.get("message").asString) else Unit
 
-  private fun checkObjectNotFound(obj: JsonObject) =
-      if (obj.get("result")?.isJsonNull == true) throw ObjectNotFoundException() else Unit
+  private fun checkObjectNotFound(obj: JsonObject, request: BaseRequest<*>) =
+      if (obj.get("result")?.isJsonNull == true) throw ObjectNotFoundException(request.description())
+      else if (obj.get("result")?.isJsonArray == true && obj.getAsJsonArray("result")?.contains(JsonNull.INSTANCE) == true) throw ObjectNotFoundException(request.description())
+      else Unit
 
   private fun parseResultElement(type: Type, obj: JsonObject) =
       when {
@@ -140,7 +143,7 @@ class RxWebSocket(
             if (it is NoSuchElementException) Single.error(WebSocketClosedException())
             else Single.error(it)
           }
-          .doOnSuccess { (_, obj) -> checkObjectNotFound(obj) }
+          .doOnSuccess { (_, obj) -> checkObjectNotFound(obj, this) }
           .map { (_, obj) -> if (this is WithCallback) obj else parseResultElement(returnClass, obj) }
           .map { gson.fromJson<T>(it, returnClass) }
 

@@ -26,7 +26,7 @@ class DCoreSdk private constructor(
     webSocketUrl: String?,
     restUrl: String?,
     private val logger: Logger?
-) : DCoreApi {
+) : DCoreApiRx {
 
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gsonBuilder.create(), logger) }
   private val service: RpcEndpoints? = restUrl?.let {
@@ -73,10 +73,10 @@ class DCoreSdk private constructor(
       makeTransactionWithCallback(keyPair, AccountCreateOperation(registrar = userId, name = name, owner = owner, active = active, options = options))
 
   override fun getAccountByName(name: String): Single<Account> =
-      GetAccountByName(name).toRequest { getAccountByName(it).map { it.result() } }
+      GetAccountByName(name).toRequest { getAccountByName(it).map { it.result(GetAccountByName(name).description()) } }
 
   override fun getAccountById(accountId: ChainObject): Single<Account> =
-      GetAccountById(accountId).toRequest { getAccountById(it).map { it.result() } }.map { it.firstOrNull() ?: throw ObjectNotFoundException() }
+      GetAccountById(accountId).toRequest { getAccountById(it).map { it.result() } }.map { it.firstOrNull() ?: throw ObjectNotFoundException(GetAccountById(accountId).description()) }
 
   override fun searchAccountHistory(accountId: ChainObject, order: SearchAccountHistoryOrder, from: ChainObject, limit: Int): Single<List<TransactionDetail>> =
       SearchAccountHistory(accountId, order, from, limit).toRequest { searchAccountHistory(it).map { it.result() } }
@@ -85,24 +85,30 @@ class DCoreSdk private constructor(
       SearchBuyings(consumer, order, from, term, limit).toRequest { searchBuyings(it).map { it.result() } }
 
   override fun getPurchase(consumer: ChainObject, uri: String): Single<Purchase> =
-      GetBuyingByUri(consumer, uri).toRequest { getBuyingsByUri(it).map { it.result() } }
+      GetBuyingByUri(consumer, uri).toRequest { getBuyingsByUri(it).map { it.result(GetBuyingByUri(consumer, uri).description()) } }
 
   override fun getContent(contentId: ChainObject): Single<Content> =
       GetContentById(contentId).toRequest { getContent(it).map { it.result() } }.map {
-        it.firstOrNull() ?: throw ObjectNotFoundException()
+        it.firstOrNull() ?: throw ObjectNotFoundException(GetContentById(contentId).description())
       }
 
   override fun getContent(uri: String): Single<Content> =
-      GetContentByUri(uri).toRequest { getContent(it).map { it.result() } }
+      GetContentByUri(uri).toRequest { getContent(it).map { it.result(GetContentByUri(uri).description()) } }
 
-  fun getAssets(assets: List<ChainObject>): Single<List<Asset>> =
-      GetAssets(assets).toRequest { getAssets(it).map { it.result() } }
+  override fun getAssets(assetIds: List<ChainObject>): Single<List<Asset>> =
+      GetAssets(assetIds).toRequest { getAssets(it).map { it.result() } }
+
+  override fun lookupAssets(assetSymbols: List<String>): Single<List<Asset>> =
+      LookupAssets(assetSymbols).toRequest { lookupAssets(it).map { it.result() } }
 
   override fun getAccountHistory(accountId: ChainObject, limit: Int, startId: ChainObject, stopId: ChainObject): Single<List<OperationHistory>> =
       GetAccountHistory(accountId, stopId, limit, startId).toRequest()
 
   override fun getRecentTransaction(trxId: String): Single<ProcessedTransaction> =
-      GetRecentTransactionById(trxId).toRequest { getRecentTransaction(it).map { it.result() } }
+      GetRecentTransactionById(trxId).toRequest { getRecentTransaction(it).map { it.result(GetRecentTransactionById(trxId).description()) } }
+
+  override fun getTransaction(blockNum: Long, trxInBlock: Long): Single<ProcessedTransaction> =
+      GetTransaction(blockNum, trxInBlock).toRequest { getTransaction(it).map { it.result(GetTransaction(blockNum, trxInBlock).description()) } }
 
   override fun transfer(keyPair: ECKeyPair, from: ChainObject, to: ChainObject, amount: AssetAmount, memo: String?, encrypted: Boolean): Single<TransactionConfirmation> =
       getAccountById(to)
@@ -141,7 +147,11 @@ class DCoreSdk private constructor(
           .flatMap { BroadcastTransaction(it).toRequest() }
 
   companion object {
-    var transactionExpiration = 30
+    /**
+     * Specifies expiration time of transactions, after expiry the transaction will be removed form recent's pool
+     */
+    @JvmStatic var transactionExpiration = 30
+
     @JvmStatic val gsonBuilder = GsonBuilder()
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
@@ -152,9 +162,14 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
 
-    @JvmOverloads @JvmStatic
-    fun createApi(client: OkHttpClient, webSocketUrl: String? = null, restUrl: String? = null, logger: Logger? = null): DCoreApi =
+    fun createApiRx(client: OkHttpClient, webSocketUrl: String? = null, restUrl: String? = null, logger: Logger? = null): DCoreApiRx =
         DCoreSdk(client, webSocketUrl, restUrl, logger)
+
+    @JvmOverloads @JvmStatic
+    fun createApi(client: OkHttpClient, webSocketUrl: String? = null, restUrl: String? = null, logger: Logger? = null): DCoreApi = object : DCoreApi {
+      override val apiRx: DCoreApiRx = createApiRx(client, webSocketUrl, restUrl, logger)
+    }
+
   }
 }
 
