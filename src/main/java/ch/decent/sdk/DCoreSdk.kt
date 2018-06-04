@@ -4,8 +4,8 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.SearchAccountHistoryOrder
-import ch.decent.sdk.net.model.SearchPurchasesOrder
+import ch.decent.sdk.model.SearchAccountHistoryOrder
+import ch.decent.sdk.model.SearchPurchasesOrder
 import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.net.rpc.RpcEndpoints
 import ch.decent.sdk.net.ws.RxWebSocket

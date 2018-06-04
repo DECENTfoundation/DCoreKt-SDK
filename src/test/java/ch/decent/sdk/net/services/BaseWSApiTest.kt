@@ -9,19 +9,21 @@ import org.junit.After
 import org.junit.Before
 import org.slf4j.LoggerFactory
 
-abstract class BaseWSApiTest : MockServer {
+internal abstract class BaseWSApiTest {
+
+  protected val useMockWebServer: Boolean
+      get() = true
 
   protected lateinit var socket: RxWebSocket
   protected var mockWebServer: CustomWebSocketService? = null
 
   @Before fun init() {
-    val shouldRunMockServer = runMockServer()
-    if (shouldRunMockServer) {
+    if (useMockWebServer) {
       mockWebServer = CustomWebSocketService().apply { start() }
     }
     socket = RxWebSocket(
         TrustAllCerts.wrap(client).build(),
-        if (shouldRunMockServer) mockWebServer!!.getUrl() else url,
+        if (useMockWebServer) mockWebServer!!.getUrl() else url,
         logger = LoggerFactory.getLogger("RxWebSocket"),
         gson = DCoreSdk.gsonBuilder.create()
     )

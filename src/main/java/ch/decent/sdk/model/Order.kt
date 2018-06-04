@@ -1,4 +1,4 @@
-package ch.decent.sdk.net.model
+package ch.decent.sdk.model
 
 enum class SearchAccountHistoryOrder(val value: String) {
   TYPE_ASC("+type"),

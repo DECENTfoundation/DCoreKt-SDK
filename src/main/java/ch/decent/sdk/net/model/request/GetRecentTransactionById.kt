@@ -4,7 +4,7 @@ import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.utils.unhex
 
-class GetRecentTransactionById(
+internal class GetRecentTransactionById(
     id: String
 ) : BaseRequest<ProcessedTransaction>(
     ApiGroup.DATABASE,

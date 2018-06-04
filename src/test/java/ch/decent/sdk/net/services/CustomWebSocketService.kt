@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 
 class CustomWebSocketService {
 
-  private var mockWebServer = MockWebServer()
+  private val mockWebServer = MockWebServer()
   private val responses = HashMap<String, String>()
   private val logger = LoggerFactory.getLogger("CustomWebSocketService")
 
@@ -43,19 +43,19 @@ class CustomWebSocketService {
   private fun enqueueResponse() {
     val response = MockResponse().withWebSocketUpgrade(object : WebSocketListener() {
       override fun onOpen(webSocket: WebSocket?, response: Response?) {
-        logger.debug("open")
+        logger.info("open")
       }
 
       override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
-        logger.debug("fail")
+        logger.info("fail")
       }
 
       override fun onClosing(webSocket: WebSocket?, code: Int, reason: String?) {
-        logger.debug("closing")
+        logger.info("closing")
       }
 
       override fun onMessage(webSocket: WebSocket?, text: String?) {
-        logger.debug("message")
+        logger.info("message")
         responses[text!!]?.let {
           webSocket?.send(it)
           responses.remove(text)
@@ -64,11 +64,11 @@ class CustomWebSocketService {
       }
 
       override fun onMessage(webSocket: WebSocket?, bytes: ByteString?) {
-        logger.debug("message")
+        logger.info("message")
       }
 
       override fun onClosed(webSocket: WebSocket?, code: Int, reason: String?) {
-        logger.debug("closed")
+        logger.info("closed")
       }
     })
     mockWebServer.enqueue(response)

@@ -1,5 +1,5 @@
 package ch.decent.sdk.net.model.request
 
-interface WithCallback {
+internal interface WithCallback {
   val callbackId: Long
 }

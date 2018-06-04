@@ -28,7 +28,7 @@ import org.slf4j.Logger
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class RxWebSocket(
+internal class RxWebSocket(
     private val client: OkHttpClient,
     private val url: String,
     private val gson: Gson,

@@ -5,6 +5,8 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import com.google.common.base.Optional
+import ch.decent.sdk.model.SearchAccountHistoryOrder
+import ch.decent.sdk.model.SearchPurchasesOrder
 import io.reactivex.Single
 import java.math.BigDecimal
 

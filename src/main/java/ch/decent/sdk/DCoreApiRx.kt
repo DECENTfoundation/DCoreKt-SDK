@@ -2,10 +2,7 @@ package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.SearchAccountHistoryOrder
-import ch.decent.sdk.net.model.SearchPurchasesOrder
 import io.reactivex.Single
 import java.math.BigDecimal
 

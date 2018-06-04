@@ -9,7 +9,7 @@ import okio.ByteString
 
 internal class WebSocketEmitter(
     private val emitter: FlowableEmitter<WebSocketEvent>
-): WebSocketListener() {
+) : WebSocketListener() {
   override fun onOpen(webSocket: WebSocket, response: Response) {
     emitter.onNext(OnOpen(webSocket))
   }
@@ -19,8 +19,8 @@ internal class WebSocketEmitter(
   }
 
   override fun onClosing(webSocket: WebSocket, code: Int, reason: String?) {
-    webSocket.close(code, reason)
     emitter.onNext(OnClosing)
+    webSocket.close(code, reason)
   }
 
   override fun onMessage(webSocket: WebSocket, text: String) {

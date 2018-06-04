@@ -39,7 +39,7 @@ import java.nio.ByteBuffer
  * <p>Signed values are further encoded using so-called zig-zag encoding
  * in order to make them "compatible" with variable-length encoding.</p>
  */
-object Varint {
+internal object Varint {
 
   /**
    * Encodes a value using the variable-length encoding from
@@ -157,7 +157,7 @@ object Varint {
  * @param numBytes the desired size of the resulting byte array
  * @return numBytes byte long array.
  */
-fun BigInteger.bytes(numBytes: Int): ByteArray {
+internal fun BigInteger.bytes(numBytes: Int): ByteArray {
   require(signum() >= 0, { "b must be positive or zero" })
   require(numBytes > 0, { "numBytes must be positive" })
   val src = toByteArray()
@@ -177,7 +177,7 @@ fun BigInteger.bytes(numBytes: Int): ByteArray {
  * it will return it's little-endian bytes.
  * @return The array of bytes that represent this value in the reverse format.
  */
-fun Int.bytes(): ByteArray {
+internal fun Int.bytes(): ByteArray {
   return ByteBuffer.allocate(Integer.SIZE / 8).putInt(Integer.reverseBytes(this)).array()
 }
 
@@ -185,7 +185,7 @@ fun Int.bytes(): ByteArray {
  * Same operation as in the Int.reverse function, but in this case for a short (2 bytes) value.
  * @return The array of bytes that represent this value in the reverse format.
  */
-fun Short.bytes(): ByteArray {
+internal fun Short.bytes(): ByteArray {
   return ByteBuffer.allocate(java.lang.Short.SIZE / 8).putShort(java.lang.Short.reverseBytes(this)).array()
 }
 
@@ -193,20 +193,20 @@ fun Short.bytes(): ByteArray {
  * Same operation as in the Int.reverse function, but in this case for a long (8 bytes) value.
  * @return The array of bytes that represent this value in the reverse format.
  */
-fun Long.bytes(): ByteArray = ByteBuffer.allocate(java.lang.Long.SIZE / 8).putLong(java.lang.Long.reverseBytes(this)).array()
+internal fun Long.bytes(): ByteArray = ByteBuffer.allocate(java.lang.Long.SIZE / 8).putLong(java.lang.Long.reverseBytes(this)).array()
 
-fun String.bytes() = toByteArray().bytes()
+internal fun String.bytes() = toByteArray().bytes()
 
-fun Boolean.bytes() = byteArrayOf(if (this) 1 else 0)
+internal fun Boolean.bytes() = byteArrayOf(if (this) 1 else 0)
 
-fun List<ByteSerializable>.bytes(): ByteArray = if (size == 0) byteArrayOf(0) else Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.bytes }.toTypedArray())
+internal fun List<ByteSerializable>.bytes(): ByteArray = if (size == 0) byteArrayOf(0) else Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.bytes }.toTypedArray())
 
 typealias VoteId = String
 
-fun Set<VoteId>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.parseVoteId() }.toTypedArray())
+internal fun Set<VoteId>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.parseVoteId() }.toTypedArray())
 
-fun ByteArray.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), this)
+internal fun ByteArray.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), this)
 
-fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 })
+internal fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 })
 
-fun ByteSerializable?.optionalBytes() = this?.let { byteArrayOf(1) + bytes } ?: byteArrayOf(0)
+internal fun ByteSerializable?.optionalBytes() = this?.let { byteArrayOf(1) + bytes } ?: byteArrayOf(0)

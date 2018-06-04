@@ -4,12 +4,12 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.TransactionDetail
 import ch.decent.sdk.net.model.ApiGroup
-import ch.decent.sdk.net.model.SearchAccountHistoryOrder
+import ch.decent.sdk.model.SearchAccountHistoryOrder
 import com.google.gson.reflect.TypeToken
 import kotlin.math.max
 import kotlin.math.min
 
-class SearchAccountHistory(
+internal class SearchAccountHistory(
     accountId: ChainObject,
     order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
     startId: ChainObject = ChainObject.NONE,

@@ -4,7 +4,7 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Purchase
 import ch.decent.sdk.net.model.ApiGroup
 
-class GetBuyingByUri(
+internal class GetBuyingByUri(
     consumer: ChainObject,
     uri: String
 ): BaseRequest<Purchase>(

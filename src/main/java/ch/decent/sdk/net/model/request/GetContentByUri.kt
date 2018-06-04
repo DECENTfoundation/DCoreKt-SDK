@@ -3,7 +3,7 @@ package ch.decent.sdk.net.model.request
 import ch.decent.sdk.model.Content
 import ch.decent.sdk.net.model.ApiGroup
 
-class GetContentByUri(
+internal class GetContentByUri(
     uri: String
 ) : BaseRequest<Content>(
     ApiGroup.DATABASE,

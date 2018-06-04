@@ -4,7 +4,7 @@ import ch.decent.sdk.model.Account
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 
-class LookupAccounts(
+internal class LookupAccounts(
     lookupTerm: String,
     limit: Int = 50
 ) : BaseRequest<List<Account>>(

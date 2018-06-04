@@ -4,13 +4,8 @@ import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.client
 import ch.decent.sdk.net.TrustAllCerts
 import ch.decent.sdk.net.model.request.Login
-import ch.decent.sdk.net.ws.model.OnClosing
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
-import ch.decent.sdk.net.ws.model.WebSocketEvent
 import ch.decent.sdk.url
-import io.reactivex.observers.TestObserver
-import io.reactivex.subscribers.TestSubscriber
-import okhttp3.WebSocket
 import org.junit.Before
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -29,46 +24,40 @@ class ConnectionTest {
   }
 
   @Test fun `should connect, disconnect and connect`() {
-    val observer = TestObserver<WebSocket>()
-    val subscriber = TestSubscriber<WebSocketEvent>()
+    var websocket = socket.webSocket().test()
 
-    socket.webSocket().subscribe(observer)
-
-    observer.awaitTerminalEvent()
-    observer.assertComplete()
+    websocket.awaitTerminalEvent()
+    websocket.assertComplete()
         .assertValueCount(1)
 
-    socket.events.subscribe(subscriber)
+    val events = socket.events.test()
     socket.disconnect()
 
-    subscriber.awaitTerminalEvent()
-    subscriber.assertComplete()
-        .assertValueAt(0, OnClosing)
+    events.awaitTerminalEvent()
+    events.assertComplete()
 
-    socket.webSocket().subscribe(observer)
-    observer.awaitTerminalEvent()
-    observer.assertComplete()
+    websocket = socket.webSocket().test()
+
+    websocket.awaitTerminalEvent()
+    websocket.assertComplete()
         .assertValueCount(1)
   }
 
   @Test fun `should connect, disconnect, fail request and reconnect with success`() {
-    val observer = TestObserver<WebSocket>()
-    var login = TestObserver<Boolean>()
+    val websocket = socket.webSocket().test()
 
-    socket.webSocket().subscribe(observer)
-
-    observer.awaitTerminalEvent()
-    observer.assertComplete()
+    websocket.awaitTerminalEvent()
+    websocket.assertComplete()
         .assertValueCount(1)
 
     socket.disconnect()
-    socket.request(Login()).subscribe(login)
+    var login = socket.request(Login()).test()
 
     login.awaitTerminalEvent()
     login.assertError(WebSocketClosedException::class.java)
 
-    login = TestObserver()
-    socket.request(Login()).subscribe(login)
+    login = socket.request(Login()).test()
+
     login.awaitTerminalEvent()
     login.assertComplete()
         .assertNoErrors()

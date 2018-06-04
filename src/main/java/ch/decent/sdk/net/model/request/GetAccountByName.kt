@@ -3,7 +3,7 @@ package ch.decent.sdk.net.model.request
 import ch.decent.sdk.model.Account
 import ch.decent.sdk.net.model.ApiGroup
 
-class GetAccountByName(
+internal class GetAccountByName(
     name: String
 ) : BaseRequest<Account>(
     ApiGroup.DATABASE,

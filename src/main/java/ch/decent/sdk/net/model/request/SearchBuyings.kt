@@ -4,12 +4,12 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.Purchase
 import ch.decent.sdk.net.model.ApiGroup
-import ch.decent.sdk.net.model.SearchPurchasesOrder
+import ch.decent.sdk.model.SearchPurchasesOrder
 import com.google.gson.reflect.TypeToken
 import kotlin.math.max
 import kotlin.math.min
 
-class SearchBuyings(
+internal class SearchBuyings(
     consumer: ChainObject,
     order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
     startId: ChainObject = ChainObject.NONE,

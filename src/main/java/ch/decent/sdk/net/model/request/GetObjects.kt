@@ -4,7 +4,7 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.net.model.ApiGroup
 import java.lang.reflect.Type
 
-open class GetObjects<T>(
+internal open class GetObjects<T>(
     objects: List<ChainObject>,
     returnClass: Type
 ) : BaseRequest<T>(
