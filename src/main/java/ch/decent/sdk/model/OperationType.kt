@@ -1,12 +1,7 @@
-package ch.decent.sdk.net.model
-
-import ch.decent.sdk.model.AccountCreateOperation
-import ch.decent.sdk.model.AccountUpdateOperation
-import ch.decent.sdk.model.BuyContentOperation
-import ch.decent.sdk.model.TransferOperation
+package ch.decent.sdk.model
 
 /**
-  The order of operation types is important
+ * The order of operation types is important
  */
 enum class OperationType(val clazz: Class<*>? = null) {
   TRANSFER_OPERATION(TransferOperation::class.java),
@@ -48,10 +43,11 @@ enum class OperationType(val clazz: Class<*>? = null) {
   UPDATE_USER_ISSUED_ASSET_OPERATION,
   UPDATE_MONITORED_ASSET_OPERATION,
   READY_TO_PUBLISH2_OPERATION,
-  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL
-  RETURN_ESCROW_SUBMISSION_OPERATION,                    // VIRTUAL 40
+  TRANSFER2_OPERATION(TransferOperation::class.java),
+  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL 40
+  RETURN_ESCROW_SUBMISSION_OPERATION,                    // VIRTUAL
   RETURN_ESCROW_BUYING_OPERATION,                        // VIRTUAL
   PAY_SEEDER_OPERATION,                                  // VIRTUAL
   FINISH_BUYING_OPERATION,                               // VIRTUAL
-  RENEWAL_OF_SUBSCRIPTION_OPERATION                      // VIRTUAL
+  RENEWAL_OF_SUBSCRIPTION_OPERATION                      // VIRTUAL 45
 }
