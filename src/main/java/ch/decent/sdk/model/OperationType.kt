@@ -1,12 +1,7 @@
-package ch.decent.sdk.net.model
-
-import ch.decent.sdk.model.AccountCreateOperation
-import ch.decent.sdk.model.AccountUpdateOperation
-import ch.decent.sdk.model.BuyContentOperation
-import ch.decent.sdk.model.TransferOperation
+package ch.decent.sdk.model
 
 /**
-  The order of operation types is important
+ * The order of operation types is important
  */
 enum class OperationType(val clazz: Class<*>? = null) {
   TRANSFER_OPERATION(TransferOperation::class.java),

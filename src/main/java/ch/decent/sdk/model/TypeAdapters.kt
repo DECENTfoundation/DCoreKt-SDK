@@ -4,7 +4,6 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Wallet
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.crypto.dpk
-import ch.decent.sdk.net.model.OperationType
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory

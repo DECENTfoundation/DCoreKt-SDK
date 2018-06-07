@@ -3,6 +3,7 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.*
+import ch.decent.sdk.net.serialization.VoteId
 import io.reactivex.Single
 import java.math.BigDecimal
 
@@ -95,6 +96,7 @@ interface DCoreApiRx {
    * @param consumer object id of the account, 1.2.*
    * @param order
    * @param from object id of the history object to start from, use 0.0.0 to ignore
+   * @param term
    * @param limit number of entries, max 100
    */
   fun searchPurchases(
@@ -154,6 +156,17 @@ interface DCoreApiRx {
   ): Single<List<OperationHistory>>
 
   /**
+   * get account history
+   *
+   * @param account account name
+   *
+   * @return list of history operations, first 100 entries
+   */
+  fun getAccountHistory(
+      account: String
+  ): Single<List<OperationHistory>> = getAccountByName(account).flatMap { getAccountHistory(it.id) }
+
+  /**
    * If the transaction has not expired, this method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
    * Just because it is not known does not mean it wasn't included in the blockchain. The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
    * You can set up a custom expiration value in [DCoreSdk.transactionExpiration]
@@ -182,17 +195,6 @@ interface DCoreApiRx {
    * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun getTransaction(confirmation: TransactionConfirmation): Single<ProcessedTransaction> = getTransaction(confirmation.blockNum, confirmation.trxNum)
-
-  /**
-   * get account history
-   *
-   * @param account account name
-   *
-   * @return list of history operations, first 100 entries
-   */
-  fun getAccountHistory(
-      account: String
-  ): Single<List<OperationHistory>> = getAccountByName(account).flatMap { getAccountHistory(it.id) }
 
   /**
    * make a transfer
@@ -334,42 +336,41 @@ interface DCoreApiRx {
    *
    * @param keyPair private keys
    * @param accountId account id
-   * @param voteIds list of miners ids
+   * @param voteIds list of miner vote ids
    *
    * @return a transaction confirmation
    */
   fun voteForMiners(
       keyPair: ECKeyPair,
       accountId: ChainObject,
-      voteIds: Set<String>
+      voteIds: Set<VoteId>
   ): Single<TransactionConfirmation>
 
   /**
    * vote for miner
    *
    * @param credentials account credentials
-   * @param voteIds list of vote ids
+   * @param voteIds list of miner vote ids
    *
    * @return a transaction confirmation
    */
   fun voteForMiners(
       credentials: Credentials,
-      voteIds: Set<String>): Single<TransactionConfirmation> = voteForMiners(credentials.keyPair, credentials.account, voteIds)
+      voteIds: Set<VoteId>
+  ): Single<TransactionConfirmation> = voteForMiners(credentials.keyPair, credentials.account, voteIds)
 
   /**
    * vote for miner
    *
-   * @param keyPair private keys
-   * @param accountId account id
-   * @param minerIds list of miner ids
+   * @param credentials account credentials
+   * @param minerIds list of miner account ids
    *
    * @return a transaction confirmation
    */
   fun voteForMinersByIds(
-      keyPair: ECKeyPair,
-      accountId: ChainObject,
+      credentials: Credentials,
       minerIds: Set<ChainObject>
-  ): Single<TransactionConfirmation> = getMiners(minerIds).map { it.map { it.voteId }.toSet() }.flatMap { voteForMiners(keyPair, accountId, it) }
+  ): Single<TransactionConfirmation> = getMiners(minerIds).map { it.map { it.voteId }.toSet() }.flatMap { voteForMiners(credentials, it) }
 
   /**
    * Returns list of miners by their Ids
@@ -384,16 +385,20 @@ interface DCoreApiRx {
    * Creates new account
    *
    * @param keyPair private keys
-   * @param userId user ID
-   * @param name user name
+   * @param registrar account id of user registering a new account
+   * @param name user name of the new account
+   * @param owner public keys
+   * @param active public keys
+   * @param options user options
    *
    * @return a transaction confirmation
    */
   fun createAccount(
       keyPair: ECKeyPair,
-      userId: ChainObject,
+      registrar: ChainObject,
       name: String,
       owner: Authority,
       active: Authority,
-      options: Options): Single<TransactionConfirmation>
+      options: Options
+  ): Single<TransactionConfirmation>
 }
