@@ -20,6 +20,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.AsyncProcessor
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -56,9 +57,9 @@ internal class RxWebSocket(
       it.doOnSubscribe { logger.info("$tag #onSubscribe on ${Thread.currentThread()}") }
           .doOnNext { value -> logger.info("$tag #onNext:$value on ${Thread.currentThread()}") }
           .doOnComplete { logger.info("$tag #onComplete on ${Thread.currentThread()}") }
-          .doOnError { error -> logger.info("$tag  #onError:$error on ${Thread.currentThread()}") }
-          .doOnCancel { logger.info("$tag  #onCancel on ${Thread.currentThread()}") }
-          .doOnRequest { value -> logger.info("$tag  #onRequest:$value on ${Thread.currentThread()}") }
+          .doOnError { error -> logger.info("$tag #onError:$error on ${Thread.currentThread()}") }
+          .doOnCancel { logger.info("$tag #onCancel on ${Thread.currentThread()}") }
+          .doOnRequest { value -> logger.info("$tag #onRequest:$value on ${Thread.currentThread()}") }
     }
 
   private fun BaseRequest<*>.json(callId: Long, apiId: Int) = RequestJson(callId, apiId, method, params).let { gson.toJson(it) }
@@ -109,7 +110,7 @@ internal class RxWebSocket(
             .flatMap { ws -> Login().make(ws, callId).map { ws } }
             .subscribe { ws -> webSocketAsync!!.onNext(ws); webSocketAsync!!.onComplete() }
     )
-    events.connect()
+    events.connect { it.addTo(disposable) }
   }
 
   internal fun webSocket(): Single<WebSocket> {
@@ -133,7 +134,7 @@ internal class RxWebSocket(
 
   private fun <T> BaseRequest<T>.make(ws: WebSocket, callId: Long): Single<T> =
       events
-          .doOnSubscribe { send(ws, callId) }
+          .doOnSubscribe { if (webSocketAsync == null) throw WebSocketClosedException() else send(ws, callId) }
           .ofType(OnMessageText::class.java)
           .map { parseIdAndObj(it.text) }
           .doOnNext { (id, obj) -> checkForError(callId, id, obj) }

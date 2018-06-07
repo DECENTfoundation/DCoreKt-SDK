@@ -8,7 +8,6 @@ import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.TrustAllCerts
 import ch.decent.sdk.net.model.request.*
-import ch.decent.sdk.net.services.CustomWebSocketService
 import ch.decent.sdk.utils.publicElGamal
 import io.reactivex.Single
 import org.junit.After
@@ -17,15 +16,15 @@ import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.math.BigInteger
 
-internal class ApiTest {
+class ApiTest : TimeOutTest() {
 
-  lateinit var socket: RxWebSocket
-  lateinit var mockWebServer: CustomWebSocketService
+  private lateinit var socket: RxWebSocket
+  private lateinit var mockWebServer: CustomWebSocketService
 
   @Before fun init() {
     mockWebServer = CustomWebSocketService().apply { start() }
     socket = RxWebSocket(
-        TrustAllCerts.wrap(client).build(),
+        client,
         mockWebServer.getUrl(),
 //        url,
         logger = LoggerFactory.getLogger("RxWebSocket"),

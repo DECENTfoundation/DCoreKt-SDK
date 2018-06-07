@@ -9,17 +9,9 @@ import org.slf4j.LoggerFactory
 
 val url = "wss://stage.decentgo.com:8090"
 val restUrl = "https://stage.decentgo.com/"
-val client: OkHttpClient.Builder = OkHttpClient.Builder()
-    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-internal val socket = RxWebSocket(TrustAllCerts.wrap(client).build(), url, logger = LoggerFactory.getLogger("RxWebSocket"), gson = DCoreSdk.gsonBuilder.create())
-val apiSync = DCoreSdk.createApi(
-//    restUrl = restUrl,
-    restUrl = null,
-    webSocketUrl = url,
-    client = TrustAllCerts.wrap(client).build(),
-    logger = LoggerFactory.getLogger("DCoreApiRx")
-)
-val api = apiSync.apiRx
+val client: OkHttpClient = TrustAllCerts.wrap(OkHttpClient.Builder()
+    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)))
+    .build()
 
 val account = ChainObject.parse("1.2.34")
 val account2 = ChainObject.parse("1.2.35")

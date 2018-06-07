@@ -6,18 +6,20 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.wrap
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
-import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.utils.hex
 import com.google.common.primitives.Bytes
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
+import org.junit.Ignore
 import org.junit.Test
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.text.DecimalFormat
 
+@Ignore
 class Scratchpad {
 
   @Test fun str() {

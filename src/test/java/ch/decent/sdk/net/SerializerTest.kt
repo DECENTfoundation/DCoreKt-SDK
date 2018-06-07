@@ -1,6 +1,7 @@
 package ch.decent.sdk.net
 
 import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.account
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
@@ -11,7 +12,7 @@ import org.amshove.kluent.`should be equal to`
 import org.junit.Test
 import java.math.BigInteger
 
-class Serializer {
+class SerializerTest : TimeOutTest() {
 
   @Test fun `serialize transfer`() {
     val bytes = "008813000000000000001e1f8096980000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b5521e507000000001086d54a9e1f8fc6e5319dbae0b087b6cc00"

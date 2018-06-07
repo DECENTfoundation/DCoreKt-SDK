@@ -1,24 +1,17 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.*
-import ch.decent.sdk.model.CipherKeyPairAdapter
-import ch.decent.sdk.model.ExtraKeysAdapter
-import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.*
 import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.utils.*
 import ch.decent.sdk.utils.ElGamal.publicElGamal
-import ch.decent.sdk.utils.decryptAesWithChecksum
-import ch.decent.sdk.utils.generateNonce
-import ch.decent.sdk.utils.secret
-import ch.decent.sdk.utils.decryptAes
-import ch.decent.sdk.utils.unhex
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
 import java.security.MessageDigest
 
-class Crytpo {
+class CrytpoTest : TimeOutTest() {
 
   @Test fun `priv key dump`() {
     val key = ECKeyPair.fromBase58(private)
@@ -162,8 +155,53 @@ class Crytpo {
   }
 
   @Test fun `dcore wallet export`() {
-    val credentials = Credentials(account, private.dpk().ecKey())
-    val account = api.getAccountById(credentials.account).blockingGet()
+    val credentials = Credentials("1.2.30".toChainObject(), "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn".dpk().ecKey())
+    val json = """
+{
+      "id": "1.2.30",
+      "registrar": "1.2.15",
+      "name": "u961279ec8b7ae7bd62f304f7c1c3d345",
+      "owner": {
+        "weight_threshold": 1,
+        "account_auths": [],
+        "key_auths": [[
+            "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+            1
+          ]
+        ]
+      },
+      "active": {
+        "weight_threshold": 1,
+        "account_auths": [],
+        "key_auths": [[
+            "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+            1
+          ]
+        ]
+      },
+      "options": {
+        "memo_key": "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+        "voting_account": "1.2.3",
+        "num_miner": 0,
+        "votes": [],
+        "extensions": [],
+        "allow_subscription": false,
+        "price_per_subscribe": {
+          "amount": 0,
+          "asset_id": "1.3.0"
+        },
+        "subscription_period": 0
+      },
+      "rights_to_publish": {
+        "is_publishing_manager": false,
+        "publishing_rights_received": [],
+        "publishing_rights_forwarded": []
+      },
+      "statistics": "2.5.30",
+      "top_n_control_flags": 0
+    }
+      """
+    val account = DCoreSdk.gsonBuilder.create().fromJson(json, Account::class.java)
 
     val wallet = Wallet.exportDCoreWallet(credentials, account, "pw")
 
@@ -172,6 +210,6 @@ class Crytpo {
         .registerTypeAdapter(Wallet.CipherKeyPair::class.java, CipherKeyPairAdapter)
         .create()
 
-    println(gson.toJson(wallet))
+    Wallet.importDCoreWallet(gson.toJson(wallet), "pw") `should equal` credentials
   }
 }
