@@ -7,9 +7,6 @@ import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.net.serialization.optionalBytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
-import com.sun.jndi.toolkit.url.UrlUtil
-import jdk.nashorn.internal.runtime.URIUtils
-import sun.net.util.URLUtil
 import java.math.BigInteger
 import java.util.regex.Pattern
 
