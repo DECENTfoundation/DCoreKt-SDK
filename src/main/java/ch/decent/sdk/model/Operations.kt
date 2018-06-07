@@ -25,7 +25,7 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
  * Transfer operation constructor
  *
  * @param from account object id of the sender
- * @param to account object or content id of the receiver
+ * @param to account object id or content object id of the receiver
  * @param amount an amount and asset type to transfer
  * @param memo optional string note
  */
