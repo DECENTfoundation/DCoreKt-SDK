@@ -7,7 +7,11 @@ import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.net.serialization.optionalBytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
+import com.sun.jndi.toolkit.url.UrlUtil
+import jdk.nashorn.internal.runtime.URIUtils
+import sun.net.util.URLUtil
 import java.math.BigInteger
+import java.util.regex.Pattern
 
 sealed class BaseOperation(@Transient val type: OperationType) : ByteSerializable {
   //  @SerializedName("extensions") val extensions = emptyList<Any>()
@@ -35,6 +39,11 @@ data class TransferOperation @JvmOverloads constructor(
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION) {
+
+  init {
+    require(from.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(to.objectType == ObjectType.ACCOUNT_OBJECT)
+  }
 
   override val bytes: ByteArray
     get() = Bytes.concat(
@@ -66,6 +75,13 @@ data class BuyContentOperation @JvmOverloads constructor(
     @SerializedName("region_code_from") val regionCode: Int = 1
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION) {
 
+  init {
+    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT)
+    // http://urlregex.com/
+    require(Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]").matcher(uri).matches())
+    require(price.amount > BigInteger.ZERO)
+  }
+
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
@@ -95,6 +111,10 @@ data class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("new_options") val options: Options? = null
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION) {
 
+  init {
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
+  }
+
   override val bytes: ByteArray
     get() = Bytes.concat(
         byteArrayOf(type.ordinal.toByte()),
@@ -123,6 +143,11 @@ data class AccountCreateOperation constructor(
     @SerializedName("active") val active: Authority,
     @SerializedName("options") val options: Options
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
+
+  init {
+    require(registrar.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(Pattern.compile("^[a-z0-9-]{5,63}\$").matcher(name).matches()) // 5 and 63 -> Graphene min and max account name length
+  }
 
   constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
 
