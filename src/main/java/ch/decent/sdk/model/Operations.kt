@@ -25,7 +25,7 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
  * Transfer operation constructor
  *
  * @param from account object id of the sender
- * @param to account object id of the receiver
+ * @param to account object or content id of the receiver
  * @param amount an amount and asset type to transfer
  * @param memo optional string note
  */
@@ -34,7 +34,7 @@ data class TransferOperation @JvmOverloads constructor(
     @SerializedName("to") val to: ChainObject,
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null
-) : BaseOperation(OperationType.TRANSFER_OPERATION) {
+) : BaseOperation(OperationType.TRANSFER2_OPERATION) {
 
   override val bytes: ByteArray
     get() = Bytes.concat(
@@ -124,7 +124,7 @@ data class AccountCreateOperation constructor(
     @SerializedName("options") val options: Options
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
 
-  constructor(registrar: ChainObject, name: String, public: Address): this(registrar, name, Authority(public), Authority(public), Options(public))
+  constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
 
   override val bytes: ByteArray
     get() = Bytes.concat(
