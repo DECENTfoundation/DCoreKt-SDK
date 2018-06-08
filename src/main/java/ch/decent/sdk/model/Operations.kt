@@ -39,7 +39,7 @@ data class TransferOperation @JvmOverloads constructor(
 
   init {
     require(from.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(to.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(to.objectType.let { it == ObjectType.ACCOUNT_OBJECT || it == ObjectType.CONTENT_OBJECT })
   }
 
   override val bytes: ByteArray
@@ -75,7 +75,7 @@ data class BuyContentOperation @JvmOverloads constructor(
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT)
     // http://urlregex.com/
-    require(Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]").matcher(uri).matches())
+    require(Pattern.compile("^(https?|ipfs|magnet)://").matcher(uri).matches())
     require(price.amount > BigInteger.ZERO)
   }
 
@@ -143,7 +143,8 @@ data class AccountCreateOperation constructor(
 
   init {
     require(registrar.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(Pattern.compile("^[a-z0-9-]{5,63}\$").matcher(name).matches()) // 5 and 63 -> Graphene min and max account name length
+    require(Pattern.compile("^[a-z][a-z0-9-]+[a-z0-9](?:\\.[a-z][a-z0-9-]+[a-z0-9])*\$").matcher(name).matches() &&
+        name.length in 5..63) // 5 and 63 -> Graphene min and max account name length
   }
 
   constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
