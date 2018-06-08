@@ -38,8 +38,8 @@ data class TransferOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION) {
 
   init {
-    require(from.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(to.objectType.let { it == ObjectType.ACCOUNT_OBJECT || it == ObjectType.CONTENT_OBJECT })
+    require(from.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
+    require(to.objectType == ObjectType.ACCOUNT_OBJECT || to.objectType == ObjectType.CONTENT_OBJECT, { "not an account or content object id" })
   }
 
   override val bytes: ByteArray
@@ -73,10 +73,9 @@ data class BuyContentOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION) {
 
   init {
-    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT)
-    // http://urlregex.com/
-    require(Pattern.compile("^(https?|ipfs|magnet)://").matcher(uri).matches())
-    require(price.amount > BigInteger.ZERO)
+    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
+    require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches(), { "unsupported uri scheme" })
+    require(price.amount > BigInteger.ZERO, { "amount must be > 0" })
   }
 
   override val bytes: ByteArray
@@ -109,7 +108,7 @@ data class AccountUpdateOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
   }
 
   override val bytes: ByteArray
@@ -142,9 +141,9 @@ data class AccountCreateOperation constructor(
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
 
   init {
-    require(registrar.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(registrar.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
     require(Pattern.compile("^[a-z][a-z0-9-]+[a-z0-9](?:\\.[a-z][a-z0-9-]+[a-z0-9])*\$").matcher(name).matches() &&
-        name.length in 5..63) // 5 and 63 -> Graphene min and max account name length
+        name.length in 5..63, { "not a valid name" }) // 5 and 63 -> Graphene min and max account name length
   }
 
   constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
