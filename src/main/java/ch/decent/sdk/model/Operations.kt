@@ -47,7 +47,7 @@ data class TransferOperation @JvmOverloads constructor(
         byteArrayOf(type.ordinal.toByte()),
         fee.bytes,
         from.bytes,
-        to.bytes,
+        to.objectTypeIdBytes,
         amount.bytes,
         memo.optionalBytes(),
         byteArrayOf(0)

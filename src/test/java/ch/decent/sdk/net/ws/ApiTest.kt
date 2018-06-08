@@ -42,8 +42,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":1}""", """{"id":1,"result":true}""")
 
     val test = socket.request(Login()).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
         .assertValue(true)
@@ -56,8 +56,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"get_account_balances",["1.2.34",[]]],"id":2}""", """{"id":2,"result":[{"amount":50500000,"asset_id":"1.3.0"}]}""")
 
     val test = socket.request(GetAccountBalances(account)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -69,8 +69,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"get_objects",[["1.2.35"]]],"id":2}""", """{"id":2,"result":[{"id":"1.2.35","registrar":"1.2.15","name":"u3a7b78084e7d3956442d5a4d439dad51","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"options":{"memo_key":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.35","top_n_control_flags":0}]}""")
 
     val test = socket.request(GetAccountById(account2)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -82,8 +82,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"get_account_by_name",["u961279ec8b7ae7bd62f304f7c1c3d345"]],"id":2}""", """{"id":2,"result":{"id":"1.2.34","registrar":"1.2.15","name":"u961279ec8b7ae7bd62f304f7c1c3d345","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.34","top_n_control_flags":0}}""")
 
     val test = socket.request(GetAccountByName(accountName)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -95,8 +95,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"search_account_history",["1.2.34","-time","0.0.0",100]],"id":2}""", """{"id":2,"result":[{"id":"2.17.263","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"580996120356000000","message":"d9134fd4a08699851e137aab2fc256dea9a6f5b525aad31a227702013a81ed4d"},"m_timestamp":"2018-05-24T12:26:00"},{"id":"2.17.231","m_from_account":"1.2.34","m_to_account":"1.2.38","m_operation_type":1,"m_transaction_amount":{"amount":0,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"","m_timestamp":"2018-05-21T16:03:40"},{"id":"2.17.230","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16653614573311238400","message":"5e1918bf52d9805d3463392ca833e63ed7b4c1f24bed949f9e2851e66b2d02b8"},"m_timestamp":"2018-05-21T15:54:25"},{"id":"2.17.229","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16653614573311238400","message":"5e1918bf52d9805d3463392ca833e63ed7b4c1f24bed949f9e2851e66b2d02b8"},"m_timestamp":"2018-05-21T15:54:25"},{"id":"2.17.157","m_from_account":"1.2.17","m_to_account":"1.2.34","m_operation_type":3,"m_transaction_amount":{"amount":100000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":0,"asset_id":"1.3.0"},"m_str_description":"Product 2","m_timestamp":"2018-05-15T08:59:10"},{"id":"2.17.155","m_from_account":"1.2.15","m_to_account":"1.2.34","m_operation_type":0,"m_transaction_amount":{"amount":"10000000000","asset_id":"1.3.0"},"m_transaction_fee":{"amount":100000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_timestamp":"2018-05-15T08:58:55"},{"id":"2.17.153","m_from_account":"1.2.15","m_to_account":"1.2.34","m_operation_type":1,"m_transaction_amount":{"amount":0,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"","m_timestamp":"2018-05-15T08:50:45"}]}""")
 
     val test = socket.request(SearchAccountHistory(account)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -114,8 +114,8 @@ class ApiTest : TimeOutTest() {
               .map { result.map { it.get(0).asString!! }.zip(it).toMap() }
         }
         .test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -127,8 +127,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"get_account_history",["1.2.34","1.7.0",100,"1.7.0"]],"id":2}""", """{"id":2,"result":[{"id":"1.7.557","op":[2,{"fee":{"amount":500000,"asset_id":"1.3.0"},"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"extensions":{}}],"result":[0,{}],"block_num":480676,"trx_in_block":0,"op_in_trx":0,"virtual_op":1231},{"id":"1.7.556","op":[2,{"fee":{"amount":500000,"asset_id":"1.3.0"},"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:5","0:8"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"extensions":{}}],"result":[0,{}],"block_num":480675,"trx_in_block":0,"op_in_trx":0,"virtual_op":1228},{"id":"1.7.456","op":[2,{"fee":{"amount":500000,"asset_id":"1.3.0"},"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"extensions":{}}],"result":[0,{}],"block_num":419229,"trx_in_block":0,"op_in_trx":0,"virtual_op":902},{"id":"1.7.455","op":[2,{"fee":{"amount":500000,"asset_id":"1.3.0"},"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:5","0:8"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"extensions":{}}],"result":[0,{}],"block_num":419228,"trx_in_block":0,"op_in_trx":0,"virtual_op":899},{"id":"1.7.368","op":[0,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"1.2.35","amount":{"amount":150000000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"9637208953715299072","message":"b7da6b1f94635777b2649309af699cee7ece00f31f0a652eb786a03b32ff2714"},"extensions":[]}],"result":[0,{}],"block_num":385238,"trx_in_block":0,"op_in_trx":0,"virtual_op":632},{"id":"1.7.367","op":[2,{"fee":{"amount":500000,"asset_id":"1.3.0"},"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"extensions":{}}],"result":[0,{}],"block_num":385122,"trx_in_block":0,"op_in_trx":0,"virtual_op":629}]}""")
 
     val test = socket.request(GetAccountHistory(account)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -140,8 +140,8 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"get_assets",[["1.3.0"]]],"id":2}""", """{"id":2,"result":[{"id":"1.3.0","symbol":"DCT","precision":8,"issuer":"1.2.1","description":"","options":{"max_supply":"7319777577456900","core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.0"},"quote":{"amount":1,"asset_id":"1.3.0"}},"is_exchangeable":true,"extensions":[]},"dynamic_asset_data_id":"2.3.0"}]}""")
 
     val test = socket.request(GetAssets(listOf("1.3.0".toChainObject()))).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
@@ -156,7 +156,7 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[2,"get_dynamic_global_properties",[]],"id":2}""", """{"id":2,"result":{"id":"2.1.0","head_block_number":599091,"head_block_id":"00092433e84dedb18c9b9a378cfea8cdfbb2b637","time":"2018-06-04T12:25:00","current_miner":"1.4.8","next_maintenance_time":"2018-06-05T00:00:00","last_budget_time":"2018-06-04T00:00:00","unspent_fee_budget":96490,"mined_rewards":"301032000000","miner_budget_from_fees":169714,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":1,"recently_missed_count":0,"current_aslot":5859543,"recent_slots_filled":"329648380685469039951165571643239038463","dynamic_flags":0,"last_irreversible_block_num":599091}}""")
         .enqueue("""{"method":"call","params":[2,"get_required_fees",[[[39,{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"${memo.message}","nonce":${memo.nonce}},"fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":3}""", """{"id":3,"result":[{"amount":500000,"asset_id":"1.3.0"}]}""")
         .enqueue("""{"method":"call","params":[1,"network_broadcast",[]],"id":4}""", """{"id":4,"result":3}""")
-        .enqueue("""{"method":"call","params":[3,"broadcast_transaction_with_callback",[27185,{"expiration":"2018-06-04T12:25:31","ref_block_num":9267,"ref_block_prefix":2985119208,"extensions":[],"operations":[[39,{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"${memo.message}","nonce":${memo.nonce}},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["20525bfa30f201ed82f74db7a22f09cf8a37a8c02b61cce4b041c881e8104f7966735835c4c466a4baf17fbe891d72465d6aece9fc9c915efd354066526938c740"]}]],"id":5}""", """{"method":"notice","params":[27185,[{"id":"1ca9bf708d1d8e154b38d9f69c9df560cb6e6324","block_num":599092,"trx_num":0,"trx":{"ref_block_num":9267,"ref_block_prefix":2985119208,"expiration":"2018-06-04T12:25:31","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"735604672334802432","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7"},"extensions":[]}]],"extensions":[],"signatures":["20525bfa30f201ed82f74db7a22f09cf8a37a8c02b61cce4b041c881e8104f7966735835c4c466a4baf17fbe891d72465d6aece9fc9c915efd354066526938c740"],"operation_results":[[0,{}]]}}]]}""")
+        .enqueue("""{"method":"call","params":[3,"broadcast_transaction_with_callback",[27185,{"expiration":"2018-06-04T12:25:32","ref_block_num":9267,"ref_block_prefix":2985119208,"extensions":[],"operations":[[39,{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"${memo.message}","nonce":${memo.nonce}},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["203c168ef8b88e5702cedd7ee2985a67a63fb15a58023323828c0b843c37eb4a6d1b45665414488d83262f7116ac6a0116943d512352c8e858fe636b3bec195265"]}]],"id":5}""", """{"method":"notice","params":[27185,[{"id":"2fd68fb4e7ec4b30b465263ed10177fe8938a8a9","block_num":599092,"trx_num":0,"trx":{"ref_block_num":9267,"ref_block_prefix":2985119208,"expiration":"2018-06-04T12:25:32","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"735604672334802432","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7"},"extensions":[]}]],"extensions":[],"signatures":["203c168ef8b88e5702cedd7ee2985a67a63fb15a58023323828c0b843c37eb4a6d1b45665414488d83262f7116ac6a0116943d512352c8e858fe636b3bec195265"],"operation_results":[[0,{}]]}}]]}""")
 
 
     val op = TransferOperation(
@@ -174,8 +174,8 @@ class ApiTest : TimeOutTest() {
     ).withSignature(key)
 
     val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
         .assertValue { it.id == transaction.id }
@@ -210,7 +210,6 @@ class ApiTest : TimeOutTest() {
     ).withSignature(key)
 
     val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185)).test()
-    socket.events.blockingLast()
 
     test.awaitTerminalEvent()
     test.assertComplete()
@@ -237,8 +236,8 @@ class ApiTest : TimeOutTest() {
     val votes = setOf("0:5", "0:8")
 
     val test = vote(votes).concatWith(vote(emptySet())).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
         .assertValueAt(0, { it.options.votes == votes })
@@ -286,8 +285,8 @@ class ApiTest : TimeOutTest() {
     ).withSignature(key)
 
     val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185)).test()
-    socket.events.blockingLast()
 
+    test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
   }
