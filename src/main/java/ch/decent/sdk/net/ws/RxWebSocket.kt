@@ -21,7 +21,6 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.AsyncProcessor
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -38,7 +37,7 @@ internal class RxWebSocket(
 ) {
 
   private val disposable = CompositeDisposable()
-  private val apiId = mutableMapOf(ApiGroup.LOGIN to 1)
+  private val apiId = mutableMapOf<ApiGroup, Int>()
   internal val events = Flowable.create<WebSocketEvent>({ emitter ->
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
     emitter.setCancellable { webSocket.close(1000, null) }
@@ -64,7 +63,7 @@ internal class RxWebSocket(
 
   private fun BaseRequest<*>.json(callId: Long, apiId: Int) = RequestJson(callId, apiId, method, params).let { gson.toJson(it) }
 
-  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long) = json(callId, apiId[apiGroup]!!).let { logger?.info(it); ws.send(it) }
+  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long, apiId: Int) = json(callId, apiId).let { logger?.info(it); ws.send(it) }
 
   /**
    * check for callback notice or simple result
@@ -106,9 +105,8 @@ internal class RxWebSocket(
               disposable.clear()
             }.subscribe(),
         events.ofType(OnOpen::class.java).firstOrError()
-            .map { it.webSocket }
-            .flatMap { ws -> Login().make(ws, callId).map { ws } }
-            .subscribe { ws -> webSocketAsync!!.onNext(ws); webSocketAsync!!.onComplete() }
+            .doOnSuccess { webSocketAsync!!.onNext(it.webSocket); webSocketAsync!!.onComplete() }
+            .subscribe()
     )
     events.connect { it.addTo(disposable) }
   }
@@ -118,23 +116,25 @@ internal class RxWebSocket(
       webSocketAsync = AsyncProcessor.create()
       connect()
     }
-    return webSocketAsync!!.subscribeOn(Schedulers.newThread()).singleOrError()
+    return webSocketAsync!!.singleOrError()
   }
 
-  private fun <T : WebSocket> Single<T>.checkApiAccess(api: ApiGroup): Single<T> =
+  private fun <T : WebSocket> Single<T>.checkApiAccess(request: BaseRequest<*>): Single<Pair<T, Int>> =
       this.flatMap { ws ->
-        if (api !in apiId) {
-          RequestApiAccess(api).make(ws, callId)
-              .doOnSuccess { apiId[api] = it }
-              .map { ws }
-        } else {
-          Single.just(ws)
+        when {
+          request === Login -> Single.just(ws to 1)
+          request.apiGroup !in apiId && request.apiGroup == ApiGroup.LOGIN -> Login.make(callId).doOnSuccess { apiId[ApiGroup.LOGIN] = 1 }.map { ws to 1 }
+          request.apiGroup !in apiId -> RequestApiAccess(request.apiGroup).make(callId).doOnSuccess { apiId[request.apiGroup] = it }.map { ws to it }
+          else -> Single.just(ws to apiId[request.apiGroup]!!)
         }
       }
 
-  private fun <T> BaseRequest<T>.make(ws: WebSocket, callId: Long): Single<T> =
-      events
-          .doOnSubscribe { if (webSocketAsync == null) throw WebSocketClosedException() else send(ws, callId) }
+  private fun <T> BaseRequest<T>.make(callId: Long): Single<T> =
+      Flowable.merge(listOf(
+          events,
+//          defer to call again after retry, otherwise would be stuck with old websocket
+          Single.defer { webSocket() }.checkApiAccess(this).doOnSuccess { (ws, apiId) -> send(ws, callId, apiId) }.toFlowable()
+      ))
           .ofType(OnMessageText::class.java)
           .map { parseIdAndObj(it.text) }
           .doOnNext { (id, obj) -> checkForError(callId, id, obj) }
@@ -148,14 +148,9 @@ internal class RxWebSocket(
           .map { (_, obj) -> if (this is WithCallback) obj else parseResultElement(returnClass, obj) }
           .map { gson.fromJson<T>(it, returnClass) }
 
-  fun <T> request(request: BaseRequest<T>): Single<T> {
-    return webSocket()
-        .checkApiAccess(request.apiGroup)
-        .flatMap {
-          check(apiId.containsKey(request.apiGroup), { "${request.apiGroup} is not enabled" })
-          request.make(it, callId)
-        }
-  }
+  fun <T> request(request: BaseRequest<T>): Single<T> =
+      request.make(callId)
+//          .retry { times, throwable -> (throwable is WebSocketClosedException) and (times <= 1) }
 
   fun disconnect() {
     disposable.add(
