@@ -17,7 +17,7 @@ data class RegionalPrice(
 }
 
 data class PricePerRegion(
-    @SerializedName("map_price") val prices: Map<Regions, AssetAmount>
+    @SerializedName("map_price") val prices: Map<Int, AssetAmount>
 )
 
 enum class Regions(val id: Int) {

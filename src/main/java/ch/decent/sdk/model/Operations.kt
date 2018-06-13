@@ -72,7 +72,7 @@ data class BuyContentOperation @JvmOverloads constructor(
     @SerializedName("consumer") val consumer: ChainObject,
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
-    @SerializedName("region_code_from") val regionCode: Int = 1
+    @SerializedName("region_code_from") val regionCode: Int = Regions.NONE.id
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION) {
 
   init {
