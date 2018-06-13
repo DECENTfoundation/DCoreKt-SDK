@@ -6,7 +6,6 @@ import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.TrustAllCerts
 import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.publicElGamal
@@ -28,8 +27,8 @@ class ApiTest : TimeOutTest() {
         mockWebServer = CustomWebSocketService().apply { start() }
         socket = RxWebSocket(
                 client,
-                //mockWebServer.getUrl(),
-                url,
+                mockWebServer.getUrl(),
+                //url,
                 logger = LoggerFactory.getLogger("RxWebSocket"),
                 gson = DCoreSdk.gsonBuilder.create()
         )
@@ -303,8 +302,8 @@ class ApiTest : TimeOutTest() {
         ).withSignature(key)
 
         val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185)).test()
-        test.awaitTerminalEvent()
-        //socket.events.blockingLast()
+        //test.awaitTerminalEvent()
+        socket.events.blockingLast()
 
         test.assertComplete()
                 .assertNoErrors()
@@ -312,6 +311,14 @@ class ApiTest : TimeOutTest() {
 
     @Test
     fun `content submit`() {
+
+        mockWebServer
+            .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
+            .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
+            .enqueue("""{"method":"call","params":[2,"get_dynamic_global_properties",[]],"id":2}""", """{"id":2,"result":{"id":"2.1.0","head_block_number":737893,"head_block_id":"000b426505dc8f26dac20b624904e5614e3d3b22","time":"2018-06-13T08:21:25","current_miner":"1.4.1","next_maintenance_time":"2018-06-14T00:00:00","last_budget_time":"2018-06-13T00:00:00","unspent_fee_budget":3494513,"mined_rewards":"202094000000","miner_budget_from_fees":5105803,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":0,"recently_missed_count":0,"current_aslot":6012113,"recent_slots_filled":"297726296777976970210915443808428620799","dynamic_flags":0,"last_irreversible_block_num":737893}}""")
+            .enqueue("""{"method":"call","params":[2,"get_required_fees",[[[20,{"size":10000,"author":"1.2.34","co_authors":[],"URI":"http://hello.io/world2","quorum":0,"price":[{"price":{"amount":1000,"asset_id":"1.3.0"},"region":1}],"hash":"2222222222222222222222222222222222222222","seeders":[],"key_parts":[],"expiration":"2019-05-28T13:32:34","publishing_fee":{"amount":1000,"asset_id":"1.3.0"},"synopsis":"{\"title\":\"Game Title\",\"description\":\"Description\",\"content_type_id\":\"1.2.3\"}","fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":3}""", """{"id":3,"result":[{"amount":0,"asset_id":"1.3.0"}]}""")
+            .enqueue("""{"method":"call","params":[1,"network_broadcast",[]],"id":4}""", """{"id":4,"result":3}""")
+            .enqueue("""{"method":"call","params":[3,"broadcast_transaction_with_callback",[27185,{"expiration":"2018-06-13T08:21:56","ref_block_num":16997,"ref_block_prefix":646962181,"extensions":[],"operations":[[20,{"size":10000,"author":"1.2.34","co_authors":[],"URI":"http://hello.io/world2","quorum":0,"price":[{"price":{"amount":1000,"asset_id":"1.3.0"},"region":1}],"hash":"2222222222222222222222222222222222222222","seeders":[],"key_parts":[],"expiration":"2019-05-28T13:32:34","publishing_fee":{"amount":1000,"asset_id":"1.3.0"},"synopsis":"{\"title\":\"Game Title\",\"description\":\"Description\",\"content_type_id\":\"1.2.3\"}","fee":{"amount":0,"asset_id":"1.3.0"}}]],"signatures":["2014ad5d562436a3c4eb0c8d29d434e4f6694528a2907970e90cbac06abcadfa1f42da5d1070a78c1c1655a2b106a818f7aeae36ee910e1da55a6753e1c51194ea"]}]],"id":5}""", """{"method":"notice","params":[27185,[{"id":"1b987049df829b84d2d5781b0e5a3fa923e638b4","block_num":737894,"trx_num":0,"trx":{"ref_block_num":16997,"ref_block_prefix":646962181,"expiration":"2018-06-13T08:21:56","operations":[[20,{"fee":{"amount":0,"asset_id":"1.3.0"},"size":10000,"author":"1.2.34","co_authors":[],"URI":"http://hello.io/world2","quorum":0,"price":[{"region":1,"price":{"amount":1000,"asset_id":"1.3.0"}}],"hash":"2222222222222222222222222222222222222222","seeders":[],"key_parts":[],"expiration":"2019-05-28T13:32:34","publishing_fee":{"amount":1000,"asset_id":"1.3.0"},"synopsis":"{\"title\":\"Game Title\",\"description\":\"Description\",\"content_type_id\":\"1.2.3\"}"}]],"extensions":[],"signatures":["2014ad5d562436a3c4eb0c8d29d434e4f6694528a2907970e90cbac06abcadfa1f42da5d1070a78c1c1655a2b106a818f7aeae36ee910e1da55a6753e1c51194ea"],"operation_results":[[0,{}]]}}]]}""")
 
         val key = ECKeyPair.fromBase58(private)
 
@@ -340,8 +347,8 @@ class ApiTest : TimeOutTest() {
         System.out.println(op.bytes.hex())
 
         val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185)).test()
-        //socket.events.blockingLast()
-        test.awaitTerminalEvent()
+        socket.events.blockingLast()
+        //test.awaitTerminalEvent()
         test.assertComplete()
                 .assertNoErrors()
     }

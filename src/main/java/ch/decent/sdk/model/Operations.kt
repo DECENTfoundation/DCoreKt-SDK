@@ -200,11 +200,11 @@ data class ContentSubmitOperation constructor(
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION) {
 
   init {
-    require(size < 0, { "invalid file size" })
+    require(size > 0, { "invalid file size" })
     require(author.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches(), { "unsupported uri scheme" })
-    require(quorum < 0, { "invalid seeders count" })
-    require(expiration.toEpochSecond(ZoneOffset.UTC) <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC), { "invalid expiration time" })
+    require(quorum >= 0, { "invalid seeders count" })
+    require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC), { "invalid expiration time" })
     require(hash.unhex().size == 20, { "invalid file hash size" })
   }
 
