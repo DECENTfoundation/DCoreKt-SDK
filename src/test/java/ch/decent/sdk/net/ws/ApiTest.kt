@@ -22,8 +22,7 @@ class ApiTest : TimeOutTest() {
   private lateinit var socket: RxWebSocket
   private lateinit var mockWebServer: CustomWebSocketService
 
-  @Before
-  fun init() {
+  @Before fun init() {
     mockWebServer = CustomWebSocketService().apply { start() }
     socket = RxWebSocket(
         client,
@@ -34,13 +33,11 @@ class ApiTest : TimeOutTest() {
     )
   }
 
-  @After
-  fun finish() {
+  @After fun finish() {
     mockWebServer.shutdown()
   }
 
-  @Test
-  fun loginTest() {
+  @Test fun loginTest() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":1}""", """{"id":1,"result":true}""")
@@ -54,8 +51,7 @@ class ApiTest : TimeOutTest() {
         .assertValue(true)
   }
 
-  @Test
-  fun `should login, request db access and get balance for account`() {
+  @Test fun `should login, request db access and get balance for account`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -68,8 +64,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `should login, request db access and get account`() {
+  @Test fun `should login, request db access and get account`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -82,8 +77,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `should login, request db access and get account by name`() {
+  @Test fun `should login, request db access and get account by name`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -96,8 +90,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `should login, request db access and get account history`() {
+  @Test fun `should login, request db access and get account history`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -110,8 +103,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `get miners, load their accounts and put it into map with miner names`() {
+  @Test fun `get miners, load their accounts and put it into map with miner names`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -130,8 +122,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `should login, request history access and get account history`() {
+  @Test fun `should login, request history access and get account history`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"history",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -144,8 +135,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `get assets`() {
+  @Test fun `get assets`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -158,8 +148,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `transaction test`() {
+  @Test fun `transaction test`() {
     val dpk = DumpedPrivateKey.fromBase58(private)
     val key = ECKeyPair.fromPrivate(dpk.bytes, dpk.compressed)
     val memo = Memo("hello memo here i am", key, Address.decode(public2), BigInteger("735604672334802432"))
@@ -194,8 +183,7 @@ class ApiTest : TimeOutTest() {
         .assertValue { it.id == transaction.id }
   }
 
-  @Test
-  fun `buy content`() {
+  @Test fun `buy content`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -232,8 +220,7 @@ class ApiTest : TimeOutTest() {
         .assertValue { it.id == transaction.id }
   }
 
-  @Test
-  fun `vote for miners`() {
+  @Test fun `vote for miners`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -278,8 +265,7 @@ class ApiTest : TimeOutTest() {
         .flatMap { socket.request(GetAccountById(account.id)).map { it.first() } }
   }
 
-  @Test
-  fun `create account`() {
+  @Test fun `create account`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
@@ -309,8 +295,7 @@ class ApiTest : TimeOutTest() {
         .assertNoErrors()
   }
 
-  @Test
-  fun `content submit`() {
+  @Test fun `content submit`() {
 
     mockWebServer
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
