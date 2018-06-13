@@ -4,8 +4,6 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
-import ch.decent.sdk.model.SearchAccountHistoryOrder
-import ch.decent.sdk.model.SearchPurchasesOrder
 import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.net.rpc.RpcEndpoints
 import ch.decent.sdk.net.ws.RxWebSocket
@@ -76,7 +74,9 @@ class DCoreSdk private constructor(
       GetAccountByName(name).toRequest { getAccountByName(it).map { it.result(GetAccountByName(name).description()) } }
 
   override fun getAccountById(accountId: ChainObject): Single<Account> =
-      GetAccountById(accountId).toRequest { getAccountById(it).map { it.result() } }.map { it.firstOrNull() ?: throw ObjectNotFoundException(GetAccountById(accountId).description()) }
+      GetAccountById(accountId).toRequest { getAccountById(it).map { it.result() } }.map {
+        it.firstOrNull() ?: throw ObjectNotFoundException(GetAccountById(accountId).description())
+      }
 
   override fun searchAccountHistory(accountId: ChainObject, order: SearchAccountHistoryOrder, from: ChainObject, limit: Int): Single<List<TransactionDetail>> =
       SearchAccountHistory(accountId, order, from, limit).toRequest { searchAccountHistory(it).map { it.result() } }
@@ -155,7 +155,6 @@ class DCoreSdk private constructor(
     @JvmStatic val gsonBuilder = GsonBuilder()
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
-        .registerTypeAdapterFactory(SynopsisAdapterFactory)
         .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
         .registerTypeAdapter(Address::class.java, AddressAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
