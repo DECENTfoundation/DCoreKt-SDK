@@ -174,7 +174,7 @@ data class AccountCreateOperation constructor(
  * @param uri URI where the content can be found
  * @param quorum how many seeders needs to cooperate to recover the key
  * @param price list of regional prices
- * @param hash hash of the content
+ * @param hash hash of the content. Should be 40 chars long, hex encoded
  * @param seeders list of selected seeders
  * @param keyParts key particles, each assigned to one of the seeders, encrypted with his key
  * @param expiration content expiration time
@@ -205,7 +205,7 @@ data class ContentSubmitOperation constructor(
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches(), { "unsupported uri scheme" })
     require(quorum >= 0, { "invalid seeders count" })
     require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC), { "invalid expiration time" })
-    require(hash.unhex().size == 20, { "invalid file hash size" })
+    require(hash.length == 20, { "invalid file hash size, should be 40 chars long, hex encoded" })
   }
 
   override val bytes: ByteArray
