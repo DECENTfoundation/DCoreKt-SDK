@@ -18,13 +18,5 @@ data class Content(
     @SerializedName("times_bought") val timesBought: Int
 ) {
 
-  data class PricePerRegion(
-      @SerializedName("map_price") val prices: Map<Int, AssetAmount>
-  )
-
-  fun price() = price.prices[regionNone]!!
-
-  companion object {
-    const val regionNone = 1
-  }
+  fun price() = price.prices[Regions.NONE]!!
 }
