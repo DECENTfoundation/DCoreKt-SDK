@@ -6,10 +6,12 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.wrap
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.utils.hex
 import com.google.common.primitives.Bytes
+import com.google.common.primitives.Longs
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
@@ -42,6 +44,17 @@ class Scratchpad {
     println(df.format(1.22))
 
     println(Globals.DCT.format(BigInteger.valueOf(9), 2))
+  }
+
+  @Test fun `chain object id`() {
+//    ByteBuffer.allocate(8).putLong(10).put(0, 1).put(1, 2).getLong(0).print()
+    val b = "1.2.34".toChainObject().objectTypeIdBytes
+//    Longs.fromByteArray(b).shl(56).print()
+    val l = 1L.shl(56) or (2L.shl(48)) or 34L
+    1L.shl(56).bytes().hex().print()
+    2L.shl(48).bytes().hex().print()
+    l.bytes().hex().print()
+    b.hex().print()
   }
 
   @Test fun bitwise() {

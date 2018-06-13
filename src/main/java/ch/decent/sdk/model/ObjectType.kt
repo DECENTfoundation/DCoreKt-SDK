@@ -40,11 +40,11 @@ enum class ObjectType {
   TRANSACTION_DETAIL_OBJECT,
   MESSAGING_OBJECT;
 
-  val space
+  val space: Byte
     get() = if(this == NULL_OBJECT) 0 else if (ordinal < 10) 1 else 2
 
-  val type
-    get() = ordinal - (max(space - 1, 0)) * 10
+  val type: Byte
+    get() = (ordinal - (max(space - 1, 0)) * 10).toByte()
 
   /**
    * This method is used to return the generic object type in the form space.type.0.

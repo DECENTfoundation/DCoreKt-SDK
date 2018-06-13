@@ -2,6 +2,8 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.Varint
+import ch.decent.sdk.net.serialization.bytes
+import java.nio.ByteBuffer
 
 class ChainObject : ByteSerializable {
 
@@ -18,6 +20,9 @@ class ChainObject : ByteSerializable {
     this.objectType = objectType
     this.instance = 0
   }
+
+  internal val objectTypeIdBytes: ByteArray
+    get() = (objectType.space.toLong().shl(56) or objectType.type.toLong().shl(48) or instance).bytes()
 
   /**
    *
