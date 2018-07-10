@@ -237,6 +237,21 @@ interface DCoreApiRx {
   ): Single<TransactionConfirmation> = transfer(credentials.keyPair, credentials.account, to, amount, memo, encrypted)
 
   /**
+   * make a transfer to content
+   *
+   * @param credentials user credentials
+   * @param to object id of the receiver content, 2.13.*
+   * @param amount amount to send with asset type
+   *
+   * @return a transaction confirmation
+   */
+  fun transfer(
+      credentials: Credentials,
+      to: ChainObject,
+      amount: AssetAmount
+  ): Single<TransactionConfirmation> = transfer(credentials.keyPair, credentials.account, to, amount)
+
+  /**
    * make a transfer
    *
    * @param credentials user credentials

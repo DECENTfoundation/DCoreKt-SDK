@@ -201,6 +201,41 @@ class ApiTest : TimeOutTest() {
         .assertValue { it.id == transaction.id }
   }
 
+  @Test fun `transfer to content test`() {
+    val dpk = DumpedPrivateKey.fromBase58(private)
+    val key = ECKeyPair.fromPrivate(dpk.bytes, dpk.compressed)
+    mockWebServer
+        .enqueue("""{"method":"call","params":[2,"get_dynamic_global_properties",[]],"id":0}""", """{"id":0,"result":{"id":"2.1.0","head_block_number":599091,"head_block_id":"00092433e84dedb18c9b9a378cfea8cdfbb2b637","time":"2018-06-04T12:25:00","current_miner":"1.4.8","next_maintenance_time":"2018-06-05T00:00:00","last_budget_time":"2018-06-04T00:00:00","unspent_fee_budget":96490,"mined_rewards":"301032000000","miner_budget_from_fees":169714,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":1,"recently_missed_count":0,"current_aslot":5859543,"recent_slots_filled":"329648380685469039951165571643239038463","dynamic_flags":0,"last_irreversible_block_num":599091}}""")
+        .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":2}""", """{"id":2,"result":true}""")
+        .enqueue("""{"method":"call","params":[2,"get_required_fees",[[[39,{"from":"1.2.34","to":"2.13.74","amount":{"amount":1500000,"asset_id":"1.3.0"},"fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":3}""", """{"id":3,"result":[{"amount":500000,"asset_id":"1.3.0"}]}""")
+        .enqueue("""{"method":"call","params":[3,"broadcast_transaction_with_callback",[27185,{"expiration":"2018-06-04T12:25:35","ref_block_num":9267,"ref_block_prefix":2985119208,"extensions":[],"operations":[[39,{"from":"1.2.34","to":"2.13.74","amount":{"amount":1500000,"asset_id":"1.3.0"},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["1f380d2c1fcff9f4c3ba1349cd3bc9318d8c670c8f204b7e6ea58c0c45bbffc626640a3b02cf04b30c53eeb7ff7158ba2d17b046817212c22ea9f347f67e2e81e9"]}]],"id":4}""", """{"method":"notice","params":[27185,[{"id":"b238a0bec414566c3d3bc9cb06b36179f070b07f","block_num":599092,"trx_num":0,"trx":{"ref_block_num":9267,"ref_block_prefix":2985119208,"expiration":"2018-06-04T12:25:35","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"2.13.74","amount":{"amount":1500000,"asset_id":"1.3.0"},"extensions":[]}]],"extensions":[],"signatures":["1f380d2c1fcff9f4c3ba1349cd3bc9318d8c670c8f204b7e6ea58c0c45bbffc626640a3b02cf04b30c53eeb7ff7158ba2d17b046817212c22ea9f347f67e2e81e9"],"operation_results":[[0,{}]]}}]]}""")
+        .enqueue("""{"method":"call","params":[1,"network_broadcast",[]],"id":5}""", """{"id":5,"result":3}""")
+
+
+    val op = TransferOperation(
+        account,
+        "2.13.74".toChainObject(),
+        AssetAmount(1500000)
+    )
+    val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+
+    val transaction = Transaction(
+        BlockData(props),
+        listOf(op.apply { fee = fees.first() })
+    ).withSignature(key)
+
+    val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+        .assertValue { it.id == transaction.id }
+  }
+
   @Test fun `buy content`() {
     mockWebServer
         .enqueue("""{"method":"call","params":[2,"get_objects",[["2.13.74"]]],"id":0}""", """{"id":0,"result":[{"id":"2.13.74","author":"1.2.17","co_authors":[],"expiration":"2019-05-21T09:37:21","created":"2018-05-21T09:37:20","price":{"map_price":[[1,{"amount":100000000,"asset_id":"1.3.0"}]]},"size":1,"synopsis":"{\"content_type_id\":\"1.5.5.0\",\"title\":\"New product 2\",\"description\":\"{\\\"productId\\\":1,\\\"applicationId\\\":1}\"}","URI":"http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=949da412-18bd-4b8d-acba-e8fd7a594d88","quorum":0,"key_parts":[],"_hash":"0000000000000000000000000000000000000000","last_proof":[],"is_blocked":false,"AVG_rating":0,"num_of_ratings":0,"times_bought":0,"publishing_fee_escrow":{"amount":0,"asset_id":"1.3.0"},"seeder_price":[]}]}""")

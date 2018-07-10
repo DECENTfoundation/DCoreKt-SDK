@@ -111,13 +111,12 @@ class DCoreSdk private constructor(
       GetTransaction(blockNum, trxInBlock).toRequest { getTransaction(it).map { it.result(GetTransaction(blockNum, trxInBlock).description()) } }
 
   override fun transfer(keyPair: ECKeyPair, from: ChainObject, to: ChainObject, amount: AssetAmount, memo: String?, encrypted: Boolean): Single<TransactionConfirmation> =
-      getAccountById(to)
-          .flatMap { recipient ->
-            val msg = if (memo.isNullOrBlank()) null else {
-              if (encrypted) Memo(memo!!, keyPair, recipient.active.keyAuths.first().value) else Memo(memo!!)
-            }
-            makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, msg))
-          }
+      if (memo.isNullOrBlank() || !encrypted) {
+        makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, memo?.let { Memo(it) }))
+      } else {
+        getAccountById(to)
+            .flatMap { makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, Memo(memo!!, keyPair, it.active.keyAuths.first().value))) }
+      }
 
   override fun buyContent(keyPair: ECKeyPair, content: Content, consumer: ChainObject): Single<TransactionConfirmation> =
       makeTransactionWithCallback(keyPair, BuyContentOperation(content.uri, consumer, content.price(),
