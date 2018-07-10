@@ -6,7 +6,6 @@ import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.TrustAllCerts
 import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.utils.publicElGamal
 import io.reactivex.Single
@@ -15,6 +14,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.slf4j.LoggerFactory
+import org.threeten.bp.LocalDateTime
 import java.math.BigInteger
 
 /**
@@ -337,6 +337,51 @@ class ApiTest : TimeOutTest() {
 
     val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
     val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+
+    val transaction = Transaction(
+        BlockData(props),
+        listOf(op.apply { fee = fees.first() })
+    ).withSignature(key)
+
+    val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+
+  @Test fun `content submit`() {
+
+    mockWebServer
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":2}""", """{"id":2,"result":true}""")
+        .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
+        .enqueue("""{"method":"call","params":[2,"get_dynamic_global_properties",[]],"id":0}""", """{"id":0,"result":{"id":"2.1.0","head_block_number":738195,"head_block_id":"000b43939a8dbb62f7a7d95f5d050536a139c485","time":"2018-06-13T08:49:05","current_miner":"1.4.4","next_maintenance_time":"2018-06-14T00:00:00","last_budget_time":"2018-06-13T00:00:00","unspent_fee_budget":3405423,"mined_rewards":"213268000000","miner_budget_from_fees":5105803,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":0,"recently_missed_count":2,"current_aslot":6012445,"recent_slots_filled":"329643350499266886481768439395175624699","dynamic_flags":0,"last_irreversible_block_num":738195}}""")
+        .enqueue("""{"method":"call","params":[2,"get_required_fees",[[[20,{"size":10000,"author":"1.2.34","co_authors":[],"URI":"http://hello.io/world2","quorum":0,"price":[{"price":{"amount":1000,"asset_id":"1.3.0"},"region":1}],"hash":"2222222222222222222222222222222222222222","seeders":[],"key_parts":[],"expiration":"2019-05-28T13:32:34","publishing_fee":{"amount":1000,"asset_id":"1.3.0"},"synopsis":"{\"title\":\"Game Title\",\"description\":\"Description\",\"content_type_id\":\"1.2.3\"}","fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":3}""", """{"id":3,"result":[{"amount":0,"asset_id":"1.3.0"}]}""")
+        .enqueue("""{"method":"call","params":[1,"network_broadcast",[]],"id":5}""", """{"id":5,"result":3}""")
+        .enqueue("""{"method":"call","params":[3,"broadcast_transaction_with_callback",[27185,{"expiration":"2018-06-13T08:49:39","ref_block_num":17299,"ref_block_prefix":1656458650,"extensions":[],"operations":[[20,{"size":10000,"author":"1.2.34","co_authors":[],"URI":"http://hello.io/world2","quorum":0,"price":[{"price":{"amount":1000,"asset_id":"1.3.0"},"region":1}],"hash":"2222222222222222222222222222222222222222","seeders":[],"key_parts":[],"expiration":"2019-05-28T13:32:34","publishing_fee":{"amount":1000,"asset_id":"1.3.0"},"synopsis":"{\"title\":\"Game Title\",\"description\":\"Description\",\"content_type_id\":\"1.2.3\"}","fee":{"amount":0,"asset_id":"1.3.0"}}]],"signatures":["1f2701505f266fac3fc4c6c6d8021a841ccbba281b191dfea940c5f54851333f3e2d17999f172a1ffa4ee2f0f36ff1b9f0bf68e81317191df46b30b8116ce899b8"]}]],"id":4}""", """{"method":"notice","params":[27185,[{"id":"d2bdda78d8ee2ebce0819ff9ff7a30858f27d49e","block_num":738196,"trx_num":1,"trx":{"ref_block_num":17299,"ref_block_prefix":1656458650,"expiration":"2018-06-13T08:49:39","operations":[[20,{"fee":{"amount":0,"asset_id":"1.3.0"},"size":10000,"author":"1.2.34","co_authors":[],"URI":"http://hello.io/world2","quorum":0,"price":[{"region":1,"price":{"amount":1000,"asset_id":"1.3.0"}}],"hash":"2222222222222222222222222222222222222222","seeders":[],"key_parts":[],"expiration":"2019-05-28T13:32:34","publishing_fee":{"amount":1000,"asset_id":"1.3.0"},"synopsis":"{\"title\":\"Game Title\",\"description\":\"Description\",\"content_type_id\":\"1.2.3\"}"}]],"extensions":[],"signatures":["1f2701505f266fac3fc4c6c6d8021a841ccbba281b191dfea940c5f54851333f3e2d17999f172a1ffa4ee2f0f36ff1b9f0bf68e81317191df46b30b8116ce899b8"],"operation_results":[[0,{}]]}}]]}""")
+
+    val key = ECKeyPair.fromBase58(private)
+
+    val op = ContentSubmitOperation(
+        10000,
+        account,
+        listOf(),
+        "http://hello.io/world2",
+        0,
+        listOf(RegionalPrice(AssetAmount(1000), 1)),
+        "2222222222222222222222222222222222222222",
+        listOf(),
+        listOf(),
+        LocalDateTime.parse("2019-05-28T13:32:34"),
+        AssetAmount(1000),
+        Synopsis("Game Title", "Description", "1.2.3".toChainObject()).json
+    )
+
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
         BlockData(props),
