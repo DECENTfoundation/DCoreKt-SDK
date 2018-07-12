@@ -79,10 +79,10 @@ interface DCoreApiRx {
   fun getAccountById(accountId: ChainObject): Single<Account>
 
   /**
-   * get Account object by public key address
+   * get account's object id by public key address
    *
    * @param address formatted public key of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
-   * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   * @return an account's object id if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun getAccountIdByAddress(address: Address): Single<ChainObject>
 
