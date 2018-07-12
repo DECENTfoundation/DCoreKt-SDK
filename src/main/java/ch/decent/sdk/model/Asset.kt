@@ -29,6 +29,18 @@ data class Asset(
   fun amount(value: Double): AssetAmount = AssetAmount(toBase(BigDecimal(value)), id)
   fun amount(value: BigDecimal): AssetAmount = AssetAmount(toBase(value), id)
 
+  fun convert(assetAmount: AssetAmount): AssetAmount {
+    if (options.exchangeRate.base.assetId == assetAmount.assetId) {
+      val amount = options.exchangeRate.quote.amount / options.exchangeRate.base.amount * assetAmount.amount
+      return AssetAmount(amount, id)
+    }
+    if (options.exchangeRate.quote.assetId == assetAmount.assetId) {
+      val amount = options.exchangeRate.base.amount / options.exchangeRate.quote.amount * assetAmount.amount
+      return AssetAmount(amount, id)
+    }
+    throw IllegalArgumentException("cannot convert ${assetAmount.assetId} with $symbol:$id")
+  }
+
   data class Options(
       @SerializedName("max_supply") val maxSupply: Long = 0,
       @SerializedName("core_exchange_rate") val exchangeRate: ExchangeRate = ExchangeRate(),
