@@ -75,7 +75,7 @@ object OperationTypeFactory : TypeAdapterFactory {
           val obj = el.asJsonArray[1].asJsonObject
           return op.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
-            delegate.fromJsonTree(obj) as T?
+            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = op } as T?
           } ?: EmptyOperation(op) as T?
         }
       }

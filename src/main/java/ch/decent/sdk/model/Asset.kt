@@ -27,6 +27,7 @@ data class Asset(
 
   fun amount(value: String): AssetAmount = AssetAmount(toBase(BigDecimal(value)), id)
   fun amount(value: Double): AssetAmount = AssetAmount(toBase(BigDecimal(value)), id)
+  fun amount(value: BigDecimal): AssetAmount = AssetAmount(toBase(value), id)
 
   data class Options(
       @SerializedName("max_supply") val maxSupply: Long = 0,

@@ -13,7 +13,7 @@ import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
 import java.util.regex.Pattern
 
-sealed class BaseOperation(@Transient val type: OperationType) : ByteSerializable {
+sealed class BaseOperation(@Transient var type: OperationType) : ByteSerializable {
   //  @SerializedName("extensions") val extensions = emptyList<Any>()
   @SerializedName("fee") open var fee: AssetAmount = AssetAmount(BigInteger.ZERO)
 }
