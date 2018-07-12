@@ -1,9 +1,12 @@
 package ch.decent.sdk
 
+import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.*
+import ch.decent.sdk.net.model.request.GetAccountByName
 import ch.decent.sdk.net.serialization.VoteId
+import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
 
@@ -74,6 +77,22 @@ interface DCoreApiRx {
    * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun getAccountById(accountId: ChainObject): Single<Account>
+
+  /**
+   * get Account object by public key address
+   *
+   * @param address formatted public key of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
+   * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   */
+  fun getAccountIdByAddress(address: Address): Single<ChainObject>
+
+  /**
+   * get Account object by public key address
+   *
+   * @param address formatted public key of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
+   * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   */
+  fun getAccountByAddress(address: Address): Single<Account> = getAccountIdByAddress(address).flatMap { getAccountById(it) }
 
   /**
    * search account history
@@ -237,6 +256,31 @@ interface DCoreApiRx {
   ): Single<TransactionConfirmation> = transfer(credentials.keyPair, credentials.account, to, amount, memo, encrypted)
 
   /**
+   * make a transfer
+   *
+   * @param credentials user credentials
+   * @param to object id of the receiver account (1.2.*) or account name or public key
+   * @param amount amount to send with asset type
+   * @param memo optional message
+   * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+   *
+   * @return a transaction confirmation
+   */
+  fun transfer(
+      credentials: Credentials,
+      to: String,
+      amount: AssetAmount,
+      memo: String? = null,
+      encrypted: Boolean = true
+  ): Single<TransactionConfirmation> = when {
+    ChainObject.isValid(to) -> Single.just(to.toChainObject())
+    Address.isValid(to) -> getAccountIdByAddress(Address.decode(to))
+    Account.isValidName(to) -> getAccountByName(to).map { it.id }
+    else -> throw IllegalArgumentException("not a valid receiver")
+  }.run { flatMap { transfer(credentials.keyPair, credentials.account, it, amount, memo, encrypted) } }
+
+
+  /**
    * make a transfer to content
    *
    * @param credentials user credentials
@@ -255,7 +299,7 @@ interface DCoreApiRx {
    * make a transfer
    *
    * @param credentials user credentials
-   * @param to receiver account name
+   * @param to receiver account name, id or public key address
    * @param amount amount to send in DCT
    * @param memo optional message
    * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
@@ -268,7 +312,7 @@ interface DCoreApiRx {
       amount: Double,
       memo: String? = null,
       encrypted: Boolean = true
-  ): Single<TransactionConfirmation> = getAccountByName(to).flatMap { transfer(credentials.keyPair, credentials.account, it.id, Globals.DCT.amount(amount), memo, encrypted) }
+  ): Single<TransactionConfirmation> = transfer(credentials, to, Globals.DCT.amount(amount), memo, encrypted)
 
   /**
    * buy a content

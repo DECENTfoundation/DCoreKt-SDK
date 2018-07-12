@@ -8,7 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 
 val url = "wss://stagesocket.decentgo.com:8090"
-val restUrl = "https://stage.decentgo.com/"
+val restUrl = "http://stagesocket.decentgo.com:8089/"
 val client: OkHttpClient = TrustAllCerts.wrap(OkHttpClient.Builder()
     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)))
     .build()

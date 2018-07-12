@@ -24,6 +24,13 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
   companion object {
     const val PREFIX = "DCT"
 
+    fun isValid(address: String) = try {
+      decode(address)
+      true
+    } catch (e: Exception) {
+      false
+    }
+
     fun decode(address: String): Address {
       val prefix = address.substring(0, 3)
       val decoded = Base58.decode(address.substring(3, address.length))

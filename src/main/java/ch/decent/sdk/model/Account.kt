@@ -4,6 +4,7 @@ import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
+import java.util.regex.Pattern
 
 data class Account(
     @SerializedName("id") val id: ChainObject,
@@ -29,4 +30,10 @@ data class Account(
         statistics.bytes,
         topControlFlags.bytes()
     )
+
+  companion object {
+    private val pattern = Pattern.compile("^[a-z][a-z0-9-]+[a-z0-9](?:\\.[a-z][a-z0-9-]+[a-z0-9])*\$")
+
+    fun isValidName(name: String) = pattern.matcher(name).matches() && name.length in 5..63
+  }
 }
