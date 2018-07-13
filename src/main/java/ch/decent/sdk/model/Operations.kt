@@ -145,8 +145,7 @@ data class AccountCreateOperation constructor(
 
   init {
     require(registrar.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
-    require(Pattern.compile("^[a-z][a-z0-9-]+[a-z0-9](?:\\.[a-z][a-z0-9-]+[a-z0-9])*\$").matcher(name).matches() &&
-        name.length in 5..63, { "not a valid name" }) // 5 and 63 -> Graphene min and max account name length
+    require(Account.isValidName(name), { "not a valid name" })
   }
 
   constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
