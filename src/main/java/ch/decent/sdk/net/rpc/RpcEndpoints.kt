@@ -12,13 +12,16 @@ internal interface RpcEndpoints {
 
 //  cannot be blank url string
   @POST("rpc")
-  fun lookupAccounts(@Body request: LookupAccounts): Single<RpcListResponse<List<String>>>
+  fun lookupAccounts(@Body request: LookupAccounts): Single<RpcListResponse<Account>>
 
   @POST("rpc")
   fun getAccountByName(@Body request: GetAccountByName): Single<RpcResponse<Account>>
 
   @POST("rpc")
   fun getAccountById(@Body request: GetAccountById): Single<RpcListResponse<Account>>
+
+  @POST("rpc")
+  fun getKeyReferences(@Body request: GetKeyReferences): Single<RpcListResponse<List<ChainObject>>>
 
   @POST("rpc")
   fun getMiners(@Body request: GetMiners): Single<RpcListResponse<Miner>>

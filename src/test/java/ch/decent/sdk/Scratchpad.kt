@@ -1,21 +1,22 @@
 package ch.decent.sdk
 
-import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.crypto.DumpedPrivateKey
-import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.crypto.wrap
+import ch.decent.sdk.crypto.*
+import ch.decent.sdk.model.Account
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.net.model.request.GetAccountByName
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.utils.hex
 import com.google.common.primitives.Bytes
 import com.google.common.primitives.Longs
+import io.reactivex.Single
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
 import org.junit.Test
+import org.slf4j.LoggerFactory
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest
@@ -209,5 +210,15 @@ class Scratchpad {
     println(trx)
   }
 
+  @Test fun `transfers to various receivers`() {
+    val api = DCoreSdk.createApiRx(client, url, logger = LoggerFactory.getLogger("DCoreApi"))
+    val dpk = DumpedPrivateKey.fromBase58(private)
+    val key = ECKeyPair.fromPrivate(dpk.bytes, dpk.compressed)
+    val credentials = Credentials(account, key)
+
+//    api.transfer(credentials, account2.objectId, 0.0001).blockingGet()
+//    api.transfer(credentials, accountName2, 0.0002).blockingGet()
+    api.transfer(credentials, public2, 0.0003).blockingGet()
+  }
 
 }
