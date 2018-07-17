@@ -15,6 +15,8 @@ import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.SecureRandom
 import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 /**
  * Hex encoding used throughout the DCore framework.
@@ -75,3 +77,9 @@ fun encryptAes(key: ByteArray, clear: ByteArray): ByteArray {
 
   return outBuf
 }
+
+fun decryptAes128(initialVector: ByteArray, encryptedText: ByteArray, key: ByteArray): String =
+  Cipher.getInstance("AES/CBC/PKCS5Padding").let {
+      it.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(initialVector))
+      String(it.doFinal(encryptedText))
+  }
