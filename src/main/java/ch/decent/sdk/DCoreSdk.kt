@@ -1,6 +1,7 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
@@ -54,7 +55,7 @@ class DCoreSdk private constructor(
           GetDynamicGlobalProps.toRequest(),
           GetRequiredFees(op).toRequest(),
           BiFunction { props: DynamicGlobalProps, fees: List<AssetAmount> ->
-            Transaction(BlockData(props), op.mapIndexed { idx, op -> op.apply { fee = fees[idx] } })
+            Transaction(BlockData(props), op.mapIndexed { idx, op -> op.apply { setFee(fees[idx]) } })
           }
       )
 
@@ -121,12 +122,24 @@ class DCoreSdk private constructor(
   override fun getTransaction(blockNum: Long, trxInBlock: Long): Single<ProcessedTransaction> =
       GetTransaction(blockNum, trxInBlock).run { toRequest { getTransaction(it).map { it.result(description()) } } }
 
-  override fun transfer(keyPair: ECKeyPair, from: ChainObject, to: ChainObject, amount: AssetAmount, memo: String?, encrypted: Boolean): Single<TransactionConfirmation> =
+  override fun transfer(
+      keyPair: ECKeyPair,
+      from: ChainObject,
+      to: ChainObject,
+      amount: AssetAmount,
+      memo: String?,
+      encrypted: Boolean,
+      fee: AssetAmount?
+  ): Single<TransactionConfirmation> =
       if (memo.isNullOrBlank() || !encrypted) {
-        makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, memo?.let { Memo(it) }))
+        makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, memo?.let { Memo(it) }, fee))
       } else {
         getAccountById(to)
-            .flatMap { makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, Memo(memo!!, keyPair, it.active.keyAuths.first().value))) }
+            .flatMap {
+              makeTransactionWithCallback(
+                  keyPair,
+                  TransferOperation(from, to, amount, Memo(memo!!, keyPair, it.active.keyAuths.first().value), fee))
+            }
       }
 
   override fun buyContent(keyPair: ECKeyPair, content: Content, consumer: ChainObject): Single<TransactionConfirmation> =

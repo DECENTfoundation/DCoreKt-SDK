@@ -165,7 +165,7 @@ class ApiTest : TimeOutTest() {
   }
 
   @Test fun `transaction test`() {
-    val dpk = DumpedPrivateKey.fromBase58(private)
+    val dpk = DumpedPrivateKey.fromBase58("5HvJS9Q7LuVE3qVBH815Am464G874DsTajB2tTPt5D4E2Gh3ZM2")
     val key = ECKeyPair.fromPrivate(dpk.bytes, dpk.compressed)
     val memo = Memo("hello memo here i am", key, Address.decode(public2), BigInteger("735604672334802432"))
     mockWebServer
@@ -176,19 +176,19 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[3,"broadcast_transaction_with_callback",[27185,{"expiration":"2018-06-04T12:25:32","ref_block_num":9267,"ref_block_prefix":2985119208,"extensions":[],"operations":[[39,{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"${memo.message}","nonce":${memo.nonce}},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["203c168ef8b88e5702cedd7ee2985a67a63fb15a58023323828c0b843c37eb4a6d1b45665414488d83262f7116ac6a0116943d512352c8e858fe636b3bec195265"]}]],"id":4}""", """{"method":"notice","params":[27185,[{"id":"2fd68fb4e7ec4b30b465263ed10177fe8938a8a9","block_num":599092,"trx_num":0,"trx":{"ref_block_num":9267,"ref_block_prefix":2985119208,"expiration":"2018-06-04T12:25:32","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"735604672334802432","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7"},"extensions":[]}]],"extensions":[],"signatures":["203c168ef8b88e5702cedd7ee2985a67a63fb15a58023323828c0b843c37eb4a6d1b45665414488d83262f7116ac6a0116943d512352c8e858fe636b3bec195265"],"operation_results":[[0,{}]]}}]]}""")
         .enqueue("""{"method":"call","params":[1,"network_broadcast",[]],"id":5}""", """{"id":5,"result":3}""")
 
-
     val op = TransferOperation(
+        "1.2.257".toChainObject(),
         account,
-        account2,
-        AssetAmount(1500000),
+        AssetAmount(150000.toBigInteger(), "1.3.54".toChainObject()),
         memo
     )
     val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
     val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+    val feeUia = AssetAmount(fees.first().amount * 4.toBigInteger(), "1.3.54".toChainObject()) //dct = 4alxt
 
     val transaction = Transaction(
         BlockData(props),
-        listOf(op.apply { fee = fees.first() })
+        listOf(op.apply { fee = feeUia })
     ).withSignature(key)
 
     val test = socket.request(BroadcastTransactionWithCallback(transaction, 27185))

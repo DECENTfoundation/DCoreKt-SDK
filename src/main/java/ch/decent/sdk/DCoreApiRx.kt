@@ -4,9 +4,7 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.GetAccountByName
 import ch.decent.sdk.net.serialization.VoteId
-import io.reactivex.Observable
 import io.reactivex.Single
 import java.math.BigDecimal
 
@@ -233,7 +231,8 @@ interface DCoreApiRx {
       to: ChainObject,
       amount: AssetAmount,
       memo: String? = null,
-      encrypted: Boolean = true
+      encrypted: Boolean = true,
+      fee: AssetAmount? = null
   ): Single<TransactionConfirmation>
 
   /**
@@ -271,13 +270,14 @@ interface DCoreApiRx {
       to: String,
       amount: AssetAmount,
       memo: String? = null,
-      encrypted: Boolean = true
+      encrypted: Boolean = true,
+      fee: AssetAmount? = null
   ): Single<TransactionConfirmation> = when {
     ChainObject.isValid(to) -> Single.just(to.toChainObject())
     Address.isValid(to) -> getAccountIdByAddress(Address.decode(to))
     Account.isValidName(to) -> getAccountByName(to).map { it.id }
     else -> throw IllegalArgumentException("not a valid receiver")
-  }.run { flatMap { transfer(credentials.keyPair, credentials.account, it, amount, memo, encrypted) } }
+  }.run { flatMap { transfer(credentials.keyPair, credentials.account, it, amount, memo, encrypted, fee) } }
 
 
   /**

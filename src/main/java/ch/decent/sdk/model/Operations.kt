@@ -14,8 +14,9 @@ import java.math.BigInteger
 import java.util.regex.Pattern
 
 sealed class BaseOperation(@Transient var type: OperationType) : ByteSerializable {
-  //  @SerializedName("extensions") val extensions = emptyList<Any>()
-  @SerializedName("fee") open var fee: AssetAmount = AssetAmount(BigInteger.ZERO)
+  @SerializedName("fee") open lateinit var fee: AssetAmount
+
+  fun setFee(amount: AssetAmount?) = amount?.let { if (this::fee.isInitialized.not()) fee = amount }.let { this }
 }
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
@@ -39,6 +40,10 @@ data class TransferOperation @JvmOverloads constructor(
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION) {
+
+  constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo: Memo?, fee: AssetAmount?): this(from, to, amount, memo) {
+    setFee(fee)
+  }
 
   init {
     require(from.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
