@@ -38,7 +38,7 @@ class DCoreSdk private constructor(
   }
 
   init {
-    require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true, { "at least one url must be set" })
+    require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
   }
 
   private fun <T, U : BaseRequest<T>> U.toRequest(rpc: (RpcEndpoints.(r: U) -> Single<T>)? = null): Single<T> {
@@ -50,7 +50,7 @@ class DCoreSdk private constructor(
   }
 
   fun prepareTransaction(op: List<BaseOperation>): Single<Transaction> =
-      op.partition { it.fee != AssetAmount.FEE_UNSET }.let { (fees, noFees) ->
+      op.partition { it.fee != BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
         if (noFees.isNotEmpty()) {
           GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
         } else {

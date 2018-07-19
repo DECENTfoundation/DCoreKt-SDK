@@ -15,8 +15,13 @@ import java.util.regex.Pattern
 
 sealed class BaseOperation(
     @Transient var type: OperationType,
-    @SerializedName("fee") open var fee: AssetAmount = AssetAmount.FEE_UNSET
-) : ByteSerializable
+    @SerializedName("fee") open var fee: AssetAmount = FEE_UNSET
+) : ByteSerializable {
+
+  companion object {
+    internal val FEE_UNSET = AssetAmount(BigInteger.ZERO)
+  }
+}
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
   override val bytes: ByteArray
@@ -32,14 +37,14 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
  * @param to account object id or content object id of the receiver
  * @param amount an [AssetAmount] to transfer
  * @param memo optional string note
- * @param fee [AssetAmount] fee for the operation, if left [AssetAmount.FEE_UNSET] the fee will be computed in DCT asset
+ * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  */
 class TransferOperation @JvmOverloads constructor(
     @SerializedName("from") val from: ChainObject,
     @SerializedName("to") val to: ChainObject,
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null,
-    fee: AssetAmount = AssetAmount.FEE_UNSET
+    fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION, fee) {
 
   init {
@@ -67,6 +72,7 @@ class TransferOperation @JvmOverloads constructor(
  * @param price price of content, can be equal to or higher then specified in content
  * @param publicElGamal public el gamal key
  * @param regionCode region code of the consumer
+ * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  */
 class BuyContentOperation @JvmOverloads constructor(
     @SerializedName("URI") val uri: String,
@@ -74,7 +80,7 @@ class BuyContentOperation @JvmOverloads constructor(
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
     @SerializedName("region_code_from") val regionCode: Int = Regions.NONE.id,
-    fee: AssetAmount = AssetAmount.FEE_UNSET
+    fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
   init {
@@ -103,6 +109,7 @@ class BuyContentOperation @JvmOverloads constructor(
  * @param owner owner authority
  * @param active active authority
  * @param options account options
+ * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  *
  */
 class AccountUpdateOperation @JvmOverloads constructor(
@@ -110,7 +117,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("owner") val owner: Authority? = null,
     @SerializedName("active") val active: Authority? = null,
     @SerializedName("new_options") val options: Options? = null,
-    fee: AssetAmount = AssetAmount.FEE_UNSET
+    fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
   init {
@@ -136,6 +143,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
  * @param owner owner authority
  * @param active active authority
  * @param options account options
+ * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  *
  */
 class AccountCreateOperation constructor(
@@ -144,7 +152,7 @@ class AccountCreateOperation constructor(
     @SerializedName("owner") val owner: Authority,
     @SerializedName("active") val active: Authority,
     @SerializedName("options") val options: Options,
-    fee: AssetAmount = AssetAmount.FEE_UNSET
+    fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION, fee) {
 
   init {
@@ -184,6 +192,7 @@ class AccountCreateOperation constructor(
  * @param publishingFee fee must be greater than the sum of seeders' publishing prices * number of days. Is paid by author
  * @param synopsis JSON formatted structure containing content information
  * @param custodyData if cd.n == 0 then no custody is submitted, and simplified verification is done.
+ * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  *
  */
 class ContentSubmitOperation constructor(
@@ -200,7 +209,7 @@ class ContentSubmitOperation constructor(
     @SerializedName("publishing_fee") val publishingFee: AssetAmount,
     @SerializedName("synopsis") val synopsis: String,
     @SerializedName("cd") val custodyData: CustodyData? = null,
-    fee: AssetAmount = AssetAmount.FEE_UNSET
+    fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION, fee) {
 
   init {
@@ -218,7 +227,7 @@ class ContentSubmitOperation constructor(
         fee.bytes,
         size.bytes(),
         author.bytes,
-        ByteArray(1, { 0 }),
+        ByteArray(1) { 0 },
         uri.bytes(),
         quorum.bytes(),
         price.bytes(),

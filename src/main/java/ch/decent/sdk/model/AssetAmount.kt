@@ -5,7 +5,6 @@ import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
-import org.bouncycastle.crypto.paddings.ZeroBytePadding
 import java.math.BigInteger
 
 data class AssetAmount @JvmOverloads constructor(
@@ -22,8 +21,4 @@ data class AssetAmount @JvmOverloads constructor(
 
   override val bytes: ByteArray
     get() = Bytes.concat(amount.toLong().bytes(), assetId.bytes)
-
-  companion object {
-    internal val FEE_UNSET = AssetAmount(BigInteger.ZERO)
-  }
 }
