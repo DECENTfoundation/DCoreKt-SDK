@@ -1,7 +1,6 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
@@ -51,7 +50,7 @@ class DCoreSdk private constructor(
   }
 
   fun prepareTransaction(op: List<BaseOperation>): Single<Transaction> =
-      op.partition { it.fee != AssetAmount.UNSET }.let { (fees, noFees) ->
+      op.partition { it.fee != AssetAmount.FEE_UNSET }.let { (fees, noFees) ->
         if (noFees.isNotEmpty()) {
           GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
         } else {

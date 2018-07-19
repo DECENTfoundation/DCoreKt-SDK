@@ -15,7 +15,7 @@ import java.util.regex.Pattern
 
 sealed class BaseOperation(
     @Transient var type: OperationType,
-    @SerializedName("fee") open var fee: AssetAmount = AssetAmount.UNSET
+    @SerializedName("fee") open var fee: AssetAmount = AssetAmount.FEE_UNSET
 ) : ByteSerializable
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
@@ -32,14 +32,14 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
  * @param to account object id or content object id of the receiver
  * @param amount an [AssetAmount] to transfer
  * @param memo optional string note
- * @param fee [AssetAmount] fee for the operation, if left [AssetAmount.UNSET] the fee will be computed in DCT asset
+ * @param fee [AssetAmount] fee for the operation, if left [AssetAmount.FEE_UNSET] the fee will be computed in DCT asset
  */
 class TransferOperation @JvmOverloads constructor(
     @SerializedName("from") val from: ChainObject,
     @SerializedName("to") val to: ChainObject,
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null,
-    fee: AssetAmount = AssetAmount.UNSET
+    fee: AssetAmount = AssetAmount.FEE_UNSET
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION, fee) {
 
   init {
@@ -74,7 +74,7 @@ class BuyContentOperation @JvmOverloads constructor(
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
     @SerializedName("region_code_from") val regionCode: Int = Regions.NONE.id,
-    fee: AssetAmount = AssetAmount.UNSET
+    fee: AssetAmount = AssetAmount.FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
   init {
@@ -110,7 +110,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("owner") val owner: Authority? = null,
     @SerializedName("active") val active: Authority? = null,
     @SerializedName("new_options") val options: Options? = null,
-    fee: AssetAmount = AssetAmount.UNSET
+    fee: AssetAmount = AssetAmount.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
   init {
@@ -144,7 +144,7 @@ class AccountCreateOperation constructor(
     @SerializedName("owner") val owner: Authority,
     @SerializedName("active") val active: Authority,
     @SerializedName("options") val options: Options,
-    fee: AssetAmount = AssetAmount.UNSET
+    fee: AssetAmount = AssetAmount.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION, fee) {
 
   init {
@@ -200,7 +200,7 @@ class ContentSubmitOperation constructor(
     @SerializedName("publishing_fee") val publishingFee: AssetAmount,
     @SerializedName("synopsis") val synopsis: String,
     @SerializedName("cd") val custodyData: CustodyData? = null,
-    fee: AssetAmount = AssetAmount.UNSET
+    fee: AssetAmount = AssetAmount.FEE_UNSET
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION, fee) {
 
   init {

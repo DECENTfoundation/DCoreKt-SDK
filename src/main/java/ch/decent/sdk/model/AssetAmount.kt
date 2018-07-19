@@ -24,6 +24,6 @@ data class AssetAmount @JvmOverloads constructor(
     get() = Bytes.concat(amount.toLong().bytes(), assetId.bytes)
 
   companion object {
-    val UNSET = AssetAmount(BigInteger.ZERO)
+    internal val FEE_UNSET = AssetAmount(BigInteger.ZERO)
   }
 }
