@@ -183,8 +183,8 @@ class ApiTest : TimeOutTest() {
         AssetAmount(1500000),
         memo
     )
-    val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
-    val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
         BlockData(props),
@@ -218,8 +218,8 @@ class ApiTest : TimeOutTest() {
         "2.13.74".toChainObject(),
         AssetAmount(1500000)
     )
-    val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
-    val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
         BlockData(props),
@@ -248,7 +248,7 @@ class ApiTest : TimeOutTest() {
 
 
     val key = ECKeyPair.fromBase58(private)
-    val content = socket.request(GetContentById("2.13.74".toChainObject())).subscribeOn(Schedulers.newThread()).blockingGet().first()
+    val content = socket.request(GetContentById("2.13.74".toChainObject())).blockingGet().first()
     val op = BuyContentOperation(
         content.uri,
         account,
@@ -256,8 +256,8 @@ class ApiTest : TimeOutTest() {
         key.publicElGamal()
     )
 
-    val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
-    val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
         BlockData(props),
@@ -305,12 +305,12 @@ class ApiTest : TimeOutTest() {
 
   private fun vote(votes: Set<String>): Single<Account> {
     val key = ECKeyPair.fromBase58(private)
-    val account = socket.request(GetAccountById(account)).subscribeOn(Schedulers.newThread()).blockingGet().first()
+    val account = socket.request(GetAccountById(account)).blockingGet().first()
     val op = AccountUpdateOperation(
         account.id, options = account.options.copy(votes = votes)
     )
-    val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
-    val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
         BlockData(props),
@@ -335,8 +335,8 @@ class ApiTest : TimeOutTest() {
     val public = "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address()
     val op = AccountCreateOperation(account, "mikeeee", public)
 
-    val props = socket.request(GetDynamicGlobalProps).subscribeOn(Schedulers.newThread()).blockingGet()
-    val fees = socket.request(GetRequiredFees(listOf(op))).subscribeOn(Schedulers.newThread()).blockingGet()
+    val props = socket.request(GetDynamicGlobalProps).blockingGet()
+    val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
         BlockData(props),

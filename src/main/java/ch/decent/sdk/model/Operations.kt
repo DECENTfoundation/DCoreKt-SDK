@@ -16,7 +16,7 @@ import java.util.regex.Pattern
 sealed class BaseOperation(@Transient var type: OperationType) : ByteSerializable {
   @SerializedName("fee") open lateinit var fee: AssetAmount
 
-  fun setFee(amount: AssetAmount?) = amount?.let { if (this::fee.isInitialized.not()) fee = amount }.let { this }
+  fun setFee(amount: AssetAmount? = AssetAmount(BigInteger.ZERO)) = amount?.let { if (this::fee.isInitialized.not()) fee = amount }.let { this }
 }
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
@@ -46,8 +46,8 @@ data class TransferOperation @JvmOverloads constructor(
   }
 
   init {
-    require(from.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
-    require(to.objectType == ObjectType.ACCOUNT_OBJECT || to.objectType == ObjectType.CONTENT_OBJECT, { "not an account or content object id" })
+    require(from.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
+    require(to.objectType == ObjectType.ACCOUNT_OBJECT || to.objectType == ObjectType.CONTENT_OBJECT) { "not an account or content object id" }
   }
 
   override val bytes: ByteArray
@@ -81,9 +81,9 @@ data class BuyContentOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION) {
 
   init {
-    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
-    require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches(), { "unsupported uri scheme" })
-    require(price.amount > BigInteger.ZERO, { "amount must be > 0" })
+    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
+    require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
+    require(price.amount > BigInteger.ZERO) { "amount must be > 0" }
   }
 
   override val bytes: ByteArray
@@ -116,7 +116,7 @@ data class AccountUpdateOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
   }
 
   override val bytes: ByteArray
@@ -149,8 +149,8 @@ data class AccountCreateOperation constructor(
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
 
   init {
-    require(registrar.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
-    require(Account.isValidName(name), { "not a valid name" })
+    require(registrar.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
+    require(Account.isValidName(name)) { "not a valid name" }
   }
 
   constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
@@ -204,12 +204,12 @@ data class ContentSubmitOperation constructor(
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION) {
 
   init {
-    require(size > 0, { "invalid file size" })
-    require(author.objectType == ObjectType.ACCOUNT_OBJECT, { "not an account object id" })
-    require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches(), { "unsupported uri scheme" })
-    require(quorum >= 0, { "invalid seeders count" })
-    require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC), { "invalid expiration time" })
-    require(hash.unhex().size == 20, { "invalid file hash size, should be 40 chars long, hex encoded" })
+    require(size > 0) { "invalid file size" }
+    require(author.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
+    require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
+    require(quorum >= 0) { "invalid seeders count" }
+    require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }
+    require(hash.unhex().size == 20) { "invalid file hash size, should be 40 chars long, hex encoded" }
   }
 
   override val bytes: ByteArray
