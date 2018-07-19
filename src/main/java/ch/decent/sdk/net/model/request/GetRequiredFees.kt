@@ -14,5 +14,5 @@ internal class GetRequiredFees(
     ApiGroup.DATABASE,
     "get_required_fees",
     TypeToken.getParameterized(List::class.java, AssetAmount::class.java).type,
-    listOf(operations.map { listOf(it.type.ordinal, it.setFee()) }, assetId)
+    listOf(operations.map { listOf(it.type.ordinal, it) }, assetId)
 )

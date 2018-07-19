@@ -232,7 +232,7 @@ interface DCoreApiRx {
       amount: AssetAmount,
       memo: String? = null,
       encrypted: Boolean = true,
-      fee: AssetAmount? = null
+      fee: AssetAmount = AssetAmount.UNSET
   ): Single<TransactionConfirmation>
 
   /**
@@ -271,7 +271,7 @@ interface DCoreApiRx {
       amount: AssetAmount,
       memo: String? = null,
       encrypted: Boolean = true,
-      fee: AssetAmount? = null
+      fee: AssetAmount = AssetAmount.UNSET
   ): Single<TransactionConfirmation> = when {
     ChainObject.isValid(to) -> Single.just(to.toChainObject())
     Address.isValid(to) -> getAccountIdByAddress(Address.decode(to))

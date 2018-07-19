@@ -5,6 +5,7 @@ import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
+import org.bouncycastle.crypto.paddings.ZeroBytePadding
 import java.math.BigInteger
 
 data class AssetAmount @JvmOverloads constructor(
@@ -15,11 +16,14 @@ data class AssetAmount @JvmOverloads constructor(
   constructor(amount: Long) : this(amount.toBigInteger())
 
   init {
-    require(amount >= BigInteger.ZERO, { "amount must be greater or equal to 0" })
-    require(assetId.objectType == ObjectType.ASSET_OBJECT, { "object id is not an asset" })
+    require(amount >= BigInteger.ZERO) { "amount must be greater or equal to 0" }
+    require(assetId.objectType == ObjectType.ASSET_OBJECT) { "object id is not an asset" }
   }
 
   override val bytes: ByteArray
     get() = Bytes.concat(amount.toLong().bytes(), assetId.bytes)
 
+  companion object {
+    val UNSET = AssetAmount(BigInteger.ZERO)
+  }
 }

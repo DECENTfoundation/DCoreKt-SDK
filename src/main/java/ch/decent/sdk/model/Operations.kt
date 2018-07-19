@@ -13,11 +13,10 @@ import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
 import java.util.regex.Pattern
 
-sealed class BaseOperation(@Transient var type: OperationType) : ByteSerializable {
-  @SerializedName("fee") open lateinit var fee: AssetAmount
-
-  fun setFee(amount: AssetAmount? = AssetAmount(BigInteger.ZERO)) = amount?.let { if (this::fee.isInitialized.not()) fee = amount }.let { this }
-}
+sealed class BaseOperation(
+    @Transient var type: OperationType,
+    @SerializedName("fee") open var fee: AssetAmount = AssetAmount.UNSET
+) : ByteSerializable
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
   override val bytes: ByteArray
@@ -31,19 +30,17 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
  *
  * @param from account object id of the sender
  * @param to account object id or content object id of the receiver
- * @param amount an amount and asset type to transfer
+ * @param amount an [AssetAmount] to transfer
  * @param memo optional string note
+ * @param fee [AssetAmount] fee for the operation, if left [AssetAmount.UNSET] the fee will be computed in DCT asset
  */
-data class TransferOperation @JvmOverloads constructor(
+class TransferOperation @JvmOverloads constructor(
     @SerializedName("from") val from: ChainObject,
     @SerializedName("to") val to: ChainObject,
     @SerializedName("amount") val amount: AssetAmount,
-    @SerializedName("memo") val memo: Memo? = null
-) : BaseOperation(OperationType.TRANSFER2_OPERATION) {
-
-  constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo: Memo?, fee: AssetAmount?): this(from, to, amount, memo) {
-    setFee(fee)
-  }
+    @SerializedName("memo") val memo: Memo? = null,
+    fee: AssetAmount = AssetAmount.UNSET
+) : BaseOperation(OperationType.TRANSFER2_OPERATION, fee) {
 
   init {
     require(from.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
@@ -70,15 +67,15 @@ data class TransferOperation @JvmOverloads constructor(
  * @param price price of content, can be equal to or higher then specified in content
  * @param publicElGamal public el gamal key
  * @param regionCode region code of the consumer
- *
  */
-data class BuyContentOperation @JvmOverloads constructor(
+class BuyContentOperation @JvmOverloads constructor(
     @SerializedName("URI") val uri: String,
     @SerializedName("consumer") val consumer: ChainObject,
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
-    @SerializedName("region_code_from") val regionCode: Int = Regions.NONE.id
-) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION) {
+    @SerializedName("region_code_from") val regionCode: Int = Regions.NONE.id,
+    fee: AssetAmount = AssetAmount.UNSET
+) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
@@ -108,12 +105,13 @@ data class BuyContentOperation @JvmOverloads constructor(
  * @param options account options
  *
  */
-data class AccountUpdateOperation @JvmOverloads constructor(
+class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("account") val accountId: ChainObject,
     @SerializedName("owner") val owner: Authority? = null,
     @SerializedName("active") val active: Authority? = null,
-    @SerializedName("new_options") val options: Options? = null
-) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION) {
+    @SerializedName("new_options") val options: Options? = null,
+    fee: AssetAmount = AssetAmount.UNSET
+) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
@@ -140,13 +138,14 @@ data class AccountUpdateOperation @JvmOverloads constructor(
  * @param options account options
  *
  */
-data class AccountCreateOperation constructor(
+class AccountCreateOperation constructor(
     @SerializedName("registrar") val registrar: ChainObject,
     @SerializedName("name") val name: String,
     @SerializedName("owner") val owner: Authority,
     @SerializedName("active") val active: Authority,
-    @SerializedName("options") val options: Options
-) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION) {
+    @SerializedName("options") val options: Options,
+    fee: AssetAmount = AssetAmount.UNSET
+) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION, fee) {
 
   init {
     require(registrar.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
@@ -187,7 +186,7 @@ data class AccountCreateOperation constructor(
  * @param custodyData if cd.n == 0 then no custody is submitted, and simplified verification is done.
  *
  */
-data class ContentSubmitOperation constructor(
+class ContentSubmitOperation constructor(
     @SerializedName("size") val size: Long,
     @SerializedName("author") val author: ChainObject,
     @SerializedName("co_authors") val coauthors: List<List<Any>>? = null,
@@ -200,8 +199,9 @@ data class ContentSubmitOperation constructor(
     @SerializedName("expiration") val expiration: LocalDateTime,
     @SerializedName("publishing_fee") val publishingFee: AssetAmount,
     @SerializedName("synopsis") val synopsis: String,
-    @SerializedName("cd") val custodyData: CustodyData? = null
-) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION) {
+    @SerializedName("cd") val custodyData: CustodyData? = null,
+    fee: AssetAmount = AssetAmount.UNSET
+) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION, fee) {
 
   init {
     require(size > 0) { "invalid file size" }
