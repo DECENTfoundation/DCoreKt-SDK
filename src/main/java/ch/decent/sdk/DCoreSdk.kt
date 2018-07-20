@@ -50,7 +50,7 @@ class DCoreSdk private constructor(
   }
 
   fun prepareTransaction(op: List<BaseOperation>): Single<Transaction> =
-      op.partition { it.fee != BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
+      op.partition { it.fee !== BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
         if (noFees.isNotEmpty()) {
           GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
         } else {
