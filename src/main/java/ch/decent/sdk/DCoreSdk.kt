@@ -38,7 +38,7 @@ class DCoreSdk private constructor(
   }
 
   init {
-    require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true, { "at least one url must be set" })
+    require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
   }
 
   private fun <T, U : BaseRequest<T>> U.toRequest(rpc: (RpcEndpoints.(r: U) -> Single<T>)? = null): Single<T> {
@@ -50,12 +50,15 @@ class DCoreSdk private constructor(
   }
 
   fun prepareTransaction(op: List<BaseOperation>): Single<Transaction> =
-      Single.zip(
+      op.partition { it.fee !== BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
+        if (noFees.isNotEmpty()) {
+          GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
+        } else {
+          Single.just(fees)
+        }
+      }.zipWith(
           GetDynamicGlobalProps.toRequest(),
-          GetRequiredFees(op).toRequest(),
-          BiFunction { props: DynamicGlobalProps, fees: List<AssetAmount> ->
-            Transaction(BlockData(props), op.mapIndexed { idx, op -> op.apply { fee = fees[idx] } })
-          }
+          BiFunction { ops, props -> Transaction(BlockData(props), ops) }
       )
 
   override fun getFees(op: List<BaseOperation>): Single<List<AssetAmount>> =
@@ -121,13 +124,21 @@ class DCoreSdk private constructor(
   override fun getTransaction(blockNum: Long, trxInBlock: Long): Single<ProcessedTransaction> =
       GetTransaction(blockNum, trxInBlock).run { toRequest { getTransaction(it).map { it.result(description()) } } }
 
-  override fun transfer(keyPair: ECKeyPair, from: ChainObject, to: ChainObject, amount: AssetAmount, memo: String?, encrypted: Boolean): Single<TransactionConfirmation> =
-      if (memo.isNullOrBlank() || !encrypted) {
-        makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, memo?.let { Memo(it) }))
+  override fun transfer(
+      keyPair: ECKeyPair,
+      from: ChainObject,
+      to: ChainObject,
+      amount: AssetAmount,
+      memo: String?,
+      encrypted: Boolean,
+      fee: AssetAmount
+  ): Single<TransactionConfirmation> =
+      (if (memo.isNullOrBlank() || !encrypted) {
+        Single.just(TransferOperation(from, to, amount, memo?.let { Memo(it) }, fee))
       } else {
         getAccountById(to)
-            .flatMap { makeTransactionWithCallback(keyPair, TransferOperation(from, to, amount, Memo(memo!!, keyPair, it.active.keyAuths.first().value))) }
-      }
+            .map { TransferOperation(from, to, amount, Memo(memo!!, keyPair, it.active.keyAuths.first().value), fee) }
+      }).flatMap { makeTransactionWithCallback(keyPair, it) }
 
   override fun buyContent(keyPair: ECKeyPair, content: Content, consumer: ChainObject): Single<TransactionConfirmation> =
       makeTransactionWithCallback(keyPair, BuyContentOperation(content.uri, consumer, content.price(),
