@@ -86,7 +86,7 @@ class BuyContentOperation @JvmOverloads constructor(
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
-    require(price.amount > BigInteger.ZERO) { "amount must be > 0" }
+    require(price.amount >= BigInteger.ZERO) { "amount must be >= 0" }
   }
 
   override val bytes: ByteArray
