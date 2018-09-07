@@ -58,8 +58,9 @@ group = "ch.decent"
 def d = versionDetails()
 def repo = "libs-release-local"
 version = "$d.lastTag"
-if (d.commitDistance > 0 || !d.isCleanTag || d.branchName != "master") {
-    version = "$d.lastTag-SNAPSHOT"
+def devTagPrefix = "dev-"
+if (d.commitDistance > 0 || !d.isCleanTag || version.contains(devTagPrefix)) {
+    version = "${d.lastTag.replace(devTagPrefix, "")}-SNAPSHOT"
     repo = "libs-snapshot-local"
 }
 
