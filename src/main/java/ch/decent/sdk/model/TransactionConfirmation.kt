@@ -7,6 +7,4 @@ data class TransactionConfirmation(
     @SerializedName("block_num") val blockNum: Long,
     @SerializedName("trx_num") val trxNum: Long,
     @SerializedName("trx") val transaction: ProcessedTransaction
-) {
-
-}
+)

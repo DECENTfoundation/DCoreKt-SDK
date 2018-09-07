@@ -16,20 +16,7 @@ data class Account(
     @SerializedName("rights_to_publish") val rightsToPublish: Publishing,
     @SerializedName("statistics") val statistics: ChainObject,
     @SerializedName("top_n_control_flags") val topControlFlags: Int
-) : ByteSerializable {
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        id.bytes,
-        registrar.bytes,
-        name.bytes(),
-        owner.bytes,
-        active.bytes,
-        options.bytes,
-        rightsToPublish.bytes,
-        statistics.bytes,
-        topControlFlags.bytes()
-    )
+) {
 
   companion object {
     private val pattern = Pattern.compile("^[a-z][a-z0-9-]+[a-z0-9](?:\\.[a-z][a-z0-9-]+[a-z0-9])*\$")

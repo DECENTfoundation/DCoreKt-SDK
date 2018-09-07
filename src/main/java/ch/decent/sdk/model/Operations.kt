@@ -62,6 +62,10 @@ class TransferOperation @JvmOverloads constructor(
         memo.optionalBytes(),
         byteArrayOf(0)
     )
+
+  override fun toString(): String {
+    return "TransferOperation(from=$from, to=$to, amount=$amount, memo=$memo, fee=$fee, fee=$fee)"
+  }
 }
 
 /**
@@ -100,6 +104,10 @@ class BuyContentOperation @JvmOverloads constructor(
         regionCode.bytes(),
         publicElGamal.bytes
     )
+
+  override fun toString(): String {
+    return "BuyContentOperation(uri='$uri', consumer=$consumer, price=$price, publicElGamal=$publicElGamal, regionCode=$regionCode, fee=$fee)"
+  }
 }
 
 /**
@@ -134,6 +142,10 @@ class AccountUpdateOperation @JvmOverloads constructor(
         options.optionalBytes(),
         byteArrayOf(0)
     )
+
+  override fun toString(): String {
+    return "AccountUpdateOperation(accountId=$accountId, owner=$owner, active=$active, options=$options, fee=$fee)"
+  }
 }
 
 /**
@@ -160,7 +172,8 @@ class AccountCreateOperation constructor(
     require(Account.isValidName(name)) { "not a valid name" }
   }
 
-  constructor(registrar: ChainObject, name: String, public: Address) : this(registrar, name, Authority(public), Authority(public), Options(public))
+  constructor(registrar: ChainObject, name: String, public: Address) :
+      this(registrar, name, Authority(public), Authority(public), Options(public))
 
   override val bytes: ByteArray
     get() = Bytes.concat(
@@ -173,6 +186,11 @@ class AccountCreateOperation constructor(
         options.bytes,
         byteArrayOf(0)
     )
+
+  override fun toString(): String {
+    return "AccountCreateOperation(registrar=$registrar, name='$name', owner=$owner, active=$active, options=$options, fee=$fee)"
+  }
+
 }
 
 /**
@@ -239,4 +257,8 @@ class ContentSubmitOperation constructor(
         synopsis.bytes(),
         custodyData.optionalBytes()
     )
+
+  override fun toString(): String {
+    return "ContentSubmitOperation(size=$size, author=$author, coauthors=$coauthors, uri='$uri', quorum=$quorum, price=$price, hash='$hash', seeders=$seeders, keyParts=$keyParts, expiration=$expiration, publishingFee=$publishingFee, synopsis='$synopsis', custodyData=$custodyData, fee=$fee)"
+  }
 }
