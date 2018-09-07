@@ -14,7 +14,7 @@ import org.threeten.bp.ZoneOffset
  * Recall that block IDs have 32 bits of block number followed by the
  * actual block hash, so this field should be set using the second 32 bits
  * in the block_id_type
- * @param relativeExpiration: Expiration time specified as a POSIX or
+ * @param expiration: Expiration time specified as a POSIX or
  * [Unix time](https://en.wikipedia.org/wiki/Unix_time)
  */
 data class BlockData(

@@ -22,6 +22,6 @@ internal class GetAccountHistory(
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(startId == ChainObject.NONE || startId.objectType == ObjectType.OPERATION_HISTORY_OBJECT)
+    require(startId.objectType == ObjectType.OPERATION_HISTORY_OBJECT)
   }
 }

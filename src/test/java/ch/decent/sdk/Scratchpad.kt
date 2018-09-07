@@ -1,10 +1,7 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.*
-import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.TransactionConfirmation
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.GetAccountByName
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
@@ -219,6 +216,20 @@ class Scratchpad {
 //    api.transfer(credentials, account2.objectId, 0.0001).blockingGet()
 //    api.transfer(credentials, accountName2, 0.0002).blockingGet()
     api.transfer(credentials, public2, 0.0003).blockingGet()
+  }
+
+  @Test fun `transaction signature`() {
+    val key = ECKeyPair.fromBase58(private)
+
+    val op = TransferOperation(
+        account,
+        account2,
+        AssetAmount(100000),
+        fee = AssetAmount(5000)
+    )
+    Sha256Hash.of(op.bytes).hex.print()
+    key.signature(Sha256Hash.of(op.bytes)).print()
+
   }
 
 }
