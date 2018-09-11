@@ -15,4 +15,9 @@ object Globals {
       Asset.Options(7319777577456900, Asset.ExchangeRate(), true),
       "2.3.0".toChainObject()
   )
+
+  const val ALXT_SYMBOL = "ALXT"
+  const val ALAT_SYMBOL = "ALAT"
+  const val ALX_SYMBOL = "ALX"
+  const val ALA_SYMBOL = "ALA"
 }
