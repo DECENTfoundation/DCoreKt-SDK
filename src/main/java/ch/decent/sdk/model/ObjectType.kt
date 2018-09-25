@@ -41,15 +41,15 @@ enum class ObjectType {
   MESSAGING_OBJECT;
 
   val space: Byte
-    get() = if(this == NULL_OBJECT) 0 else if (ordinal < 10) 1 else 2
+    get() = if (ordinal < 10) 1 else 2
 
   val type: Byte
-    get() = (ordinal - (max(space - 1, 0)) * 10).toByte()
+    get() = (ordinal - (space - 1) * 10).toByte()
 
   /**
    * This method is used to return the generic object type in the form space.type.0.
    *
-   * Not to be confused with [ChainObject.getObjectId], which will return
+   * Not to be confused with [ChainObject.objectId], which will return
    * the full object id in the form space.type.id.
    *
    * @return: The generic object type

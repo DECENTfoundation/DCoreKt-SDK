@@ -97,13 +97,13 @@ interface DCoreApiRx {
    *
    * @param accountId object id of the account, 1.2.*
    * @param order
-   * @param from object id of the history object to start from, use 0.0.0 to ignore
+   * @param from object id of the history object to start from, use [ObjectType.NULL_OBJECT.genericId] to ignore
    * @param limit number of entries, max 100
    */
   fun searchAccountHistory(
       accountId: ChainObject,
       order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
-      from: ChainObject = ChainObject.NONE,
+      from: ChainObject = ObjectType.NULL_OBJECT.genericId,
       limit: Int = 100
   ): Single<List<TransactionDetail>>
 
@@ -112,14 +112,14 @@ interface DCoreApiRx {
    *
    * @param consumer object id of the account, 1.2.*
    * @param order
-   * @param from object id of the history object to start from, use 0.0.0 to ignore
+   * @param from object id of the history object to start from, use [ObjectType.NULL_OBJECT.genericId] to ignore
    * @param term
    * @param limit number of entries, max 100
    */
   fun searchPurchases(
       consumer: ChainObject,
       order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
-      from: ChainObject = ChainObject.NONE,
+      from: ChainObject = ObjectType.NULL_OBJECT.genericId,
       term: String = "",
       limit: Int = 100
   ): Single<List<Purchase>>
