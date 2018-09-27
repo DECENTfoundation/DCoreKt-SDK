@@ -31,8 +31,8 @@ class ApiTest : TimeOutTest() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
         client(logger),
-//        mockWebServer.getUrl(),
-        url,
+        mockWebServer.getUrl(),
+//        url,
         logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )
@@ -182,8 +182,8 @@ class ApiTest : TimeOutTest() {
     val op = TransferOperation(
         account,
         account2,
-        AssetAmount(1500000)
-//        memo
+        AssetAmount(1500000),
+        memo
     )
     val props = socket.request(GetDynamicGlobalProps).blockingGet()
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
@@ -280,7 +280,7 @@ class ApiTest : TimeOutTest() {
 
   @Test fun `buy free content`() = testBuyContent(0, "1f51b2c15930ff46cb08f75d24488e2ac0a5c75567962d43b8384af6f03d5bde603c4c36949bd7b9c5ba007e73e95703a27a7d43e6936a8f9f68323b47d64d2ed5", "65650fc8c317e5e9d008fe6f694ad4fc1246c176", "2018-05-30T11:35:16")
 
-  @Test(expected = IllegalArgumentException::class) fun `require nonnegative price for buy content`() {
+  @Test(expected = IllegalArgumentException::class) fun `require non negative price for buy content`() {
     val key = ECKeyPair.fromBase58(private)
     BuyContentOperation(
         "http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=949da412-18bd-4b8d-acba-e8fd7a594d88",
@@ -351,8 +351,6 @@ class ApiTest : TimeOutTest() {
     val public = "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address()
     val op = AccountCreateOperation(account, "mikeeee", public)
 
-    op.bytes.hex().print()
-
     val props = socket.request(GetDynamicGlobalProps).blockingGet()
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
@@ -384,7 +382,7 @@ class ApiTest : TimeOutTest() {
     val key = ECKeyPair.fromBase58(private)
 
     val op = ContentSubmitOperation(
-        1,
+        10000,
         account,
         listOf(),
         "http://hello.io/world2",
@@ -394,18 +392,15 @@ class ApiTest : TimeOutTest() {
         listOf(),
         listOf(),
         LocalDateTime.parse("2019-05-28T13:32:34"),
-        AssetAmount(0),
-        Synopsis("Game Title", "Description", "1.5.5".toChainObject()).json
+        AssetAmount(1000),
+        Synopsis("Game Title", "Description", "1.2.3".toChainObject()).json
     )
 
     val props = socket.request(GetDynamicGlobalProps).blockingGet()
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
-    op.bytes.hex().print()
-
-/*
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -416,6 +411,5 @@ class ApiTest : TimeOutTest() {
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
-*/
   }
 }
