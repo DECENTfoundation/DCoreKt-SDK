@@ -40,7 +40,7 @@ internal class RpcService(url: String, client: OkHttpClient, private val gson: G
           .flatMap {
             when {
               it.has("error") -> Single.error(DCoreException(gson.fromJson(it["error"], Error::class.java)))
-              it.has("result") && it["result"].isJsonArray && it["result"].asJsonArray.contains(JsonNull.INSTANCE)
+              it.has("result") && ((it["result"].isJsonArray && it["result"].asJsonArray.contains(JsonNull.INSTANCE)) || it["result"] == JsonNull.INSTANCE)
               -> Single.error(ObjectNotFoundException(request.description()))
               it.has("result") -> Single.just<T>(gson.fromJson(it["result"], request.returnClass))
               else -> Single.error(IllegalStateException("invalid HTTP API response"))

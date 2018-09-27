@@ -40,6 +40,22 @@ interface AccountApi {
    */
   fun getAccountByAddress(address: Address): Single<Account> = getAccountIdsByKeys(listOf(address)).flatMap { getAccountsByIds(it.first()).map { it.first() } }
 
+  /**
+   * check if account exist
+   *
+   * @param reference account id, name or pub key
+   * @return account exists in DCore database
+   */
+  fun accountExist(reference: String): Single<Boolean> = getAccountId(reference).map { true }.onErrorReturnItem(false)
+
+  /**
+   * get account id by reference
+   *
+   * @param reference account id, name or pub key
+   * @return first found account id if exist, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   * @throws IllegalStateException if the account reference is not valid
+   */
+
   fun getAccountId(reference: String): Single<ChainObject> = when {
     ChainObject.isValid(reference) -> getAccountsByIds(listOf(reference.toChainObject())).map { it.first().id }
     Address.isValid(reference) -> getAccountIdsByKeys(listOf(Address.decode(reference))).map { it[0][0] }
@@ -47,8 +63,13 @@ interface AccountApi {
     else -> throw IllegalArgumentException("not a valid account reference")
   }
 
-  fun accountExist(reference: String): Single<Boolean> = getAccountId(reference).map { true }.onErrorReturnItem(false)
-
+  /**
+   * get account by reference
+   *
+   * @param reference account id, name or pub key
+   * @return first found account if exist, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   * @throws IllegalStateException if the account reference is not valid
+   */
   fun getAccount(reference: String): Single<Account> = when {
     ChainObject.isValid(reference) -> getAccountsByIds(listOf(reference.toChainObject())).map { it.first() }
     Address.isValid(reference) -> getAccountIdsByKeys(listOf(Address.decode(reference))).map { it[0] }.flatMap { getAccountsByIds(it).map { it.first() } }

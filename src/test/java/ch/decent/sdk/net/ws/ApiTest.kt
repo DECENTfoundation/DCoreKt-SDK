@@ -189,7 +189,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -224,7 +224,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -262,7 +262,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -329,7 +329,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -357,7 +357,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
