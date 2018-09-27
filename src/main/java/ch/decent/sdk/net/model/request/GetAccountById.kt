@@ -6,13 +6,13 @@ import ch.decent.sdk.model.ObjectType
 import com.google.gson.reflect.TypeToken
 
 internal class GetAccountById(
-    accountId: ChainObject
+    accountIds: List<ChainObject>
 ) : GetObjects<List<Account>>(
-    listOf(accountId),
+    accountIds,
     TypeToken.getParameterized(List::class.java, Account::class.java).type
 ) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(accountIds.all { it.objectType == ObjectType.ACCOUNT_OBJECT })
   }
 }

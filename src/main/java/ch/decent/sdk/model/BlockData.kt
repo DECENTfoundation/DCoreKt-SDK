@@ -35,7 +35,7 @@ data class BlockData(
       relativeExpiration
   )
 
-  constructor(props: DynamicGlobalProps) : this(props.headBlockNumber, props.headBlockId, props.time.toEpochSecond(ZoneOffset.UTC) + DCoreSdk.transactionExpiration)
+  constructor(props: DynamicGlobalProps, expiration: Int) : this(props.headBlockNumber, props.headBlockId, props.time.toEpochSecond(ZoneOffset.UTC) + expiration)
 
   override val bytes: ByteArray
     get() =
@@ -44,9 +44,9 @@ data class BlockData(
     // 4 bytes for the ref_block_prefix value
     // 4 bytes for the relative_expiration
       Bytes.concat(
-          ByteArray(2, { idx -> (refBlockNum shr 8 * idx).toByte() }),
-          ByteArray(4, { idx -> (refBlockPrefix shr 8 * idx).toByte() }),
-          ByteArray(4, { idx -> (expiration shr 8 * idx).toByte() }))
+          ByteArray(2) { idx -> (refBlockNum shr 8 * idx).toByte() },
+          ByteArray(4) { idx -> (refBlockPrefix shr 8 * idx).toByte() },
+          ByteArray(4) { idx -> (expiration shr 8 * idx).toByte() })
 
   fun increment() = this.copy(expiration = expiration + 1)
 }

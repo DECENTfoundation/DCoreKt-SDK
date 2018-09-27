@@ -28,11 +28,12 @@ class ApiTest : TimeOutTest() {
 
   @Before fun init() {
     mockWebServer = CustomWebSocketService().apply { start() }
+    val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
-        client,
-        mockWebServer.getUrl(),
-//        url,
-        logger = LoggerFactory.getLogger("RxWebSocket"),
+        client(logger),
+//        mockWebServer.getUrl(),
+        url,
+        logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )
   }
@@ -76,7 +77,7 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":2}""", """{"id":2,"result":true}""")
 
-    val test = socket.request(GetAccountById(account2))
+    val test = socket.request(GetAccountById(listOf(account2)))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -320,7 +321,7 @@ class ApiTest : TimeOutTest() {
 
   private fun vote(votes: Set<String>): Single<Account> {
     val key = ECKeyPair.fromBase58(private)
-    val account = socket.request(GetAccountById(account)).blockingGet().first()
+    val account = socket.request(GetAccountById(listOf(account))).blockingGet().first()
     val op = AccountUpdateOperation(
         account.id, options = account.options.copy(votes = votes)
     )
@@ -333,7 +334,7 @@ class ApiTest : TimeOutTest() {
     ).withSignature(key)
 
     return socket.request(BroadcastTransactionWithCallback(transaction, 27185))
-        .flatMap { socket.request(GetAccountById(account.id)).map { it.first() } }
+        .flatMap { socket.request(GetAccountById(listOf(account.id))).map { it.first() } }
   }
 
   @Test fun `create account`() {
@@ -352,7 +353,6 @@ class ApiTest : TimeOutTest() {
 
     op.bytes.hex().print()
 
-/*
     val props = socket.request(GetDynamicGlobalProps).blockingGet()
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
@@ -368,7 +368,6 @@ class ApiTest : TimeOutTest() {
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
-*/
   }
 
 

@@ -1,22 +1,22 @@
 package ch.decent.sdk.net.model.request
 
+import ch.decent.sdk.model.Account
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 
-internal class GetAccountBalances(
-    accountId: ChainObject,
+internal class GetNamedAccountBalances(
+    account: String,
     assets: Set<ChainObject> = emptySet()
 ): BaseRequest<List<AssetAmount>>(
     ApiGroup.DATABASE,
-    "get_account_balances",
+    "get_named_account_balances",
     TypeToken.getParameterized(List::class.java, AssetAmount::class.java).type,
-    listOf(accountId.objectId, assets)
+    listOf(account, assets)
 ) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(Account.isValidName(account))
   }
 }

@@ -2,16 +2,16 @@ package ch.decent.sdk
 
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.net.TrustAllCerts
-import ch.decent.sdk.net.ws.RxWebSocket
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
 val url = "wss://stagesocket.decentgo.com:8090"
-val restUrl = "http://stagesocket.decentgo.com:8089/"
-val client: OkHttpClient = TrustAllCerts.wrap(OkHttpClient.Builder()
-    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)))
-    .build()
+val restUrl = "https://stagesocket.decentgo.com:8090/"
+fun client(logger: Logger): OkHttpClient =
+    TrustAllCerts.wrap(OkHttpClient.Builder())
+        .addInterceptor(HttpLoggingInterceptor { logger.info(it) }.setLevel(HttpLoggingInterceptor.Level.BODY))
+        .build()
 
 val account = ChainObject.parse("1.2.34")
 val account2 = ChainObject.parse("1.2.35")

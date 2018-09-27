@@ -1,11 +1,13 @@
 package ch.decent.sdk.net.ws
 
+import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.net.model.request.BaseRequest
 import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.model.request.RequestApiAccess
 import ch.decent.sdk.net.model.request.WithCallback
+import ch.decent.sdk.net.model.response.Error
 import ch.decent.sdk.net.ws.model.OnMessageText
 import ch.decent.sdk.net.ws.model.OnOpen
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
@@ -82,7 +84,7 @@ internal class RxWebSocket(
       }
 
   private fun checkForError(callId: Long, resultId: Long, obj: JsonObject) =
-      if (resultId == callId && obj.has("error")) throw Exception(obj.get("error").asJsonObject.get("message").asString) else Unit
+      if (resultId == callId && obj.has("error")) throw DCoreException(gson.fromJson(obj["error"], Error::class.java)) else Unit
 
   private fun checkObjectNotFound(obj: JsonObject, request: BaseRequest<*>) =
       if (obj.get("result")?.isJsonNull == true) throw ObjectNotFoundException(request.description())

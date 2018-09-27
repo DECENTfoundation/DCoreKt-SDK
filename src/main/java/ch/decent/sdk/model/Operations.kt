@@ -1,16 +1,17 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.net.serialization.ByteSerializable
-import ch.decent.sdk.net.serialization.Varint
-import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.net.serialization.optionalBytes
+import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.net.serialization.*
+import ch.decent.sdk.utils.publicElGamal
 import ch.decent.sdk.utils.unhex
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
+import java.net.URL
+import java.util.*
 import java.util.regex.Pattern
 
 sealed class BaseOperation(
@@ -21,6 +22,18 @@ sealed class BaseOperation(
   companion object {
     internal val FEE_UNSET = AssetAmount(BigInteger.ZERO)
   }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as BaseOperation
+
+    if (!bytes.contentEquals(other.bytes)) return false
+    return true
+  }
+
+  override fun hashCode(): Int = Arrays.hashCode(bytes)
 }
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
@@ -87,6 +100,9 @@ class BuyContentOperation @JvmOverloads constructor(
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
+  constructor(credentials: Credentials, content: Content):
+      this(content.uri, credentials.account, content.price(), if (URL(content.uri).protocol != "ipfs") PubKey() else credentials.keyPair.publicElGamal())
+
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
@@ -127,6 +143,8 @@ class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("new_options") val options: Options? = null,
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
+
+  constructor(account: Account, votes: Set<VoteId>): this(account.id, options = account.options.copy(votes = votes))
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
@@ -245,7 +263,7 @@ class ContentSubmitOperation constructor(
         fee.bytes,
         size.bytes(),
         author.bytes,
-        ByteArray(1) { 0 },
+        byteArrayOf(0),
         uri.bytes(),
         quorum.bytes(),
         price.bytes(),
