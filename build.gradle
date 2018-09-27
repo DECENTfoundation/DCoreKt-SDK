@@ -64,7 +64,6 @@ if (d.commitDistance > 0 || !d.isCleanTag || version.contains(devTagPrefix)) {
     repo = "libs-snapshot-local"
 }
 
-
 changelog {
     markdown {
         commitFormat = '* %s (%aE)'

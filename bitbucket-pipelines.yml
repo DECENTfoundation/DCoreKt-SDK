@@ -6,5 +6,5 @@ pipelines:
           caches:
             - gradle
           script:
-            - ./gradlew build --stacktrace
+            - ./gradlew check build --stacktrace
             - ./gradlew artifactoryPublish
