@@ -2,20 +2,14 @@ package ch.decent.sdk
 
 import ch.decent.sdk.crypto.*
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.GetAccountByName
-import ch.decent.sdk.net.serialization.Varint
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.utils.hex
 import com.google.common.primitives.Bytes
-import com.google.common.primitives.Longs
-import io.reactivex.Single
 import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should equal`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
 import org.junit.Test
-import org.slf4j.LoggerFactory
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest
@@ -43,7 +37,7 @@ class Scratchpad {
     println(df.format(1))
     println(df.format(1.22))
 
-    println(Globals.DCT.format(BigInteger.valueOf(9), 2))
+    println(Constants.DCT.format(BigInteger.valueOf(9), 2))
   }
 
   @Test fun `chain object id`() {
@@ -92,22 +86,6 @@ class Scratchpad {
 
   }
 
-  @Test fun hex() {
-    fun hexToBytes(s: String): ByteArray {
-      val len = s.length
-      val data = ByteArray(len / 2)
-      var i = 0
-      while (i < len) {
-        data[i / 2] = ((Character.digit(s[i], 16) shl 4) + Character.digit(s[i + 1], 16)).toByte()
-        i += 2
-      }
-      return data
-    }
-
-    println(Hex.decode(Globals.DCT_CHAIN_ID).joinToString())
-    println(hexToBytes(Globals.DCT_CHAIN_ID).joinToString())
-  }
-
   @Test fun base58() {
 
     val private = "5JVHeRffGsKGyDf7T9i9dBbzVHQrYprYeaBQo2VCSytj7BxpMCq"
@@ -138,20 +116,6 @@ class Scratchpad {
     println(sig)
 
     sig `should not be equal to` ""
-  }
-
-  @Test fun toBytes() {
-    val chainId = Globals.DCT_CHAIN_ID
-
-    var buffer = ByteArray(chainId.length / 2)
-    var i = 0
-    while (i < chainId.length) {
-      buffer[i / 2] = ((Character.digit(chainId[i], 16) shl 4) + Character.digit(chainId[i + 1], 16)).toByte()
-      i += 2
-    }
-    println(Bytes.asList(*buffer).joinToString())
-    println(Hex.decode(chainId).joinToString())
-
   }
 
   @Test fun `encrypt and decrypt from BC`() {

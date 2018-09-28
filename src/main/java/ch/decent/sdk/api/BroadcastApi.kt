@@ -3,6 +3,7 @@ package ch.decent.sdk.api
 import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -26,6 +27,12 @@ interface BroadcastApi {
       broadcast(ECKeyPair.fromBase58(privateKey), operations, expiration)
 
   /**
+   * broadcast transaction to DCore
+   * @param transaction transaction to broadcast
+   */
+  fun broadcast(transaction: Transaction): Single<Unit>
+
+  /**
    * broadcast operations to DCore with callback when applied
    * @param privateKey private key
    * @param operations operations to be submitted to DCore
@@ -41,5 +48,12 @@ interface BroadcastApi {
    */
   fun broadcastWithCallback(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<TransactionConfirmation> =
       broadcastWithCallback(ECKeyPair.fromBase58(privateKey), operations, expiration)
+
+  /**
+   * broadcast transaction to DCore with callback
+   * @param transaction transaction to broadcast
+   */
+  fun broadcastWithCallback(transaction: Transaction): Single<TransactionConfirmation>
+
 
 }

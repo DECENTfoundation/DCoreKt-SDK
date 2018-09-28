@@ -72,7 +72,8 @@ interface AccountApi {
    */
   fun getAccount(reference: String): Single<Account> = when {
     ChainObject.isValid(reference) -> getAccountsByIds(listOf(reference.toChainObject())).map { it.first() }
-    Address.isValid(reference) -> getAccountIdsByKeys(listOf(Address.decode(reference))).map { it[0] }.flatMap { getAccountsByIds(it).map { it.first() } }
+    Address.isValid(reference) -> getAccountIdsByKeys(listOf(Address.decode(reference))).map { it[0][0] }
+        .flatMap { getAccountsByIds(listOf(it)).map { it.first() } }
     Account.isValidName(reference) -> getAccountByName(reference)
     else -> throw IllegalArgumentException("not a valid account reference")
   }

@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
+import org.omg.CORBA.ValueMember
 import org.threeten.bp.LocalDateTime
 import java.math.BigInteger
 
@@ -139,4 +140,21 @@ object CipherKeyPairAdapter : TypeAdapter<Wallet.CipherKeyPair>() {
     out.value(value.private.toString())
     out.endArray()
   }
+}
+
+object MinerIdAdapter : TypeAdapter<MinerId>() {
+  override fun write(out: JsonWriter, value: MinerId) {
+    out.beginArray()
+    out.value(value.name)
+    out.value(value.id.objectId)
+    out.endArray()
+  }
+
+  override fun read(reader: JsonReader): MinerId {
+    reader.beginArray()
+    val minerId = MinerId(reader.nextString(), reader.nextString().toChainObject())
+    reader.endArray()
+    return minerId
+  }
+
 }

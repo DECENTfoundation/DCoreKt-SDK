@@ -5,10 +5,11 @@ import ch.decent.sdk.net.TrustAllCerts
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 val url = "wss://stagesocket.decentgo.com:8090"
 val restUrl = "https://stagesocket.decentgo.com:8090/"
-fun client(logger: Logger): OkHttpClient =
+fun client(logger: Logger = LoggerFactory.getLogger("OkHttpClient")): OkHttpClient =
     TrustAllCerts.wrap(OkHttpClient.Builder())
         .addInterceptor(HttpLoggingInterceptor { logger.info(it) }.setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()

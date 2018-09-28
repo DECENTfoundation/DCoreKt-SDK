@@ -1,5 +1,8 @@
 package ch.decent.sdk.api
 
+import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
@@ -35,5 +38,7 @@ interface TransactionApi {
    * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun getTransaction(confirmation: TransactionConfirmation): Single<ProcessedTransaction> = getTransaction(confirmation.blockNum, confirmation.trxNum)
+
+  fun createTransaction(operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<Transaction>
 
 }

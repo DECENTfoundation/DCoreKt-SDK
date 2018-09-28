@@ -8,11 +8,14 @@ import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.net.rpc.RpcService
 import ch.decent.sdk.net.ws.RxWebSocket
 import com.google.gson.GsonBuilder
+import com.sun.xml.internal.bind.v2.model.core.ID
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.threeten.bp.LocalDateTime
+import java.lang.IllegalArgumentException
 
 class DCoreSdk private constructor(
     private val client: OkHttpClient,
@@ -23,6 +26,7 @@ class DCoreSdk private constructor(
 
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gsonBuilder.create(), logger) }
   private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gsonBuilder.create()) }
+  private val chainId = GetChainId.toRequest().cache()
 
   init {
     require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
@@ -30,32 +34,35 @@ class DCoreSdk private constructor(
 
   private fun <T> BaseRequest<T>.toRequest(): Single<T> = makeRequest(this)
 
-  private fun prepareTransaction(operations: List<BaseOperation>, expiration: Int): Single<Transaction> =
-      operations.partition { it.fee !== BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
-        if (noFees.isNotEmpty()) {
-          GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
-        } else {
-          Single.just(fees)
-        }
-      }.zipWith(
-          GetDynamicGlobalProps.toRequest(),
-          BiFunction { ops, props -> Transaction(BlockData(props, expiration), ops) }
-      )
+  internal fun prepareTransaction(operations: List<BaseOperation>, expiration: Int): Single<Transaction> =
+      chainId.flatMap { id ->
+        GetDynamicGlobalProps.toRequest().zipWith(
+            operations.partition { it.fee !== BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
+              if (noFees.isNotEmpty()) {
+                GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
+              } else {
+                Single.just(fees)
+              }
+            }, BiFunction { props: DynamicGlobalProps, ops: List<BaseOperation> -> Transaction(BlockData(props, expiration), ops, id) })
+      }
 
   internal fun <T> makeRequest(request: BaseRequest<T>): Single<T> {
     check(rxWebSocket != null || rpc != null)
     return if (rxWebSocket != null && (rpc == null || rxWebSocket.connected || request.apiGroup != ApiGroup.DATABASE)) {
       rxWebSocket.request(request)
     } else {
-      require(rpc != null && request.apiGroup == ApiGroup.DATABASE) { "not available through HTTP API" }
-      rpc!!.request(request)
+      if (rpc == null || request.apiGroup != ApiGroup.DATABASE) Single.error(IllegalArgumentException("not available through HTTP API"))
+      else rpc.request(request)
     }
   }
+
+  internal fun broadcastWithCallback(transaction: Transaction) =
+      with(rxWebSocket!!.callId) { BroadcastTransactionWithCallback(transaction, this).toRequest() }
 
   fun broadcastWithCallback(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = defaultExpiration): Single<TransactionConfirmation> =
       prepareTransaction(operations, expiration)
           .map { it.withSignature(keyPair) }
-          .flatMap { with(rxWebSocket!!.callId) { BroadcastTransactionWithCallback(it, this).toRequest() } }
+          .flatMap { broadcastWithCallback(it) }
 
   fun broadcast(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = defaultExpiration): Single<Unit> =
       prepareTransaction(operations, expiration)
@@ -63,9 +70,6 @@ class DCoreSdk private constructor(
           .flatMap { BroadcastTransaction(it).toRequest() }
 
   companion object {
-    /**
-     * Specifies expiration time of transactions, after expiry the transaction will be removed form recent's pool
-     */
     const val defaultExpiration = 30 //seconds
 
     @JvmStatic val gsonBuilder = GsonBuilder()
@@ -76,6 +80,7 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
         .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
+        .registerTypeAdapter(MinerId::class.java, MinerIdAdapter)
 
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, restUrl = url, logger = logger))
@@ -87,4 +92,3 @@ class DCoreSdk private constructor(
         DCoreApi(DCoreSdk(client, webSocketUrl, httpUrl, logger))
   }
 }
-
