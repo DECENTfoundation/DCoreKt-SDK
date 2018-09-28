@@ -1,6 +1,6 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.Constants
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.ChainObject
@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 
 internal class GetRequiredFees(
     operations: List<BaseOperation>,
-    assetId: ChainObject = Constants.DCT.id
+    assetId: ChainObject = DCoreConstants.DCT.id
 ): BaseRequest<List<AssetAmount>>(
     ApiGroup.DATABASE,
     "get_required_fees",

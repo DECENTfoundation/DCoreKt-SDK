@@ -1,6 +1,6 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.Constants
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.bytes
 import com.google.common.primitives.Bytes
@@ -9,7 +9,7 @@ import java.math.BigInteger
 
 data class AssetAmount @JvmOverloads constructor(
     @SerializedName("amount") val amount: BigInteger,
-    @SerializedName("asset_id") val assetId: ChainObject = Constants.DCT_ASSET_ID
+    @SerializedName("asset_id") val assetId: ChainObject = DCoreConstants.DCT_ASSET_ID
 ) : ByteSerializable {
 
   constructor(amount: Long) : this(amount.toBigInteger())

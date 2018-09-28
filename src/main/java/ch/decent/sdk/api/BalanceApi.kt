@@ -33,7 +33,7 @@ interface BalanceApi {
    * @param assetSymbols asset symbols, eg. DCT
    * @return list of assets with amounts
    */
-  fun getBalanceWithAsset(account: ChainObject, assetSymbols: Set<String> = emptySet()): Single<Map<Asset, BigInteger>>
+  fun getBalanceWithAsset(account: ChainObject, assetSymbols: Set<String> = emptySet()): Single<Map<Asset, AssetAmount>>
 
   /**
    * get account balance by name
@@ -42,6 +42,6 @@ interface BalanceApi {
    * @param assetSymbols asset symbols, eg. DCT
    * @return list of assets with amounts
    */
-  fun getBalanceWithAsset(accountReference: String, assetSymbols: Set<String> = emptySet()): Single<Map<Asset, BigInteger>>
+  fun getBalanceWithAsset(accountReference: String, assetSymbols: Set<String> = emptySet()): Single<Map<Asset, AssetAmount>>
 
 }

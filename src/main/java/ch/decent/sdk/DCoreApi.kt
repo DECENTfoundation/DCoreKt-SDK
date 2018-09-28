@@ -45,14 +45,14 @@ class DCoreApi internal constructor(private val core: DCoreSdk) {
       else -> account.getAccountId(accountReference).flatMap { getBalance(it, assets) }
     }
 
-    override fun getBalanceWithAsset(account: ChainObject, assetSymbols: Set<String>): Single<Map<Asset, BigInteger>> =
+    override fun getBalanceWithAsset(account: ChainObject, assetSymbols: Set<String>): Single<Map<Asset, AssetAmount>> =
         asset.lookupAssets(assetSymbols.toList()).flatMap { assets ->
           getBalance(account, assets.map { it.id }.toSet()).map {
-            it.associate { balance -> assets.single { it.id == balance.assetId } to balance.amount }
+            it.associate { balance -> assets.single { it.id == balance.assetId } to balance }
           }
         }
 
-    override fun getBalanceWithAsset(accountReference: String, assetSymbols: Set<String>): Single<Map<Asset, BigInteger>> =
+    override fun getBalanceWithAsset(accountReference: String, assetSymbols: Set<String>): Single<Map<Asset, AssetAmount>> =
         account.getAccountId(accountReference).flatMap { getBalanceWithAsset(it, assetSymbols) }
   }
 
@@ -112,7 +112,6 @@ class DCoreApi internal constructor(private val core: DCoreSdk) {
   }
 
   val operations = object : OperationsHelper {
-
     override fun createTransfer(credentials: Credentials, to: String, amount: AssetAmount, memo: String?, encrypted: Boolean, fee: AssetAmount): Single<TransferOperation> =
         account.getAccount(to).map { receiver ->
           if (memo.isNullOrBlank() || !encrypted) {
@@ -120,6 +119,11 @@ class DCoreApi internal constructor(private val core: DCoreSdk) {
           } else {
             TransferOperation(credentials.account, receiver.id, amount, Memo(memo!!, credentials.keyPair, receiver.active.keyAuths.first().value), fee)
           }
+        }
+
+    override fun transfer(credentials: Credentials, to: String, amount: AssetAmount, memo: String?, encrypted: Boolean, fee: AssetAmount, expiration: Int): Single<TransactionConfirmation> =
+        createTransfer(credentials, to, amount, memo, encrypted, fee).flatMap {
+          broadcast.broadcastWithCallback(credentials.keyPair, listOf(it), expiration)
         }
 
     override fun createBuyContent(credentials: Credentials, contentId: ChainObject): Single<BuyContentOperation> =

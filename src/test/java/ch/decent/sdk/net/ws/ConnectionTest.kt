@@ -1,7 +1,6 @@
 package ch.decent.sdk.net.ws
 
 import ch.decent.sdk.DCoreSdk
-import ch.decent.sdk.Constants
 import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.client
 import ch.decent.sdk.net.model.request.GetChainId

@@ -21,6 +21,7 @@ interface BroadcastApi {
    * broadcast operations to DCore
    * @param privateKey private key in base58 format
    * @param operations operations to be submitted to DCore
+   * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   fun broadcast(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<Unit> =
       broadcast(ECKeyPair.fromBase58(privateKey), operations, expiration)
@@ -35,6 +36,7 @@ interface BroadcastApi {
    * broadcast operations to DCore with callback when applied
    * @param privateKey private key
    * @param operations operations to be submitted to DCore
+   * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    * @return a transaction confirmation
    */
   fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<TransactionConfirmation>
@@ -43,6 +45,7 @@ interface BroadcastApi {
    * broadcast operations to DCore with callback when applied
    * @param privateKey private key in base58 format
    * @param operations operations to be submitted to DCore
+   * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    * @return a transaction confirmation
    */
   fun broadcastWithCallback(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<TransactionConfirmation> =
