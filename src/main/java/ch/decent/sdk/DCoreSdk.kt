@@ -56,19 +56,17 @@ class DCoreSdk private constructor(
   internal fun broadcastWithCallback(transaction: Transaction) =
       with(rxWebSocket!!.callId) { BroadcastTransactionWithCallback(transaction, this).toRequest() }
 
-  fun broadcastWithCallback(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = defaultExpiration): Single<TransactionConfirmation> =
+  fun broadcastWithCallback(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<TransactionConfirmation> =
       prepareTransaction(operations, expiration)
           .map { it.withSignature(keyPair) }
           .flatMap { broadcastWithCallback(it) }
 
-  fun broadcast(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = defaultExpiration): Single<Unit> =
+  fun broadcast(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<Unit> =
       prepareTransaction(operations, expiration)
           .map { it.withSignature(keyPair) }
           .flatMap { BroadcastTransaction(it).toRequest() }
 
   companion object {
-    const val defaultExpiration = 30 //seconds
-
     @JvmStatic val gsonBuilder = GsonBuilder()
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
@@ -79,12 +77,15 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
         .registerTypeAdapter(MinerId::class.java, MinerIdAdapter)
 
+    @JvmStatic
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, restUrl = url, logger = logger))
 
+    @JvmStatic
     fun createForWebSocket(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, webSocketUrl = url, logger = logger))
 
+    @JvmStatic
     fun create(client: OkHttpClient, webSocketUrl: String, httpUrl: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, webSocketUrl, httpUrl, logger))
   }

@@ -1,5 +1,6 @@
 package ch.decent.sdk.api
 
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.BaseOperation
@@ -15,7 +16,7 @@ interface BroadcastApi {
    * @param operations operations to be submitted to DCore
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
-  fun broadcast(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<Unit>
+  fun broadcast(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<Unit>
 
   /**
    * broadcast operations to DCore
@@ -23,7 +24,7 @@ interface BroadcastApi {
    * @param operations operations to be submitted to DCore
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
-  fun broadcast(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<Unit> =
+  fun broadcast(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<Unit> =
       broadcast(ECKeyPair.fromBase58(privateKey), operations, expiration)
 
   /**
@@ -39,7 +40,7 @@ interface BroadcastApi {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    * @return a transaction confirmation
    */
-  fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<TransactionConfirmation>
+  fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<TransactionConfirmation>
 
   /**
    * broadcast operations to DCore with callback when applied
@@ -48,7 +49,7 @@ interface BroadcastApi {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    * @return a transaction confirmation
    */
-  fun broadcastWithCallback(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<TransactionConfirmation> =
+  fun broadcastWithCallback(privateKey: String, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<TransactionConfirmation> =
       broadcastWithCallback(ECKeyPair.fromBase58(privateKey), operations, expiration)
 
   /**

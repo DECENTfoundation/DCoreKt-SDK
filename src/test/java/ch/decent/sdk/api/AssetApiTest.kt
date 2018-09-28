@@ -14,7 +14,7 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
 
     mockHttp.enqueue("""{"id":0,"result":[{"id":"1.3.0","symbol":"DCT","precision":8,"issuer":"1.2.1","description":"","options":{"max_supply":"7319777577456900","core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.0"},"quote":{"amount":1,"asset_id":"1.3.0"}},"is_exchangeable":true,"extensions":[]},"dynamic_asset_data_id":"2.3.0"}]}""")
 
-    val test = api.asset.getAssets((listOf("1.3.0".toChainObject())))
+    val test = api.assetApi.getAssets((listOf("1.3.0".toChainObject())))
         .subscribeOn(Schedulers.newThread())
         .test()
 

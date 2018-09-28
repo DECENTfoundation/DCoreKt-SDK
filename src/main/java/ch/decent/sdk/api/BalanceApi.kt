@@ -27,13 +27,23 @@ interface BalanceApi {
   fun getBalance(accountReference: String, assets: Set<ChainObject> = emptySet()): Single<List<AssetAmount>>
 
   /**
-   * get account balance by name
+   * get account balance by id with asset
    *
    * @param account id of the account
    * @param assetSymbols asset symbols, eg. DCT
-   * @return list of assets with amounts
+   * @return a map of assets to amounts
    */
   fun getBalanceWithAsset(account: ChainObject, assetSymbols: Set<String> = emptySet()): Single<Map<Asset, AssetAmount>>
+
+  /**
+   * get account balance by name
+   *
+   * @param account id of the account
+   * @param assetSymbol asset symbol, eg. DCT
+   * @return a pair of asset to amount
+   */
+  fun getBalanceWithAsset(account: ChainObject, assetSymbol: String = "DCT"): Single<Pair<Asset, AssetAmount>> =
+      getBalanceWithAsset(account, setOf(assetSymbol)).map { it.entries.single().toPair() }
 
   /**
    * get account balance by name

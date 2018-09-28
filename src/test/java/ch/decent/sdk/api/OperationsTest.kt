@@ -2,7 +2,6 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.*
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Memo
@@ -35,7 +34,7 @@ class OperationsTest {
   @Test fun `should fail for HTTP`() {
     api = DCoreSdk.createForHttp(client(), restUrl)
 
-    val test = api.broadcast.broadcast(private, emptyList())
+    val test = api.broadcastApi.broadcast(private, emptyList())
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -63,11 +62,11 @@ class OperationsTest {
         memo
     )
 
-    val trx = api.transaction.createTransaction(listOf(op))
+    val trx = api.transactionApi.createTransaction(listOf(op))
         .map { it.withSignature(key) }
         .blockingGet()
 
-    val test = api.broadcast.broadcastWithCallback(trx)
+    val test = api.broadcastApi.broadcastWithCallback(trx)
         .subscribeOn(Schedulers.newThread())
         .test()
 

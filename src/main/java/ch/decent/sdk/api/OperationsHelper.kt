@@ -1,6 +1,6 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.*
 import io.reactivex.Single
@@ -48,7 +48,7 @@ interface OperationsHelper {
       memo: String? = null,
       encrypted: Boolean = true,
       fee: AssetAmount = BaseOperation.FEE_UNSET,
-      expiration: Int = DCoreSdk.defaultExpiration
+      expiration: Int = DCoreConstants.DEFAULT_EXPIRATION
   ): Single<TransactionConfirmation>
 
   /**

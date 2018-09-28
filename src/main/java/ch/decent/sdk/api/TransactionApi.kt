@@ -1,6 +1,6 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
@@ -38,6 +38,6 @@ interface TransactionApi {
    */
   fun getTransaction(confirmation: TransactionConfirmation): Single<ProcessedTransaction> = getTransaction(confirmation.blockNum, confirmation.trxNum)
 
-  fun createTransaction(operations: List<BaseOperation>, expiration: Int = DCoreSdk.defaultExpiration): Single<Transaction>
+  fun createTransaction(operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<Transaction>
 
 }
