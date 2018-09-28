@@ -5,7 +5,6 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
-import io.reactivex.Completable
 import io.reactivex.Single
 
 interface BroadcastApi {

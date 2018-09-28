@@ -1,8 +1,5 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.net.serialization.ByteSerializable
-import ch.decent.sdk.net.serialization.bytes
-import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import java.util.regex.Pattern
 

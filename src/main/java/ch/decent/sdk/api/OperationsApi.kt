@@ -2,7 +2,6 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.serialization.VoteId
 import io.reactivex.Single
 
 interface OperationsHelper {

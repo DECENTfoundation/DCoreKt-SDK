@@ -1,7 +1,6 @@
 package ch.decent.sdk.crypto
 
 import ch.decent.sdk.DCoreSdk
-import ch.decent.sdk.Constants
 import ch.decent.sdk.model.*
 import ch.decent.sdk.utils.*
 import com.google.gson.annotations.SerializedName
@@ -95,8 +94,7 @@ object Wallet {
     return Credentials(walletFile.accountId, ECKeyPair.fromPrivate(clear))
   }
 
-  // fixme
-  fun exportDCoreWallet(credentials: Credentials, account: Account, password: String, chainId: String = ""): DCoreWallet {
+  fun exportDCoreWallet(credentials: Credentials, account: Account, password: String, chainId: String): DCoreWallet {
     require(credentials.account == account.id)
     val pass = MessageDigest.getInstance("SHA-512").digest(password.toByteArray())
     val gson = DCoreSdk.gsonBuilder
@@ -125,8 +123,7 @@ object Wallet {
   data class DCoreWallet(
       @SerializedName("version") val version: Int = 1,
       @SerializedName("update_time") val updateTime: LocalDateTime = LocalDateTime.now(),
-      //fixme
-      @SerializedName("chain_id") val chainId: String = "",
+      @SerializedName("chain_id") val chainId: String,
       @SerializedName("my_accounts") val accounts: List<Account>,
       @SerializedName("cipher_keys") val cipher: String,
       @SerializedName("extra_keys") val extraKeys: List<ExtraKeys>,

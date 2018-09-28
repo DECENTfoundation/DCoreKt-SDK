@@ -8,14 +8,11 @@ import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.net.rpc.RpcService
 import ch.decent.sdk.net.ws.RxWebSocket
 import com.google.gson.GsonBuilder
-import com.sun.xml.internal.bind.v2.model.core.ID
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function3
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.threeten.bp.LocalDateTime
-import java.lang.IllegalArgumentException
 
 class DCoreSdk private constructor(
     private val client: OkHttpClient,
