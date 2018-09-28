@@ -56,7 +56,6 @@ class ChainObject : ByteSerializable {
 
   companion object {
     private val regex = Regex("""(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?""")
-    val NONE = "0.0.0".toChainObject()
 
     @JvmStatic fun parse(id: String) = if (isValid(id)) ChainObject(id) else throw IllegalArgumentException()
     @JvmStatic fun isValid(id: String): Boolean = regex.matchEntire(id.trim()) != null

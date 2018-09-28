@@ -9,10 +9,10 @@ data class Asset(
     @SerializedName("id") val id: ChainObject = ObjectType.ASSET_OBJECT.genericId,
     @SerializedName("symbol") val symbol: String = "UIA",
     @SerializedName("precision") val precision: Int = 0,
-    @SerializedName("issuer") val issuer: ChainObject = ChainObject.NONE,
+    @SerializedName("issuer") val issuer: ChainObject = ObjectType.NULL_OBJECT.genericId,
     @SerializedName("description") val description: String = "",
     @SerializedName("options") val options: Options = Options(),
-    @SerializedName("dynamic_asset_data_id") val dataId: ChainObject = ChainObject.NONE
+    @SerializedName("dynamic_asset_data_id") val dataId: ChainObject = ObjectType.NULL_OBJECT.genericId
 ) {
 
   init {

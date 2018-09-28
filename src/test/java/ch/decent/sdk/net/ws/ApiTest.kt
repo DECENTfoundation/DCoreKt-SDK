@@ -7,6 +7,7 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.publicElGamal
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -27,11 +28,12 @@ class ApiTest : TimeOutTest() {
 
   @Before fun init() {
     mockWebServer = CustomWebSocketService().apply { start() }
+    val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
-        client,
+        client(logger),
         mockWebServer.getUrl(),
 //        url,
-        logger = LoggerFactory.getLogger("RxWebSocket"),
+        logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )
   }
@@ -75,7 +77,7 @@ class ApiTest : TimeOutTest() {
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":2}""", """{"id":2,"result":true}""")
 
-    val test = socket.request(GetAccountById(account2))
+    val test = socket.request(GetAccountById(listOf(account2)))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -101,7 +103,7 @@ class ApiTest : TimeOutTest() {
 
   @Test fun `should login, request db access and get account history`() {
     mockWebServer
-        .enqueue("""{"method":"call","params":[2,"search_account_history",["1.2.34","-time","0.0.0",100]],"id":0}""", """{"id":0,"result":[{"id":"2.17.263","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"580996120356000000","message":"d9134fd4a08699851e137aab2fc256dea9a6f5b525aad31a227702013a81ed4d"},"m_timestamp":"2018-05-24T12:26:00"},{"id":"2.17.231","m_from_account":"1.2.34","m_to_account":"1.2.38","m_operation_type":1,"m_transaction_amount":{"amount":0,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"","m_timestamp":"2018-05-21T16:03:40"},{"id":"2.17.230","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16653614573311238400","message":"5e1918bf52d9805d3463392ca833e63ed7b4c1f24bed949f9e2851e66b2d02b8"},"m_timestamp":"2018-05-21T15:54:25"},{"id":"2.17.229","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16653614573311238400","message":"5e1918bf52d9805d3463392ca833e63ed7b4c1f24bed949f9e2851e66b2d02b8"},"m_timestamp":"2018-05-21T15:54:25"},{"id":"2.17.157","m_from_account":"1.2.17","m_to_account":"1.2.34","m_operation_type":3,"m_transaction_amount":{"amount":100000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":0,"asset_id":"1.3.0"},"m_str_description":"Product 2","m_timestamp":"2018-05-15T08:59:10"},{"id":"2.17.155","m_from_account":"1.2.15","m_to_account":"1.2.34","m_operation_type":0,"m_transaction_amount":{"amount":"10000000000","asset_id":"1.3.0"},"m_transaction_fee":{"amount":100000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_timestamp":"2018-05-15T08:58:55"},{"id":"2.17.153","m_from_account":"1.2.15","m_to_account":"1.2.34","m_operation_type":1,"m_transaction_amount":{"amount":0,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"","m_timestamp":"2018-05-15T08:50:45"}]}""")
+        .enqueue("""{"method":"call","params":[2,"search_account_history",["1.2.34","-time","1.0.0",100]],"id":0}""", """{"id":0,"result":[{"id":"2.17.263","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"580996120356000000","message":"d9134fd4a08699851e137aab2fc256dea9a6f5b525aad31a227702013a81ed4d"},"m_timestamp":"2018-05-24T12:26:00"},{"id":"2.17.231","m_from_account":"1.2.34","m_to_account":"1.2.38","m_operation_type":1,"m_transaction_amount":{"amount":0,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"","m_timestamp":"2018-05-21T16:03:40"},{"id":"2.17.230","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16653614573311238400","message":"5e1918bf52d9805d3463392ca833e63ed7b4c1f24bed949f9e2851e66b2d02b8"},"m_timestamp":"2018-05-21T15:54:25"},{"id":"2.17.229","m_from_account":"1.2.34","m_to_account":"1.2.35","m_operation_type":0,"m_transaction_amount":{"amount":150000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_transaction_encrypted_memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16653614573311238400","message":"5e1918bf52d9805d3463392ca833e63ed7b4c1f24bed949f9e2851e66b2d02b8"},"m_timestamp":"2018-05-21T15:54:25"},{"id":"2.17.157","m_from_account":"1.2.17","m_to_account":"1.2.34","m_operation_type":3,"m_transaction_amount":{"amount":100000000,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":0,"asset_id":"1.3.0"},"m_str_description":"Product 2","m_timestamp":"2018-05-15T08:59:10"},{"id":"2.17.155","m_from_account":"1.2.15","m_to_account":"1.2.34","m_operation_type":0,"m_transaction_amount":{"amount":"10000000000","asset_id":"1.3.0"},"m_transaction_fee":{"amount":100000,"asset_id":"1.3.0"},"m_str_description":"transfer","m_timestamp":"2018-05-15T08:58:55"},{"id":"2.17.153","m_from_account":"1.2.15","m_to_account":"1.2.34","m_operation_type":1,"m_transaction_amount":{"amount":0,"asset_id":"1.3.0"},"m_transaction_fee":{"amount":500000,"asset_id":"1.3.0"},"m_str_description":"","m_timestamp":"2018-05-15T08:50:45"}]}""")
         .enqueue("""{"method":"call","params":[1,"database",[]],"id":1}""", """{"id":1,"result":2}""")
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":2}""", """{"id":2,"result":true}""")
 
@@ -187,7 +189,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -222,7 +224,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -260,7 +262,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -278,7 +280,7 @@ class ApiTest : TimeOutTest() {
 
   @Test fun `buy free content`() = testBuyContent(0, "1f51b2c15930ff46cb08f75d24488e2ac0a5c75567962d43b8384af6f03d5bde603c4c36949bd7b9c5ba007e73e95703a27a7d43e6936a8f9f68323b47d64d2ed5", "65650fc8c317e5e9d008fe6f694ad4fc1246c176", "2018-05-30T11:35:16")
 
-  @Test(expected = IllegalArgumentException::class) fun `require nonnegative price for buy content`() {
+  @Test(expected = IllegalArgumentException::class) fun `require non negative price for buy content`() {
     val key = ECKeyPair.fromBase58(private)
     BuyContentOperation(
         "http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=949da412-18bd-4b8d-acba-e8fd7a594d88",
@@ -319,7 +321,7 @@ class ApiTest : TimeOutTest() {
 
   private fun vote(votes: Set<String>): Single<Account> {
     val key = ECKeyPair.fromBase58(private)
-    val account = socket.request(GetAccountById(account)).blockingGet().first()
+    val account = socket.request(GetAccountById(listOf(account))).blockingGet().first()
     val op = AccountUpdateOperation(
         account.id, options = account.options.copy(votes = votes)
     )
@@ -327,12 +329,12 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
     return socket.request(BroadcastTransactionWithCallback(transaction, 27185))
-        .flatMap { socket.request(GetAccountById(account.id)).map { it.first() } }
+        .flatMap { socket.request(GetAccountById(listOf(account.id))).map { it.first() } }
   }
 
   @Test fun `create account`() {
@@ -353,7 +355,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 
@@ -398,7 +400,7 @@ class ApiTest : TimeOutTest() {
     val fees = socket.request(GetRequiredFees(listOf(op))).blockingGet()
 
     val transaction = Transaction(
-        BlockData(props),
+        BlockData(props, DCoreSdk.defaultExpiration),
         listOf(op.apply { fee = fees.first() })
     ).withSignature(key)
 

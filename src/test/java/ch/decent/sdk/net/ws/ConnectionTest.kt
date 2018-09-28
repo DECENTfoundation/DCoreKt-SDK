@@ -10,6 +10,7 @@ import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import org.junit.Before
 import org.junit.Test
 import org.slf4j.LoggerFactory
+import kotlin.math.log
 
 class ConnectionTest : TimeOutTest() {
 
@@ -18,11 +19,12 @@ class ConnectionTest : TimeOutTest() {
 
   @Before fun init() {
     mockWebServer = CustomWebSocketService().apply { start() }
+    val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
-        client,
+        client(logger),
         mockWebServer.getUrl(),
 //        url,
-        logger = LoggerFactory.getLogger("RxWebSocket"),
+        logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )
   }

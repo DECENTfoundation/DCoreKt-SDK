@@ -7,10 +7,10 @@ import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 
 internal class GetKeyReferences(
-    address: Address
+    address: List<Address>
 ) : BaseRequest<List<List<ChainObject>>>(
     ApiGroup.DATABASE,
     "get_key_references",
     TypeToken.getParameterized(List::class.java, TypeToken.getParameterized(List::class.java, ChainObject::class.java).type).type,
-    listOf(listOf(address))
+    listOf(address)
 )

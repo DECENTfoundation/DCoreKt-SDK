@@ -12,7 +12,7 @@ import kotlin.math.min
 internal class SearchAccountHistory(
     accountId: ChainObject,
     order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
-    startId: ChainObject = ChainObject.NONE,
+    startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
     limit: Int = 100
 ) : BaseRequest<List<TransactionDetail>>(
     ApiGroup.DATABASE,
@@ -23,6 +23,6 @@ internal class SearchAccountHistory(
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(startId == ChainObject.NONE || startId.objectType == ObjectType.TRANSACTION_DETAIL_OBJECT)
+    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.TRANSACTION_DETAIL_OBJECT)
   }
 }

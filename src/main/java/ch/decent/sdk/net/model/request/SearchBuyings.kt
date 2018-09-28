@@ -12,7 +12,7 @@ import kotlin.math.min
 internal class SearchBuyings(
     consumer: ChainObject,
     order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
-    startId: ChainObject = ChainObject.NONE,
+    startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
     term: String = "",
     limit: Int = 100
 ): BaseRequest<List<Purchase>>(
@@ -24,6 +24,6 @@ internal class SearchBuyings(
 
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(startId == ChainObject.NONE || startId.objectType == ObjectType.BUYING_OBJECT)
+    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.BUYING_OBJECT)
   }
 }
