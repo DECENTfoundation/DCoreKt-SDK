@@ -6,11 +6,9 @@ import ch.decent.sdk.model.Account
 import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.net.model.request.GetAccountBalances
 import ch.decent.sdk.net.model.request.GetNamedAccountBalances
 import io.reactivex.Single
-import java.math.BigInteger
 
 class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
@@ -26,6 +24,16 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun getBalance(account: ChainObject, assets: List<ChainObject> = emptyList()): Single<List<AssetAmount>> = GetAccountBalances(account, assets).toRequest()
 
   /**
+   * get account balance by id
+   *
+   * @param account object id of the account, 1.2.*
+   * @param asset object id of the assets, 1.3.*
+   *
+   * @return amount for asset
+   */
+  fun getBalance(account: ChainObject, asset: ChainObject): Single<AssetAmount> = getBalance(account, listOf(asset)).map { it.single() }
+
+  /**
    * get account balance by name
    *
    * @param accountReference name, id or public key of the account
@@ -38,6 +46,17 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
     Account.isValidName(accountReference) -> GetNamedAccountBalances(accountReference, assets).toRequest()
     else -> api.accountApi.getAccount(accountReference).flatMap { getBalance(it.id, assets) }
   }
+
+  /**
+   * get account balance by name
+   *
+   * @param accountReference name, id or public key of the account
+   * @param asset object id of the assets, 1.3.*
+   *
+   * @return amount for asset
+   */
+  fun getBalance(accountReference: String, asset: ChainObject): Single<AssetAmount> =
+      getBalance(accountReference, listOf(asset)).map { it.single() }
 
   /**
    * get account balance by id with asset
