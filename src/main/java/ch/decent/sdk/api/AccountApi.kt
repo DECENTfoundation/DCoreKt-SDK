@@ -4,6 +4,7 @@ import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.GetAccountById
 import ch.decent.sdk.net.model.request.GetAccountByName
@@ -38,7 +39,10 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return an account object ids if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
-  fun getAccountIds(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).toRequest()
+  fun getAccountIds(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).run {
+    toRequest()
+        .doOnSuccess { if (it.size == 1 && it[0].isEmpty()) throw ObjectNotFoundException(description()) }
+  }
 
   /**
    * get Account object by public key address
