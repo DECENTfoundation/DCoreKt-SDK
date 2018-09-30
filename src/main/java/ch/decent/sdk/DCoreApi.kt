@@ -64,6 +64,10 @@ class DCoreApi internal constructor(private val core: DCoreSdk) {
 
     override fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int): Single<TransactionConfirmation> =
         core.broadcastWithCallback(privateKey, operations, expiration)
+
+    override fun broadcast(transaction: Transaction): Single<Unit> = BroadcastTransaction(transaction).toRequest()
+
+    override fun broadcastWithCallback(transaction: Transaction): Single<TransactionConfirmation> = core.broadcastWithCallback(transaction)
   }
 
   val content = object : ContentApi {
@@ -81,6 +85,8 @@ class DCoreApi internal constructor(private val core: DCoreSdk) {
 
   val mining = object : MiningApi {
     override fun getMiners(minerIds: Set<ChainObject>): Single<List<Miner>> = GetMiners(minerIds).toRequest()
+
+    override fun lookupMiners(term: String, limit: Int): Single<List<MinerId>> = LookupMinerAccounts(term, limit).toRequest()
   }
 
   val purchase = object : PurchaseApi {
@@ -100,6 +106,9 @@ class DCoreApi internal constructor(private val core: DCoreSdk) {
 
     override fun getTransaction(blockNum: Long, trxInBlock: Long): Single<ProcessedTransaction> =
         GetTransaction(blockNum, trxInBlock).toRequest()
+
+    override fun createTransaction(operations: List<BaseOperation>, expiration: Int): Single<Transaction> =
+        core.prepareTransaction(operations, expiration)
   }
 
   val operations = object : OperationsHelper {

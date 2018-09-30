@@ -4,7 +4,6 @@ import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
 import io.reactivex.Single
-import java.math.BigDecimal
 import java.math.BigInteger
 
 interface BalanceApi {

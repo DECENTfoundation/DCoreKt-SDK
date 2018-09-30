@@ -1,6 +1,5 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.Globals
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.Sha256Hash
 import ch.decent.sdk.net.serialization.ByteSerializable
@@ -15,7 +14,7 @@ import org.threeten.bp.ZoneOffset
 data class Transaction @JvmOverloads constructor(
     @Transient private val blockData: BlockData,
     @SerializedName("operations") private val operations: List<BaseOperation>,
-    @Transient private val chainId: String = Globals.DCT_CHAIN_ID,
+    @Transient private val chainId: String,
     @SerializedName("signatures") val signatures: List<String>? = null
 ) : ByteSerializable {
   @SerializedName("expiration") val expiration: LocalDateTime = LocalDateTime.ofEpochSecond(blockData.expiration, 0, ZoneOffset.UTC)

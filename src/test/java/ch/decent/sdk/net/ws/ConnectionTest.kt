@@ -1,7 +1,7 @@
 package ch.decent.sdk.net.ws
 
 import ch.decent.sdk.DCoreSdk
-import ch.decent.sdk.Globals
+import ch.decent.sdk.Constants
 import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.client
 import ch.decent.sdk.net.model.request.GetChainId
@@ -10,7 +10,6 @@ import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import org.junit.Before
 import org.junit.Test
 import org.slf4j.LoggerFactory
-import kotlin.math.log
 
 class ConnectionTest : TimeOutTest() {
 
@@ -96,6 +95,5 @@ class ConnectionTest : TimeOutTest() {
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
-        .assertValue(Globals.DCT_CHAIN_ID)
   }
 }

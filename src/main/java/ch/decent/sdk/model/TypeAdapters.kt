@@ -140,3 +140,20 @@ object CipherKeyPairAdapter : TypeAdapter<Wallet.CipherKeyPair>() {
     out.endArray()
   }
 }
+
+object MinerIdAdapter : TypeAdapter<MinerId>() {
+  override fun write(out: JsonWriter, value: MinerId) {
+    out.beginArray()
+    out.value(value.name)
+    out.value(value.id.objectId)
+    out.endArray()
+  }
+
+  override fun read(reader: JsonReader): MinerId {
+    reader.beginArray()
+    val minerId = MinerId(reader.nextString(), reader.nextString().toChainObject())
+    reader.endArray()
+    return minerId
+  }
+
+}

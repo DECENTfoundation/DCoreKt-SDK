@@ -203,7 +203,7 @@ class CrytpoTest : TimeOutTest() {
       """
     val account = DCoreSdk.gsonBuilder.create().fromJson(json, Account::class.java)
 
-    val wallet = Wallet.exportDCoreWallet(credentials, account, "pw")
+    val wallet = Wallet.exportDCoreWallet(credentials, account, "pw", "17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc")
 
     val gson = DCoreSdk.gsonBuilder
         .registerTypeAdapter(Wallet.ExtraKeys::class.java, ExtraKeysAdapter)

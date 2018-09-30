@@ -1,7 +1,6 @@
 package ch.decent.sdk.net.model.request
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.model.Account
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
