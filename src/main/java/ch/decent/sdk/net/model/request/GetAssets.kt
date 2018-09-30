@@ -16,6 +16,6 @@ internal class GetAssets(
 ) {
 
   init {
-    check(assets.all { it.objectType == ObjectType.ASSET_OBJECT }, { "not an asset object type" })
+    require(assets.all { it.objectType == ObjectType.ASSET_OBJECT }) { "not a valid asset object id" }
   }
 }

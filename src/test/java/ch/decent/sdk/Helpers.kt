@@ -1,3 +1,5 @@
+@file:JvmName("Helpers")
+
 package ch.decent.sdk
 
 import ch.decent.sdk.model.ChainObject

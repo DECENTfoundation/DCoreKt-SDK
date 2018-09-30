@@ -13,6 +13,6 @@ internal class GetContentById(
 ) {
 
   init {
-    require(contentId.objectType == ObjectType.CONTENT_OBJECT)
+    require(contentId.objectType == ObjectType.CONTENT_OBJECT) { "not a valid content object id" }
   }
 }

@@ -7,13 +7,13 @@ import ch.decent.sdk.model.ObjectType
 import com.google.gson.reflect.TypeToken
 
 internal class GetMiners(
-    contentIds: Set<ChainObject>
+    contentIds: List<ChainObject>
 ) : GetObjects<List<Miner>>(
     contentIds.map { it },
     TypeToken.getParameterized(List::class.java, Miner::class.java).type
 ) {
 
   init {
-    check(contentIds.all { it.objectType == ObjectType.MINER_OBJECT })
+    require(contentIds.all { it.objectType == ObjectType.MINER_OBJECT }) { "not a valid miner object id" }
   }
 }

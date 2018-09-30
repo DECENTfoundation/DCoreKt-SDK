@@ -23,7 +23,7 @@ internal class SearchBuyings(
 ) {
 
   init {
-    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.BUYING_OBJECT)
+    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
+    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.BUYING_OBJECT) { "not a valid null or buying object id" }
   }
 }

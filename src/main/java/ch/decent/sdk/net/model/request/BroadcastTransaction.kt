@@ -10,4 +10,8 @@ internal class BroadcastTransaction(
     "broadcast_transaction",
     Unit::class.java,
     listOf(transaction)
-)
+) {
+  init {
+    require(transaction.signatures?.isNotEmpty() == true) {"transaction not signed, forgot to call .withSignature(key) ?"}
+  }
+}

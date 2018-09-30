@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken
 
 internal class LookupMinerAccounts(
     lookupTerm: String = "",
-    limit: Int = 100
+    limit: Int = 1000
 ) : BaseRequest<List<MinerId>>(
     ApiGroup.DATABASE,
     "lookup_miner_accounts",

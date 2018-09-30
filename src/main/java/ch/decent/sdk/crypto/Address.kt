@@ -24,6 +24,7 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
   companion object {
     const val PREFIX = "DCT"
 
+    @JvmStatic
     fun isValid(address: String) = try {
       decode(address)
       true
@@ -31,6 +32,7 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
       false
     }
 
+    @JvmStatic
     fun decode(address: String): Address {
       val prefix = address.substring(0, 3)
       val decoded = Base58.decode(address.substring(3, address.length))
@@ -43,6 +45,7 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
       return Address(key.public, prefix)
     }
 
+    @JvmStatic
     fun decodeCheckNull(address: String): Address? {
       val decoded = Base58.decode(address.substring(3, address.length))
       val pubKey = decoded.copyOfRange(0, decoded.size - 4)

@@ -13,6 +13,6 @@ internal class GetAccountById(
 ) {
 
   init {
-    require(accountIds.all { it.objectType == ObjectType.ACCOUNT_OBJECT })
+    require(accountIds.all { it.objectType == ObjectType.ACCOUNT_OBJECT }) { "not a valid account object id" }
   }
 }

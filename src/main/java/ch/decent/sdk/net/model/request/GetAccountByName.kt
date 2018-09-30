@@ -10,4 +10,8 @@ internal class GetAccountByName(
     "get_account_by_name",
     Account::class.java,
     listOf(name)
-)
+) {
+  init {
+    require(Account.isValidName(name)) {"not a valid account name"}
+  }
+}
