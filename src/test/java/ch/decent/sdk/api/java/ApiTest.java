@@ -68,9 +68,11 @@ public class ApiTest {
     @Test
     public void BalanceApiTest() {
         api.getBalanceApi().getBalance(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getBalanceApi().getBalance(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId());
         api.getBalanceApi().getBalance(ObjectType.ACCOUNT_OBJECT.getGenericId(), Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
         api.getBalanceApi().getBalance("reference");
         api.getBalanceApi().getBalance("reference", Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
+        api.getBalanceApi().getBalance("reference", ObjectType.ASSET_OBJECT.getGenericId());
         api.getBalanceApi().getBalanceWithAsset(ObjectType.ACCOUNT_OBJECT.getGenericId(), "DCT");
         api.getBalanceApi().getBalanceWithAsset(ObjectType.ACCOUNT_OBJECT.getGenericId(), Arrays.asList("DCT", "DCT"));
         api.getBalanceApi().getBalanceWithAsset("reference", "DCT");
