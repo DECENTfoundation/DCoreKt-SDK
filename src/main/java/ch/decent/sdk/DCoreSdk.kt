@@ -77,15 +77,15 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
         .registerTypeAdapter(MinerId::class.java, MinerIdAdapter)
 
-    @JvmStatic
+    @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, restUrl = url, logger = logger))
 
-    @JvmStatic
+    @JvmStatic @JvmOverloads
     fun createForWebSocket(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, webSocketUrl = url, logger = logger))
 
-    @JvmStatic
+    @JvmStatic @JvmOverloads
     fun create(client: OkHttpClient, webSocketUrl: String, httpUrl: String, logger: Logger? = null): DCoreApi =
         DCoreApi(DCoreSdk(client, webSocketUrl, httpUrl, logger))
   }

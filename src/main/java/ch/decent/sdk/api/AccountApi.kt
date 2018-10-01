@@ -45,15 +45,6 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   }
 
   /**
-   * get Account object by public key address
-   *
-   * @param address formatted public key of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
-   *
-   * @return first found account if exist, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
-   */
-//  fun getAccountByAddress(address: Address): Single<Account> = getAccountIdsByKeys(listOf(address)).flatMap { getAccountsByIds(it.first()).map { it.first() } }
-
-  /**
    * check if account exist
    *
    * @param reference account id, name or pub key

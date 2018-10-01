@@ -28,8 +28,10 @@ public class ApiTest {
 
     @Test
     public void init() {
-        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl(), logger);
-        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getUrl(), logger);
+        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl());
+        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl(), logger);
+        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getUrl());
+        apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getUrl(), logger);
         Gson gson = DCoreSdk.getGsonBuilder().create();
 
         apiHttp.setTransactionExpiration(100);
