@@ -22,7 +22,7 @@ internal class SearchAccountHistory(
 ) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.TRANSACTION_DETAIL_OBJECT)
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
+    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.TRANSACTION_DETAIL_OBJECT) { "not a valid null or transaction detail object id" }
   }
 }

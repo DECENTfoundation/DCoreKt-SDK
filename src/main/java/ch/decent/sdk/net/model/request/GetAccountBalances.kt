@@ -8,8 +8,8 @@ import com.google.gson.reflect.TypeToken
 
 internal class GetAccountBalances(
     accountId: ChainObject,
-    assets: Set<ChainObject> = emptySet()
-): BaseRequest<List<AssetAmount>>(
+    assets: List<ChainObject> = emptyList()
+) : BaseRequest<List<AssetAmount>>(
     ApiGroup.DATABASE,
     "get_account_balances",
     TypeToken.getParameterized(List::class.java, AssetAmount::class.java).type,
@@ -17,6 +17,6 @@ internal class GetAccountBalances(
 ) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
   }
 }

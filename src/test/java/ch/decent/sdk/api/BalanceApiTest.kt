@@ -14,7 +14,7 @@ class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
 
     mockHttp.enqueue("""{"id":0,"result":[{"amount":50500000,"asset_id":"1.3.0"}]}""")
 
-    val test = api.balance.getBalance(account)
+    val test = api.balanceApi.getBalance(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 

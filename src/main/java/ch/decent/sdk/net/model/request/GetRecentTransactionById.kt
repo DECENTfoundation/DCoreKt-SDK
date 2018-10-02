@@ -14,6 +14,6 @@ internal class GetRecentTransactionById(
 ) {
 
   init {
-    check(id.unhex().size == 20 , { "invalid transaction id" })
+    require(id.unhex().size == 20) { "invalid transaction id" }
   }
 }

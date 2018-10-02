@@ -1,11 +1,13 @@
 package ch.decent.sdk.api
 
+import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.OperationHistory
+import ch.decent.sdk.net.model.request.GetAccountHistory
 import io.reactivex.Single
 
-interface HistoryApi {
+class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * get account history
@@ -17,11 +19,12 @@ interface HistoryApi {
    *
    * @return list of history operations
    */
+  @JvmOverloads
   fun getAccountHistory(
       accountId: ChainObject,
-      limit: Int = 100,
       startId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
-      stopId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId
-  ): Single<List<OperationHistory>>
+      stopId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
+      limit: Int = 100
+  ): Single<List<OperationHistory>> = GetAccountHistory(accountId, stopId, limit, startId).toRequest()
 
 }

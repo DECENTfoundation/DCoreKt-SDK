@@ -1,10 +1,14 @@
 package ch.decent.sdk.api
 
+import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Content
+import ch.decent.sdk.net.model.request.GetBuyingByUri
+import ch.decent.sdk.net.model.request.GetContentById
+import ch.decent.sdk.net.model.request.GetContentByUri
 import io.reactivex.Single
 
-interface ContentApi {
+class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * get content by id
@@ -13,7 +17,7 @@ interface ContentApi {
    *
    * @return a content if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
-  fun getContent(contentId: ChainObject): Single<Content>
+  fun getContent(contentId: ChainObject): Single<Content> = GetContentById(contentId).toRequest().map { it.single() }
 
   /**
    * get content by uri
@@ -22,6 +26,6 @@ interface ContentApi {
    *
    * @return a content if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
-  fun getContent(uri: String): Single<Content>
+  fun getContent(uri: String): Single<Content> = GetContentByUri(uri).toRequest()
 
 }

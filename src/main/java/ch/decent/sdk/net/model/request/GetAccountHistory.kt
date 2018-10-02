@@ -10,9 +10,9 @@ import kotlin.math.min
 
 internal class GetAccountHistory(
     accountId: ChainObject,
-    stopId: ChainObject = ChainObject.parse("1.7.0"),
+    stopId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
     limit: Int = 100,
-    startId: ChainObject = ChainObject.parse("1.7.0")
+    startId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId
 ) : BaseRequest<List<OperationHistory>>(
     ApiGroup.HISTORY,
     "get_account_history",
@@ -21,7 +21,7 @@ internal class GetAccountHistory(
 ) {
 
   init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT)
-    require(startId.objectType == ObjectType.OPERATION_HISTORY_OBJECT)
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
+    require(startId.objectType == ObjectType.OPERATION_HISTORY_OBJECT) { "not a valid history object id" }
   }
 }

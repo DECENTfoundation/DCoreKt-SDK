@@ -20,7 +20,8 @@ sealed class BaseOperation(
 ) : ByteSerializable {
 
   companion object {
-    internal val FEE_UNSET = AssetAmount(BigInteger.ZERO)
+    @JvmField
+    val FEE_UNSET = AssetAmount(BigInteger.ZERO)
   }
 
   override fun equals(other: Any?): Boolean {

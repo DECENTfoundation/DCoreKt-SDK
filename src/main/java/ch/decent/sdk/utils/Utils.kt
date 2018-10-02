@@ -1,3 +1,5 @@
+@file:JvmName("Utils")
+
 package ch.decent.sdk.utils
 
 import ch.decent.sdk.crypto.Address

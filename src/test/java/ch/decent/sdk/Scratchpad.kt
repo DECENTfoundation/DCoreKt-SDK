@@ -3,9 +3,7 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.*
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.utils.Hex
 import ch.decent.sdk.utils.hex
-import com.google.common.primitives.Bytes
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
@@ -37,7 +35,7 @@ class Scratchpad {
     println(df.format(1))
     println(df.format(1.22))
 
-    println(Constants.DCT.format(BigInteger.valueOf(9), 2))
+    println(DCoreConstants.DCT.format(BigInteger.valueOf(9), 2))
   }
 
   @Test fun `chain object id`() {

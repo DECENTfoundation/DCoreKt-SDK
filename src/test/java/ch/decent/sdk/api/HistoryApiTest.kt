@@ -1,18 +1,13 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.*
-import ch.decent.sdk.net.model.request.GetAccountHistory
 import ch.decent.sdk.net.ws.CustomWebSocketService
 import io.reactivex.schedulers.Schedulers
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runners.Parameterized
 import org.slf4j.LoggerFactory
 import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
 class HistoryApiTest {
 
@@ -36,7 +31,7 @@ class HistoryApiTest {
         .enqueue("""{"method":"call","params":[1,"history",[]],"id":2}""", """{"id":2,"result":2}""")
         .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":3}""", """{"id":3,"result":true}""")
 
-    val test = api.history.getAccountHistory(account)
+    val test = api.historyApi.getAccountHistory(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -48,7 +43,7 @@ class HistoryApiTest {
   @Test fun `should fail for HTTP`() {
     api = DCoreSdk.createForHttp(client(), restUrl)
 
-    val test = api.history.getAccountHistory(account)
+    val test = api.historyApi.getAccountHistory(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 
