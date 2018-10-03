@@ -50,7 +50,7 @@ class Memo : ByteSerializable {
 
   fun decrypt(keyPair: ECKeyPair): String {
     return if (from == null || to == null) {
-      message.drop(2).unhex().toString(Charset.forName("UTF-8"))
+      message.drop(8).unhex().toString(Charset.forName("UTF-8"))
     } else if (from.publicKey == keyPair.public) {
       decryptOrEmpty(keyPair.secret(to, nonce))
     } else if (to.publicKey == keyPair.public) {
