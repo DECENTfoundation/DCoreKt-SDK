@@ -5,7 +5,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
-  override val useMock: Boolean = false
+//  override val useMock: Boolean = false
 
   @Test fun `should get assets for id`() {
     mockWebSocket

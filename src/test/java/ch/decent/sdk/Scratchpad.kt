@@ -4,10 +4,16 @@ import ch.decent.sdk.crypto.*
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.hex
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
 import org.junit.Test
+import java.lang.Exception
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest
@@ -195,6 +201,29 @@ class Scratchpad {
     Sha256Hash.of(op.bytes).hex.print()
     key.signature(Sha256Hash.of(op.bytes)).print()
 
+  }
+
+  @Test fun `retry when`() {
+    val some = PublishSubject.create<Unit>()
+    val o = Observable.error<Unit>(Exception())
+        .doOnError { "error".print() }
+        .retryWhen { some }
+
+    o.test()
+
+    some.onNext(Unit)
+    some.onNext(Unit)
+
+  }
+
+  @Test fun `inner subscribe flatMap`() {
+    val o = Observable.range(1, 10)
+        .subscribeOn(Schedulers.computation())
+        .doOnNext { "$it  ${Thread.currentThread()}".print() }
+        .flatMap { idx -> Observable.create<String> { it.onNext("hello $idx") }.subscribeOn(Schedulers.io()) }
+        .doOnNext { "$it  ${Thread.currentThread()}".print() }
+
+    o.test().awaitTerminalEvent()
   }
 
 }
