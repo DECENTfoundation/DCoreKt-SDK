@@ -61,6 +61,15 @@ class CrytpoTest : TimeOutTest() {
     msg `should be equal to` plain
   }
 
+  @Test fun `decrypt public memo`() {
+    val plain = "hello memo here i am"
+    val key = ECKeyPair.fromBase58(private)
+
+    val memo = Memo(plain)
+
+    memo.decrypt(key) `should be equal to` plain
+  }
+
   @Test fun `encrypt private key as wallet file`() {
     val pass = "quick brown fox jumped over a lazy dog"
     val key = ECKeyPair.fromBase58(private)
