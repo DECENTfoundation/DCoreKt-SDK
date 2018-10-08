@@ -11,15 +11,9 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
-        classpath 'com.selesse:gradle-git-changelog:0.3.0'
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.16"
-        classpath "gradle.plugin.com.palantir.gradle.gitversion:gradle-git-version:0.11.0"
     }
 }
-
-apply plugin: 'com.selesse.git.changelog'
 
 allprojects {
     repositories {
@@ -30,14 +24,4 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-changelog {
-    markdown {
-        commitFormat = '* %s (%aE)'
-    }
-}
-
-static def isCI() {
-    System.getenv("CI")
 }
