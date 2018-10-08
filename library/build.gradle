@@ -1,6 +1,7 @@
 apply plugin: 'kotlin'
 apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
