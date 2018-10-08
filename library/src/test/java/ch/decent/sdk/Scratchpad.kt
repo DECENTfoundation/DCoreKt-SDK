@@ -226,4 +226,39 @@ class Scratchpad {
     o.test().awaitTerminalEvent()
   }
 
+  @Test fun lifecycle() {
+    val o = Observable.range(1, 10)
+        .doOnSubscribe { "subscribe".print() }
+        .doOnNext { "next".print() }
+        .doAfterNext { "after next".print() }
+        .doOnComplete { "complete".print() }
+        .doOnDispose { "dispose".print() }
+        .doOnTerminate { "terminate".print() }
+        .doAfterTerminate { "after terminate".print() }
+        .doFinally { "finally".print() }
+        .flatMap {
+          Observable.just(it)
+              .doOnSubscribe { "inner subscribe".print() }
+              .doOnNext { "inner next".print() }
+              .doAfterNext { "inner after next".print() }
+              .doOnComplete { "inner complete".print() }
+              .doOnDispose { "inner dispose".print() }
+              .doOnTerminate { "inner terminate".print() }
+              .doAfterTerminate { "inner after terminate".print() }
+              .doFinally { "inner finally".print() }
+
+        }
+        .doOnSubscribe { "end subscribe".print() }
+        .doOnNext { "end next".print() }
+        .doAfterNext { "end after next".print() }
+        .doOnComplete { "end complete".print() }
+        .doOnDispose { "end dispose".print() }
+        .doOnTerminate { "end terminate".print() }
+        .doAfterTerminate { "end after terminate".print() }
+        .doFinally { "end finally".print() }
+
+
+    o.test().awaitTerminalEvent()
+  }
+
 }

@@ -4,9 +4,11 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        google()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
@@ -17,51 +19,17 @@ buildscript {
     }
 }
 
-apply plugin: 'kotlin'
 apply plugin: 'com.selesse.git.changelog'
-apply plugin: 'net.ltgt.errorprone'
-apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'org.jetbrains.dokka'
-apply plugin: 'maven-publish'
-apply plugin: 'com.palantir.git-version'
 
-repositories {
-    mavenCentral()
-    jcenter()
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
 }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "io.reactivex.rxjava2:rxkotlin:2.2.0"
-    compile "org.threeten:threetenbp:1.3.6"
-
-    implementation "org.bouncycastle:bcprov-jdk15on:1.59"
-    compile "org.slf4j:slf4j-api:1.7.25"
-    compile "com.google.guava:guava:25.0-android" //JDK7 support
-
-    implementation "com.squareup.retrofit2:retrofit:2.3.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
-    compile "com.google.code.gson:gson:2.8.4"
-    compile "com.squareup.okhttp3:okhttp:$okhttp_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-
-    testImplementation "org.slf4j:slf4j-simple:1.7.25"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation "org.amshove.kluent:kluent:1.34"
-    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
-}
-
-group = "ch.decent"
-def d = versionDetails()
-def repo = "libs-release-local"
-version = "$d.lastTag"
-def devTagPrefix = "dev-"
-if (d.commitDistance > 0 || !d.isCleanTag || version.contains(devTagPrefix)) {
-    version = "${d.lastTag.replace(devTagPrefix, "")}-SNAPSHOT"
-    repo = "libs-snapshot-local"
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
 
 changelog {
@@ -72,56 +40,4 @@ changelog {
 
 static def isCI() {
     System.getenv("CI")
-}
-
-// build a jar with source files
-task sourcesJar(type: Jar) {
-    from sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = "javadoc"
-    outputDirectory = javadoc.destinationDir
-}
-
-// build a jar with javadoc
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar {
-                classifier 'sources'
-            }
-        }
-    }
-}
-
-if (rootProject.file("publish.gradle").exists()) {
-    apply from: rootProject.file("publish.gradle")
-}
-
-artifactory {
-    contextUrl = "http://ec2-18-196-32-67.eu-central-1.compute.amazonaws.com/artifactory"
-    publish {
-        defaults {
-            publications('mavenJava')
-        }
-        repository {
-            repoKey = repo
-            username = artifactoryUser
-            password = artifactoryPass
-            maven = true
-        }
-    }
 }

@@ -1,1 +1,3 @@
-rootProject.name = "dcore-sdk-kt"
+rootProject.name = "dcorekt-sdk"
+include ':library'
+include ':examples:android-java-blocking'
