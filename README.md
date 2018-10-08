@@ -8,4 +8,4 @@ Download
 
 Available through the the JitPack.io:
 
-![Release](https://jitpack.io/v/DECENTfoundation/DCoreKt-SDK.svg?style=flat-square)
+[![](https://jitpack.io/v/DECENTfoundation/DCoreKt-SDK.svg)](https://jitpack.io/#DECENTfoundation/DCoreKt-SDK)
