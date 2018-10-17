@@ -8,6 +8,7 @@ import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.net.rpc.RpcService
 import ch.decent.sdk.net.ws.RxWebSocket
 import com.google.gson.GsonBuilder
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import okhttp3.OkHttpClient
@@ -30,6 +31,7 @@ class DCoreSdk private constructor(
   }
 
   private fun <T> BaseRequest<T>.toRequest(): Single<T> = makeRequest(this)
+  internal fun <R, T> T.toRequest(): Flowable<R> where T : BaseRequest<R>, T : WithCallback = makeRequestStream(this)
 
   internal fun prepareTransaction(operations: List<BaseOperation>, expiration: Int): Single<Transaction> =
       chainId.flatMap { id ->
@@ -43,28 +45,18 @@ class DCoreSdk private constructor(
             }, BiFunction { props: DynamicGlobalProps, ops: List<BaseOperation> -> Transaction(BlockData(props, expiration), ops, id) })
       }
 
+  internal fun <T, R> makeRequestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback =
+      checkNotNull(rxWebSocket).requestStream(request)
+
   internal fun <T> makeRequest(request: BaseRequest<T>): Single<T> {
     check(rxWebSocket != null || rpc != null)
-    return if (rxWebSocket != null && (rpc == null || rxWebSocket.connected || request.apiGroup != ApiGroup.DATABASE)) {
+    return if (rxWebSocket != null && (rpc == null || rxWebSocket.connected || request.apiGroup != ApiGroup.DATABASE || request is WithCallback)) {
       rxWebSocket.request(request)
     } else {
-      if (rpc == null || request.apiGroup != ApiGroup.DATABASE) Single.error(IllegalArgumentException("not available through HTTP API"))
+      if (rpc == null || request.apiGroup != ApiGroup.DATABASE || request is WithCallback) Single.error(IllegalArgumentException("not available through HTTP API"))
       else rpc.request(request)
     }
   }
-
-  internal fun broadcastWithCallback(transaction: Transaction) =
-      with(rxWebSocket!!.callId) { BroadcastTransactionWithCallback(transaction, this).toRequest() }
-
-  fun broadcastWithCallback(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<TransactionConfirmation> =
-      prepareTransaction(operations, expiration)
-          .map { it.withSignature(keyPair) }
-          .flatMap { broadcastWithCallback(it) }
-
-  fun broadcast(keyPair: ECKeyPair, operations: List<BaseOperation>, expiration: Int = DCoreConstants.DEFAULT_EXPIRATION): Single<Unit> =
-      prepareTransaction(operations, expiration)
-          .map { it.withSignature(keyPair) }
-          .flatMap { BroadcastTransaction(it).toRequest() }
 
   companion object {
     @JvmStatic val gsonBuilder = GsonBuilder()
@@ -76,6 +68,8 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
         .registerTypeAdapter(MinerId::class.java, MinerIdAdapter)
+        .registerTypeAdapter(FeeParameter::class.java, FeeParamAdapter)
+        .registerTypeAdapter(OperationType::class.java, OperationTypeAdapter)
 
     @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =

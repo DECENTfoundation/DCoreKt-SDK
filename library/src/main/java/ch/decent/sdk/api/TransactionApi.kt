@@ -1,13 +1,8 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.DCoreConstants
-import ch.decent.sdk.model.BaseOperation
-import ch.decent.sdk.model.ProcessedTransaction
-import ch.decent.sdk.model.Transaction
-import ch.decent.sdk.model.TransactionConfirmation
-import ch.decent.sdk.net.model.request.GetRecentTransactionById
-import ch.decent.sdk.net.model.request.GetTransaction
+import ch.decent.sdk.model.*
+import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
 
 class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -21,6 +16,18 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun getRecentTransaction(trxId: String): Single<ProcessedTransaction> = GetRecentTransactionById(trxId).toRequest()
+
+  /**
+   * This method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
+   * Just because it is not known does not mean it wasn't included in the DCore.
+   * The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
+   * Note: By default these objects are not tracked, the transaction_history_plugin must be loaded for these objects to be maintained.
+   *
+   * @param trxId transaction id
+   *
+   * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   */
+  fun getTransaction(trxId: String): Single<ProcessedTransaction> = GetTransactionById(trxId).toRequest()
 
   /**
    * get applied transaction
@@ -60,5 +67,10 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun createTransaction(operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<Transaction> =
       api.core.prepareTransaction(listOf(operation), expiration)
+
+  fun getTransactionHex(transaction: Transaction): Single<String> = GetTransactionHex(transaction).toRequest()
+
+  // todo model
+  fun getProposedTransactions(account: ChainObject) = GetProposedTransactions(account).toRequest()
 
 }

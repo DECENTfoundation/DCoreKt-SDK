@@ -20,6 +20,10 @@ data class PricePerRegion(
     @SerializedName("map_price") val prices: Map<Int, AssetAmount>
 )
 
-enum class Regions(val id: Int) {
-  NONE(1)
+enum class Regions(val code: String) {
+  NULL("null"),
+  NONE(""),
+  ALL("default");
+
+  val id = ordinal
 }

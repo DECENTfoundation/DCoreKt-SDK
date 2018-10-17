@@ -6,7 +6,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
-//  override val useMock: Boolean = false
+  override val useMock: Boolean = false
 
   @Test fun `should get balance for account`() {
     mockWebSocket
@@ -34,6 +34,16 @@ class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
     mockHttp.enqueue("""{"id":0,"result":[{"amount":50500000,"asset_id":"1.3.0"}]}""")
 
     val test = api.balanceApi.getBalance(account, "1.3.56576".toChainObject())
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `should get vesting balances`() {
+    val test = api.balanceApi.getVestingBalances(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 

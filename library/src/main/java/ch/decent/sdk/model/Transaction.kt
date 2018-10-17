@@ -13,7 +13,7 @@ import org.threeten.bp.ZoneOffset
 
 data class Transaction @JvmOverloads constructor(
     @Transient private val blockData: BlockData,
-    @SerializedName("operations") private val operations: List<BaseOperation>,
+    @SerializedName("operations") val operations: List<BaseOperation>,
     @Transient private val chainId: String,
     @SerializedName("signatures") val signatures: List<String>? = null
 ) : ByteSerializable {

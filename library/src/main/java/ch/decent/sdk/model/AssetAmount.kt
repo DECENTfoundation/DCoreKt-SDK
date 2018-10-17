@@ -13,6 +13,7 @@ data class AssetAmount @JvmOverloads constructor(
 ) : ByteSerializable {
 
   constructor(amount: Long) : this(amount.toBigInteger())
+  constructor(amount: Long, asset: String) : this(amount.toBigInteger(), asset.toChainObject())
 
   init {
     require(amount >= BigInteger.ZERO) { "amount must be greater or equal to 0" }

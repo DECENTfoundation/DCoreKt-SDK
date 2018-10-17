@@ -21,5 +21,6 @@ object ElGamal {
 
 }
 
-fun BigInteger.publicKey(): PubKey = PubKey(this)
-fun ECKeyPair.publicElGamal(): PubKey = ElGamal.publicElGamal(this).publicKey()
+fun BigInteger.pubKey(): PubKey = PubKey(this)
+fun ECKeyPair.publicElGamal(): PubKey = ElGamal.publicElGamal(this).pubKey()
+fun ECKeyPair.privateElGamal(): PubKey = ElGamal.privateElGamal(this).pubKey()

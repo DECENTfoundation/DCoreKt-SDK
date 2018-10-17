@@ -1,16 +1,23 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.DCoreConstants
-import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.net.model.request.BroadcastTransaction
+import ch.decent.sdk.net.model.request.BroadcastTransactionSynchronous
+import ch.decent.sdk.net.model.request.BroadcastTransactionWithCallback
 import io.reactivex.Single
 
 class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
+
+
+  /**
+   * broadcast transaction to DCore
+   * @param transaction transaction to broadcast
+   */
+  fun broadcast(transaction: Transaction): Single<Unit> = BroadcastTransaction(transaction).toRequest()
 
   /**
    * broadcast operations to DCore
@@ -20,7 +27,9 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun broadcast(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<Unit> =
-      api.core.broadcast(privateKey, operations, expiration)
+      api.transactionApi.createTransaction(operations, expiration)
+          .map { it.withSignature(privateKey) }
+          .flatMap { broadcast(it) }
 
   /**
    * broadcast operation to DCore
@@ -53,10 +62,13 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
       broadcast(privateKey, listOf(operation), expiration)
 
   /**
-   * broadcast transaction to DCore
+   * broadcast transaction to DCore with callback
    * @param transaction transaction to broadcast
+   *
+   * @return a transaction confirmation
    */
-  fun broadcast(transaction: Transaction): Single<Unit> = BroadcastTransaction(transaction).toRequest()
+  fun broadcastWithCallback(transaction: Transaction): Single<TransactionConfirmation> =
+      BroadcastTransactionWithCallback(transaction).toRequest().firstOrError()
 
   /**
    * broadcast operations to DCore with callback when applied
@@ -68,7 +80,10 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<TransactionConfirmation> =
-      api.core.broadcastWithCallback(privateKey, operations, expiration)
+      api.transactionApi.createTransaction(operations, expiration)
+          .map { it.withSignature(privateKey) }
+          .flatMap { broadcastWithCallback(it) }
+
 
   /**
    * broadcast operation to DCore with callback when applied
@@ -106,12 +121,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun broadcastWithCallback(privateKey: String, operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<TransactionConfirmation> =
       broadcastWithCallback(ECKeyPair.fromBase58(privateKey), listOf(operation), expiration)
 
-  /**
-   * broadcast transaction to DCore with callback
-   * @param transaction transaction to broadcast
-   *
-   * @return a transaction confirmation
-   */
-  fun broadcastWithCallback(transaction: Transaction): Single<TransactionConfirmation> = api.core.broadcastWithCallback(transaction)
+  // todo
+  fun broadcastSynchronous(transaction: Transaction): Single<TransactionConfirmation> = BroadcastTransactionSynchronous(transaction).toRequest()
 
 }

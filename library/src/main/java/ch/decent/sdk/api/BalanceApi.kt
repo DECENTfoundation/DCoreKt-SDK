@@ -2,12 +2,10 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
-import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.Asset
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.GetAccountBalances
 import ch.decent.sdk.net.model.request.GetNamedAccountBalances
+import ch.decent.sdk.net.model.request.GetVestingBalances
 import io.reactivex.Single
 
 class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -105,5 +103,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun getBalanceWithAsset(accountReference: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<Pair<Asset, AssetAmount>> =
       api.accountApi.getAccount(accountReference).flatMap { getBalanceWithAsset(it.id, assetSymbol) }
+
+  fun getVestingBalances(account: ChainObject): Single<List<VestingBalance>> = GetVestingBalances(account).toRequest()
 
 }

@@ -19,12 +19,12 @@ class OperationsTest {
 
   private lateinit var mockWebSocket: CustomWebSocketService
   private lateinit var api: DCoreApi
-  private val useMock = true
 
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-    api = DCoreSdk.createForWebSocket(client(logger), if (useMock) mockWebSocket.getUrl() else url, logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {
@@ -58,13 +58,15 @@ class OperationsTest {
     val op = TransferOperation(
         account,
         account2,
-        AssetAmount(1500000),
+        AssetAmount(1),
         memo
     )
 
     val trx = api.transactionApi.createTransaction(listOf(op))
         .map { it.withSignature(key) }
         .blockingGet()
+
+    trx.print()
 
     val test = api.broadcastApi.broadcastWithCallback(trx)
         .subscribeOn(Schedulers.newThread())

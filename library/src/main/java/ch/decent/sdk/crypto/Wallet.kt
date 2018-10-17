@@ -167,7 +167,7 @@ object Wallet {
       @SerializedName("private_key") val private: PubKey,
       @SerializedName("public_key") val public: PubKey
   ) {
-    constructor(keyPair: ECKeyPair): this(ElGamal.privateElGamal(keyPair).publicKey(), ElGamal.publicElGamal(keyPair.private!!).publicKey())
+    constructor(keyPair: ECKeyPair): this(keyPair.privateElGamal(), keyPair.publicElGamal())
   }
 }
 

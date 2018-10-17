@@ -36,12 +36,14 @@ internal class RpcService(url: String, client: OkHttpClient, private val gson: G
 
   private fun BaseRequest<*>.toRequestBody(): RequestBody = RequestBody.create(MEDIA_TYPE, gson.toJson(this))
 
+  @Suppress("UNCHECKED_CAST")
   fun <T> request(request: BaseRequest<T>): Single<T> =
       service.request(request.toRequestBody())
           .map { JsonParser().parse(it.charStream()).asJsonObject }
           .flatMap {
             when {
               it.has("error") -> Single.error(DCoreException(gson.fromJson(it["error"], Error::class.java)))
+              it.has("result") && request.returnClass == Unit::class.java -> Single.just(Unit) as Single<T>
               it.has("result") && ((it["result"].isJsonArray && it["result"].asJsonArray.contains(JsonNull.INSTANCE)) || it["result"] == JsonNull.INSTANCE)
               -> Single.error(ObjectNotFoundException(request.description()))
               it.has("result") -> Single.just<T>(gson.fromJson(it["result"], request.returnClass))

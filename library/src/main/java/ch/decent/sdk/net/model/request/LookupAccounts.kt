@@ -1,14 +1,14 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 
 internal class LookupAccounts(
-    lookupTerm: String,
+    lowerBound: String,
     limit: Int = 1000
-) : BaseRequest<List<Account>>(
+) : BaseRequest<Map<String, ChainObject>>(
     ApiGroup.DATABASE,
     "lookup_accounts",
-    TypeToken.getParameterized(List::class.java, Account::class.java).type,
-    listOf(lookupTerm, limit))
+    TypeToken.getParameterized(Map::class.java, String::class.java, ChainObject::class.java).type,
+    listOf(lowerBound, limit))

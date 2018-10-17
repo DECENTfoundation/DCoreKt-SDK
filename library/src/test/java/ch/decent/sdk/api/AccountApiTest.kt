@@ -13,7 +13,7 @@ import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
 class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
-//  override val useMock: Boolean = false
+  override val useMock: Boolean = false
 
   @Test fun `get account by id`() {
     mockWebSocket
@@ -153,5 +153,87 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
     test.assertComplete()
         .assertNoErrors()
         .assertValue(emptyList())
+  }
+
+  @Test fun `get full accounts`() {
+    val test = api.accountApi.getFullAccounts(listOf("u961279ec8b7ae7bd62f304f7c1c3d345", "1.2.34"))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `get full accounts not found`() {
+    val test = api.accountApi.getFullAccounts(listOf("hello"))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+        .assertValue(emptyMap())
+  }
+
+  @Test fun `get account references`() {
+    val test = api.accountApi.getAccountReferences(account)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+        .assertValue(emptyList())
+  }
+
+  @Test fun `get accounts by names`() {
+    val test = api.accountApi.lookupAccountNames(listOf("u961279ec8b7ae7bd62f304f7c1c3d345", "u3a7b78084e7d3956442d5a4d439dad51"))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `get accounts by names should fail`() {
+    val test = api.accountApi.lookupAccountNames(listOf("hello"))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertTerminated()
+        .assertError(ObjectNotFoundException::class.java)
+  }
+
+  @Test fun `lookup accounts by lower bound`() {
+    val test = api.accountApi.lookupAccounts("alax", 10)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `search accounts by term`() {
+    val test = api.accountApi.searchAccounts("decent")
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `get account count`() {
+    val test = api.accountApi.getAccountCount()
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
   }
 }
