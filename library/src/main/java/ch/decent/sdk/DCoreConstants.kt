@@ -19,6 +19,6 @@ object DCoreConstants {
   const val ALXT_SYMBOL = "ALXT"
   const val ALAT_SYMBOL = "ALAT"
   const val ALX_SYMBOL = "ALX"
-  const val ALA_SYMBOL = "ALA"
+  const val AIA_SYMBOL = "AIA"
   const val DCT_SYMBOL = "DCT"
 }
