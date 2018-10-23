@@ -66,7 +66,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
     Address.isValid(reference) -> getAccountIds(listOf(Address.decode(reference))).map { it[0][0] }
         .flatMap { getAccounts(listOf(it)).map { it.first() } }
     Account.isValidName(reference) -> getAccountByName(reference)
-    else -> throw IllegalArgumentException("not a valid account reference")
+    else -> Single.error(IllegalArgumentException("not a valid account reference"))
   }
 
   /**
