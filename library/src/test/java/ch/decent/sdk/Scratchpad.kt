@@ -5,15 +5,12 @@ import ch.decent.sdk.model.*
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.hex
 import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
 import org.junit.Test
-import java.lang.Exception
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.security.MessageDigest

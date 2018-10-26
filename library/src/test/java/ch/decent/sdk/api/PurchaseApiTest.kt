@@ -71,7 +71,7 @@ class PurchaseApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should search feedback`() {
-    val test = api.purchaseApi.searchFeedback("", 10)
+    val test = api.purchaseApi.searchFeedback("")
         .subscribeOn(Schedulers.newThread())
         .test()
 

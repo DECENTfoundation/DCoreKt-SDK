@@ -68,9 +68,23 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createTransaction(operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<Transaction> =
       api.core.prepareTransaction(listOf(operation), expiration)
 
+  /**
+   * Get a hexdump of the serialized binary form of a transaction.
+   *
+   * @param transaction a signed transaction
+   *
+   * @return hexadecimal string
+   */
   fun getTransactionHex(transaction: Transaction): Single<String> = GetTransactionHex(transaction).toRequest()
 
+  /**
+   * Get the set of proposed transactions relevant to the specified account id.
+   *
+   * @param accountId account object id, 1.2.*
+   *
+   * @return a set of proposed transactions
+   */
   // todo model
-  fun getProposedTransactions(account: ChainObject) = GetProposedTransactions(account).toRequest()
+  fun getProposedTransactions(accountId: ChainObject) = GetProposedTransactions(accountId).toRequest()
 
 }

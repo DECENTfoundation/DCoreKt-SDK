@@ -53,6 +53,7 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
+        .assertValue(true)
   }
 
   @Test fun `should fail to verify signed transaction`() {
@@ -61,8 +62,8 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
         .test()
 
     test.awaitTerminalEvent()
-    test.assertTerminated()
-        .assertError(DCoreException::class.java)
+    test.assertComplete()
+        .assertValue(false)
   }
 
   // bug in dcore, fails
