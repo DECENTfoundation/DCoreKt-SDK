@@ -157,3 +157,25 @@ object MinerIdAdapter : TypeAdapter<MinerId>() {
   }
 
 }
+
+object FeeParamAdapter : TypeAdapter<FeeParameter>() {
+  override fun write(out: JsonWriter, value: FeeParameter) {
+  }
+
+  override fun read(reader: JsonReader): FeeParameter {
+    reader.beginObject()
+    reader.nextName()
+    val fee = AssetAmount(BigInteger(reader.nextString()))
+    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); nextInt() }
+    reader.endObject()
+    return FeeParameter(fee, perKb)
+  }
+}
+
+object OperationTypeAdapter : TypeAdapter<OperationType>() {
+  override fun write(out: JsonWriter, value: OperationType) {
+    out.value(value.ordinal)
+  }
+
+  override fun read(reader: JsonReader): OperationType = OperationType.values()[reader.nextInt()]
+}

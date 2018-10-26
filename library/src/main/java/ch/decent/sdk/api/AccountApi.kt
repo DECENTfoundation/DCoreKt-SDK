@@ -6,10 +6,7 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.GetAccountById
-import ch.decent.sdk.net.model.request.GetAccountByName
-import ch.decent.sdk.net.model.request.GetKeyReferences
-import ch.decent.sdk.net.model.request.SearchAccountHistory
+import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
 
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -97,5 +94,73 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
       getAccountByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
+
+  /**
+   * Fetch all objects relevant to the specified accounts and subscribe to updates.
+   *
+   * @param namesOrIds list of account names or ids
+   * @param subscribe true to subscribe to updates
+   *
+   * @return map of names or ids to account, or empty map if not present
+   */
+  @JvmOverloads
+  fun getFullAccounts(namesOrIds: List<String>, subscribe: Boolean = false) =
+      GetFullAccounts(namesOrIds, subscribe).toRequest()
+
+  /**
+   * Get all accounts that refer to the account id in their owner or active authorities.
+   *
+   * @param accountId account object id
+   *
+   * @return a list of account object ids
+   */
+  fun getAccountReferences(accountId: ChainObject): Single<List<ChainObject>> =
+      GetAccountReferences(accountId).toRequest()
+
+  /**
+   * Get a list of accounts by name.
+   *
+   * @param names account names to retrieve
+   *
+   * @return list of accounts or [ObjectNotFoundException] if none exist
+   */
+  fun lookupAccountNames(names: List<String>): Single<List<Account>> =
+      LookupAccountNames(names).toRequest()
+
+  /**
+   * Get names and IDs for registered accounts.
+   *
+   * @param lowerBound lower bound of the first name to return
+   * @param limit number of items to get, max 1000
+   *
+   * @return map of account names to corresponding IDs
+
+   */
+  @JvmOverloads
+  fun lookupAccounts(lowerBound: String, limit: Int = 1000): Single<Map<String, ChainObject>> =
+      LookupAccounts(lowerBound, limit).toRequest()
+
+  /**
+   * Get names and IDs for registered accounts that match search term.
+   *
+   * @param searchTerm will try to partially match account name or id
+   * @param order sort data by field
+   * @param id object id to start searching from
+   * @param limit number of items to get, max 1000
+   *
+   * @return list of found accounts
+   */
+  @JvmOverloads
+  fun searchAccounts(
+      searchTerm: String,
+      order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
+      id: ChainObject = ObjectType.NULL_OBJECT.genericId,
+      limit: Int = 1000
+  ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
+
+  /**
+   * Get
+   */
+  fun getAccountCount(): Single<Long> = GetAccountCount.toRequest()
 
 }

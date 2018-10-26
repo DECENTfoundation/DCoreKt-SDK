@@ -1,13 +1,6 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.api.*
-import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
-import io.reactivex.Single
 
 class DCoreApi internal constructor(internal val core: DCoreSdk) {
 
@@ -19,17 +12,17 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
 
   val accountApi = AccountApi(this)
   val assetApi = AssetApi(this)
-  val authorityApi = AuthorityApi()
+  val validationApi = ValidationApi(this)
   val balanceApi = BalanceApi(this)
-  val blockApi = BlockApi()
+  val blockApi = BlockApi(this)
   val broadcastApi = BroadcastApi(this)
   val contentApi = ContentApi(this)
-  val generalApi = GeneralApi()
+  val generalApi = GeneralApi(this)
   val historyApi = HistoryApi(this)
   val miningApi = MiningApi(this)
   val purchaseApi = PurchaseApi(this)
-  val seedersApi = SeedersApi()
-  val subscriptionApi = SubscriptionApi()
+  val seedersApi = SeedersApi(this)
+  val subscriptionApi = SubscriptionApi(this)
   val transactionApi = TransactionApi(this)
   val operationsHelper = OperationsHelper(this)
 }

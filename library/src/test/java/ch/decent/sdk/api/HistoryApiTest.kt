@@ -1,6 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.*
+import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.ws.CustomWebSocketService
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
@@ -13,16 +14,28 @@ class HistoryApiTest {
 
   private lateinit var mockWebSocket: CustomWebSocketService
   private lateinit var api: DCoreApi
-  private val useMock = true
 
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-    api = DCoreSdk.createForWebSocket(client(logger), if (useMock) mockWebSocket.getUrl() else url, logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {
     mockWebSocket.shutdown()
+  }
+
+  @Test fun `should fail for HTTP`() {
+    api = DCoreSdk.createForHttp(client(), restUrl)
+
+    val test = api.historyApi.getAccountHistory(account)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertTerminated()
+        .assertError(IllegalArgumentException::class.java)
   }
 
   @Test fun `should get account history`() {
@@ -40,16 +53,37 @@ class HistoryApiTest {
         .assertNoErrors()
   }
 
-  @Test fun `should fail for HTTP`() {
-    api = DCoreSdk.createForHttp(client(), restUrl)
-
-    val test = api.historyApi.getAccountHistory(account)
+  @Test fun `should get relative account history`() {
+    val test = api.historyApi.getAccountHistoryRelative(account, limit = 10)
         .subscribeOn(Schedulers.newThread())
         .test()
 
     test.awaitTerminalEvent()
-    test.assertTerminated()
-        .assertError(IllegalArgumentException::class.java)
+    test.assertComplete()
+        .assertNoErrors()
+
+    test.values().map { it.map { it.id } }.print()
   }
+
+  @Test fun `should get account history balances`() {
+    val test = api.historyApi.searchAccountBalanceHistory(account, startOffset = 2, limit = 3)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `should get account balance history for op`() {
+    val test = api.historyApi.getAccountBalanceForTransaction(account, "1.7.7570".toChainObject())
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
 
 }

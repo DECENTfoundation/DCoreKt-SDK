@@ -3,11 +3,8 @@ package ch.decent.sdk.api
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.GetAssets
-import ch.decent.sdk.net.model.request.GetRequiredFees
-import ch.decent.sdk.net.model.request.LookupAssets
+import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
-import ch.decent.sdk.model.OperationType
 
 class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
@@ -84,4 +81,12 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
           OperationType.CUSTOM_OPERATION)
           .contains(type).not()
       ).let { getFee(EmptyOperation(type)) }
+
+
+  @JvmOverloads
+  fun listAssets(lowerBound: String, limit: Int = 100): Single<List<Asset>> = ListAssets(lowerBound, limit).toRequest()
+
+  fun priceToDct(amount: AssetAmount): Single<AssetAmount> = PriceToDct(amount).toRequest()
+
+  fun getRealSupply(): Single<RealSupply> = GetRealSupply.toRequest()
 }
