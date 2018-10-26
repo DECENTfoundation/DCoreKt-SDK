@@ -52,36 +52,12 @@ object Wallet {
         digest
       }
 
-  @Throws(CipherException::class)
-  private fun cipher(mode: Int, iv: ByteArray, encryptKey: ByteArray, text: ByteArray): ByteArray {
-    try {
-      val ivParameterSpec = IvParameterSpec(iv)
-      val cipher = Cipher.getInstance("AES/CBC/NoPadding")
-
-      val secretKeySpec = SecretKeySpec(encryptKey, "AES")
-      cipher.init(mode, secretKeySpec, ivParameterSpec)
-      return cipher.doFinal(text)
-    } catch (e: NoSuchPaddingException) {
-      throw CipherException("Error performing cipher operation", e)
-    } catch (e: NoSuchAlgorithmException) {
-      throw CipherException("Error performing cipher operation", e)
-    } catch (e: InvalidAlgorithmParameterException) {
-      throw CipherException("Error performing cipher operation", e)
-    } catch (e: InvalidKeyException) {
-      throw CipherException("Error performing cipher operation", e)
-    } catch (e: BadPaddingException) {
-      throw CipherException("Error performing cipher operation", e)
-    } catch (e: IllegalBlockSizeException) {
-      throw CipherException("Error performing cipher operation", e)
-    }
-  }
-
   fun create(credentials: Credentials, password: String = ""): WalletFile {
     val secret = credentials.keyPair.private!!.toByteArray()
     val salt = randomBytes(SALT_LEN)
     val derived = kdf(password, salt)
     val iv = randomBytes(16)
-    val cipher = cipher(Cipher.ENCRYPT_MODE, iv, derived.first, secret)
+    val cipher = encryptAes(iv, derived.first, secret)
     val mac = (derived.second + cipher).mac()
     return WalletFile(1, credentials.account, cipher.hex(), salt.hex(), iv.hex(), mac.hex())
   }
@@ -90,7 +66,7 @@ object Wallet {
     val derived = kdf(password, walletFile.salt.unhex())
     val mac = (derived.second + walletFile.cipherText.unhex()).mac()
     if (!mac.contentEquals(walletFile.mac.unhex())) throw CipherException("Invalid password provided!")
-    val clear = cipher(Cipher.DECRYPT_MODE, walletFile.iv.unhex(), derived.first, walletFile.cipherText.unhex())
+    val clear = decryptAes(walletFile.iv.unhex(), derived.first, walletFile.cipherText.unhex())
     return Credentials(walletFile.accountId, ECKeyPair.fromPrivate(clear))
   }
 
