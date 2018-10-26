@@ -9,7 +9,7 @@ import io.reactivex.Single
 class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
-   * create a transfer
+   * Create a transfer.
    *
    * @param credentials account credentials
    * @param to object id of the receiver, account id, content id, account name or public key
@@ -38,7 +38,7 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * create a transfer
+   * Create a transfer.
    *
    * @param credentials account credentials
    * @param to object id of the receiver, account id, content id, account name or public key
@@ -55,7 +55,7 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<TransferOperation> = createTransfer(credentials, to, amount, null, false, fee)
 
   /**
-   * make a transfer
+   * Make a transfer.
    *
    * @param credentials account credentials
    * @param to object id of the receiver, account id, content id, account name or public key
@@ -80,7 +80,7 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * make a transfer
+   * Make a transfer.
    *
    * @param credentials account credentials
    * @param to object id of the receiver, account id, content id, account name or public key
@@ -100,7 +100,7 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * create a buy content operation
+   * Create a buy content operation.
    *
    * @param credentials account credentials
    * @param contentId object id of the content, 2.13.*
@@ -113,7 +113,7 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
 
 
   /**
-   * create a buy content operation
+   * Create a buy content operation.
    *
    * @param credentials account credentials
    * @param uri uri of the content
@@ -125,19 +125,19 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
       api.contentApi.getContent(uri).map { BuyContentOperation(credentials, it) }
 
   /**
-   * create vote for miner operation
+   * Create vote for miner operation.
    *
-   * @param account account object id, 1.2.*
+   * @param accountId account object id, 1.2.*
    * @param minerIds list of miner account ids
    *
    * @return a transaction confirmation
    */
   fun createVote(
-      account: ChainObject,
+      accountId: ChainObject,
       minerIds: List<ChainObject>
   ): Single<AccountUpdateOperation> =
       api.miningApi.getMiners(minerIds).flatMap { miners ->
-        api.accountApi.getAccount(account.objectId).map { AccountUpdateOperation(it, miners.asSequence().map { it.voteId }.toSet()) }
+        api.accountApi.getAccount(accountId.objectId).map { AccountUpdateOperation(it, miners.asSequence().map { it.voteId }.toSet()) }
       }
 
 

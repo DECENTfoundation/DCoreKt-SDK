@@ -12,29 +12,29 @@ import io.reactivex.Single
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
-   * get Account object by name
+   * Get account object by name.
    *
    * @param name the name of the account
    *
-   * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   * @return an account if found, [ObjectNotFoundException] otherwise
    */
   private fun getAccountByName(name: String): Single<Account> = GetAccountByName(name).toRequest()
 
   /**
-   * get Account objects by ids
+   * Get account objects by ids.
    *
    * @param accountIds object ids of the account, 1.2.*
    *
-   * @return an account list if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   * @return an account list if found, [ObjectNotFoundException] otherwise
    */
   fun getAccounts(accountIds: List<ChainObject>): Single<List<Account>> = GetAccountById(accountIds).toRequest()
 
   /**
-   * get account object ids by public key addresses
+   * Get account object ids by public key addresses.
    *
    * @param keys formatted public keys of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
    *
-   * @return an account object ids if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
+   * @return an account object ids if found, [ObjectNotFoundException] otherwise
    */
   fun getAccountIds(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).run {
     toRequest()
@@ -42,7 +42,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   }
 
   /**
-   * check if account exist
+   * Check if the account exist.
    *
    * @param reference account id, name or pub key
    *
@@ -51,12 +51,11 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun accountExist(reference: String): Single<Boolean> = getAccount(reference).map { true }.onErrorReturnItem(false)
 
   /**
-   * get account by reference
+   * Get account by reference.
    *
    * @param reference account id, name or pub key
    *
-   * @return first found account if exist, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
-   * @throws IllegalStateException if the account reference is not valid
+   * @return first found account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account reference is not valid
    */
   fun getAccount(reference: String): Single<Account> = when {
     ChainObject.isValid(reference) -> getAccounts(listOf(reference.toChainObject())).map { it.first() }
@@ -67,7 +66,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   }
 
   /**
-   * search account history
+   * Search account history.
    *
    * @param accountId object id of the account, 1.2.*
    * @param from object id of the history object to start from, use [ObjectType.NULL_OBJECT.genericId] to ignore
@@ -85,7 +84,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<List<TransactionDetail>> = SearchAccountHistory(accountId, order, from, limit).toRequest()
 
   /**
-   * create api credentials
+   * Create API credentials.
    *
    * @param account account name
    * @param privateKey private key in wif base58 format, eg. 5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn
@@ -159,7 +158,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
 
   /**
-   * Get
+   * Get the total number of accounts registered on the blockchain.
    */
   fun getAccountCount(): Single<Long> = GetAccountCount.toRequest()
 
