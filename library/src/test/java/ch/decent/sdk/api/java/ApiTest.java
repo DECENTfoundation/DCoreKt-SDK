@@ -58,9 +58,6 @@ public class ApiTest {
         api.getAssetApi().getAssets(Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
         api.getAssetApi().lookupAsset("dct");
         api.getAssetApi().lookupAssets(Arrays.asList("dct", "dct"));
-        api.getAssetApi().getFee(new EmptyOperation(OperationType.TRANSFER2_OPERATION));
-        api.getAssetApi().getFees(Arrays.asList(new EmptyOperation(OperationType.TRANSFER2_OPERATION), new EmptyOperation(OperationType.TRANSFER2_OPERATION)));
-        api.getAssetApi().getFee(OperationType.TRANSFER2_OPERATION);
     }
 
     @Test
@@ -189,5 +186,12 @@ public class ApiTest {
         api.getTransactionApi().createTransaction(operation, 100);
         api.getTransactionApi().createTransaction(Arrays.asList(operation, operation));
         api.getTransactionApi().createTransaction(Arrays.asList(operation, operation), 100);
+    }
+
+    @Test
+    public void ValidationApiTest() {
+        api.getValidationApi().getFee(new EmptyOperation(OperationType.TRANSFER2_OPERATION));
+        api.getValidationApi().getFees(Arrays.asList(new EmptyOperation(OperationType.TRANSFER2_OPERATION), new EmptyOperation(OperationType.TRANSFER2_OPERATION)));
+        api.getValidationApi().getFee(OperationType.TRANSFER2_OPERATION);
     }
 }

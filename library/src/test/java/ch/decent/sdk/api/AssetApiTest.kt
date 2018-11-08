@@ -45,16 +45,6 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
         .assertNoErrors()
   }
 
-  @Test fun `should get fee for transfer OP`() {
-    val test = api.assetApi.getFee(OperationType.TRANSFER2_OPERATION)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-  }
-
   @Test fun `should list assets for lower bound symbol`() {
     val test = api.assetApi.listAssets("ALX")
         .subscribeOn(Schedulers.newThread())

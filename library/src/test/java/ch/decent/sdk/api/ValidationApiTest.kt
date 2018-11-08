@@ -5,6 +5,7 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.BlockData
+import ch.decent.sdk.model.OperationType
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.private
 import ch.decent.sdk.public
@@ -99,6 +100,16 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
     test.awaitTerminalEvent()
     test.assertTerminated()
         .assertError(DCoreException::class.java)
+  }
+
+  @Test fun `should get fee for transfer OP`() {
+    val test = api.validationApi.getFee(OperationType.TRANSFER2_OPERATION)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
   }
 
 }

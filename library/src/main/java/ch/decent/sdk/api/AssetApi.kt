@@ -45,45 +45,6 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun lookupAsset(assetSymbol: String): Single<Asset> = lookupAssets(listOf(assetSymbol)).map { it.single() }
 
   /**
-   * Returns fees for operation.
-   *
-   * @param op list of operations
-   *
-   * @return a list of fee asset amounts
-   */
-  fun getFees(op: List<BaseOperation>): Single<List<AssetAmount>> = GetRequiredFees(op).toRequest()
-
-  /**
-   * Returns fee for operation.
-   *
-   * @param op operation
-   *
-   * @return a fee asset amount
-   */
-  fun getFee(op: BaseOperation): Single<AssetAmount> = getFees(listOf(op)).map { it.single() }
-
-  /**
-   * Returns fee for operation type, not valid for operation per size fees:
-   * [OperationType.PROPOSAL_CREATE_OPERATION],
-   * [OperationType.PROPOSAL_UPDATE_OPERATION],
-   * [OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION],
-   * [OperationType.CUSTOM_OPERATION]
-   *
-   * @param type operation type
-   *
-   * @return a fee asset amount
-   */
-  fun getFee(type: OperationType): Single<AssetAmount> =
-      require(listOf(
-          OperationType.PROPOSAL_CREATE_OPERATION,
-          OperationType.PROPOSAL_UPDATE_OPERATION,
-          OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION,
-          OperationType.CUSTOM_OPERATION)
-          .contains(type).not()
-      ).let { getFee(EmptyOperation(type)) }
-
-
-  /**
    * Get assets alphabetically by symbol name.
    *
    * @param lowerBound lower bound of symbol names to retrieve

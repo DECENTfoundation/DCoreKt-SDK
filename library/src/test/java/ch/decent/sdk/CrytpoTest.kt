@@ -9,7 +9,9 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
+import java.nio.charset.Charset
 import java.security.MessageDigest
+import java.util.*
 
 class CrytpoTest : TimeOutTest() {
 
@@ -17,6 +19,13 @@ class CrytpoTest : TimeOutTest() {
     val key = ECKeyPair.fromBase58(private)
     val dump = DumpedPrivateKey.toBase58(key)
 
+    private.print()
+    ECKeyPair.fromBase58(private).private!!.toByteArray().hex().print()
+    public2.print()
+    public2.address().publicKey.getEncoded(true).hex().print()
+    public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
+
+    key.secret(public2.address(), BigInteger("1234567890")).hex().print()
     dump `should be equal to` private
   }
 
@@ -54,11 +63,19 @@ class CrytpoTest : TimeOutTest() {
 
     val memo = Memo(plain, key, to, nonce)
 
+    val secret = key.secret(to, nonce).also { it.hex().print() }
+    val ivBytes = secret.copyOfRange(32, 32 + 16).also { it.hex().print() }
+    val sks = secret.copyOfRange(0, 32).also { it.hex().print() }
+    decryptAes(ivBytes, sks, encrypted.unhex()).hex().print()
+
     memo.message `should be equal to` encrypted
     memo.decrypt(key) `should be equal to` plain
 
     val msg = decryptAesWithChecksum(key.secret(to, nonce), encrypted.unhex())
     msg `should be equal to` plain
+
+    "995ea94b18bd2fa351719ceab961c67daac5379d82be1f8bd5006eed419a3e8718facad5a65fd3557d6c0ee3e3c0166087593b96fad136b46c7c2aa4d3ed0978".unhex()
+        .toString(Charset.forName("utf8")).print()
   }
 
   @Test fun `decrypt public memo`() {
@@ -73,6 +90,7 @@ class CrytpoTest : TimeOutTest() {
   @Test fun `encrypt private key as wallet file`() {
     val pass = "quick brown fox jumped over a lazy dog"
     val key = ECKeyPair.fromBase58(private)
+    encryptAes(MessageDigest.getInstance("SHA-512").digest(pass.toByteArray()), private.toByteArray()).hex().print()
     val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key), pass)
     Wallet.decrypt(wallet, pass).keyPair.private `should equal` key.private
   }
