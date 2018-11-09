@@ -43,7 +43,7 @@ internal class RxWebSocket(
   internal val events = Flowable.create<WebSocketEvent>({ emitter ->
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
     emitter.setCancellable { webSocket.close(1000, null) }
-  }, BackpressureStrategy.ERROR)
+  }, BackpressureStrategy.BUFFER)
       .publish()
 
   private var webSocketAsync: AsyncProcessor<WebSocket>? = null
