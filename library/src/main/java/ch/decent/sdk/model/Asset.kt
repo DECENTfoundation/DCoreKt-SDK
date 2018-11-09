@@ -6,28 +6,18 @@ import java.math.BigInteger
 import java.text.DecimalFormat
 
 data class Asset(
-    @SerializedName("id") val id: ChainObject = ObjectType.ASSET_OBJECT.genericId,
-    @SerializedName("symbol") val symbol: String = "UIA",
-    @SerializedName("precision") val precision: Int = 0,
+    @SerializedName("id") override val id: ChainObject = ObjectType.ASSET_OBJECT.genericId,
+    @SerializedName("symbol") override val symbol: String = "UIA",
+    @SerializedName("precision") override val precision: Int = 0,
     @SerializedName("issuer") val issuer: ChainObject = ObjectType.NULL_OBJECT.genericId,
     @SerializedName("description") val description: String = "",
     @SerializedName("options") val options: Options = Options(),
     @SerializedName("dynamic_asset_data_id") val dataId: ChainObject = ObjectType.NULL_OBJECT.genericId
-) {
+): AssetFormatter {
 
   init {
     check(id.objectType == ObjectType.ASSET_OBJECT)
   }
-
-  fun fromBase(value: BigInteger): BigDecimal = value.toBigDecimal().divide(BigDecimal.TEN.pow(precision))
-  fun toBase(value: BigDecimal): BigInteger = value.multiply(BigDecimal.TEN.pow(precision)).toBigInteger()
-
-  fun format(value: BigDecimal, maxDecimals: Int = precision) = DecimalFormat.getInstance().apply { maximumFractionDigits = maxDecimals }.format(value) + " $symbol"
-  fun format(value: BigInteger, maxDecimals: Int = precision) = DecimalFormat.getInstance().apply { maximumFractionDigits = maxDecimals }.format(fromBase(value)) + " $symbol"
-
-  fun amount(value: String): AssetAmount = AssetAmount(toBase(BigDecimal(value)), id)
-  fun amount(value: Double): AssetAmount = AssetAmount(toBase(BigDecimal(value)), id)
-  fun amount(value: BigDecimal): AssetAmount = AssetAmount(toBase(value), id)
 
   fun convert(assetAmount: AssetAmount): AssetAmount {
     if (options.exchangeRate.base.assetId == assetAmount.assetId) {
