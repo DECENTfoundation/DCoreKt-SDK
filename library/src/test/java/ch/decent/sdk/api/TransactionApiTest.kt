@@ -28,16 +28,15 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
 
   }
 
-  //  transaction_history_plugin not loaded ?
-  @Ignore
   @Test fun `should get a transaction by ID`() {
-    val test = api.transactionApi.getTransaction("a9e89715f18f0bb0595b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000011f140e5744bcef282147ef3f0bab8df46f49704a99046d6ea5db37ab3113e0f45935fd94af7b33189ad34fa1666ab7e54aa127d725e2018fb6b68771aacef54c41")
+    val test = api.transactionApi.getTransaction("322d451fb1dc9b3ec6bc521395f4547a8b62eb3f")
         .subscribeOn(Schedulers.newThread())
         .test()
 
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
+        .assertValue { it.id == "322d451fb1dc9b3ec6bc521395f4547a8b62eb3f"}
 
   }
 
