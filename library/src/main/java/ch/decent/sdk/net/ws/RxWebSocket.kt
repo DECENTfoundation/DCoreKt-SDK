@@ -115,6 +115,7 @@ internal class RxWebSocket(
             }.subscribe(),
         events.ofType(OnOpen::class.java).firstOrError()
             .doOnSuccess { webSocketAsync!!.onNext(it.webSocket); webSocketAsync!!.onComplete() }
+            .ignoreElement().onErrorComplete()
             .subscribe()
     )
     events.connect { it.addTo(disposable) }
