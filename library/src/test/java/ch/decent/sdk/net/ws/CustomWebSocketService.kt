@@ -1,5 +1,6 @@
 package ch.decent.sdk.net.ws
 
+import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import com.google.gson.Gson
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -8,6 +9,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.ByteString
 import org.slf4j.LoggerFactory
+import java.lang.RuntimeException
 
 class CustomWebSocketService {
 
@@ -21,8 +23,8 @@ class CustomWebSocketService {
     mockWebServer.enqueue(response)
   }
 
-  fun start() {
-    mockWebServer.start()
+  fun start(port: Int = 0) {
+    mockWebServer.start(port)
   }
 
   fun shutdown() {
@@ -59,6 +61,7 @@ class CustomWebSocketService {
 
     override fun onMessage(webSocket: WebSocket?, text: String?) {
       logger.info("message")
+      if (text == "fail") throw RuntimeException("fail")
       responses[text!!]?.let {
         webSocket?.send(it)
         responses.remove(text)

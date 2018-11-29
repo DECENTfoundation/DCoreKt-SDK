@@ -16,7 +16,7 @@ class ConnectionTest : TimeOutTest() {
   private lateinit var mockWebServer: CustomWebSocketService
 
   @Before fun init() {
-    mockWebServer = CustomWebSocketService().apply { start() }
+    mockWebServer = CustomWebSocketService().apply { start(port) }
     val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
         client(logger),
@@ -94,5 +94,37 @@ class ConnectionTest : TimeOutTest() {
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
+  }
+
+  @Test fun `should fail, disconnect, connect and make request`() {
+    mockWebServer
+        .enqueue("keep alive", "")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":3}""", """{"id":3,"result":true}""")
+
+    val websocket = socket.webSocket().test()
+
+    websocket.awaitTerminalEvent()
+    websocket.assertComplete()
+        .assertValueCount(1)
+
+    websocket.values().single().send("fail")
+    val fail = socket.events.test()
+    fail.awaitTerminalEvent()
+
+    mockWebServer.shutdown()
+    mockWebServer = CustomWebSocketService().apply { start(port) }
+        .enqueue("keep alive", "")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
+
+    val login = socket.request(Login).test()
+
+    login.awaitTerminalEvent()
+    login.assertComplete()
+        .assertNoErrors()
+        .assertValue(true)
+  }
+
+  companion object {
+    private const val port = 1111
   }
 }
