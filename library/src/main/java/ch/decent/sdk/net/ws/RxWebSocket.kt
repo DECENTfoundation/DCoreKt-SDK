@@ -8,10 +8,7 @@ import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.model.request.RequestApiAccess
 import ch.decent.sdk.net.model.request.WithCallback
 import ch.decent.sdk.net.model.response.Error
-import ch.decent.sdk.net.ws.model.OnMessageText
-import ch.decent.sdk.net.ws.model.OnOpen
-import ch.decent.sdk.net.ws.model.WebSocketClosedException
-import ch.decent.sdk.net.ws.model.WebSocketEvent
+import ch.decent.sdk.net.ws.model.*
 import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import io.reactivex.BackpressureStrategy
@@ -106,7 +103,7 @@ internal class RxWebSocket(
   private fun connect() {
     disposable.addAll(
         events.log("RxWebSocket")
-            .doOnComplete {
+            .doOnTerminate {
               webSocketAsync = null
               disposable.clear()
             }.subscribe(),
