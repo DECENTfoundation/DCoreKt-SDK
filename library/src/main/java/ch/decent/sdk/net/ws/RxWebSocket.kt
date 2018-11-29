@@ -106,7 +106,8 @@ internal class RxWebSocket(
   private fun connect() {
     disposable.addAll(
         events.log("RxWebSocket")
-            .doOnTerminate {
+            .onErrorResumeNext(Flowable.empty())
+            .doOnComplete {
               webSocketAsync = null
               disposable.clear()
               apiId.clear()
