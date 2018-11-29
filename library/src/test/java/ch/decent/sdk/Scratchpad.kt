@@ -38,7 +38,7 @@ class Scratchpad {
     println(df.format(1))
     println(df.format(1.22))
 
-    println(DCoreConstants.DCT.format(BigInteger.valueOf(9), 2))
+    println(DCoreConstants.DCT.format(BigInteger.valueOf(9)))
   }
 
   @Test fun `chain object id`() {

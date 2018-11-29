@@ -7,9 +7,11 @@ import android.util.Log;
 
 import com.google.common.base.Optional;
 
+import kotlin.jvm.functions.Function1;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         Pair<Asset, AssetAmount> balance = api.getBalanceApi()
                 .getBalanceWithAsset(credentials.getAccount(), "DCT")
                 .blockingGet();
-        Log.i("BALANCE", balance.getFirst().format(balance.getSecond().getAmount(), 2));
+        Log.i("BALANCE", balance.getFirst().format(balance.getSecond().getAmount()));
 
 //        transfer
         AssetAmount amount = balance.getFirst().amount(0.12345);
