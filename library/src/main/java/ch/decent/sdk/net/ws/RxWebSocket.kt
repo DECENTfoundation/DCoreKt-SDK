@@ -8,12 +8,17 @@ import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.model.request.RequestApiAccess
 import ch.decent.sdk.net.model.request.WithCallback
 import ch.decent.sdk.net.model.response.Error
-import ch.decent.sdk.net.ws.model.*
-import com.google.gson.*
+import ch.decent.sdk.net.ws.model.OnMessageText
+import ch.decent.sdk.net.ws.model.OnOpen
+import ch.decent.sdk.net.ws.model.WebSocketClosedException
+import ch.decent.sdk.net.ws.model.WebSocketEvent
+import com.google.gson.Gson
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.AsyncProcessor
@@ -22,10 +27,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
 import org.slf4j.Logger
-import org.threeten.bp.LocalDateTime
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import javax.xml.stream.events.EndElement
 
 internal class RxWebSocket(
     private val client: OkHttpClient,
@@ -103,9 +106,12 @@ internal class RxWebSocket(
   private fun connect() {
     disposable.addAll(
         events.log("RxWebSocket")
-            .doOnTerminate {
+            .onErrorResumeNext(Flowable.empty())
+            .doOnComplete {
               webSocketAsync = null
               disposable.clear()
+              apiId.clear()
+              callId = 0
             }.subscribe(),
         events.ofType(OnOpen::class.java).firstOrError()
             .doOnSuccess { webSocketAsync!!.onNext(it.webSocket); webSocketAsync!!.onComplete() }
