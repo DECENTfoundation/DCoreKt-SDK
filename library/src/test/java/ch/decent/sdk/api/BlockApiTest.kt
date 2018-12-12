@@ -1,5 +1,7 @@
 package ch.decent.sdk.api
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 import org.junit.runner.RunWith

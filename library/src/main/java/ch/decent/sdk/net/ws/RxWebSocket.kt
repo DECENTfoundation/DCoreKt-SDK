@@ -29,6 +29,8 @@ import okhttp3.WebSocket
 import org.slf4j.Logger
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 internal class RxWebSocket(
     private val client: OkHttpClient,
@@ -39,7 +41,7 @@ internal class RxWebSocket(
 ) {
 
   private val disposable = CompositeDisposable()
-  private val apiId = mutableMapOf<ApiGroup, Int>()
+  private val apiId = mutableMapOf<ApiGroup, Single<Int>>()
   internal val events = Flowable.create<WebSocketEvent>({ emitter ->
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
     emitter.setCancellable { webSocket.close(1000, null) }
@@ -47,8 +49,10 @@ internal class RxWebSocket(
       .publish()
 
   private var webSocketAsync: AsyncProcessor<WebSocket>? = null
-  internal var callId: Long = 0
+  private var callId: Long = 0
     get() = field++
+
+  internal var timeout = TimeUnit.MINUTES.toSeconds(1)
 
   val connected: Boolean
     get() = disposable.size() != 0
@@ -107,18 +111,20 @@ internal class RxWebSocket(
     disposable.addAll(
         events.log("RxWebSocket")
             .onErrorResumeNext(Flowable.empty())
-            .doOnComplete {
-              webSocketAsync = null
-              disposable.clear()
-              apiId.clear()
-              callId = 0
-            }.subscribe(),
+            .doOnComplete { clearConnection() }.subscribe(),
         events.ofType(OnOpen::class.java).firstOrError()
             .doOnSuccess { webSocketAsync!!.onNext(it.webSocket); webSocketAsync!!.onComplete() }
             .ignoreElement().onErrorComplete()
             .subscribe()
     )
     events.connect { it.addTo(disposable) }
+  }
+
+  private fun clearConnection() {
+    webSocketAsync = null
+    disposable.clear()
+    apiId.clear()
+    callId = 0
   }
 
   internal fun webSocket(): Single<WebSocket> {
@@ -132,10 +138,12 @@ internal class RxWebSocket(
   private fun <T : WebSocket> Single<T>.checkApiAccess(request: BaseRequest<*>): Single<Pair<T, Int>> =
       this.flatMap { ws ->
         when {
+          request.apiGroup !in apiId && request.apiGroup == ApiGroup.LOGIN -> apiId[request.apiGroup] = Login.make(callId).map { 1 }.cache()
+          request.apiGroup !in apiId -> apiId[request.apiGroup] = RequestApiAccess(request.apiGroup).make(callId).cache()
+        }
+        when {
           request === Login -> Single.just(ws to 1)
-          request.apiGroup !in apiId && request.apiGroup == ApiGroup.LOGIN -> Login.make(callId).doOnSuccess { apiId[ApiGroup.LOGIN] = 1 }.map { ws to 1 }
-          request.apiGroup !in apiId -> RequestApiAccess(request.apiGroup).make(callId).doOnSuccess { apiId[request.apiGroup] = it }.map { ws to it }
-          else -> Single.just(ws to apiId[request.apiGroup]!!)
+          else -> apiId[request.apiGroup]!!.map { ws to it }
         }
       }
 
@@ -152,6 +160,8 @@ internal class RxWebSocket(
           .doOnNext { (_, obj) -> checkObjectNotFound(obj, this) }
           .map { (_, obj) -> parseResultElement(returnClass, obj) }
           .map { gson.fromJson<T>(it, returnClass) }
+          .timeout(1, TimeUnit.MINUTES)
+          .doOnError { if (it is TimeoutException) clearConnection() }
 
   private fun <T> BaseRequest<T>.make(callId: Long): Single<T> =
       makeStream(callId)

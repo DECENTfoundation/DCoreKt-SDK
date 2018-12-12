@@ -10,6 +10,10 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    */
   var transactionExpiration = 30
 
+  fun setTimeout(seconds: Long) {
+    core.setTimeout(seconds)
+  }
+
   val accountApi = AccountApi(this)
   val assetApi = AssetApi(this)
   val validationApi = ValidationApi(this)

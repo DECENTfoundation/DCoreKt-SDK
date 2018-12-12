@@ -14,6 +14,8 @@ import io.reactivex.functions.BiFunction
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.threeten.bp.LocalDateTime
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class DCoreSdk private constructor(
     private val client: OkHttpClient,
@@ -21,7 +23,6 @@ class DCoreSdk private constructor(
     restUrl: String? = null,
     private val logger: Logger? = null
 ) {
-
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gsonBuilder.create(), logger) }
   private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gsonBuilder.create()) }
   private val chainId = GetChainId.toRequest().cache()
@@ -56,6 +57,10 @@ class DCoreSdk private constructor(
       if (rpc == null || request.apiGroup != ApiGroup.DATABASE || request is WithCallback) Single.error(IllegalArgumentException("not available through HTTP API"))
       else rpc.request(request)
     }
+  }
+
+  internal fun setTimeout(seconds: Long) {
+    rxWebSocket?.timeout = seconds
   }
 
   companion object {

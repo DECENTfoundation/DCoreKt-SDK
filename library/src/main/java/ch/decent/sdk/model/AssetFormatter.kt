@@ -47,7 +47,7 @@ interface AssetFormatter {
 
   fun format(value: BigDecimal) = defaultFormatter.format(value) + " $symbol"
 
-  fun format(value: BigDecimal, formatter: NumberFormat.() -> NumberFormat = { this }) = formatter(defaultFormatter).format(value) + " $symbol"
+  fun format(value: BigDecimal, formatter: NumberFormat.() -> NumberFormat) = formatter(defaultFormatter).format(value) + " $symbol"
 
   /**
    * format raw value with asset symbol
@@ -59,7 +59,7 @@ interface AssetFormatter {
 
   fun format(value: BigInteger) = defaultFormatter.format(fromRaw(value)) + " $symbol"
 
-  fun format(value: BigInteger, formatter: NumberFormat.() -> NumberFormat = { this }) = formatter(defaultFormatter).format(fromRaw(value)) + " $symbol"
+  fun format(value: BigInteger, formatter: NumberFormat.() -> NumberFormat) = formatter(defaultFormatter).format(fromRaw(value)) + " $symbol"
 
   fun amount(value: String): AssetAmount = AssetAmount(toRaw(BigDecimal(value)), id)
   fun amount(value: Double): AssetAmount = AssetAmount(toRaw(BigDecimal(value)), id)
