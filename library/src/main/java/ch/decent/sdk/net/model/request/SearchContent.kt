@@ -17,6 +17,6 @@ internal class SearchContent(
 ): BaseRequest<List<Content>>(
     ApiGroup.DATABASE,
     "search_content",
-    TypeToken.getParameterized(List::class.java, Purchase::class.java).type,
+    TypeToken.getParameterized(List::class.java, Content::class.java).type,
     listOf(term, order.value, user, regionCode, type, startId, limit)
 )
