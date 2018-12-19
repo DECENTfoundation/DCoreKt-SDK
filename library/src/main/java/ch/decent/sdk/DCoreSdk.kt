@@ -1,9 +1,7 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.net.model.request.*
 import ch.decent.sdk.net.rpc.RpcService
 import ch.decent.sdk.net.ws.RxWebSocket
@@ -14,8 +12,6 @@ import io.reactivex.functions.BiFunction
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.threeten.bp.LocalDateTime
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 class DCoreSdk private constructor(
     private val client: OkHttpClient,
@@ -47,14 +43,14 @@ class DCoreSdk private constructor(
       }
 
   internal fun <T, R> makeRequestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback =
-      checkNotNull(rxWebSocket).requestStream(request)
+      rxWebSocket?.requestStream(request) ?: Flowable.error(IllegalArgumentException("callbacks not available through HTTP API"))
 
   internal fun <T> makeRequest(request: BaseRequest<T>): Single<T> {
     check(rxWebSocket != null || rpc != null)
-    return if (rxWebSocket != null && (rpc == null || rxWebSocket.connected || request.apiGroup != ApiGroup.DATABASE || request is WithCallback)) {
+    return if (rxWebSocket != null && (rpc == null || rxWebSocket.connected || request is WithCallback)) {
       rxWebSocket.request(request)
     } else {
-      if (rpc == null || request.apiGroup != ApiGroup.DATABASE || request is WithCallback) Single.error(IllegalArgumentException("not available through HTTP API"))
+      if (rpc == null || request is WithCallback) Single.error(IllegalArgumentException("callbacks not available through HTTP API"))
       else rpc.request(request)
     }
   }

@@ -34,7 +34,7 @@ internal class RpcService(url: String, client: OkHttpClient, private val gson: G
       .build()
       .create(RpcEndpoint::class.java)
 
-  private fun BaseRequest<*>.toRequestBody(): RequestBody = RequestBody.create(MEDIA_TYPE, gson.toJson(this))
+  private fun BaseRequest<*>.toRequestBody(): RequestBody = RequestBody.create(MEDIA_TYPE, json(gson))
 
   @Suppress("UNCHECKED_CAST")
   fun <T> request(request: BaseRequest<T>): Single<T> =

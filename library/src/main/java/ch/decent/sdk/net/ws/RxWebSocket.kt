@@ -41,7 +41,6 @@ internal class RxWebSocket(
 ) {
 
   private val disposable = CompositeDisposable()
-  private val apiId = mutableMapOf<ApiGroup, Single<Int>>()
   internal val events = Flowable.create<WebSocketEvent>({ emitter ->
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
     emitter.setCancellable { webSocket.close(1000, null) }
@@ -67,13 +66,8 @@ internal class RxWebSocket(
           .doOnRequest { value -> logger.info("$tag #onRequest:$value on ${Thread.currentThread()}") }
     }
 
-  private fun BaseRequest<*>.json(callId: Long, callback: Long?, apiId: Int) =
-      (if (callback != null) listOf(callback) + params else params).let {
-        RequestJson(callId, apiId, method, it).let { gson.toJson(it) }
-      }
-
-  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long, callback: Long?, apiId: Int) =
-      json(callId, callback, apiId).let { logger?.info(it); ws.send(it) }
+  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long, callback: Long?) =
+      json(gson, callId, callback).let { logger?.info(it); ws.send(it) }
 
   /**
    * check for callback notice or simple result
@@ -123,7 +117,6 @@ internal class RxWebSocket(
   private fun clearConnection() {
     webSocketAsync = null
     disposable.clear()
-    apiId.clear()
     callId = 0
   }
 
@@ -135,23 +128,11 @@ internal class RxWebSocket(
     return webSocketAsync!!.singleOrError()
   }
 
-  private fun <T : WebSocket> Single<T>.checkApiAccess(request: BaseRequest<*>): Single<Pair<T, Int>> =
-      this.flatMap { ws ->
-        when {
-          request.apiGroup !in apiId && request.apiGroup == ApiGroup.LOGIN -> apiId[request.apiGroup] = Login.make(callId).map { 1 }.cache()
-          request.apiGroup !in apiId -> apiId[request.apiGroup] = RequestApiAccess(request.apiGroup).make(callId).cache()
-        }
-        when {
-          request === Login -> Single.just(ws to 1)
-          else -> apiId[request.apiGroup]!!.map { ws to it }
-        }
-      }
-
   private fun <T> BaseRequest<T>.makeStream(callId: Long, callback: Long? = null): Flowable<T> =
       Flowable.merge(listOf(
           events,
 //          defer to call again after retry, otherwise would be stuck with old websocket
-          Single.defer { webSocket() }.checkApiAccess(this).doOnSuccess { (ws, apiId) -> send(ws, callId, callback, apiId) }.toFlowable()
+          Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback) }.toFlowable()
       ))
           .ofType(OnMessageText::class.java)
           .map { parseIdAndElement(it.text) }
@@ -180,16 +161,5 @@ internal class RxWebSocket(
     disposable.add(
         webSocket().subscribe { ws -> ws.close(1000, "disconnect") }
     )
-  }
-
-  private class RequestJson(
-      @SerializedName("id") val callId: Long,
-      apiId: Int,
-      apiMethod: String,
-      params: List<*>
-  ) {
-    @SerializedName("method") val method: String = "call"
-    @SerializedName("params") val params: List<*> = listOf(apiId, apiMethod, params)
-
   }
 }
