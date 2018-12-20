@@ -6,6 +6,7 @@ import ch.decent.sdk.client
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.slf4j.LoggerFactory
@@ -25,6 +26,10 @@ class ConnectionTest : TimeOutTest() {
         logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )
+  }
+
+  @After fun close() {
+    mockWebServer.shutdown()
   }
 
   @Test fun `should connect, disconnect and connect`() {
@@ -53,7 +58,7 @@ class ConnectionTest : TimeOutTest() {
   @Test fun `should connect, disconnect, fail request and reconnect with success`() {
     mockWebServer
         .enqueue("keep alive", "")
-        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":3}""", """{"id":3,"result":true}""")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
 
     val websocket = socket.webSocket().test()
 
@@ -78,9 +83,7 @@ class ConnectionTest : TimeOutTest() {
   @Test fun `should connect, disconnect, fail request and retry with success`() {
     mockWebServer
         .enqueue("keep alive", "")
-        .enqueue("""{"method":"call","params":[2,"get_chain_id",[]],"id":0}""", """{"id":0,"result":"17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc"}""")
-        .enqueue("""{"method":"call","params":[1,"database",[]],"id":3}""", """{"id":3,"result":2}""")
-        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":4}""", """{"id":4,"result":true}""")
+        .enqueue("""{"method":"call","params":[0,"get_chain_id",[]],"id":0}""", """{"id":0,"result":"17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc"}""")
 
     val websocket = socket.webSocket().test()
 
@@ -99,7 +102,7 @@ class ConnectionTest : TimeOutTest() {
   @Test fun `should fail, disconnect, connect and make request`() {
     mockWebServer
         .enqueue("keep alive", "")
-        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":3}""", """{"id":3,"result":true}""")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
 
     val websocket = socket.webSocket().test()
 

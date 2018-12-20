@@ -1,8 +1,19 @@
 package ch.decent.sdk.net.model
 
+// 0 - database
+// 1 - login
+// 2 - network
+// 3 - history
+// 4 - crypto
+// 5 - messaging
 internal enum class ApiGroup(val apiName: String = "") {
-  LOGIN,
   DATABASE("database"),
+  LOGIN,
+  BROADCAST("network_broadcast"),
   HISTORY("history"),
-  BROADCAST("network_broadcast")
+  CRYPTO("crypto"),
+  MESSAGING("messaging");
+
+  val id: Int
+    get() = ordinal
 }
