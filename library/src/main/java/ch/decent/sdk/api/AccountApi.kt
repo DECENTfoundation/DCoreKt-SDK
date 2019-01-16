@@ -21,6 +21,15 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   private fun getAccountByName(name: String): Single<Account> = GetAccountByName(name).toRequest()
 
   /**
+   * Get account object by object id of the account, 1.2.*
+   *
+   * @param id the id of the account
+   *
+   * @return an account if found, [ObjectNotFoundException] otherwise
+   */
+  fun getAccountById(id: ChainObject): Single<Account> = getAccounts(listOf(id)).map { it.first() }
+
+  /**
    * Get account objects by ids.
    *
    * @param accountIds object ids of the account, 1.2.*
@@ -58,7 +67,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return first found account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account reference is not valid
    */
   fun getAccount(reference: String): Single<Account> = when {
-    ChainObject.isValid(reference) -> getAccounts(listOf(reference.toChainObject())).map { it.first() }
+    ChainObject.isValid(reference) -> getAccountById(reference.toChainObject())
     Address.isValid(reference) -> getAccountIds(listOf(Address.decode(reference))).map { it[0][0] }
         .flatMap { getAccounts(listOf(it)).map { it.first() } }
     Account.isValidName(reference) -> getAccountByName(reference)
