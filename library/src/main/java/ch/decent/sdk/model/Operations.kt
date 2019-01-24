@@ -71,7 +71,7 @@ class TransferOperation @JvmOverloads constructor(
         byteArrayOf(type.ordinal.toByte()),
         fee.bytes,
         from.bytes,
-        to.objectTypeIdBytes,
+        if (type == OperationType.TRANSFER2_OPERATION) to.objectTypeIdBytes else to.bytes,
         amount.bytes,
         memo.optionalBytes(),
         byteArrayOf(0)
@@ -101,7 +101,7 @@ class BuyContentOperation @JvmOverloads constructor(
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
-  constructor(credentials: Credentials, content: Content):
+  constructor(credentials: Credentials, content: Content) :
       this(content.uri, credentials.account, content.price(), if (URL(content.uri).protocol != "ipfs") PubKey() else credentials.keyPair.publicElGamal())
 
   init {
@@ -145,7 +145,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
-  constructor(account: Account, votes: Set<VoteId>): this(account.id, options = account.options.copy(votes = votes))
+  constructor(account: Account, votes: Set<VoteId>) : this(account.id, options = account.options.copy(votes = votes))
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
