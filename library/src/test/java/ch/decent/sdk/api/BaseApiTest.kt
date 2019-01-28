@@ -29,6 +29,9 @@ abstract class BaseApiTest(private val channel: Channel) : TimeOutTest() {
   }
 
   @Before fun init() {
+    System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE")
+    System.setProperty("rx2.buffer-size", "10")
+
     val logger = LoggerFactory.getLogger(channel.toString())
     mockHttp = MockWebServer().apply { start() }
     mockWebSocket = CustomWebSocketService().apply { start() }

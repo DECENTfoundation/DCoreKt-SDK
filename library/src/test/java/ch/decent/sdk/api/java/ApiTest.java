@@ -85,7 +85,7 @@ public class ApiTest {
     @Test
     public void BroadcastApiTest() {
         ECKeyPair keyPair = ECKeyPair.fromBase58(Helpers.getPrivate());
-        EmptyOperation operation = new EmptyOperation(OperationType.TRANSFER2_OPERATION);
+        TransferOperation operation = new TransferOperation(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.ACCOUNT_OBJECT.getGenericId(), new AssetAmount(1));
         Transaction trx = new Transaction(new BlockData(0, 0, 0), Collections.singletonList(operation), "")
                 .withSignature(keyPair);
         api.getBroadcastApi().broadcast(trx);
