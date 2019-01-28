@@ -2,10 +2,7 @@ package ch.decent.sdk.net.ws
 
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.net.model.request.BaseRequest
-import ch.decent.sdk.net.model.request.Login
-import ch.decent.sdk.net.model.request.RequestApiAccess
 import ch.decent.sdk.net.model.request.WithCallback
 import ch.decent.sdk.net.model.response.Error
 import ch.decent.sdk.net.ws.model.OnMessageText
@@ -16,12 +13,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.google.gson.annotations.SerializedName
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.AsyncProcessor
+import io.reactivex.processors.PublishProcessor
 import io.reactivex.rxkotlin.addTo
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,6 +29,10 @@ import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
+internal sealed class MessageEvent
+internal data class Message(val id: Long, val obj: JsonObject) : MessageEvent()
+internal data class WsError(val t: Throwable) : MessageEvent()
+
 internal class RxWebSocket(
     private val client: OkHttpClient,
     private val url: String,
@@ -41,6 +42,7 @@ internal class RxWebSocket(
 ) {
 
   private val disposable = CompositeDisposable()
+  private val messages = PublishProcessor.create<MessageEvent>()
   internal val events = Flowable.create<WebSocketEvent>({ emitter ->
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
     emitter.setCancellable { webSocket.close(1000, null) }
@@ -56,7 +58,7 @@ internal class RxWebSocket(
   val connected: Boolean
     get() = disposable.size() != 0
 
-  private fun <T> Flowable<T>.log(tag: String): Flowable<T> = if (logger == null) this else
+  private fun <T> Flowable<T>.info(tag: String): Flowable<T> = if (logger == null) this else
     this.compose {
       it.doOnSubscribe { logger.info("$tag #onSubscribe on ${Thread.currentThread()}") }
           .doOnNext { value -> logger.info("$tag #onNext:$value on ${Thread.currentThread()}") }
@@ -72,16 +74,16 @@ internal class RxWebSocket(
   /**
    * check for callback notice or simple result
    */
-  private fun parseIdAndElement(message: String): Pair<Long, JsonObject> =
+  private fun parseIdAndElement(message: String): Message =
       JsonParser().parse(message).asJsonObject.let {
         if (it.has("method") && it.get("method").asString == "notice") {
           it.get("params").asJsonArray.let {
             val id = it[0].asLong
             val result = it[1].asJsonArray[0]
-            id to JsonObject().apply { add("result", result) }
+            Message(id, JsonObject().apply { add("result", result) })
           }
         } else {
-          it.get("id").asLong to it
+          Message(it.get("id").asLong, it)
         }
       }
 
@@ -103,9 +105,14 @@ internal class RxWebSocket(
 
   private fun connect() {
     disposable.addAll(
-        events.log("RxWebSocket")
-            .onErrorResumeNext(Flowable.empty())
-            .doOnComplete { clearConnection() }.subscribe(),
+        events.info("RxWebSocket")
+            .doOnTerminate { clearConnection() }
+            .doOnComplete { messages.onNext(WsError(WebSocketClosedException())) }
+            .doOnError { messages.onNext(WsError(it)) }
+            .ofType(OnMessageText::class.java)
+            .map { parseIdAndElement(it.text) }
+            .doOnNext { messages.onNext(it) }
+            .subscribe(),
         events.ofType(OnOpen::class.java).firstOrError()
             .doOnSuccess { webSocketAsync!!.onNext(it.webSocket); webSocketAsync!!.onComplete() }
             .ignoreElement().onErrorComplete()
@@ -129,13 +136,10 @@ internal class RxWebSocket(
   }
 
   private fun <T> BaseRequest<T>.makeStream(callId: Long, callback: Long? = null): Flowable<T> =
-      Flowable.merge(listOf(
-          events,
-//          defer to call again after retry, otherwise would be stuck with old websocket
-          Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback) }.toFlowable()
-      ))
-          .ofType(OnMessageText::class.java)
-          .map { parseIdAndElement(it.text) }
+      Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback) }.ignoreElement()
+          .andThen(messages)
+          .flatMap { if (it is WsError) Flowable.error(it.t) else Flowable.just(it) }
+          .ofType(Message::class.java)
           .doOnNext { (id, obj) -> checkForError(callId, id, obj) }
           .filter { (id, _) -> id == callback ?: callId }
           .doOnNext { (_, obj) -> checkObjectNotFound(obj, this) }
@@ -147,11 +151,6 @@ internal class RxWebSocket(
   private fun <T> BaseRequest<T>.make(callId: Long): Single<T> =
       makeStream(callId)
           .firstOrError()
-          .onErrorResumeNext {
-            if (it is NoSuchElementException) Single.error(WebSocketClosedException())
-            else Single.error(it)
-          }
-
 
   internal fun <T, R> requestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback = request.makeStream(callId, callId)
 

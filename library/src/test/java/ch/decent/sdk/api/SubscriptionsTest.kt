@@ -65,7 +65,7 @@ class SubscriptionsTest {
         )
 
     val test = api.subscriptionApi.setBlockAppliedCallback()
-        .take(3)
+        .take(1)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -93,6 +93,7 @@ class SubscriptionsTest {
         )
 
     val test = api.subscriptionApi.setPendingTransactionCallback()
+        .take(1)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -109,7 +110,7 @@ class SubscriptionsTest {
         )
 
     val test = api.subscriptionApi.setSubscribeCallback(false)
-        .take(3)
+        .take(1)
         .subscribeOn(Schedulers.newThread())
         .test()
 
