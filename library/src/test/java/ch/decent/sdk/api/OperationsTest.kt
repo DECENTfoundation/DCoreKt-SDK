@@ -3,6 +3,8 @@ package ch.decent.sdk.api
 import ch.decent.sdk.*
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.crypto.address
+import ch.decent.sdk.model.AccountCreateOperation
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransferOperation
@@ -22,8 +24,8 @@ class OperationsTest {
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
-//    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {
@@ -83,6 +85,23 @@ class OperationsTest {
         .assertNoErrors()
         .assertValue { it.id == trx.id }
 
+  }
+
+  @Test fun `should create account`() {
+    val key = ECKeyPair.fromBase58(private)
+    val op = AccountCreateOperation(account, "hello.johnny", public.address())
+    val trx = api.transactionApi.createTransaction(op)
+        .map { it.withSignature(key) }
+        .blockingGet()
+
+    val test = api.broadcastApi.broadcastWithCallback(trx)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+        .assertValue { it.id == trx.id }
   }
 
 }
