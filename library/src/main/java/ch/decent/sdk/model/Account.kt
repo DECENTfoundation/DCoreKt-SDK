@@ -16,8 +16,8 @@ data class Account(
 ) {
 
   companion object {
-    private val pattern = Pattern.compile("^[a-z][a-z0-9-]+[a-z0-9](?:\\.[a-z][a-z0-9-]+[a-z0-9])*\$")
+    private val pattern = Pattern.compile("^(?=.{5,63}\$)([a-z][a-z0-9-]+[a-z0-9])(\\\\.[a-z][a-z0-9-]+[a-z0-9])*\$")
 
-    fun isValidName(name: String) = pattern.matcher(name).matches() && name.length in 5..63
+    fun isValidName(name: String) = pattern.matcher(name).matches()
   }
 }
