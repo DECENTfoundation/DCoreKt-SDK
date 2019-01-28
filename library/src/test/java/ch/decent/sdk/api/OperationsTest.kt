@@ -12,6 +12,7 @@ import ch.decent.sdk.net.ws.CustomWebSocketService
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.math.BigInteger
@@ -24,8 +25,8 @@ class OperationsTest {
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
-    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
+    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {
@@ -87,6 +88,7 @@ class OperationsTest {
 
   }
 
+  @Ignore
   @Test fun `should create account`() {
     val key = ECKeyPair.fromBase58(private)
     val op = AccountCreateOperation(account, "hello.johnny", public.address())
