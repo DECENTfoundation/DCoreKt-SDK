@@ -109,6 +109,7 @@ internal class RxWebSocket(
             .doOnTerminate { clearConnection() }
             .doOnComplete { messages.onNext(WsError(WebSocketClosedException())) }
             .doOnError { messages.onNext(WsError(it)) }
+            .onErrorResumeNext(Flowable.empty())
             .ofType(OnMessageText::class.java)
             .map { parseIdAndElement(it.text) }
             .doOnNext { messages.onNext(it) }
@@ -136,8 +137,10 @@ internal class RxWebSocket(
   }
 
   private fun <T> BaseRequest<T>.makeStream(callId: Long, callback: Long? = null): Flowable<T> =
-      Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback) }.ignoreElement()
-          .andThen(messages)
+      Flowable.merge(listOf(
+          Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback) }.ignoreElement().toFlowable(),
+          messages
+      ))
           .flatMap { if (it is WsError) Flowable.error(it.t) else Flowable.just(it) }
           .ofType(Message::class.java)
           .doOnNext { (id, obj) -> checkForError(callId, id, obj) }
