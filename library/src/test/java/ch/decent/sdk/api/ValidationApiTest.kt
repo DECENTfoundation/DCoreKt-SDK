@@ -152,8 +152,8 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
         .test()
 
     test.awaitTerminalEvent()
-    test.assertTerminated()
-        .assertError(DCoreException::class.java)
+    test.assertComplete()
+        .assertValue(true)
   }
 
   @Test fun `should validate signed transaction`() {
