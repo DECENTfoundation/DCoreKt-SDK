@@ -5,6 +5,8 @@ package ch.decent.sdk.utils
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.Sha256Hash
+import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.net.serialization.bytes
 import com.google.common.io.BaseEncoding
 import org.bouncycastle.crypto.engines.AESEngine
@@ -17,6 +19,7 @@ import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.SecureRandom
+import java.text.NumberFormat
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -96,3 +99,7 @@ fun createCipher(forEncryption: Boolean, iv: ByteArray, key: ByteArray) =
     PaddedBufferedBlockCipher(CBCBlockCipher(AESEngine())).apply {
       init(forEncryption, ParametersWithIV(KeyParameter(key), iv))
     }
+
+fun Pair<Asset, AssetAmount>.format() = first.format(second.amount)
+
+fun Pair<Asset, AssetAmount>.format(formatter: NumberFormat.() -> NumberFormat) = first.format(second.amount, formatter)
