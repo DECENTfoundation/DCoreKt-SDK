@@ -20,7 +20,7 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
   private val signature = "1f140e5744bcef282147ef3f0bab8df46f49704a99046d6ea5db37ab3113e0f45935fd94af7b33189ad34fa1666ab7e54aa127d725e2018fb6b68771aacef54c41"
   private val signatureInvalid = "1f3aaceb17ae6718235bac851fb376b2c00cfc69ddb23d471a29135f49c336de5316d92ee14d73567d57781bd8a14d69259adbe6e6094b387d9d9ea60e25fcf089"
   private val trx: Transaction
-    get() = api.transactionApi.getTransaction(1370282, 0).blockingGet().let {
+    get() = api.transactionApi.get(1370282, 0).blockingGet().let {
       Transaction(BlockData(it.refBlockNum, it.refBlockPrefix, it.expiration.toEpochSecond(ZoneOffset.UTC)), it.operations, "")
     }
 

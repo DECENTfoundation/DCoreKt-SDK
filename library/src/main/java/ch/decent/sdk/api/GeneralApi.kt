@@ -9,13 +9,6 @@ import org.threeten.bp.LocalDateTime
 class GeneralApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
-   * Get the name of the API.
-   *
-   * @return the name of the API.
-   */
-  fun info(): Single<String> = Info.toRequest()
-
-  /**
    * Retrieve properties associated with the chain.
    *
    * @return chain id and immutable chain parameters

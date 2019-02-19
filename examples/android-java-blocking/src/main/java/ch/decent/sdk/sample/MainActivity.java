@@ -2,40 +2,17 @@ package ch.decent.sdk.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.SmsMessage;
 import android.util.Log;
-
-import com.google.common.base.Optional;
-
-import kotlin.jvm.functions.Function1;
-import org.slf4j.LoggerFactory;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import ch.decent.sdk.DCoreApi;
-import ch.decent.sdk.DCoreConstants;
 import ch.decent.sdk.DCoreSdk;
 import ch.decent.sdk.crypto.Credentials;
-import ch.decent.sdk.exception.ObjectNotFoundException;
-import ch.decent.sdk.model.Asset;
-import ch.decent.sdk.model.AssetAmount;
-import ch.decent.sdk.model.BaseOperation;
-import ch.decent.sdk.model.ObjectType;
-import ch.decent.sdk.model.OperationHistory;
-import ch.decent.sdk.model.ProcessedTransaction;
-import ch.decent.sdk.model.TransactionConfirmation;
+import ch.decent.sdk.model.*;
 import ch.decent.sdk.net.TrustAllCerts;
-import io.reactivex.Single;
 import kotlin.Pair;
 import okhttp3.OkHttpClient;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,24 +36,33 @@ public class MainActivity extends AppCompatActivity {
 
 //        balance
         Pair<Asset, AssetAmount> balance = api.getBalanceApi()
-                .getBalanceWithAsset(credentials.getAccount(), "DCT")
+                .getWithAsset(credentials.getAccount(), "DCT")
                 .blockingGet();
         Log.i("BALANCE", balance.getFirst().format(balance.getSecond().getAmount()));
 
+//        receiver
+        Account receiver = api.getAccountApi().getByName("u3a7b78084e7d3956442d5a4d439dad51")
+                .blockingGet();
+        Log.i("RECIEVER ACCOUNT", receiver.toString());
+
 //        transfer
         AssetAmount amount = balance.getFirst().amount(0.12345);
-        TransactionConfirmation confirmation = api.getOperationsHelper()
-                .transfer(credentials, "u3a7b78084e7d3956442d5a4d439dad51", amount, "hello memo")
+        Memo memo = new Memo("hello memo", credentials, receiver);
+        TransferOperation operation = new TransferOperation(credentials.getAccount(), receiver.getId(), amount, memo);
+
+        TransactionConfirmation confirmation = api.getBroadcastApi()
+                .broadcastWithCallback(credentials.getKeyPair(), operation)
                 .blockingGet();
+
         Log.i("TRANSACTION", confirmation.toString());
 
 //        verify
-        ProcessedTransaction trx = api.getTransactionApi().getTransaction(confirmation)
+        ProcessedTransaction trx = api.getTransactionApi().get(confirmation)
                 .blockingGet();
         Log.i("TRANSACTION EXIST", trx.toString());
 
 //        history
-        List<OperationHistory> history = api.getHistoryApi().getAccountHistory(credentials.getAccount())
+        List<OperationHistory> history = api.getHistoryApi().listOperations(credentials.getAccount())
                 .blockingGet();
         Log.i("HISTORY", history.toString());
     }

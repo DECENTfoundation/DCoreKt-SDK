@@ -12,22 +12,36 @@ import io.reactivex.Single
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
+   * Check if the account exist.
+   *
+   * @param reference account id, name or pub key
+   *
+   * @return account exists in DCore database
+   */
+//  fun exists(reference: String): Single<Boolean> = getAccount(reference).map { true }.onErrorReturnItem(false)
+
+  /**
+   * Get account by reference.
+   *
+   * @param id account id
+   *
+   * @return an account if exist, [ObjectNotFoundException] if not found
+   */
+  fun get(id: ChainObject): Single<Account> = getAll(listOf(id)).map { it.first() }
+
+  /**
    * Get account object by name.
    *
    * @param name the name of the account
    *
    * @return an account if found, [ObjectNotFoundException] otherwise
    */
-  private fun getAccountByName(name: String): Single<Account> = GetAccountByName(name).toRequest()
+  fun getByName(name: String): Single<Account> = GetAccountByName(name).toRequest()
 
   /**
-   * Get account objects by ids.
-   *
-   * @param accountIds object ids of the account, 1.2.*
-   *
-   * @return an account list if found, [ObjectNotFoundException] otherwise
+   * Get the total number of accounts registered on the blockchain.
    */
-  fun getAccounts(accountIds: List<ChainObject>): Single<List<Account>> = GetAccountById(accountIds).toRequest()
+  fun countAll(): Single<Long> = GetAccountCount.toRequest()
 
   /**
    * Get account object ids by public key addresses.
@@ -36,34 +50,81 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return an account object ids if found, [ObjectNotFoundException] otherwise
    */
-  fun getAccountIds(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).run {
+  fun findAllReferencesByKeys(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).run {
     toRequest()
         .doOnSuccess { if (it.size == 1 && it[0].isEmpty()) throw ObjectNotFoundException(description()) }
   }
 
   /**
-   * Check if the account exist.
+   * Get all accounts that refer to the account id in their owner or active authorities.
    *
-   * @param reference account id, name or pub key
+   * @param accountId account object id
    *
-   * @return account exists in DCore database
+   * @return a list of account object ids
    */
-  fun accountExist(reference: String): Single<Boolean> = getAccount(reference).map { true }.onErrorReturnItem(false)
+  fun findAllReferencesByAccount(accountId: ChainObject): Single<List<ChainObject>> =
+      GetAccountReferences(accountId).toRequest()
 
   /**
-   * Get account by reference.
+   * Get account objects by ids.
    *
-   * @param reference account id, name or pub key
+   * @param accountIds object ids of the account, 1.2.*
    *
-   * @return first found account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account reference is not valid
+   * @return an account list if found, [ObjectNotFoundException] otherwise
    */
-  fun getAccount(reference: String): Single<Account> = when {
-    ChainObject.isValid(reference) -> getAccounts(listOf(reference.toChainObject())).map { it.first() }
-    Address.isValid(reference) -> getAccountIds(listOf(Address.decode(reference))).map { it[0][0] }
-        .flatMap { getAccounts(listOf(it)).map { it.first() } }
-    Account.isValidName(reference) -> getAccountByName(reference)
-    else -> Single.error(IllegalArgumentException("not a valid account reference"))
-  }
+  fun getAll(accountIds: List<ChainObject>): Single<List<Account>> = GetAccountById(accountIds).toRequest()
+
+  /**
+   * Fetch all objects relevant to the specified accounts and subscribe to updates.
+   *
+   * @param namesOrIds list of account names or ids
+   * @param subscribe true to subscribe to updates
+   *
+   * @return map of names or ids to account, or empty map if not present
+   */
+  @JvmOverloads
+  fun getFullAccounts(namesOrIds: List<String>, subscribe: Boolean = false) =
+      GetFullAccounts(namesOrIds, subscribe).toRequest()
+
+  /**
+   * Get a list of accounts by name.
+   *
+   * @param names account names to retrieve
+   *
+   * @return list of accounts or [ObjectNotFoundException] if none exist
+   */
+  fun getAllByNames(names: List<String>): Single<List<Account>> =
+      LookupAccountNames(names).toRequest()
+
+  /**
+   * Get names and IDs for registered accounts.
+   *
+   * @param lowerBound lower bound of the first name to return
+   * @param limit number of items to get, max 1000
+   *
+   * @return map of account names to corresponding IDs
+   */
+  @JvmOverloads
+  fun listAllRelative(lowerBound: String, limit: Int = 1000): Single<Map<String, ChainObject>> =
+      LookupAccounts(lowerBound, limit).toRequest()
+
+  /**
+   * Get names and IDs for registered accounts that match search term.
+   *
+   * @param searchTerm will try to partially match account name or id
+   * @param order sort data by field
+   * @param id object id to start searching from
+   * @param limit number of items to get, max 1000
+   *
+   * @return list of found accounts
+   */
+  @JvmOverloads
+  fun findAll(
+      searchTerm: String,
+      order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
+      id: ChainObject = ObjectType.NULL_OBJECT.genericId,
+      limit: Int = 1000
+  ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
 
   /**
    * Search account history.
@@ -75,6 +136,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return account history list
    */
+  @Deprecated(message = "Use history API")
   @JvmOverloads
   fun searchAccountHistory(
       accountId: ChainObject,
@@ -92,74 +154,6 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return credentials
    */
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
-      getAccountByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
-
-  /**
-   * Fetch all objects relevant to the specified accounts and subscribe to updates.
-   *
-   * @param namesOrIds list of account names or ids
-   * @param subscribe true to subscribe to updates
-   *
-   * @return map of names or ids to account, or empty map if not present
-   */
-  @JvmOverloads
-  fun getFullAccounts(namesOrIds: List<String>, subscribe: Boolean = false) =
-      GetFullAccounts(namesOrIds, subscribe).toRequest()
-
-  /**
-   * Get all accounts that refer to the account id in their owner or active authorities.
-   *
-   * @param accountId account object id
-   *
-   * @return a list of account object ids
-   */
-  fun getAccountReferences(accountId: ChainObject): Single<List<ChainObject>> =
-      GetAccountReferences(accountId).toRequest()
-
-  /**
-   * Get a list of accounts by name.
-   *
-   * @param names account names to retrieve
-   *
-   * @return list of accounts or [ObjectNotFoundException] if none exist
-   */
-  fun lookupAccountNames(names: List<String>): Single<List<Account>> =
-      LookupAccountNames(names).toRequest()
-
-  /**
-   * Get names and IDs for registered accounts.
-   *
-   * @param lowerBound lower bound of the first name to return
-   * @param limit number of items to get, max 1000
-   *
-   * @return map of account names to corresponding IDs
-
-   */
-  @JvmOverloads
-  fun lookupAccounts(lowerBound: String, limit: Int = 1000): Single<Map<String, ChainObject>> =
-      LookupAccounts(lowerBound, limit).toRequest()
-
-  /**
-   * Get names and IDs for registered accounts that match search term.
-   *
-   * @param searchTerm will try to partially match account name or id
-   * @param order sort data by field
-   * @param id object id to start searching from
-   * @param limit number of items to get, max 1000
-   *
-   * @return list of found accounts
-   */
-  @JvmOverloads
-  fun searchAccounts(
-      searchTerm: String,
-      order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
-      id: ChainObject = ObjectType.NULL_OBJECT.genericId,
-      limit: Int = 1000
-  ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
-
-  /**
-   * Get the total number of accounts registered on the blockchain.
-   */
-  fun getAccountCount(): Single<Long> = GetAccountCount.toRequest()
+      getByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
 
 }

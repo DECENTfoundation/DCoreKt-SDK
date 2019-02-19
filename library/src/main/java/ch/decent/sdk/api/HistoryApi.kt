@@ -14,6 +14,19 @@ import io.reactivex.Single
 class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
+   * Returns balance operation on the account and operation id.
+   *
+   * @param accountId object id of the account whose history should be queried, 1.2.*
+   * @param operationId object id of the history object, 1.7.*
+   *
+   * @return an balance operation change
+   */
+  fun getOperation(
+      accountId: ChainObject,
+      operationId: ChainObject
+  ): Single<BalanceChange> = GetAccountBalanceForTransaction(accountId, operationId).toRequest()
+
+  /**
    * Get account history of operations.
    *
    * @param accountId object id of the account whose history should be queried, 1.2.*
@@ -24,7 +37,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of operations performed by account, ordered from most recent to oldest
    */
   @JvmOverloads
-  fun getAccountHistory(
+  fun listOperations(
       accountId: ChainObject,
       startId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
       stopId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
@@ -40,7 +53,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of operations performed by account, ordered from most recent to oldest
    */
-  fun getAccountHistoryRelative(
+  fun listOperationsRelative(
       accountId: ChainObject,
       start: Int = 0,
       limit: Int = 100
@@ -60,7 +73,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of balance changes
    */
-  fun searchAccountBalanceHistory(
+  fun findAllOperations(
       accountId: ChainObject,
       assets: List<ChainObject> = emptyList(),
       recipientAccount: ChainObject? = null,
@@ -69,17 +82,4 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
       startOffset: Long = 0,
       limit: Int = 100
   ): Single<List<BalanceChange>> = SearchAccountBalanceHistory(accountId, assets, recipientAccount, fromBlock, toBlock, startOffset, limit).toRequest()
-
-  /**
-   * Returns balance operation on the account and operation id.
-   *
-   * @param accountId object id of the account whose history should be queried, 1.2.*
-   * @param operationId object id of the history object, 1.7.*
-   *
-   * @return an balance operation change
-   */
-  fun getAccountBalanceForTransaction(
-      accountId: ChainObject,
-      operationId: ChainObject
-  ): Single<BalanceChange> = GetAccountBalanceForTransaction(accountId, operationId).toRequest()
 }

@@ -83,7 +83,7 @@ class TransferOperation @JvmOverloads constructor(
 }
 
 /**
- * Request to buy content operation constructor
+ * Request to purchase content operation constructor
  *
  * @param uri uri of the content
  * @param consumer chain object id of the buyer's account
@@ -92,7 +92,7 @@ class TransferOperation @JvmOverloads constructor(
  * @param regionCode region code of the consumer
  * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  */
-class BuyContentOperation @JvmOverloads constructor(
+class PurchaseContentOperation @JvmOverloads constructor(
     @SerializedName("URI") val uri: String,
     @SerializedName("consumer") val consumer: ChainObject,
     @SerializedName("price") val price: AssetAmount,
@@ -123,7 +123,7 @@ class BuyContentOperation @JvmOverloads constructor(
     )
 
   override fun toString(): String {
-    return "BuyContentOperation(uri='$uri', consumer=$consumer, price=$price, publicElGamal=$publicElGamal, regionCode=$regionCode, fee=$fee)"
+    return "PurchaseContentOperation(uri='$uri', consumer=$consumer, price=$price, publicElGamal=$publicElGamal, regionCode=$regionCode, fee=$fee)"
   }
 }
 

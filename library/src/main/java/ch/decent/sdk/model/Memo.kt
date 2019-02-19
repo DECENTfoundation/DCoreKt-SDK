@@ -1,6 +1,7 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.Sha256Hash
 import ch.decent.sdk.net.serialization.ByteSerializable
@@ -17,15 +18,38 @@ class Memo : ByteSerializable {
   @SerializedName("message") val message: String
   @SerializedName("nonce") val nonce: BigInteger
 
+  /**
+   * Create Memo object with unencrypted message
+   *
+   * @param message a message to send
+   */
   constructor(message: String) {
-    this.message = (ByteArray(4, { 0 }) + message.toByteArray()).hex()
+    this.message = (ByteArray(4) { 0 } + message.toByteArray()).hex()
     this.nonce = BigInteger.ZERO
     this.from = null
     this.to = null
   }
 
+  /**
+   * Create Memo object with encrypted message
+   *
+   * @param message a message to send
+   * @param credentials sender credentials
+   * @param recipient receiver account
+   */
+  constructor(message: String, credentials: Credentials, recipient: Account) :
+      this(message, credentials.keyPair, recipient.active.keyAuths[0].value)
+
+  /**
+   * Create Memo object with encrypted message
+   *
+   * @param message a message to send
+   * @param keyPair sender keys, use [ch.decent.sdk.crypto.Credentials.keyPair]
+   * @param recipient receiver public key, use address from [Account.active] keys
+   * @param nonce unique positive number
+   */
   constructor(message: String, keyPair: ECKeyPair, recipient: Address, nonce: BigInteger = generateNonce()) {
-    require(nonce.signum() > 0, { "nonce must be a positive number" })
+    require(nonce.signum() > 0) { "nonce must be a positive number" }
     this.nonce = nonce
     this.from = Address(keyPair.public)
     this.to = recipient

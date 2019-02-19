@@ -10,26 +10,6 @@ import org.threeten.bp.LocalDateTime
 class GeneralApiTest(channel: Channel) : BaseApiTest(channel) {
 //  override val useMock: Boolean = false
 
-  @Test fun `get info`() {
-    mockWebSocket
-        .enqueue(
-            """{"method":"call","params":[0,"info",[]],"id":1}""",
-            """{"id":1,"result":"database_api"}"""
-        )
-
-    mockHttp.enqueue(
-        """{"id":1,"result":"database_api"}"""
-    )
-
-    val test = api.generalApi.info()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-  }
-
   @Test fun `get chain props`() {
     mockWebSocket
         .enqueue(

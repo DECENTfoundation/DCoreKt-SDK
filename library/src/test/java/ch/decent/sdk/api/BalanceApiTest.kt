@@ -19,7 +19,7 @@ class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":0,"result":[{"amount":50500000,"asset_id":"1.3.0"}]}"""
     )
 
-    val test = api.balanceApi.getBalance(account)
+    val test = api.balanceApi.getAll(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -39,7 +39,7 @@ class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":0,"result":[{"amount":50500000,"asset_id":"1.3.0"}]}"""
     )
 
-    val test = api.balanceApi.getBalance(account, "1.3.56576".toChainObject())
+    val test = api.balanceApi.get(account, "1.3.56576".toChainObject())
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -59,7 +59,7 @@ class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[]}"""
     )
 
-    val test = api.balanceApi.getVestingBalances(account)
+    val test = api.balanceApi.getAllVesting(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 
