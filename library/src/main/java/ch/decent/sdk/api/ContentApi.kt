@@ -103,4 +103,25 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       uri: String
   ): Single<PurchaseContentOperation> =
       get(uri).map { PurchaseContentOperation(credentials, it) }
+
+  /**
+   * Create a transfer operation.
+   *
+   * @param credentials account credentials
+   * @param id content id
+   * @param amount amount to send with asset type
+   * @param memo optional unencrypted message
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun createTransfer(
+      credentials: Credentials,
+      id: ChainObject,
+      amount: AssetAmount,
+      memo: String? = null,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): TransferOperation = TransferOperation(credentials.account, id, amount, memo?.let { Memo(it) }, fee)
+
 }

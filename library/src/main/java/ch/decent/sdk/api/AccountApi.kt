@@ -14,11 +14,11 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   /**
    * Check if the account exist.
    *
-   * @param reference account id, name or pub key
+   * @param nameOrId account id or name
    *
    * @return account exists in DCore database
    */
-//  fun exists(reference: String): Single<Boolean> = getAccount(reference).map { true }.onErrorReturnItem(false)
+  fun exist(nameOrId: String): Single<Boolean> = get(nameOrId).map { true }.onErrorReturnItem(false)
 
   /**
    * Get account by reference.
@@ -37,6 +37,19 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return an account if found, [ObjectNotFoundException] otherwise
    */
   fun getByName(name: String): Single<Account> = GetAccountByName(name).toRequest()
+
+  /**
+   * Get account by name or id.
+   *
+   * @param nameOrId account id or name
+   *
+   * @return an account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account reference is not valid
+   */
+  fun get(nameOrId: String): Single<Account> = when {
+    ChainObject.isValid(nameOrId) -> get(nameOrId.toChainObject())
+    Account.isValidName(nameOrId) -> getByName(nameOrId)
+    else -> Single.error(IllegalArgumentException("not a valid account reference"))
+  }
 
   /**
    * Get the total number of accounts registered on the blockchain.
@@ -155,5 +168,60 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
       getByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
+
+  /**
+   * Create a transfer operation.
+   *
+   * @param credentials account credentials
+   * @param nameOrId account id or account name
+   * @param amount amount to send with asset type
+   * @param memo optional message
+   * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun createTransfer(
+      credentials: Credentials,
+      nameOrId: String,
+      amount: AssetAmount,
+      memo: String? = null,
+      encrypted: Boolean = true,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): Single<TransferOperation> =
+      if ((memo.isNullOrBlank() || !encrypted) && ChainObject.isValid(nameOrId)) {
+        Single.just(TransferOperation(credentials.account, nameOrId.toChainObject(), amount, memo?.let { Memo(it) }, fee))
+      } else {
+        get(nameOrId).map { receiver ->
+          val msg = memo?.let { if (encrypted) Memo(memo, credentials, receiver) else Memo(memo) }
+          TransferOperation(credentials.account, receiver.id, amount, msg, fee)
+        }
+      }
+
+  /**
+   * Make a transfer.
+   *
+   * @param credentials account credentials
+   * @param nameOrId account id or account name
+   * @param amount amount to send with asset type
+   * @param memo optional message
+   * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun transfer(
+      credentials: Credentials,
+      nameOrId: String,
+      amount: AssetAmount,
+      memo: String? = null,
+      encrypted: Boolean = true,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): Single<TransactionConfirmation> =
+      createTransfer(credentials, nameOrId, amount, memo, encrypted, fee).flatMap {
+        api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+      }
 
 }
