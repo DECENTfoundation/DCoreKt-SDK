@@ -18,10 +18,13 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return account exists in DCore database
    */
-  fun exist(nameOrId: String): Single<Boolean> = get(nameOrId).map { true }.onErrorReturnItem(false)
+  fun exist(nameOrId: String): Single<Boolean> = get(nameOrId).map { true }.onErrorResumeNext {
+    if (it is IllegalStateException || it is ObjectNotFoundException) Single.just(false)
+    else Single.error(it)
+  }
 
   /**
-   * Get account by reference.
+   * Get account by id.
    *
    * @param id account id
    *
@@ -43,12 +46,12 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param nameOrId account id or name
    *
-   * @return an account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account reference is not valid
+   * @return an account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account name or id is not valid
    */
   fun get(nameOrId: String): Single<Account> = when {
     ChainObject.isValid(nameOrId) -> get(nameOrId.toChainObject())
     Account.isValidName(nameOrId) -> getByName(nameOrId)
-    else -> Single.error(IllegalArgumentException("not a valid account reference"))
+    else -> Single.error(IllegalArgumentException("not a valid account name or id"))
   }
 
   /**
@@ -61,12 +64,9 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param keys formatted public keys of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
    *
-   * @return an account object ids if found, [ObjectNotFoundException] otherwise
+   * @return a list of account object ids
    */
-  fun findAllReferencesByKeys(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).run {
-    toRequest()
-        .doOnSuccess { if (it.size == 1 && it[0].isEmpty()) throw ObjectNotFoundException(description()) }
-  }
+  fun findAllReferencesByKeys(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).toRequest()
 
   /**
    * Get all accounts that refer to the account id in their owner or active authorities.
