@@ -39,43 +39,53 @@ public class ApiTest {
 
     @Test
     public void accountApiTest() {
-        api.getAccountApi().accountExist("reference");
-        api.getAccountApi().getAccount("reference");
-        api.getAccountApi().getAccount(ObjectType.ACCOUNT_OBJECT.getGenericId().toString());
-        api.getAccountApi().getAccount("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz");
-        api.getAccountApi().getAccounts(Collections.singletonList(ObjectType.ACCOUNT_OBJECT.getGenericId()));
-        api.getAccountApi().getAccountIds(Collections.singletonList(Address.decode("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")));
+        api.getAccountApi().get(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getAccountApi().getAll(Collections.singletonList(ObjectType.ACCOUNT_OBJECT.getGenericId()));
+        api.getAccountApi().getByName("reference");
+        api.getAccountApi().getAllByNames(Collections.singletonList("a name"));
+        api.getAccountApi().countAll();
+        api.getAccountApi().createCredentials("u961279ec8b7ae7bd62f304f7c1c3d345", "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
+        api.getAccountApi().findAll("term");
+        api.getAccountApi().findAll("term", SearchAccountsOrder.ID_ASC);
+        api.getAccountApi().findAll("term", SearchAccountsOrder.ID_ASC, ObjectType.NULL_OBJECT.getGenericId());
+        api.getAccountApi().findAll("term", SearchAccountsOrder.ID_ASC, ObjectType.NULL_OBJECT.getGenericId(), 10);
+        api.getAccountApi().findAllReferencesByAccount(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getAccountApi().findAllReferencesByKeys(Collections.singletonList(Address.decode("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")));
+        api.getAccountApi().getFullAccounts(Collections.singletonList("a name or id"));
+        api.getAccountApi().getFullAccounts(Collections.singletonList("a name or id"), true);
+        api.getAccountApi().listAllRelative("abc");
+        api.getAccountApi().listAllRelative("abc", 10);
         api.getAccountApi().searchAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId());
         api.getAccountApi().searchAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.NULL_OBJECT.getGenericId());
         api.getAccountApi().searchAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.NULL_OBJECT.getGenericId(), SearchAccountHistoryOrder.FROM_ASC);
         api.getAccountApi().searchAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.NULL_OBJECT.getGenericId(), SearchAccountHistoryOrder.FROM_ASC, 10);
-        api.getAccountApi().createCredentials("u961279ec8b7ae7bd62f304f7c1c3d345", "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
     }
 
     @Test
     public void AssetApiTest() {
-        api.getAssetApi().getAsset(ObjectType.ASSET_OBJECT.getGenericId());
-        api.getAssetApi().getAssets(Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
-        api.getAssetApi().lookupAsset("dct");
-        api.getAssetApi().lookupAssets(Arrays.asList("dct", "dct"));
-    }
-
-    @Test
-    public void AuthorityApiTest() {
+        api.getAssetApi().convertToDct(new AssetAmount(10));
+        api.getAssetApi().get(ObjectType.ASSET_OBJECT.getGenericId());
+        api.getAssetApi().getAll(Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
+        api.getAssetApi().getAllByName(Arrays.asList("dct", "dct"));
+        api.getAssetApi().getByName("dct");
+        api.getAssetApi().getRealSupply();
+        api.getAssetApi().listAllRelative("abc");
+        api.getAssetApi().listAllRelative("abc", 10);
     }
 
     @Test
     public void BalanceApiTest() {
-        api.getBalanceApi().getBalance(ObjectType.ACCOUNT_OBJECT.getGenericId());
-        api.getBalanceApi().getBalance(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId());
-        api.getBalanceApi().getBalance(ObjectType.ACCOUNT_OBJECT.getGenericId(), Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
-        api.getBalanceApi().getBalance("reference");
-        api.getBalanceApi().getBalance("reference", Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
-        api.getBalanceApi().getBalance("reference", ObjectType.ASSET_OBJECT.getGenericId());
-        api.getBalanceApi().getBalanceWithAsset(ObjectType.ACCOUNT_OBJECT.getGenericId(), "DCT");
-        api.getBalanceApi().getBalanceWithAsset(ObjectType.ACCOUNT_OBJECT.getGenericId(), Arrays.asList("DCT", "DCT"));
-        api.getBalanceApi().getBalanceWithAsset("reference", "DCT");
-        api.getBalanceApi().getBalanceWithAsset("reference", Arrays.asList("DCT", "DCT"));
+        api.getBalanceApi().get(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId());
+        api.getBalanceApi().get("account.name", ObjectType.ASSET_OBJECT.getGenericId());
+        api.getBalanceApi().getAll("account.name");
+        api.getBalanceApi().getAll("account.name", Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
+        api.getBalanceApi().getAll(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getBalanceApi().getAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
+        api.getBalanceApi().getAllVesting(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getBalanceApi().getWithAsset(ObjectType.ACCOUNT_OBJECT.getGenericId(), "DCT");
+        api.getBalanceApi().getWithAsset("account.name", "DCT");
+        api.getBalanceApi().getAllWithAsset(ObjectType.ACCOUNT_OBJECT.getGenericId(), Arrays.asList("DCT", "DCT"));
+        api.getBalanceApi().getAllWithAsset("account.name", Arrays.asList("DCT", "DCT"));
     }
 
     @Test
@@ -110,8 +120,8 @@ public class ApiTest {
 
     @Test
     public void ContentApiTest() {
-        api.getContentApi().getContent("uri");
-        api.getContentApi().getContent(ObjectType.CONTENT_OBJECT.getGenericId());
+        api.getContentApi().get("uri");
+        api.getContentApi().get(ObjectType.CONTENT_OBJECT.getGenericId());
     }
 
     @Test
@@ -121,21 +131,22 @@ public class ApiTest {
     @Test
     public void HistoryApiTest() {
         ChainObject historyObj = ObjectType.OPERATION_HISTORY_OBJECT.getGenericId();
-        api.getHistoryApi().getAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId());
-        api.getHistoryApi().getAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId(), historyObj);
-        api.getHistoryApi().getAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId(), historyObj, historyObj);
-        api.getHistoryApi().getAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId(), historyObj, historyObj, 100);
+        api.getHistoryApi().listOperations(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getHistoryApi().listOperations(ObjectType.ACCOUNT_OBJECT.getGenericId(), historyObj);
+        api.getHistoryApi().listOperations(ObjectType.ACCOUNT_OBJECT.getGenericId(), historyObj, historyObj);
+        api.getHistoryApi().listOperations(ObjectType.ACCOUNT_OBJECT.getGenericId(), historyObj, historyObj, 100);
     }
 
     @Test
     public void MiningApiTest() {
         api.getMiningApi().getMiners();
         api.getMiningApi().getMiners(Arrays.asList(ObjectType.MINER_OBJECT.getGenericId(), ObjectType.MINER_OBJECT.getGenericId()));
-        api.getMiningApi().lookupMiners();
-        api.getMiningApi().lookupMiners("lookup");
-        api.getMiningApi().lookupMiners("lookup", 1);
+        api.getMiningApi().listMinersRelative();
+        api.getMiningApi().listMinersRelative("lookup");
+        api.getMiningApi().listMinersRelative("lookup", 1);
     }
 
+/*
     @Test
     public void OperationsHelperTest() {
         Credentials credentials = new Credentials(ObjectType.ACCOUNT_OBJECT.getGenericId(), Helpers.getPrivate());
@@ -154,15 +165,16 @@ public class ApiTest {
         api.getOperationsHelper().transfer(credentials, "reference", new AssetAmount(10), "public memo", false);
         api.getOperationsHelper().transfer(credentials, "reference", new AssetAmount(10), "public memo", false, fee);
     }
+*/
 
     @Test
     public void PurchaseApiTest() {
-        api.getPurchaseApi().getPurchase(ObjectType.ACCOUNT_OBJECT.getGenericId(), "uri");
-        api.getPurchaseApi().searchPurchases(ObjectType.ACCOUNT_OBJECT.getGenericId());
-        api.getPurchaseApi().searchPurchases(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term");
-        api.getPurchaseApi().searchPurchases(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId());
-        api.getPurchaseApi().searchPurchases(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC);
-        api.getPurchaseApi().searchPurchases(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC, 100);
+        api.getPurchaseApi().get(ObjectType.ACCOUNT_OBJECT.getGenericId(), "uri");
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId());
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term");
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId());
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC);
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC, 100);
     }
 
     @Test
@@ -178,9 +190,9 @@ public class ApiTest {
         byte[] id = new byte[20];
         Arrays.fill(id, (byte) 0);
         BaseOperation operation = new EmptyOperation(OperationType.TRANSFER2_OPERATION);
-        api.getTransactionApi().getRecentTransaction(Utils.hex(id));
-        api.getTransactionApi().getTransaction(1, 1);
-        api.getTransactionApi().getTransaction(new TransactionConfirmation("", 1, 1,
+        api.getTransactionApi().getRecent(Utils.hex(id));
+        api.getTransactionApi().get(1, 1);
+        api.getTransactionApi().get(new TransactionConfirmation("", 1, 1,
                 new ProcessedTransaction(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), 1, 1, Collections.emptyList())));
         api.getTransactionApi().createTransaction(operation);
         api.getTransactionApi().createTransaction(operation, 100);

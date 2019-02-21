@@ -25,8 +25,8 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val historyApi = HistoryApi(this)
   val miningApi = MiningApi(this)
   val purchaseApi = PurchaseApi(this)
-  val seedersApi = SeedersApi(this)
+  val seedersApi = SeederApi(this)
+  val callbackApi = CallbackApi(this)
   val subscriptionApi = SubscriptionApi(this)
   val transactionApi = TransactionApi(this)
-  val operationsHelper = OperationsHelper(this)
 }

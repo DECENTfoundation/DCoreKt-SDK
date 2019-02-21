@@ -6,7 +6,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
-//  override val useMock: Boolean = false
+  override val useMock: Boolean = false
 
   @Test fun `get miners, load their accounts and put it into map with miner names`() {
     mockWebSocket
@@ -146,7 +146,7 @@ class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[{"id":"1.4.1","miner_account":"1.2.4","last_aslot":9281456,"signing_key":"DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4","pay_vb":"1.9.6","vote_id":"0:0","total_votes":"549660925403","url":"","total_missed":478994,"last_confirmed_block_num":3441265},{"id":"1.4.2","miner_account":"1.2.5","last_aslot":9281457,"signing_key":"DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4","pay_vb":"1.9.4","vote_id":"0:1","total_votes":"548881501573","url":"","total_missed":478995,"last_confirmed_block_num":3441266}]}"""
     )
 
-    val test = api.miningApi.lookupVoteIds(listOf("0:0", "0:1"))
+    val test = api.miningApi.findVotedMiners(listOf("0:0", "0:1"))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -186,7 +186,7 @@ class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[{"id":"1.4.6","name":"init5","url":"","total_votes":"31084811693","voted":true},{"id":"1.4.9","name":"init8","url":"","total_votes":"573757534890","voted":true}]}"""
     )
 
-    val test = api.miningApi.searchMinerVoting("init", accountName = accountName, onlyMyVotes = true)
+    val test = api.miningApi.findAllVotingInfo("init", accountName = accountName, onlyMyVotes = true)
         .subscribeOn(Schedulers.newThread())
         .test()
 

@@ -2,20 +2,14 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.*
+import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.RealSupply
 import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
 
 class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
-
-  /**
-   * Get assets by id.
-   *
-   * @param assetIds asset id eg. DCT id is 1.3.0
-   *
-   * @return list of assets or [ObjectNotFoundException]
-   */
-  fun getAssets(assetIds: List<ChainObject>): Single<List<Asset>> = GetAssets(assetIds).toRequest()
 
   /**
    * Get asset by id.
@@ -24,25 +18,23 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return asset or [ObjectNotFoundException]
    */
-  fun getAsset(assetId: ChainObject): Single<Asset> = getAssets(listOf(assetId)).map { it.single() }
+  fun get(assetId: ChainObject): Single<Asset> = getAll(listOf(assetId)).map { it.single() }
 
   /**
-   * Lookup assets by symbol.
+   * Get assets by id.
    *
-   * @param assetSymbols asset symbols eg. DCT
+   * @param assetIds asset id eg. DCT id is 1.3.0
    *
    * @return list of assets or [ObjectNotFoundException]
    */
-  fun lookupAssets(assetSymbols: List<String>): Single<List<Asset>> = LookupAssets(assetSymbols).toRequest()
+  fun getAll(assetIds: List<ChainObject>): Single<List<Asset>> = GetAssets(assetIds).toRequest()
 
   /**
-   * Lookup asset by symbol.
+   * Return current core asset supply.
    *
-   * @param assetSymbol asset symbol eg. DCT
-   *
-   * @return asset or [ObjectNotFoundException]
+   * @return current supply
    */
-  fun lookupAsset(assetSymbol: String): Single<Asset> = lookupAssets(listOf(assetSymbol)).map { it.single() }
+  fun getRealSupply(): Single<RealSupply> = GetRealSupply.toRequest()
 
   /**
    * Get assets alphabetically by symbol name.
@@ -53,7 +45,25 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return the assets found
    */
   @JvmOverloads
-  fun listAssets(lowerBound: String, limit: Int = 100): Single<List<Asset>> = ListAssets(lowerBound, limit).toRequest()
+  fun listAllRelative(lowerBound: String, limit: Int = 100): Single<List<Asset>> = ListAssets(lowerBound, limit).toRequest()
+
+  /**
+   * Lookup asset by symbol.
+   *
+   * @param assetSymbol asset symbol eg. DCT
+   *
+   * @return asset or [ObjectNotFoundException]
+   */
+  fun getByName(assetSymbol: String): Single<Asset> = getAllByName(listOf(assetSymbol)).map { it.single() }
+
+  /**
+   * Lookup assets by symbol.
+   *
+   * @param assetSymbols asset symbols eg. DCT
+   *
+   * @return list of assets or [ObjectNotFoundException]
+   */
+  fun getAllByName(assetSymbols: List<String>): Single<List<Asset>> = LookupAssets(assetSymbols).toRequest()
 
   /**
    * Converts asset into DCT, using actual price feed.
@@ -62,12 +72,5 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return price in DCT
    */
-  fun priceToDct(amount: AssetAmount): Single<AssetAmount> = PriceToDct(amount).toRequest()
-
-  /**
-   * Return current core asset supply.
-   *
-   * @return current supply
-   */
-  fun getRealSupply(): Single<RealSupply> = GetRealSupply.toRequest()
+  fun convertToDct(amount: AssetAmount): Single<AssetAmount> = PriceToDct(amount).toRequest()
 }

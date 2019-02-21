@@ -3,7 +3,6 @@ package ch.decent.sdk.api
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.private
-import ch.decent.sdk.utils.ElGamal
 import ch.decent.sdk.utils.privateElGamal
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
@@ -25,7 +24,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":{"id":"2.13.3","author":"1.2.17","co_authors":[],"expiration":"2019-04-26T15:34:51","created":"2018-04-26T15:34:50","price":{"map_price":[[1,{"amount":100000000,"asset_id":"1.3.0"}]]},"size":1,"synopsis":"{\"content_type_id\":\"1.5.5.0\",\"title\":\"Product 2\",\"description\":\"{\\\"productId\\\":2,\\\"applicationId\\\":1}\"}","URI":"http://alax.io/?scheme=alax%3A%2F%2F1%2F2&version=bbc8a9c3-1bcd-48a6-820d-e5a60c29cf56","quorum":0,"key_parts":[],"_hash":"0000000000000000000000000000000000000000","last_proof":[],"is_blocked":false,"AVG_rating":0,"num_of_ratings":0,"times_bought":1,"publishing_fee_escrow":{"amount":0,"asset_id":"1.3.0"},"seeder_price":[]}}"""
     )
 
-    val test = api.contentApi.getContent("http://alax.io/?scheme=alax%3A%2F%2F1%2F2&version=bbc8a9c3-1bcd-48a6-820d-e5a60c29cf56")
+    val test = api.contentApi.get("http://alax.io/?scheme=alax%3A%2F%2F1%2F2&version=bbc8a9c3-1bcd-48a6-820d-e5a60c29cf56")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -45,7 +44,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[{"id":"2.13.3","author":"1.2.17","co_authors":[],"expiration":"2019-04-26T15:34:51","created":"2018-04-26T15:34:50","price":{"map_price":[[1,{"amount":100000000,"asset_id":"1.3.0"}]]},"size":1,"synopsis":"{\"content_type_id\":\"1.5.5.0\",\"title\":\"Product 2\",\"description\":\"{\\\"productId\\\":2,\\\"applicationId\\\":1}\"}","URI":"http://alax.io/?scheme=alax%3A%2F%2F1%2F2&version=bbc8a9c3-1bcd-48a6-820d-e5a60c29cf56","quorum":0,"key_parts":[],"_hash":"0000000000000000000000000000000000000000","last_proof":[],"is_blocked":false,"AVG_rating":0,"num_of_ratings":0,"times_bought":1,"publishing_fee_escrow":{"amount":0,"asset_id":"1.3.0"},"seeder_price":[]}]}"""
     )
 
-    val test = api.contentApi.getContent("2.13.3".toChainObject())
+    val test = api.contentApi.get("2.13.3".toChainObject())
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -65,7 +64,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[]}"""
     )
 
-    val test = api.contentApi.searchContent("")
+    val test = api.contentApi.findAll("")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -85,7 +84,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[]}"""
     )
 
-    val test = api.contentApi.listPublishingManagers("")
+    val test = api.contentApi.listAllPublishersRelative("")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -105,7 +104,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":{"key":"b44e0749395e1009a90cdd7e545897b66f7abacada463091c53bf76e1af74e6f","parts":[]}}"""
     )
 
-    val test = api.contentApi.generateContentKeys(emptyList())
+    val test = api.contentApi.generateKeys(emptyList())
         .subscribeOn(Schedulers.newThread())
         .test()
 

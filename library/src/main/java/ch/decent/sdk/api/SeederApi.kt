@@ -8,7 +8,7 @@ import ch.decent.sdk.model.Seeder
 import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
 
-class SeedersApi internal constructor(api: DCoreApi) : BaseApi(api) {
+class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Get a seeder by ID.
@@ -16,7 +16,7 @@ class SeedersApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a seeder object or [ObjectNotFoundException] if not found
    */
-  fun getSeeder(accountId: ChainObject): Single<Seeder> = GetSeeder(accountId).toRequest()
+  fun get(accountId: ChainObject): Single<Seeder> = GetSeeder(accountId).toRequest()
 
   /**
    * Get a list of seeders by price, in increasing order.
@@ -25,7 +25,7 @@ class SeedersApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
-  fun listSeedersByPrice(count: Int = 100): Single<List<Seeder>> = ListSeedersByPrice(count).toRequest()
+  fun listByPrice(count: Int = 100): Single<List<Seeder>> = ListSeedersByPrice(count).toRequest()
 
   /**
    * Get a list of seeders ordered by total upload, in decreasing order.
@@ -34,7 +34,7 @@ class SeedersApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
-  fun listSeedersByUpload(count: Int = 100): Single<List<Seeder>> = ListSeedersByUpload(count).toRequest()
+  fun listByUpload(count: Int = 100): Single<List<Seeder>> = ListSeedersByUpload(count).toRequest()
 
   /**
    * Get a list of seeders ordered by price.
@@ -43,7 +43,7 @@ class SeedersApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
-  fun listSeedersByRegion(region: String = Regions.ALL.code): Single<List<Seeder>> = ListSeedersByRegion(region).toRequest()
+  fun listByRegion(region: String = Regions.ALL.code): Single<List<Seeder>> = ListSeedersByRegion(region).toRequest()
 
   /**
    * Get a list of seeders by price, in decreasing order.
@@ -52,6 +52,6 @@ class SeedersApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
-  fun listSeedersByRating(count: Int = 100): Single<List<Seeder>> = ListSeedersByRating(count).toRequest()
+  fun listByRating(count: Int = 100): Single<List<Seeder>> = ListSeedersByRating(count).toRequest()
 
 }

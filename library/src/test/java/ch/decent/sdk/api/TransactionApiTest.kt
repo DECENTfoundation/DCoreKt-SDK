@@ -28,7 +28,7 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":null}"""
     )
 
-    val test = api.transactionApi.getRecentTransaction("322d451fb1dc9b3ec6bc521395f4547a8b62eb3f")
+    val test = api.transactionApi.getRecent("322d451fb1dc9b3ec6bc521395f4547a8b62eb3f")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -49,7 +49,7 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":{"ref_block_num":65525,"ref_block_prefix":2304643484,"expiration":"2018-10-13T12:37:19","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"1.2.35","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"735604672334802432","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7"},"extensions":[]}]],"extensions":[],"signatures":["2072e8b8efa1ca97c2f9d85f69a31761fc212858fc77b5d8bc824627117904214458a7deecc8b4fd8495f8b448d971ed92c0bcb0c9b3f3fcf0c7eba4c81303de4b"]}}"""
     )
 
-    val test = api.transactionApi.getTransaction("322d451fb1dc9b3ec6bc521395f4547a8b62eb3f")
+    val test = api.transactionApi.get("322d451fb1dc9b3ec6bc521395f4547a8b62eb3f")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -71,7 +71,7 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":{"ref_block_num":59561,"ref_block_prefix":2414941591,"expiration":"2018-07-26T11:27:07","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"735604672334802432","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7"},"extensions":[]}]],"extensions":[],"signatures":["1f140e5744bcef282147ef3f0bab8df46f49704a99046d6ea5db37ab3113e0f45935fd94af7b33189ad34fa1666ab7e54aa127d725e2018fb6b68771aacef54c41"],"operation_results":[[0,{}]]}}"""
     )
 
-    val test = api.transactionApi.getTransaction(1370282, 0)
+    val test = api.transactionApi.get(1370282, 0)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -107,9 +107,9 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
     )
 
     val id = api.generalApi.getChainId().blockingGet()
-    val ptrx = api.transactionApi.getTransaction(1370282, 0).blockingGet()
+    val ptrx = api.transactionApi.get(1370282, 0).blockingGet()
     val trx = Transaction(BlockData(ptrx.refBlockNum, ptrx.refBlockPrefix, ptrx.expiration.toEpochSecond(ZoneOffset.UTC)), ptrx.operations, id, ptrx.signatures)
-    val test = api.transactionApi.getTransactionHex(trx)
+    val test = api.transactionApi.getHexDump(trx)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -129,7 +129,7 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[]}"""
     )
 
-    val test = api.transactionApi.getProposedTransactions(account)
+    val test = api.transactionApi.getAllProposed(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 

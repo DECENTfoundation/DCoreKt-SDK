@@ -3,11 +3,11 @@ package ch.decent.sdk.api
 import ch.decent.sdk.account
 import ch.decent.sdk.account2
 import ch.decent.sdk.accountName
+import ch.decent.sdk.crypto.address
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.public
 import io.reactivex.schedulers.Schedulers
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -22,7 +22,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
 
     mockHttp.enqueue("""{"id":0,"result":[{"id":"1.2.35","registrar":"1.2.15","name":"u3a7b78084e7d3956442d5a4d439dad51","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"options":{"memo_key":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.35","top_n_control_flags":0}]}""")
 
-    val test = api.accountApi.getAccount(account2.objectId)
+    val test = api.accountApi.get(account2)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -37,7 +37,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
 
     mockHttp.enqueue("""{"id":0,"result":[null]}""")
 
-    val test = api.accountApi.getAccount("1.2.34000")
+    val test = api.accountApi.get("1.2.34000".toChainObject())
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -54,7 +54,8 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
     mockHttp.enqueue("""{"id":0,"result":[["1.2.34","1.2.775"]]}""")
     mockHttp.enqueue("""{"id":0,"result":[{"id":"1.2.34","registrar":"1.2.15","name":"u961279ec8b7ae7bd62f304f7c1c3d345","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:5","0:8"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.34","top_n_control_flags":0}]}""")
 
-    val test = api.accountApi.getAccount(public)
+    val test = api.accountApi.findAllReferencesByKeys(listOf(public.address())).map { it.single().first() }
+        .flatMap { api.accountApi.get(it) }
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -74,7 +75,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":0,"result":[[]]}"""
     )
 
-    val test = api.accountApi.getAccount("DCT5Abm5dCdy3hJ1C5ckXkqUH2Me7dXqi9Y7yjn9ACaiSJ9h8r8mL")
+    val test = api.accountApi.findAllReferencesByKeys(listOf("DCT5Abm5dCdy3hJ1C5ckXkqUH2Me7dXqi9Y7yjn9ACaiSJ9h8r8mL".address()))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -94,7 +95,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":0,"result":{"id":"1.2.35","registrar":"1.2.15","name":"u3a7b78084e7d3956442d5a4d439dad51","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"options":{"memo_key":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.35","top_n_control_flags":0}}"""
     )
 
-    val test = api.accountApi.getAccount(accountName)
+    val test = api.accountApi.getByName(accountName)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -114,7 +115,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":0,"result":null}"""
     )
 
-    val test = api.accountApi.getAccount("helloooo")
+    val test = api.accountApi.getByName("helloooo")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -217,7 +218,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[]}"""
     )
 
-    val test = api.accountApi.getAccountReferences(account)
+    val test = api.accountApi.findAllReferencesByAccount(account)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -238,7 +239,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[{"id":"1.2.34","registrar":"1.2.15","name":"u961279ec8b7ae7bd62f304f7c1c3d345","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:5","0:8"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.34","top_n_control_flags":0},{"id":"1.2.35","registrar":"1.2.15","name":"u3a7b78084e7d3956442d5a4d439dad51","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP",1]]},"options":{"memo_key":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.35","top_n_control_flags":0}]}"""
     )
 
-    val test = api.accountApi.lookupAccountNames(listOf("u961279ec8b7ae7bd62f304f7c1c3d345", "u3a7b78084e7d3956442d5a4d439dad51"))
+    val test = api.accountApi.getAllByNames(listOf("u961279ec8b7ae7bd62f304f7c1c3d345", "u3a7b78084e7d3956442d5a4d439dad51"))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -258,7 +259,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[null]}"""
     )
 
-    val test = api.accountApi.lookupAccountNames(listOf("hello"))
+    val test = api.accountApi.getAllByNames(listOf("hello"))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -278,7 +279,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[["alaxio","1.2.55"],["all-txs","1.2.85"],["all-txs2","1.2.86"],["alx-customer-00d3afac-cb38-4eb6-955a-017e53630b21","1.2.584"],["alx-customer-01265aeb-2bdb-4caa-975e-83ced23365ae","1.2.249"],["alx-customer-02b2e883-9c41-4d72-beb0-b9275b5c5be9","1.2.476"],["alx-customer-02fb0082-719d-43ae-8f24-2e2302ff5f9b","1.2.11623"],["alx-customer-030bed20-c5d4-43d9-a2dc-b1d9366595c9","1.2.1123"],["alx-customer-03320597-b5be-4f30-b8e1-b3a001d72b50","1.2.223"],["alx-customer-03f858e4-f23b-4a64-acdf-f9abb96fee54","1.2.741"]]}"""
     )
 
-    val test = api.accountApi.lookupAccounts("alax", 10)
+    val test = api.accountApi.listAllRelative("alax", 10)
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -298,7 +299,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":[{"id":"1.2.15","registrar":"1.2.2","name":"decent","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4",1]]},"options":{"memo_key":"DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4","voting_account":"1.2.3","num_miner":0,"votes":["0:12"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.15","top_n_control_flags":0},{"id":"1.2.16","registrar":"1.2.15","name":"decent-go","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4",1]]},"options":{"memo_key":"DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.16","top_n_control_flags":0},{"id":"1.2.79","registrar":"1.2.15","name":"decent-test1","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT76Ye5k4SMUgw2NNqpuhyjtQZQDEF5h5pL6df6mBCez8JaVoZ8g",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT76Ye5k4SMUgw2NNqpuhyjtQZQDEF5h5pL6df6mBCez8JaVoZ8g",1]]},"options":{"memo_key":"DCT76Ye5k4SMUgw2NNqpuhyjtQZQDEF5h5pL6df6mBCez8JaVoZ8g","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.79","top_n_control_flags":0},{"id":"1.2.80","registrar":"1.2.15","name":"decent-test2","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT51oiBiKzv4WVmZJmTNAoy4ZBb8TFdGEkEEDaDc7FEi2gz6PzQk",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT51oiBiKzv4WVmZJmTNAoy4ZBb8TFdGEkEEDaDc7FEi2gz6PzQk",1]]},"options":{"memo_key":"DCT51oiBiKzv4WVmZJmTNAoy4ZBb8TFdGEkEEDaDc7FEi2gz6PzQk","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.80","top_n_control_flags":0},{"id":"1.2.81","registrar":"1.2.15","name":"decent-test3","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6QurT3ZazHH6JQ5QUcMeTFvaLCgyGgwn4iK9oqgS4udjqupgmq",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6QurT3ZazHH6JQ5QUcMeTFvaLCgyGgwn4iK9oqgS4udjqupgmq",1]]},"options":{"memo_key":"DCT6QurT3ZazHH6JQ5QUcMeTFvaLCgyGgwn4iK9oqgS4udjqupgmq","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.81","top_n_control_flags":0},{"id":"1.2.82","registrar":"1.2.15","name":"decent-test4","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6ham7G5fADkR2TKLnqUPcW8q8JtsTmkCEWMnh667EHJhbe8vyP",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6ham7G5fADkR2TKLnqUPcW8q8JtsTmkCEWMnh667EHJhbe8vyP",1]]},"options":{"memo_key":"DCT6ham7G5fADkR2TKLnqUPcW8q8JtsTmkCEWMnh667EHJhbe8vyP","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.82","top_n_control_flags":0},{"id":"1.2.83","registrar":"1.2.15","name":"decent-test5","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT7WNvjuXQBw7RtCxMXyb8E7MTXA87LtkpFb1N8fKkPseaRu9PRU",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT7WNvjuXQBw7RtCxMXyb8E7MTXA87LtkpFb1N8fKkPseaRu9PRU",1]]},"options":{"memo_key":"DCT7WNvjuXQBw7RtCxMXyb8E7MTXA87LtkpFb1N8fKkPseaRu9PRU","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.83","top_n_control_flags":0},{"id":"1.2.84","registrar":"1.2.15","name":"decent-test6","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6hgxzNbUTfEuZRjM4nPQaRQwXjWHvxeravHHWP7A526ohU3tQB",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6hgxzNbUTfEuZRjM4nPQaRQwXjWHvxeravHHWP7A526ohU3tQB",1]]},"options":{"memo_key":"DCT6hgxzNbUTfEuZRjM4nPQaRQwXjWHvxeravHHWP7A526ohU3tQB","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.84","top_n_control_flags":0},{"id":"1.2.11915","registrar":"1.2.15","name":"dw-decent-wallet","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5d9pjBwAPvrG1zGrHqgrBRhFWvQQFAMd5qrS4WuXk4eP8M2ALY",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5d9pjBwAPvrG1zGrHqgrBRhFWvQQFAMd5qrS4WuXk4eP8M2ALY",1]]},"options":{"memo_key":"DCT5d9pjBwAPvrG1zGrHqgrBRhFWvQQFAMd5qrS4WuXk4eP8M2ALY","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.11915","top_n_control_flags":0},{"id":"1.2.1096","registrar":"1.2.15","name":"quoine-decent-stagenet","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5asxGy1DwHbyn7C4pwno1hf2Fs5vdUU1gj42EsE4uCSE671Z2V",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT5asxGy1DwHbyn7C4pwno1hf2Fs5vdUU1gj42EsE4uCSE671Z2V",1]]},"options":{"memo_key":"DCT5asxGy1DwHbyn7C4pwno1hf2Fs5vdUU1gj42EsE4uCSE671Z2V","voting_account":"1.2.3","num_miner":0,"votes":[],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.1096","top_n_control_flags":0}]}"""
     )
 
-    val test = api.accountApi.searchAccounts("decent")
+    val test = api.accountApi.findAll("decent")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -318,7 +319,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         """{"id":1,"result":12129}"""
     )
 
-    val test = api.accountApi.getAccountCount()
+    val test = api.accountApi.countAll()
         .subscribeOn(Schedulers.newThread())
         .test()
 

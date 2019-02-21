@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 internal class GetNamedAccountBalances(
     account: String,
     assets: List<ChainObject> = emptyList()
-): BaseRequest<List<AssetAmount>>(
+) : BaseRequest<List<AssetAmount>>(
     ApiGroup.DATABASE,
     "get_named_account_balances",
     TypeToken.getParameterized(List::class.java, AssetAmount::class.java).type,
@@ -18,7 +18,7 @@ internal class GetNamedAccountBalances(
 ) {
 
   init {
-    require(Account.isValidName(account))
+    require(Account.isValidName(account)) { "not a valid name: $account" }
     require(assets.all { it.objectType == ObjectType.ASSET_OBJECT }) { "not a valid asset object id" }
   }
 }
