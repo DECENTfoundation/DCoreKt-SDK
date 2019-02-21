@@ -105,7 +105,8 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       get(uri).map { PurchaseContentOperation(credentials, it) }
 
   /**
-   * Create a transfer operation.
+   * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
+   * Fees are paid by the "from" account.
    *
    * @param credentials account credentials
    * @param id content id
