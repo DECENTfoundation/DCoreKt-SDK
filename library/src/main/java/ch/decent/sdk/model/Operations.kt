@@ -45,13 +45,23 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
   override fun toString(): String = type.toString()
 }
 
+/**
+ * Custom operation
+ *
+ * @param type custom operation subtype
+ * @param payer account which pays for the fee
+ * @param requiredAuths accounts required to authorize this operation with signatures
+ * @param data data payload encoded in hex string
+ */
 open class CustomOperation constructor(
-    @SerializedName("id") val id: Int,
+    type: CustomOperationType,
     @SerializedName("payer") val payer: ChainObject,
     @SerializedName("required_auths") val requiredAuths: List<ChainObject>,
     @SerializedName("data") val data: String,
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.CUSTOM_OPERATION, fee) {
+
+  @SerializedName("id") val id: Int = type.ordinal
 
   override val bytes: ByteArray
     get() = Bytes.concat(
@@ -306,4 +316,4 @@ class SendMessageOperation constructor(
     messagePayloadJson: String,
     payer: ChainObject,
     requiredAuths: List<ChainObject> = listOf(payer)
-) : CustomOperation(1, payer, requiredAuths, messagePayloadJson.toByteArray().hex())
+) : CustomOperation(CustomOperationType.MESSAGING, payer, requiredAuths, messagePayloadJson.toByteArray().hex())

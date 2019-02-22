@@ -18,7 +18,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
-  fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000) =
+  fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<Message>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
 
 
@@ -35,7 +35,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
       credentials: Credentials,
       to: ChainObject,
       message: String
-  ) = Single.zip(
+  ): Single<SendMessageOperation> = Single.zip(
       api.accountApi.get(credentials.account),
       api.accountApi.get(to),
       BiFunction { sender: Account, recipient: Account -> sender to recipient }
@@ -57,7 +57,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createMessageOperation(
       credentials: Credentials,
       messages: List<Pair<ChainObject, String>>
-  ) = Single.zip(
+  ): Single<SendMessageOperation> = Single.zip(
       api.accountApi.get(credentials.account),
       Single.merge(messages.map { api.accountApi.get(it.first) }).toList(),
       BiFunction { sender: Account, recipients: List<Account> -> sender to recipients }

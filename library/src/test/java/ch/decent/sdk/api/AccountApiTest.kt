@@ -80,8 +80,9 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         .test()
 
     test.awaitTerminalEvent()
-    test.assertTerminated()
-        .assertError(ObjectNotFoundException::class.java)
+    test.assertComplete()
+        .assertNoErrors()
+        .assertValue { it.single().isEmpty() }
   }
 
   @Test fun `get account by name`() {
