@@ -19,8 +19,9 @@ class DCoreSdk private constructor(
     restUrl: String? = null,
     private val logger: Logger? = null
 ) {
-  private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gsonBuilder.create(), logger) }
-  private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gsonBuilder.create()) }
+  internal val gson = gsonBuilder.create()
+  private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gson, logger) }
+  private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gson) }
   private val chainId = GetChainId.toRequest().cache()
 
   init {

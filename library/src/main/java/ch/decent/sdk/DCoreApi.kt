@@ -29,4 +29,5 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val callbackApi = CallbackApi(this)
   val subscriptionApi = SubscriptionApi(this)
   val transactionApi = TransactionApi(this)
+  val messagingApi = MessagingApi(this)
 }

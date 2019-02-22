@@ -2,20 +2,23 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.*
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
-import ch.decent.sdk.model.AccountCreateOperation
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.TransferOperation
+import ch.decent.sdk.model.*
+import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.net.ws.CustomWebSocketService
+import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.unhex
 import io.reactivex.schedulers.Schedulers
+import org.amshove.kluent.`should be equal to`
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.math.BigInteger
+import kotlin.reflect.jvm.internal.impl.types.VarianceCheckerKt
 
 class OperationsTest {
 
@@ -25,8 +28,8 @@ class OperationsTest {
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
-//    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {
@@ -106,4 +109,22 @@ class OperationsTest {
         .assertValue { it.id == trx.id }
   }
 
+  @Test fun `should send message`() {
+    val credentials = Credentials(account, ECKeyPair.fromBase58(private))
+    val op = api.messagingApi.createMessageOperation(credentials, account2, "hello messaging api")
+        .blockingGet()
+
+    val trx = api.transactionApi.createTransaction(op)
+        .map { it.withSignature(credentials.keyPair) }
+        .blockingGet()
+
+    val test = api.broadcastApi.broadcastWithCallback(trx)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+        .assertValue { it.id == trx.id }
+  }
 }
