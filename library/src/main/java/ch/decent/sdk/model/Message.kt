@@ -25,6 +25,13 @@ data class Message(
     ""
   }
 
+  /**
+   * Decrypt messages, sender can decrypt all sent messages, recipient only message addressed to him
+   *
+   * @param credentials account credentials
+   *
+   * @return list of pairs of receiver id to decrypted message string
+   */
   fun decrypt(credentials: Credentials): List<Pair<ChainObject, String>> =
       when {
         credentials.account == sender -> receiversData.map { it.receiver to decryptOrEmpty(credentials.keyPair, it) }

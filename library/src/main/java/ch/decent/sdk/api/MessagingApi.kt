@@ -9,9 +9,28 @@ import io.reactivex.functions.BiFunction
 
 class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
+  /**
+   * Get all messages
+   *
+   * @param sender filter by sender account id
+   * @param receiver filter by receiver account id
+   * @param maxCount max items to return
+   *
+   * @return list of messages
+   */
   fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000) =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
 
+
+  /**
+   * Create message operation, send a message to one receiver
+   *
+   * @param credentials sender account credentials
+   * @param to receiver address
+   * @param message a message to send
+   *
+   * @return send message operation
+   */
   fun createMessageOperation(
       credentials: Credentials,
       to: ChainObject,
@@ -27,6 +46,14 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
     SendMessageOperation(api.core.gson.toJson(payload), credentials.account)
   }
 
+  /**
+   * Create message operation, send messages to multiple receivers
+   *
+   * @param credentials sender account credentials
+   * @param messages a list of pairs of receiver account id and message
+   *
+   * @return send message operation
+   */
   fun createMessageOperation(
       credentials: Credentials,
       messages: List<Pair<ChainObject, String>>
