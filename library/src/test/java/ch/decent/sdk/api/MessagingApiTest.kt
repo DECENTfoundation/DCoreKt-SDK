@@ -3,13 +3,10 @@ package ch.decent.sdk.api
 import ch.decent.sdk.account
 import ch.decent.sdk.account2
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.private
 import ch.decent.sdk.private2
 import io.reactivex.schedulers.Schedulers
-import org.amshove.kluent.`should be in`
-import org.amshove.kluent.`should not be in`
+import org.amshove.kluent.`should equal`
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -18,8 +15,7 @@ import org.junit.runners.Parameterized
 class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
 //  override val useMock: Boolean = false
 
-  @Test fun `should get messages account and decrypt for receiver`() {
-    val credentials = Credentials(account2, private2)
+  @Test fun `should get messages for account and decrypt for receiver`() {
     mockWebSocket
         .enqueue(
             """{"method":"call","params":[5,"get_message_objects",[null,"1.2.35",1000]],"id":1}""",
@@ -38,23 +34,48 @@ class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
     test.assertComplete()
         .assertNoErrors()
 
-    val encrypted: Pair<ChainObject, String> = "1.2.35".toChainObject() to "hello messaging api"
-    val unencrypted = "1.2.35".toChainObject() to "hello messaging api unencrypted"
-    val all = test.values().flatten()
-        .map { it.decrypt(credentials) }
-        .flatten().toSet()
-    val clear = test.values().flatten()
-        .map { it.listUnencrypted() }
-        .flatten().toSet()
+    val unencrypted = test.values().single()
+        .filter { it.encrypted.not() }
+        .toSet()
 
-    encrypted `should be in` all
-    encrypted `should not be in` clear
-    unencrypted `should be in` all
-    unencrypted `should be in` clear
+    unencrypted.all { it.sender == account } `should equal` true
+    unencrypted.all { it.receiver == account2 } `should equal` true
+    unencrypted.all { it.message == "hello messaging api unencrypted" } `should equal` true
+
+    val credentials = Credentials(account, private)
+    val decrypted = test.values().single()
+        .filter { it.encrypted }
+        .map { it.decrypt(credentials) }
+
+    decrypted.all { it.sender == account } `should equal` true
+    decrypted.all { it.receiver == account2 } `should equal` true
+    decrypted.all { it.message == "hello messaging api" } `should equal` true
   }
 
-  @Test fun `should get messages for account and decrypt for sender`() {
+  @Test fun `should get decrypted messages for sender account`() {
     val credentials = Credentials(account, private)
+    mockWebSocket
+        .enqueue(
+            """{"method":"call","params":[5,"get_message_objects",["1.2.34",null,1000]],"id":1}""",
+            """{"id":1,"result":[{"id":"2.18.3","created":"2019-02-22T11:41:20","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"17391111264393218816","data":"4e2e37edec71eadba4eb8171f7ec1468dc8f5c9b5c218baef9447fd7b998fd83"}],"text":""},{"id":"2.18.4","created":"2019-02-22T11:42:00","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"9084912823086861056","data":"dbf804d15fc01cafa7380f66e008ac2549f0c67900a415d822a7ecc0397013e7"}],"text":""},{"id":"2.18.5","created":"2019-02-22T11:42:15","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"15712596674046053120","data":"05927f8341f72c1af709c076604482605f3180d1d71a99a64d96620e922c5b66"}],"text":""},{"id":"2.18.6","created":"2019-02-22T11:43:45","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"6523220187852098304","data":"d10fc732248baf8daf36c3e78bb8412c8602e0649e081d1e45410ced8dd66db0"}],"text":""},{"id":"2.18.7","created":"2019-02-22T11:46:25","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"5418653098442279680","data":"1eb0eb62c81bb84a6d91fc42d54d374498dded5c286b59e5b46490b78234d39c"}],"text":""},{"id":"2.18.8","created":"2019-02-22T11:46:45","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16910704723097406208","data":"5ae4141456f1f7ed5525739426457266b8f84aeebdfe77c14358111cf80c4594"}],"text":""},{"id":"2.18.9","created":"2019-02-22T11:48:15","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"17798987865604147968","data":"e1654daf4ee9ffc01aa460d5d6b6dbbb82d1fb88967c88691f1093a778f95d42"}],"text":""},{"id":"2.18.10","created":"2019-02-22T11:48:20","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"17095986669189122816","data":"97d75766f62ac390d54f572b3c06e3f790567134753e2c0ff5adc3471b1312ff"}],"text":""},{"id":"2.18.11","created":"2019-02-22T11:50:50","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"716610381404359424","data":"6a5c230e0f5b7f449a279a10ceacc16c7e7e103c229f27dba3d95491cd427984"}],"text":""},{"id":"2.18.12","created":"2019-02-22T11:53:40","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"4764221389359926272","data":"fd71b9cbe050899358204513f1cb4f4ccd0115806d14b03f18d787de1633f6c2"}],"text":""},{"id":"2.18.13","created":"2019-02-22T14:11:40","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"2691640026145870592","data":"bdebc10baef29f5554beefafa4566a50f928379ffb6194e1b58f1fd9f02cc1a2"}],"text":""},{"id":"2.18.14","created":"2019-02-22T14:22:15","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"14691757747255038976","data":"af18f34442ff09acbfd6152c9a1e7aafe77a8f83fad12a1f04d248d702239081"}],"text":""},{"id":"2.18.15","created":"2019-02-22T14:23:20","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"10216254519122646016","data":"9b93c57410ea7d80ba6750819e06d6e2b7ba81cf91bbf7e31d265909b46790ad"}],"text":""},{"id":"2.18.16","created":"2019-02-22T15:04:05","sender":"1.2.34","sender_pubkey":"DCT1111111111111111111111111111111114T1Anm","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"data":"0000000068656c6c6f206d6573736167696e672061706920756e656e63727970746564"}],"text":""},{"id":"2.18.17","created":"2019-02-22T15:20:25","sender":"1.2.34","sender_pubkey":"DCT1111111111111111111111111111111114T1Anm","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"data":"0000000068656c6c6f206d6573736167696e672061706920756e656e63727970746564"}],"text":""}]}"""
+        )
+
+    mockHttp.enqueue(
+        """{"id":1,"result":[{"id":"2.18.3","created":"2019-02-22T11:41:20","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"17391111264393218816","data":"4e2e37edec71eadba4eb8171f7ec1468dc8f5c9b5c218baef9447fd7b998fd83"}],"text":""},{"id":"2.18.4","created":"2019-02-22T11:42:00","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"9084912823086861056","data":"dbf804d15fc01cafa7380f66e008ac2549f0c67900a415d822a7ecc0397013e7"}],"text":""},{"id":"2.18.5","created":"2019-02-22T11:42:15","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"15712596674046053120","data":"05927f8341f72c1af709c076604482605f3180d1d71a99a64d96620e922c5b66"}],"text":""},{"id":"2.18.6","created":"2019-02-22T11:43:45","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"6523220187852098304","data":"d10fc732248baf8daf36c3e78bb8412c8602e0649e081d1e45410ced8dd66db0"}],"text":""},{"id":"2.18.7","created":"2019-02-22T11:46:25","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"5418653098442279680","data":"1eb0eb62c81bb84a6d91fc42d54d374498dded5c286b59e5b46490b78234d39c"}],"text":""},{"id":"2.18.8","created":"2019-02-22T11:46:45","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"16910704723097406208","data":"5ae4141456f1f7ed5525739426457266b8f84aeebdfe77c14358111cf80c4594"}],"text":""},{"id":"2.18.9","created":"2019-02-22T11:48:15","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"17798987865604147968","data":"e1654daf4ee9ffc01aa460d5d6b6dbbb82d1fb88967c88691f1093a778f95d42"}],"text":""},{"id":"2.18.10","created":"2019-02-22T11:48:20","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"17095986669189122816","data":"97d75766f62ac390d54f572b3c06e3f790567134753e2c0ff5adc3471b1312ff"}],"text":""},{"id":"2.18.11","created":"2019-02-22T11:50:50","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"716610381404359424","data":"6a5c230e0f5b7f449a279a10ceacc16c7e7e103c229f27dba3d95491cd427984"}],"text":""},{"id":"2.18.12","created":"2019-02-22T11:53:40","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"4764221389359926272","data":"fd71b9cbe050899358204513f1cb4f4ccd0115806d14b03f18d787de1633f6c2"}],"text":""},{"id":"2.18.13","created":"2019-02-22T14:11:40","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"2691640026145870592","data":"bdebc10baef29f5554beefafa4566a50f928379ffb6194e1b58f1fd9f02cc1a2"}],"text":""},{"id":"2.18.14","created":"2019-02-22T14:22:15","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"14691757747255038976","data":"af18f34442ff09acbfd6152c9a1e7aafe77a8f83fad12a1f04d248d702239081"}],"text":""},{"id":"2.18.15","created":"2019-02-22T14:23:20","sender":"1.2.34","sender_pubkey":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","nonce":"10216254519122646016","data":"9b93c57410ea7d80ba6750819e06d6e2b7ba81cf91bbf7e31d265909b46790ad"}],"text":""},{"id":"2.18.16","created":"2019-02-22T15:04:05","sender":"1.2.34","sender_pubkey":"DCT1111111111111111111111111111111114T1Anm","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"data":"0000000068656c6c6f206d6573736167696e672061706920756e656e63727970746564"}],"text":""},{"id":"2.18.17","created":"2019-02-22T15:20:25","sender":"1.2.34","sender_pubkey":"DCT1111111111111111111111111111111114T1Anm","receivers_data":[{"receiver":"1.2.35","receiver_pubkey":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"data":"0000000068656c6c6f206d6573736167696e672061706920756e656e63727970746564"}],"text":""}]}"""
+    )
+
+    val test = api.messagingApi.getAllDecryptedForSender(credentials)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+
+    test.values().single().all { it.encrypted.not() } `should equal` true
+  }
+
+  @Test fun `should get fail decrypt messages for sender account with wrong credentials`() {
     mockWebSocket
         .enqueue(
             """{"method":"call","params":[5,"get_message_objects",["1.2.34",null,1000]],"id":1}""",
@@ -73,18 +94,10 @@ class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
     test.assertComplete()
         .assertNoErrors()
 
-    val encrypted = "1.2.35".toChainObject() to "hello messaging api"
-    val unencrypted = "1.2.35".toChainObject() to "hello messaging api unencrypted"
-    val all = test.values().flatten()
+    val credentials = Credentials(account, private2)
+    test.values().single()
+        .filter { it.encrypted }
         .map { it.decrypt(credentials) }
-        .flatten().toSet()
-    val clear = test.values().flatten()
-        .map { it.listUnencrypted() }
-        .flatten().toSet()
-
-    encrypted `should be in` all
-    encrypted `should not be in` clear
-    unencrypted `should be in` all
-    unencrypted `should be in` clear
+        .all { it.encrypted } `should equal` true
   }
 }

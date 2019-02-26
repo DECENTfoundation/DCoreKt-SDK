@@ -20,7 +20,52 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<Message>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
+          .map { it.map { Message.create(it) }.flatten() }
 
+  /**
+   * Get all messages and decrypt
+   *
+   * @param credentials account credentials used for decryption, must be either sender's or receiver's
+   * @param sender filter by sender account id
+   * @param receiver filter by receiver account id
+   * @param maxCount max items to return
+   *
+   * @return list of messages
+   */
+  fun getAllDecrypted(
+      credentials: Credentials,
+      sender: ChainObject? = null,
+      receiver: ChainObject? = null,
+      maxCount: Int = 1000
+  ): Single<List<Message>> =
+      require(sender == credentials.account || receiver == credentials.account)
+      { "credentials account id must match either sender id or receiver id " }.let {
+        GetMessageObjects(sender, receiver, maxCount).toRequest()
+            .map { it.map { Message.create(it) }.flatten() }
+            .map { it.map { it.decrypt(credentials) } }
+      }
+
+  /**
+   * Get all messages for sender and decrypt
+   *
+   * @param credentials sender account credentials with decryption keys
+   * @param maxCount max items to return
+   *
+   * @return list of messages
+   */
+  fun getAllDecryptedForSender(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
+      getAllDecrypted(credentials, sender = credentials.account, maxCount = maxCount)
+
+  /**
+   * Get all messages for receiver and decrypt
+   *
+   * @param credentials receiver account credentials with decryption keys
+   * @param maxCount max items to return
+   *
+   * @return list of messages
+   */
+  fun getAllDecryptedForReceiver(credentials: Credentials,maxCount: Int = 1000): Single<List<Message>> =
+      getAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
 
   /**
    * Create message operation, send a message to one receiver
