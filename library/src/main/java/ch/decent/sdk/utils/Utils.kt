@@ -13,7 +13,9 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher
 import org.bouncycastle.crypto.params.KeyParameter
 import org.bouncycastle.crypto.params.ParametersWithIV
 import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi
+import java.math.BigDecimal
 import java.math.BigInteger
+import java.math.RoundingMode
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -96,3 +98,5 @@ fun createCipher(forEncryption: Boolean, iv: ByteArray, key: ByteArray) =
     PaddedBufferedBlockCipher(CBCBlockCipher(AESEngine())).apply {
       init(forEncryption, ParametersWithIV(KeyParameter(key), iv))
     }
+
+fun BigDecimal.toBigInteger(roundingMode: RoundingMode) = setScale(0, roundingMode).unscaledValue()

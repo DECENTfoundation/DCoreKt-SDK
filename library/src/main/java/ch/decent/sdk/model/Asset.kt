@@ -1,9 +1,9 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.DCoreConstants.DCT_ASSET_ID
+import ch.decent.sdk.utils.toBigInteger
 import com.google.gson.annotations.SerializedName
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.text.DecimalFormat
+import java.math.RoundingMode
 
 data class Asset(
     @SerializedName("id") override val id: ChainObject = ObjectType.ASSET_OBJECT.genericId,
@@ -19,14 +19,18 @@ data class Asset(
     check(id.objectType == ObjectType.ASSET_OBJECT)
   }
 
-  fun convert(assetAmount: AssetAmount): AssetAmount {
+  fun convert(assetAmount: AssetAmount, roundingMode: RoundingMode = RoundingMode.UP): AssetAmount {
+    require(id == DCT_ASSET_ID || assetAmount.assetId == DCT_ASSET_ID) {
+      "One of converted asset must be DCT, conversions between arbitrary assets is not supported"
+    }
+
     if (options.exchangeRate.base.assetId == assetAmount.assetId) {
-      val amount = options.exchangeRate.quote.amount / options.exchangeRate.base.amount * assetAmount.amount
-      return AssetAmount(amount, id)
+      val amount = options.exchangeRate.quote.amount.toBigDecimal().divide(options.exchangeRate.base.amount.toBigDecimal()) * assetAmount.amount.toBigDecimal()
+      return AssetAmount(amount.toBigInteger(roundingMode), id)
     }
     if (options.exchangeRate.quote.assetId == assetAmount.assetId) {
-      val amount = options.exchangeRate.base.amount / options.exchangeRate.quote.amount * assetAmount.amount
-      return AssetAmount(amount, id)
+      val amount = options.exchangeRate.base.amount.toBigDecimal().divide(options.exchangeRate.quote.amount.toBigDecimal()) * assetAmount.amount.toBigDecimal()
+      return AssetAmount(amount.toBigInteger(roundingMode), id)
     }
     throw IllegalArgumentException("cannot convert ${assetAmount.assetId} with $symbol:$id")
   }
