@@ -21,12 +21,12 @@ data class Asset(
 
   fun convert(assetAmount: AssetAmount): AssetAmount {
     if (options.exchangeRate.base.assetId == assetAmount.assetId) {
-      val amount = options.exchangeRate.quote.amount / options.exchangeRate.base.amount * assetAmount.amount
-      return AssetAmount(amount, id)
+      val amount = options.exchangeRate.quote.amount.toBigDecimal().divide(options.exchangeRate.base.amount.toBigDecimal()) * assetAmount.amount.toBigDecimal()
+      return AssetAmount(amount.toBigInteger(), id)
     }
     if (options.exchangeRate.quote.assetId == assetAmount.assetId) {
-      val amount = options.exchangeRate.base.amount / options.exchangeRate.quote.amount * assetAmount.amount
-      return AssetAmount(amount, id)
+      val amount = options.exchangeRate.base.amount.toBigDecimal().divide(options.exchangeRate.quote.amount.toBigDecimal()) * assetAmount.amount.toBigDecimal()
+      return AssetAmount(amount.toBigInteger(), id)
     }
     throw IllegalArgumentException("cannot convert ${assetAmount.assetId} with $symbol:$id")
   }
