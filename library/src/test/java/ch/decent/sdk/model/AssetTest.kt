@@ -7,13 +7,16 @@ import java.math.RoundingMode
 
 class AssetTest {
 
-  private fun testAsset(precision: Int, base: BigInteger, quote: BigInteger) =
+  private val otherId = "1.3.4".toChainObject()
+
+  private fun testAsset(precision: Int, base: AssetAmount, quote: AssetAmount) =
     Asset(
+        id = otherId,
         precision = precision,
         options = Asset.Options(
             exchangeRate = Asset.ExchangeRate(
-                base = AssetAmount(base),
-                quote = AssetAmount(quote)
+                base = base,
+                quote = quote
             ),
             exchangeable = true
         )
@@ -22,8 +25,8 @@ class AssetTest {
   private fun testConversion(
       amountToConvert: BigInteger,
       precision: Int,
-      base: BigInteger,
-      quote: BigInteger,
+      base: AssetAmount,
+      quote: AssetAmount,
       expectedAmount: BigInteger,
       roundingMode: RoundingMode? = null
   ) {
@@ -39,9 +42,20 @@ class AssetTest {
     testConversion(
         amountToConvert = 4.toBigInteger(),
         precision = 4,
-        base = 2.toBigInteger(),
-        quote = 1.toBigInteger(),
+        base = AssetAmount(2.toBigInteger()),
+        quote = AssetAmount(1.toBigInteger(), otherId),
         expectedAmount = 2.toBigInteger()
+    )
+  }
+
+  @Test
+  fun `should successfully convert when base is in other asset`() {
+    testConversion(
+        amountToConvert = 4.toBigInteger(),
+        precision = 4,
+        base = AssetAmount(2.toBigInteger(), otherId),
+        quote = AssetAmount(1.toBigInteger()),
+        expectedAmount = 8.toBigInteger()
     )
   }
 
@@ -50,8 +64,8 @@ class AssetTest {
     testConversion(
         amountToConvert = 1.toBigInteger(),
         precision = 1,
-        base = 10.toBigInteger(),
-        quote = 1.toBigInteger(),
+        base = AssetAmount(10.toBigInteger()),
+        quote = AssetAmount(1.toBigInteger(), otherId),
         expectedAmount = 1.toBigInteger()
     )
   }
@@ -61,8 +75,8 @@ class AssetTest {
     testConversion(
         amountToConvert = 1.toBigInteger(),
         precision = 1,
-        base = 10.toBigInteger(),
-        quote = 1.toBigInteger(),
+        base = AssetAmount(10.toBigInteger()),
+        quote = AssetAmount(1.toBigInteger(), otherId),
         expectedAmount = 0.toBigInteger(),
         roundingMode = RoundingMode.DOWN
     )
@@ -73,8 +87,8 @@ class AssetTest {
     testConversion(
         amountToConvert = 1.toBigInteger(),
         precision = 1,
-        base = 10.toBigInteger(),
-        quote = 1.toBigInteger(),
+        base = AssetAmount(10.toBigInteger()),
+        quote = AssetAmount(1.toBigInteger(), otherId),
         expectedAmount = 1.toBigInteger(),
         roundingMode = RoundingMode.UP
     )
