@@ -1,6 +1,6 @@
 package ch.decent.sdk.model
 
-import org.junit.Assert
+import org.amshove.kluent.`should be`
 import org.junit.Test
 import java.math.BigInteger
 import java.math.RoundingMode
@@ -33,7 +33,7 @@ class AssetTest {
     val testAsset = testAsset(precision, base, quote)
     val assetAmountToConvert = AssetAmount(amountToConvert)
     val convertedAmount = testAsset.convert(assetAmountToConvert, roundingMode)
-    Assert.assertEquals(expectedAmount, convertedAmount.amount)
+    expectedAmount `should be` convertedAmount.amount
   }
 
   @Test
@@ -80,17 +80,5 @@ class AssetTest {
         expectedAmount = 1.toBigInteger(),
         roundingMode = RoundingMode.UP
     )
-  }
-
-  @Test(expected = IllegalArgumentException::class)
-  fun `checks for supported asset conversion`() {
-    val testAsset = Asset(
-        id = "1.3.2".toChainObject(),
-        options = Asset.Options(
-            exchangeable = true
-        )
-    )
-
-    testAsset.convert(AssetAmount(1.toBigInteger(), "1.3.1".toChainObject()), RoundingMode.UP)
   }
 }

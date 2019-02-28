@@ -20,10 +20,6 @@ data class Asset(
   }
 
   fun convert(assetAmount: AssetAmount, roundingMode: RoundingMode): AssetAmount {
-    require(id == DCT_ASSET_ID || assetAmount.assetId == DCT_ASSET_ID) {
-      "One of converted asset must be DCT, conversions between arbitrary assets is not supported"
-    }
-
     if (options.exchangeRate.base.assetId == assetAmount.assetId) {
       val amount = options.exchangeRate.quote.amount.toBigDecimal().divide(options.exchangeRate.base.amount.toBigDecimal()) * assetAmount.amount.toBigDecimal()
       return AssetAmount(amount.toBigInteger(roundingMode), id)
