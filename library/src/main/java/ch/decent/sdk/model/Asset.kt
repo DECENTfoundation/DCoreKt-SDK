@@ -19,6 +19,14 @@ data class Asset(
     check(id.objectType == ObjectType.ASSET_OBJECT)
   }
 
+  /**
+   * Convert asset amount to/from DCT. Conversions between arbitrary assets are not supported
+   *
+   * @param assetAmount asset amount to convert. Conversion will be made to assetId of this assetAmount
+   * @param roundingMode rounding mode to use when resolving remainder of conversion
+   *
+   * @return converted asset amount in requested asset id
+   */
   fun convert(assetAmount: AssetAmount, roundingMode: RoundingMode): AssetAmount {
     if (options.exchangeRate.base.assetId == assetAmount.assetId) {
       val amount = options.exchangeRate.quote.amount.toBigDecimal().divide(options.exchangeRate.base.amount.toBigDecimal()) * assetAmount.amount.toBigDecimal()
