@@ -19,7 +19,7 @@ data class Asset(
     check(id.objectType == ObjectType.ASSET_OBJECT)
   }
 
-  fun convert(assetAmount: AssetAmount, roundingMode: RoundingMode = RoundingMode.UP): AssetAmount {
+  fun convert(assetAmount: AssetAmount, roundingMode: RoundingMode): AssetAmount {
     require(id == DCT_ASSET_ID || assetAmount.assetId == DCT_ASSET_ID) {
       "One of converted asset must be DCT, conversions between arbitrary assets is not supported"
     }

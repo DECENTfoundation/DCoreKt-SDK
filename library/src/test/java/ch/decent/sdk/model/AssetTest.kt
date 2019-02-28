@@ -28,12 +28,11 @@ class AssetTest {
       base: AssetAmount,
       quote: AssetAmount,
       expectedAmount: BigInteger,
-      roundingMode: RoundingMode? = null
+      roundingMode: RoundingMode = RoundingMode.UP
   ) {
     val testAsset = testAsset(precision, base, quote)
     val assetAmountToConvert = AssetAmount(amountToConvert)
-    val convertedAmount =
-        roundingMode?.let { testAsset.convert(assetAmountToConvert, it) } ?: testAsset.convert(assetAmountToConvert)
+    val convertedAmount = testAsset.convert(assetAmountToConvert, roundingMode)
     Assert.assertEquals(expectedAmount, convertedAmount.amount)
   }
 
@@ -56,17 +55,6 @@ class AssetTest {
         base = AssetAmount(2.toBigInteger(), otherId),
         quote = AssetAmount(1.toBigInteger()),
         expectedAmount = 8.toBigInteger()
-    )
-  }
-
-  @Test
-  fun `should successfully convert when precision of one token is higher using default rounding`() {
-    testConversion(
-        amountToConvert = 1.toBigInteger(),
-        precision = 1,
-        base = AssetAmount(10.toBigInteger()),
-        quote = AssetAmount(1.toBigInteger(), otherId),
-        expectedAmount = 1.toBigInteger()
     )
   }
 
@@ -103,6 +91,6 @@ class AssetTest {
         )
     )
 
-    testAsset.convert(AssetAmount(1.toBigInteger(), "1.3.1".toChainObject()))
+    testAsset.convert(AssetAmount(1.toBigInteger(), "1.3.1".toChainObject()), RoundingMode.UP)
   }
 }
