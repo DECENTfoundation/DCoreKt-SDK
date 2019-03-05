@@ -12,7 +12,7 @@ import java.math.BigInteger
 import java.nio.charset.Charset
 
 data class Message(
-    val id: ChainObject,
+    val operationId: ChainObject,
     val timestamp: LocalDateTime,
     val sender: ChainObject,
     val senderAddress: Address?,

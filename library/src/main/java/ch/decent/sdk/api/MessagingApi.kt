@@ -10,6 +10,18 @@ import io.reactivex.functions.BiFunction
 class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
+   * Get all message operations
+   *
+   * @param sender filter by sender account id
+   * @param receiver filter by receiver account id
+   * @param maxCount max items to return
+   *
+   * @return list of message operation responses
+   */
+  fun getAllOperations(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<MessageResponse>> =
+      GetMessageObjects(sender, receiver, maxCount).toRequest()
+
+  /**
    * Get all messages
    *
    * @param sender filter by sender account id
