@@ -19,7 +19,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return account exists in DCore database
    */
   fun exist(nameOrId: String): Single<Boolean> = get(nameOrId).map { true }.onErrorResumeNext {
-    if (it is IllegalStateException || it is ObjectNotFoundException) Single.just(false)
+    if (it is IllegalArgumentException || it is ObjectNotFoundException) Single.just(false)
     else Single.error(it)
   }
 

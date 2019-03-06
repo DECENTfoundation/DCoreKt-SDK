@@ -6,7 +6,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
-  override val useMock: Boolean = false
+//  override val useMock: Boolean = false
 
   @Test fun `get miners, load their accounts and put it into map with miner names`() {
     mockWebSocket

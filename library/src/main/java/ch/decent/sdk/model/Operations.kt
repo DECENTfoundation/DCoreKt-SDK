@@ -3,6 +3,7 @@ package ch.decent.sdk.model
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.net.serialization.*
+import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.publicElGamal
 import ch.decent.sdk.utils.unhex
 import com.google.common.primitives.Bytes
@@ -42,6 +43,35 @@ class EmptyOperation(type: OperationType) : BaseOperation(type) {
     get() = byteArrayOf(0)
 
   override fun toString(): String = type.toString()
+}
+
+/**
+ * Custom operation
+ *
+ * @param type custom operation subtype
+ * @param payer account which pays for the fee
+ * @param requiredAuths accounts required to authorize this operation with signatures
+ * @param data data payload encoded in hex string
+ */
+open class CustomOperation constructor(
+    type: CustomOperationType,
+    @SerializedName("payer") val payer: ChainObject,
+    @SerializedName("required_auths") val requiredAuths: List<ChainObject>,
+    @SerializedName("data") val data: String,
+    fee: AssetAmount = BaseOperation.FEE_UNSET
+) : BaseOperation(OperationType.CUSTOM_OPERATION, fee) {
+
+  @SerializedName("id") val id: Int = type.ordinal
+
+  override val bytes: ByteArray
+    get() = Bytes.concat(
+        byteArrayOf(type.ordinal.toByte()),
+        fee.bytes,
+        payer.bytes,
+        requiredAuths.bytes(),
+        id.toShort().bytes(),
+        data.unhex().bytes()
+    )
 }
 
 /**
@@ -281,3 +311,9 @@ class ContentSubmitOperation constructor(
     return "ContentSubmitOperation(size=$size, author=$author, coauthors=$coauthors, uri='$uri', quorum=$quorum, price=$price, hash='$hash', seeders=$seeders, keyParts=$keyParts, expiration=$expiration, publishingFee=$publishingFee, synopsis='$synopsis', custodyData=$custodyData, fee=$fee)"
   }
 }
+
+class SendMessageOperation constructor(
+    messagePayloadJson: String,
+    payer: ChainObject,
+    requiredAuths: List<ChainObject> = listOf(payer)
+) : CustomOperation(CustomOperationType.MESSAGING, payer, requiredAuths, messagePayloadJson.toByteArray().hex())
