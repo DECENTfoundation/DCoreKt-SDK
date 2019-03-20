@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
 
 data class CustodyData(
     @SerializedName("n") val n: Int,
-    @SerializedName("u_seed") val uSeed: List<Short>, // Fixed size 16
-    @SerializedName("pubKey") val pubKey: Long
+    @SerializedName("u_seed") val uSeed: String,
+    @SerializedName("pubKey") val pubKey: String
 ) : ByteSerializable {
   override val bytes: ByteArray
     get() = Bytes.concat(
