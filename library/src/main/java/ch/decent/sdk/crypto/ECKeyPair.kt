@@ -2,6 +2,8 @@ package ch.decent.sdk.crypto
 
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
+import ch.decent.sdk.utils.hash256
+import ch.decent.sdk.utils.hash512
 import org.bouncycastle.asn1.x9.X9IntegerConverter
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.ec.CustomNamedCurves
@@ -254,3 +256,4 @@ fun DumpedPrivateKey.ecKey() = ECKeyPair.fromPrivate(bytes, compressed)
 fun ECKeyPair.base58() = this.dpk().toString()
 fun ECKeyPair.dpk() = DumpedPrivateKey(this)
 fun ECKeyPair.address() = this.public.address()
+fun generateFromPhrase(phrase: Passphrase, sequence: Int = 0) = ECKeyPair.fromPrivate(hash256(hash512("$phrase $sequence".toByteArray())), false)

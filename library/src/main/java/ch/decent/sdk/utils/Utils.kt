@@ -17,6 +17,7 @@ import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.SecureRandom
+import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -37,6 +38,22 @@ fun ECKeyPair.secret(address: Address, nonce: BigInteger): ByteArray = address.p
   val sha512 = MessageDigest.getInstance("SHA-512")
   sha512.digest((nonce.toString() + sha512.digest(it).hex()).toByteArray())
 }
+
+fun generateEntropy(power: Int = 250): ByteArray {
+  val input = Date().toString()
+  var entropy = hash256(input.bytes()) + input.bytes().joinToString().bytes() + input.bytes()
+
+  val start = System.currentTimeMillis()
+  while ((System.currentTimeMillis() - start) < power) {
+    entropy = hash256(entropy)
+  }
+
+  return hash256(entropy + ByteArray(32).apply { Random().nextBytes(this) })
+}
+
+fun hash256(data: ByteArray) = MessageDigest.getInstance("SHA-256").digest(data)
+
+fun hash512(data: ByteArray) = MessageDigest.getInstance("SHA-512").digest(data)
 
 fun generateNonce(): BigInteger {
   val sha224 = MessageDigest.getInstance("SHA-224").digest(ECKeyPair(SecureRandom()).private!!.toByteArray())
