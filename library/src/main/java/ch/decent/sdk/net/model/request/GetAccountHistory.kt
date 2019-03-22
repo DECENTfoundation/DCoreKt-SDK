@@ -23,5 +23,6 @@ internal class GetAccountHistory(
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
     require(startId.objectType == ObjectType.OPERATION_HISTORY_OBJECT) { "not a valid history object id" }
+    require(stopId.objectType == ObjectType.OPERATION_HISTORY_OBJECT) { "not a valid history object id" }
   }
 }

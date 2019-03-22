@@ -5,6 +5,7 @@ import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.net.serialization.VoteId
 import com.google.gson.reflect.TypeToken
 
+// todo validate vote id input
 internal class LookupVoteIds(
     voteIds: List<VoteId>
 ) : BaseRequest<List<Miner>>(

@@ -3,8 +3,6 @@ package ch.decent.sdk.net.model.request
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
-import kotlin.math.max
-import kotlin.math.min
 
 internal class SearchContent(
     term: String,
@@ -14,9 +12,15 @@ internal class SearchContent(
     type: String,
     startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
     limit: Int = 100
-): BaseRequest<List<Content>>(
+) : BaseRequest<List<Content>>(
     ApiGroup.DATABASE,
     "search_content",
     TypeToken.getParameterized(List::class.java, Content::class.java).type,
     listOf(term, order.value, user, regionCode, type, startId, limit)
-)
+) {
+
+  init {
+    require(Account.isValidName(user)) { "not a valid account name" }
+    require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.CONTENT_OBJECT) { "not a valid null or content object id" }
+  }
+}

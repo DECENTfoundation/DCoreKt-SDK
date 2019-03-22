@@ -1,8 +1,6 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.MinerVotingInfo
-import ch.decent.sdk.model.SearchMinerVotingOrder
+import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 
@@ -18,4 +16,10 @@ internal class SearchMinerVoting(
     "search_miner_voting",
     TypeToken.getParameterized(List::class.java, MinerVotingInfo::class.java).type,
     listOf(accountName, searchTerm, onlyMyVotes, order, id, limit)
-)
+) {
+
+  init {
+    require(accountName?.let { Account.isValidName(it) } ?: true) { "not a valid account name" }
+    require(id?.objectType?.equals(ObjectType.MINER_OBJECT) ?: true) { "not a valid miner object id" }
+  }
+}

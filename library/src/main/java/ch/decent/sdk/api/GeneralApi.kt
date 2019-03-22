@@ -13,7 +13,7 @@ class GeneralApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return chain id and immutable chain parameters
    */
-  fun getChainProperties(): Single<ChainProperty> = GetChainProperties.toRequest()
+  fun getChainProperties(): Single<ChainProperties> = GetChainProperties.toRequest()
 
   /**
    * Retrieve global properties. This object contains all of the properties of the blockchain that are fixed
@@ -21,7 +21,7 @@ class GeneralApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return global property object
    */
-  fun getGlobalProperties(): Single<GlobalProperty> = GetGlobalProperties.toRequest()
+  fun getGlobalProperties(): Single<GlobalProperties> = GetGlobalProperties.toRequest()
 
   /**
    * Retrieve compile-time constants.

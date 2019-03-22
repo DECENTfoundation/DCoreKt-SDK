@@ -10,7 +10,7 @@ import io.reactivex.Single
 class CallbackApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
-   * Stop receiving any notifications. This unsubscribes from all subscribed objects ([setSubscribeCallback] and [AccountApi.getFullAccounts]).
+   * Stop receiving any notifications. This unsubscribes from all subscribed objects ([onGlobal] and [AccountApi.getFullAccounts]).
    */
   fun cancelAll(): Single<Unit> = CancelAllSubscriptions.toRequest()
 
@@ -32,7 +32,7 @@ class CallbackApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun onPendingTransaction(): Flowable<Unit> = SetPendingTransactionCallback.toRequest()
 
   /**
-   * Subscribe to callbacks. Can be cancelled. with [cancelAllSubscriptions].
+   * Subscribe to callbacks. Can be cancelled. with [cancelAll].
    *
    * @param clearFilter clear current subscriptions created with [AccountApi.getFullAccounts]
    */

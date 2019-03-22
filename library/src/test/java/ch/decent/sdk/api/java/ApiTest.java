@@ -5,7 +5,6 @@ import ch.decent.sdk.DCoreConstants;
 import ch.decent.sdk.DCoreSdk;
 import ch.decent.sdk.Helpers;
 import ch.decent.sdk.crypto.Address;
-import ch.decent.sdk.crypto.Credentials;
 import ch.decent.sdk.crypto.ECKeyPair;
 import ch.decent.sdk.model.*;
 import ch.decent.sdk.utils.Utils;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDateTime;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -173,9 +171,9 @@ public class ApiTest {
         api.getPurchaseApi().get(ObjectType.ACCOUNT_OBJECT.getGenericId(), "uri");
         api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId());
         api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term");
-        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId());
-        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC);
-        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.BUYING_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC, 100);
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.PURCHASE_OBJECT.getGenericId());
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.PURCHASE_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC);
+        api.getPurchaseApi().findAll(ObjectType.ACCOUNT_OBJECT.getGenericId(), "term", ObjectType.PURCHASE_OBJECT.getGenericId(), SearchPurchasesOrder.PURCHASED_DESC, 100);
     }
 
     @Test

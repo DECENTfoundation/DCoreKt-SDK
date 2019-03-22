@@ -1,6 +1,7 @@
 package ch.decent.sdk.net.model.request
 
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.model.Account
 import ch.decent.sdk.net.model.ApiGroup
 
 internal class VerifyAccountAuthority(
@@ -11,4 +12,8 @@ internal class VerifyAccountAuthority(
     "verify_account_authority",
     Boolean::class.java,
     listOf(account, keys)
-)
+) {
+  init {
+    require(Account.isValidName(account)) { "not a valid account name" }
+  }
+}

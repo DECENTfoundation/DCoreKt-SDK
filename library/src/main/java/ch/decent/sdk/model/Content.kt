@@ -18,5 +18,6 @@ data class Content(
     @SerializedName("times_bought") val timesBought: Int
 ) {
 
+  // todo?
   fun price() = price.prices[Regions.NONE.id]!!
 }

@@ -148,12 +148,12 @@ internal class RxWebSocket(
           .doOnNext { (_, obj) -> checkObjectNotFound(obj, this) }
           .map { (_, obj) -> parseResultElement(returnClass, obj) }
           .map { gson.fromJson<T>(it, returnClass) }
-          .timeout(timeout, TimeUnit.SECONDS)
           .doOnError { if (it is TimeoutException) clearConnection() }
 
   private fun <T> BaseRequest<T>.make(callId: Long): Single<T> =
       makeStream(callId)
           .firstOrError()
+          .timeout(timeout, TimeUnit.SECONDS)
 
   internal fun <T, R> requestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback = request.makeStream(callId, callId)
 

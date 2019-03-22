@@ -127,7 +127,7 @@ class PurchaseContentOperation @JvmOverloads constructor(
     @SerializedName("consumer") val consumer: ChainObject,
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
-    @SerializedName("region_code_from") val regionCode: Int = Regions.NONE.id,
+    @SerializedName("region_code_from") val regionCode: Int = Regions.ALL.id,
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
@@ -201,6 +201,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
  * Request to create account operation constructor
  *
  * @param registrar registrar
+ * @param name account name
  * @param owner owner authority
  * @param active active authority
  * @param options account options

@@ -15,6 +15,6 @@ internal class GetHistoryBuyingsByConsumer(
     listOf(consumer)
 ) {
   init {
-    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid asset object id" }
+    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
   }
 }

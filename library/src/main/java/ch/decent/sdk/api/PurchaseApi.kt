@@ -83,7 +83,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param uri content URI
    * @param user feedback author account name
    * @param count count	maximum number of feedback objects to fetch
-   * @param startId the id of feedback object to start searching from
+   * @param startId the id of purchase object to start searching from
    *
    * @return a list of purchase objects
    */

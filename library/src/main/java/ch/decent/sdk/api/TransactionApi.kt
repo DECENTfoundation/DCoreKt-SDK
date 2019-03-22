@@ -49,9 +49,10 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * This method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
-   * Just because it is not known does not mean it wasn't included in the DCore.
    * The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
+   *
    * Note: By default these objects are not tracked, the transaction_history_plugin must be loaded for these objects to be maintained.
+   * Just because it is not known does not mean it wasn't included in the DCore.
    *
    * @param trxId transaction id
    *

@@ -166,7 +166,7 @@ object FeeParamAdapter : TypeAdapter<FeeParameter>() {
     reader.beginObject()
     reader.nextName()
     val fee = AssetAmount(BigInteger(reader.nextString()))
-    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); nextInt() }
+    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); AssetAmount(BigInteger(reader.nextString())) }
     reader.endObject()
     return FeeParameter(fee, perKb)
   }

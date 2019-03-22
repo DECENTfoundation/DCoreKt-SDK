@@ -16,4 +16,9 @@ internal class SearchAccounts(
     ApiGroup.DATABASE,
     "search_accounts",
     TypeToken.getParameterized(List::class.java, Account::class.java).type,
-    listOf(searchTerm, order, id, limit))
+    listOf(searchTerm, order, id, limit)
+) {
+  init {
+    require(id.objectType == ObjectType.NULL_OBJECT || id.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
+  }
+}
