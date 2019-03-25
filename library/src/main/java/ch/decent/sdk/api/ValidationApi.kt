@@ -38,7 +38,7 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return if the transaction has all of the required signatures
    */
-  fun verifyAuthority(transaction: Transaction): Single<Boolean> = VerifyAuthority(transaction).toRequest().onErrorReturnItem(false)
+  fun verifyAuthority(transaction: Transaction): Single<Boolean> = VerifyAuthority(transaction).toRequest()
 
   /**
    * Verifies if the signers have enough authority to authorize an account.

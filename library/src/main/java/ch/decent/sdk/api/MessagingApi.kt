@@ -134,7 +134,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): SendMessageOperation = createMessageOperationUnencrypted(credentials, listOf(to to message))
 
   /**
-   * Create message operation, send a message to one receiver, unencrypted
+   * Create message operation, send messages to multiple receivers, unencrypted
    *
    * @param credentials sender account credentials
    * @param messages a list of pairs of receiver account id and message

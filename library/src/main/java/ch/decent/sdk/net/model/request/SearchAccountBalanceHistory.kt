@@ -1,10 +1,10 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.*
+import ch.decent.sdk.model.BalanceChange
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
-import kotlin.math.max
-import kotlin.math.min
 
 internal class SearchAccountBalanceHistory(
     accountId: ChainObject,
@@ -19,4 +19,10 @@ internal class SearchAccountBalanceHistory(
     "search_account_balance_history",
     TypeToken.getParameterized(List::class.java, BalanceChange::class.java).type,
     listOf(accountId, assets, recipientAccount, fromBlock, toBlock, startOffset, limit)
-)
+) {
+  init {
+    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
+    require(assets.all { it.objectType == ObjectType.ASSET_OBJECT }) { "not a valid asset object id" }
+    require(recipientAccount?.objectType?.equals(ObjectType.ACCOUNT_OBJECT) ?: true) { "not a valid account object id" }
+  }
+}

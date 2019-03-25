@@ -12,6 +12,6 @@ internal class GetAccountByName(
     listOf(name)
 ) {
   init {
-    require(Account.isValidName(name)) {"not a valid account name"}
+    require(Account.isValidName(name)) { "not a valid account name" }
   }
 }

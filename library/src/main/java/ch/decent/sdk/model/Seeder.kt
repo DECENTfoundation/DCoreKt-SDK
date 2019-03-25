@@ -11,9 +11,8 @@ data class Seeder(
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("expiration") val expiration: LocalDateTime,
     @SerializedName("pubKey") val pubKey: PubKey,
-    @SerializedName("ipfs_ID") val ipfs_ID: String,
+    @SerializedName("ipfs_ID") val ipfsId: String,
     @SerializedName("stats") val stats: ChainObject,
     @SerializedName("rating") val rating: Int,
     @SerializedName("region_code") val regionCode: String
-
 )

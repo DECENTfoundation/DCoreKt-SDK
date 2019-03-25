@@ -16,6 +16,6 @@ internal class RestoreEncryptionKey(
 ) {
 
   init {
-    require(purchaseId.objectType == ObjectType.BUYING_OBJECT) { "not a valid purchase object id" }
+    require(purchaseId.objectType == ObjectType.PURCHASE_OBJECT) { "not a valid purchase object id" }
   }
 }

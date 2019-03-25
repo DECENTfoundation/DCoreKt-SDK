@@ -1,10 +1,10 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.ChainProperty
+import ch.decent.sdk.model.ChainProperties
 import ch.decent.sdk.net.model.ApiGroup
 
-internal object GetChainProperties: BaseRequest<ChainProperty>(
+internal object GetChainProperties: BaseRequest<ChainProperties>(
     ApiGroup.DATABASE,
     "get_chain_properties",
-    ChainProperty::class.java
+    ChainProperties::class.java
 )

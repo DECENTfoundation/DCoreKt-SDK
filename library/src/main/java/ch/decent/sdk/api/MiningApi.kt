@@ -36,7 +36,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    */
   // todo model
-  fun getFeedsByMiner(account: ChainObject, count: Long = 100) = GetFeedsByMiner(account, count).toRequest()
+  fun getFeedsByMiner(account: ChainObject, count: Int = 100) = GetFeedsByMiner(account, count).toRequest()
 
   /**
    * Get the miner owned by a given account.

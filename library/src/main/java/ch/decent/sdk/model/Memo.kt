@@ -38,7 +38,7 @@ class Memo : ByteSerializable {
    * @param recipient receiver account
    */
   constructor(message: String, credentials: Credentials, recipient: Account) :
-      this(message, credentials.keyPair, recipient.active.keyAuths[0].value)
+      this(message, credentials.keyPair, recipient.options.memoKey)
 
   /**
    * Create Memo object with encrypted message
