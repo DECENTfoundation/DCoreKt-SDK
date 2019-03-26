@@ -1,3 +1,3 @@
-package ch.decent.sdk.mnemonic.wordlists
+package ch.decent.sdk.crypto.wordlist
 
 data class WordList(val separator: String, val words: List<String>)

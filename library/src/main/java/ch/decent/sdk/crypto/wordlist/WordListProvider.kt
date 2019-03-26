@@ -1,4 +1,4 @@
-package ch.decent.sdk.mnemonic.wordlists
+package ch.decent.sdk.crypto.wordlist
 
 interface WordListProvider {
   fun all(): Collection<WordList>

@@ -1,4 +1,3 @@
 include ':library'
 include ':examples:android-java-blocking'
 include ':mnemonic_android'
-include ':mnemonic'

@@ -1,7 +1,7 @@
 package ch.decent.sdk.crypto
 
-import ch.decent.sdk.mnemonic.wordlists.WordList
-import ch.decent.sdk.mnemonic.wordlists.WordListProvider
+import ch.decent.sdk.crypto.wordlist.WordList
+import ch.decent.sdk.crypto.wordlist.WordListProvider
 import ch.decent.sdk.utils.generateEntropy
 
 const val WORD_COUNT: Int = 16
@@ -14,10 +14,21 @@ class Passphrase(private val words: Array<String>) {
 
   public companion object {
 
-    public fun generate(count: Int = WORD_COUNT, wordListProvider: WordListProvider, languageId: Int) =
-        create(generateEntropy(), wordListProvider.get(languageId), count)
+    /**
+     * Method generates pass phrase from word list provided by [WordListProvider] for language with id provided by parameter [languageId].
+     * If parameter [normalize] is true, all provided word will be converted to upper case before entropy creation. In other case word stays
+     * as it was provided. Default value for [normalize] parameter is true.
+     *
+     * @param count word count
+     * @param wordListProvider word list provider
+     * @param languageId language id
+     * @param normalize normalization flag
+     */
+    @JvmOverloads
+    public fun generate(count: Int = WORD_COUNT, wordListProvider: WordListProvider, languageId: Int, normalize: Boolean = true) =
+        create(generateEntropy(), wordListProvider.get(languageId), count, normalize)
 
-    private fun create(entropy: ByteArray, seed: WordList?, count: Int): Passphrase {
+    private fun create(entropy: ByteArray, seed: WordList?, count: Int, normalize: Boolean): Passphrase {
       requireNotNull(seed) { "Word list provider must not be null" }
       val phrases = mutableListOf<String>()
       for (i in 0 until (count * 2) step 2) {
@@ -29,7 +40,7 @@ class Passphrase(private val words: Array<String>) {
         val multiplier = num / Math.pow(2.0, 16.0)
         val index = Math.abs(Math.round(seed.words.size * multiplier))
 
-        phrases.add(seed.words[index.toInt()])
+        phrases.add(seed.words[index.toInt()].let { if (normalize) it.toUpperCase() else it })
       }
       return Passphrase(phrases.toTypedArray())
     }

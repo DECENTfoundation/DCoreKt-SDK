@@ -97,16 +97,15 @@ object Base58 {
    * @return the base58-encoded string
    */
   fun encodeChecked(version: Int, payload: ByteArray, compressed: Boolean): String {
-    val unsignedPayload = payload.copyOfRange(payload.size - 32, payload.size)
     if (version < 0 || version > 255)
       throw IllegalArgumentException("Version not in range.")
 
     // A stringified buffer is:
     // 1 byte version + data bytes + 1byte compressed + 4 bytes check code (a truncated hash)
-    val bytes = ByteArray(1 + unsignedPayload.size + (if (compressed) 1 else 0) + 4)
+    val bytes = ByteArray(1 + payload.size + (if (compressed) 1 else 0) + 4)
     bytes[0] = version.toByte()
-    System.arraycopy(unsignedPayload, 0, bytes, 1, unsignedPayload.size)
-    if (compressed) bytes[unsignedPayload.size + 2] = 0x01
+    System.arraycopy(payload, 0, bytes, 1, payload.size)
+    if (compressed) bytes[payload.size + 2] = 0x01
     val checksum = Sha256Hash.hashTwice(bytes, 0, bytes.size - 4)
     System.arraycopy(checksum, 0, bytes, bytes.size - 4, 4)
     return Base58.encode(bytes)

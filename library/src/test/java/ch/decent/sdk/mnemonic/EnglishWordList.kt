@@ -1,6 +1,6 @@
 package ch.decent.sdk.mnemonic
 
-import ch.decent.sdk.mnemonic.wordlists.WordList
+import ch.decent.sdk.crypto.wordlist.WordList
 
 val ENGLISH_WORD_LIST = WordList(
     " ", listOf(

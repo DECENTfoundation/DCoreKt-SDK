@@ -1,6 +1,6 @@
 package ch.decent.sdk.mnemonic
 
-import ch.decent.sdk.mnemonic.wordlists.WordListProvider
+import ch.decent.sdk.crypto.wordlist.WordListProvider
 
 class TestWorldListProvider : WordListProvider {
   companion object {
