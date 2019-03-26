@@ -12,14 +12,10 @@ import org.bouncycastle.crypto.modes.CBCBlockCipher
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher
 import org.bouncycastle.crypto.params.KeyParameter
 import org.bouncycastle.crypto.params.ParametersWithIV
-import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi
 import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.SecureRandom
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 
 /**
  * Hex encoding used throughout the DCore framework.

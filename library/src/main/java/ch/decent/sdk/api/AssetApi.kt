@@ -2,10 +2,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.Asset
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.RealSupply
+import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
 
@@ -35,6 +32,24 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return current supply
    */
   fun getRealSupply(): Single<RealSupply> = GetRealSupply.toRequest()
+
+  /**
+   * Get asset dynamic data by id.
+   *
+   * @param assetId asset data id eg. DCT id is 2.3.0
+   *
+   * @return asset dynamic data or [ObjectNotFoundException]
+   */
+  fun getAssetsData(assetId: List<ChainObject>): Single<List<AssetData>> = GetAssetsData(assetId).toRequest()
+
+  /**
+   * Get asset dynamic data by id.
+   *
+   * @param assetId asset data id eg. DCT id is 2.3.0
+   *
+   * @return asset dynamic data or [ObjectNotFoundException]
+   */
+  fun getAssetData(assetId: ChainObject): Single<AssetData> = getAssetsData(listOf(assetId)).map { it.single() }
 
   /**
    * Get assets alphabetically by symbol name.
