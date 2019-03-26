@@ -1,6 +1,7 @@
 package ch.decent.sdk.api.java;
 
 import ch.decent.sdk.DCoreApi;
+import ch.decent.sdk.DCoreConstants;
 import ch.decent.sdk.DCoreSdk;
 import ch.decent.sdk.Helpers;
 import ch.decent.sdk.crypto.Address;
@@ -191,7 +192,10 @@ public class ApiTest {
     @Test
     public void ValidationApiTest() {
         api.getValidationApi().getFee(new EmptyOperation(OperationType.TRANSFER2_OPERATION));
+        api.getValidationApi().getFee(new EmptyOperation(OperationType.TRANSFER2_OPERATION), DCoreConstants.DCT_ASSET_ID);
         api.getValidationApi().getFees(Arrays.asList(new EmptyOperation(OperationType.TRANSFER2_OPERATION), new EmptyOperation(OperationType.TRANSFER2_OPERATION)));
+        api.getValidationApi().getFees(Arrays.asList(new EmptyOperation(OperationType.TRANSFER2_OPERATION), new EmptyOperation(OperationType.TRANSFER2_OPERATION)), DCoreConstants.DCT_ASSET_ID);
         api.getValidationApi().getFee(OperationType.TRANSFER2_OPERATION);
+        api.getValidationApi().getFee(OperationType.TRANSFER2_OPERATION, DCoreConstants.DCT_ASSET_ID);
     }
 }

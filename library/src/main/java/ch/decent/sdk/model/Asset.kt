@@ -1,9 +1,10 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.DCoreConstants
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.text.DecimalFormat
+import java.math.RoundingMode
 
 data class Asset(
     @SerializedName("id") override val id: ChainObject = ObjectType.ASSET_OBJECT.genericId,
@@ -13,22 +14,45 @@ data class Asset(
     @SerializedName("description") val description: String = "",
     @SerializedName("options") val options: Options = Options(),
     @SerializedName("dynamic_asset_data_id") val dataId: ChainObject = ObjectType.NULL_OBJECT.genericId
-): AssetFormatter {
+) : AssetFormatter {
 
   init {
     check(id.objectType == ObjectType.ASSET_OBJECT)
   }
 
-  fun convert(assetAmount: AssetAmount): AssetAmount {
-    if (options.exchangeRate.base.assetId == assetAmount.assetId) {
-      val amount = options.exchangeRate.quote.amount / options.exchangeRate.base.amount * assetAmount.amount
-      return AssetAmount(amount, id)
+  /**
+   * Converts DCT [amount] according conversion rate.
+   * Throws an [IllegalArgumentException] if the quote or base [amount] is not greater then zero.
+   */
+  fun convertFromDCT(amount: BigInteger, roundingMode: RoundingMode) = convert(amount, id, roundingMode)
+
+  /**
+   * Converts asset [amount] to DCT according conversion rate.
+   * Throws an [IllegalArgumentException] if the quote or base [amount] is not greater then zero.
+   */
+  fun convertToDCT(amount: BigInteger, roundingMode: RoundingMode) = convert(amount, DCoreConstants.DCT_ASSET_ID, roundingMode)
+
+  /**
+   * Method convert [amount] to [toAssetId] asset and returns [AssetAmount] for converted amount.
+   * Throws an [IllegalArgumentException] if the quote or base [amount] is not greater then zero.
+   *
+   * @param amount amount to convert
+   * @param toAssetId asset id
+   * @param roundingMode rounding mode for converted amount
+   *
+   * @return [AssetAmount] for converted amount
+   */
+  private fun convert(amount: BigInteger, toAssetId: ChainObject, roundingMode: RoundingMode): AssetAmount {
+    val quoteAmount: BigDecimal = options.exchangeRate.quote.amount.toBigDecimal()
+    val baseAmount: BigDecimal = options.exchangeRate.base.amount.toBigDecimal()
+    require(quoteAmount > BigDecimal.ZERO) { "Quote amount ($quoteAmount) must be greater then zero" }
+    require(baseAmount > BigDecimal.ZERO) { "Base amount ($baseAmount) must be greater then zero" }
+    val convertedAmount = when (toAssetId) {
+      options.exchangeRate.quote.assetId -> (quoteAmount * amount.toBigDecimal()).divide(baseAmount, roundingMode)
+      options.exchangeRate.base.assetId -> (baseAmount * amount.toBigDecimal()).divide(quoteAmount, roundingMode)
+      else -> throw IllegalArgumentException("cannot convert ${id} with $symbol:$toAssetId")
     }
-    if (options.exchangeRate.quote.assetId == assetAmount.assetId) {
-      val amount = options.exchangeRate.base.amount / options.exchangeRate.quote.amount * assetAmount.amount
-      return AssetAmount(amount, id)
-    }
-    throw IllegalArgumentException("cannot convert ${assetAmount.assetId} with $symbol:$id")
+    return AssetAmount(convertedAmount.toBigInteger(), toAssetId)
   }
 
   data class Options(

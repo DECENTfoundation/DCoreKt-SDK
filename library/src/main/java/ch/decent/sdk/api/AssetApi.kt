@@ -27,6 +27,24 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun getAsset(assetId: ChainObject): Single<Asset> = getAssets(listOf(assetId)).map { it.single() }
 
   /**
+   * Get asset dynamic data by id.
+   *
+   * @param assetId asset data id eg. DCT id is 2.3.0
+   *
+   * @return asset dynamic data or [ObjectNotFoundException]
+   */
+  fun getAssetsData(assetId: List<ChainObject>): Single<List<AssetData>> = GetAssetsData(assetId).toRequest()
+
+  /**
+   * Get asset dynamic data by id.
+   *
+   * @param assetId asset data id eg. DCT id is 2.3.0
+   *
+   * @return asset dynamic data or [ObjectNotFoundException]
+   */
+  fun getAssetData(assetId: ChainObject): Single<AssetData> = getAssetsData(listOf(assetId)).map { it.single() }
+
+  /**
    * Lookup assets by symbol.
    *
    * @param assetSymbols asset symbols eg. DCT

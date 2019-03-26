@@ -1,6 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.*
@@ -62,19 +63,23 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * Returns fees for operation.
    *
    * @param op list of operations
+   * @param assetId asset id eg. DCT id is 1.3.0
    *
    * @return a list of fee asset amounts
    */
-  fun getFees(op: List<BaseOperation>): Single<List<AssetAmount>> = GetRequiredFees(op).toRequest()
+  @JvmOverloads
+  fun getFees(op: List<BaseOperation>, assetId: ChainObject = DCoreConstants.DCT.id): Single<List<AssetAmount>> = GetRequiredFees(op, assetId).toRequest()
 
   /**
    * Returns fee for operation.
    *
    * @param op operation
+   * @param assetId asset id eg. DCT id is 1.3.0
    *
    * @return a fee asset amount
    */
-  fun getFee(op: BaseOperation): Single<AssetAmount> = getFees(listOf(op)).map { it.single() }
+  @JvmOverloads
+  fun getFee(op: BaseOperation, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> = getFees(listOf(op), assetId).map { it.single() }
 
   /**
    * Returns fee for operation type, not valid for operation per size fees:
@@ -87,13 +92,14 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a fee asset amount
    */
-  fun getFee(type: OperationType): Single<AssetAmount> =
+  @JvmOverloads
+  fun getFee(type: OperationType, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> =
       require(listOf(
           OperationType.PROPOSAL_CREATE_OPERATION,
           OperationType.PROPOSAL_UPDATE_OPERATION,
           OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION,
           OperationType.CUSTOM_OPERATION)
           .contains(type).not()
-      ).let { getFee(EmptyOperation(type)) }
+      ).let { getFee(EmptyOperation(type), assetId) }
 
 }

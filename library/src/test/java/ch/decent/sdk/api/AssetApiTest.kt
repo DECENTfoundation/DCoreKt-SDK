@@ -31,6 +31,46 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
         .assertNoErrors()
   }
 
+  @Test fun `should get asset data for id`() {
+    mockWebSocket
+        .enqueue(
+            """{"method":"call","params":[0,"get_objects",[["2.3.0"]]],"id":1}""",
+            """{"id":1,"result":[{"id":"2.3.0","current_supply":"5291193864628570","asset_pool":11000000,"core_pool":0}]}"""
+        )
+
+    mockHttp.enqueue(
+        """{"id":0,"result":[{"id":"2.3.0","current_supply":"5291193864628570","asset_pool":11000000,"core_pool":0}]}"""
+    )
+
+    val test = api.assetApi.getAssetData("2.3.0".toChainObject())
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `should get assets data for id`() {
+    mockWebSocket
+        .enqueue(
+            """{"method":"call","params":[0,"get_objects",[["2.3.0","2.3.54"]]],"id":1}""",
+            """{"id":1,"result":[{"id":"2.3.0","current_supply":"5291193864628570","asset_pool":11500000,"core_pool":0},{"id":"2.3.54","current_supply":"26100000000000","asset_pool":922000000,"core_pool":"99819500000"}]}"""
+        )
+
+    mockHttp.enqueue(
+        """{"id":0,"result":[{"id":"2.3.0","current_supply":"5291193864628570","asset_pool":11500000,"core_pool":0},{"id":"2.3.54","current_supply":"26100000000000","asset_pool":922000000,"core_pool":"99819500000"}]}"""
+    )
+
+    val test = api.assetApi.getAssetsData(listOf("2.3.0".toChainObject(), "2.3.54".toChainObject()))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
   @Test fun `should get asset for symbol`() {
     mockWebSocket.enqueue(
         """{"method":"call","params":[0,"lookup_asset_symbols",[["DCT"]]],"id":1}""",
