@@ -104,8 +104,10 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<PurchaseContentOperation> =
       get(uri).map { PurchaseContentOperation(credentials, it) }
 
+
+
   /**
-   * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
+   * Create amount transfer operation of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
    * Fees are paid by the "from" account.
    *
    * @param credentials account credentials
@@ -114,7 +116,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param memo optional unencrypted message
    * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
    *
-   * @return a transaction confirmation
+   * @return a transfer operation
    */
   @JvmOverloads
   fun createTransfer(
@@ -123,6 +125,30 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       amount: AssetAmount,
       memo: String? = null,
       fee: AssetAmount = BaseOperation.FEE_UNSET
-  ): TransferOperation = TransferOperation(credentials.account, id, amount, memo?.let { Memo(it) }, fee)
+  ): Single<TransferOperation> = Single.just(TransferOperation(credentials.account, id, amount, memo?.let { Memo(it) }, fee))
+
+    /**
+     * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
+     * Fees are paid by the "from" account.
+     *
+     * @param credentials account credentials
+     * @param id content id
+     * @param amount amount to send with asset type
+     * @param memo optional unencrypted message
+     * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+     *
+     * @return a transaction confirmation
+     */
+    @JvmOverloads
+    fun transfer(
+            credentials: Credentials,
+            id: ChainObject,
+            amount: AssetAmount,
+            memo: String? = null,
+            fee: AssetAmount = BaseOperation.FEE_UNSET
+    ): Single<TransactionConfirmation> =
+            createTransfer(credentials, id, amount, memo, fee).flatMap {
+                api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+            }
 
 }

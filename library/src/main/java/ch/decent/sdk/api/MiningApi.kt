@@ -1,6 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.*
@@ -136,4 +137,20 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
         api.accountApi.get(accountId).map { AccountUpdateOperation(it, miners.asSequence().map { it.voteId }.toSet()) }
       }
 
+  /**
+   * Create vote for miner operation.
+   *
+   * @param accountId account object id, 1.2.*
+   * @param minerIds list of miner account ids
+   *
+   * @return a transaction confirmation
+   */
+  fun vote(
+          credentials: Credentials,
+          accountId: ChainObject,
+          minerIds: List<ChainObject>
+  ): Single<TransactionConfirmation> =
+          createVoteOperation(accountId, minerIds).flatMap {
+            api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+          }
 }
