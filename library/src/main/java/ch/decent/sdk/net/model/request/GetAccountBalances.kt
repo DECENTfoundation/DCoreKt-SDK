@@ -18,6 +18,6 @@ internal class GetAccountBalances(
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-    require(assets.all { it.objectType == ObjectType.ACCOUNT_OBJECT }) { "not a valid asset object id" }
+    require(assets.all { it.objectType == ObjectType.ASSET_OBJECT }) { "not a valid asset object id" }
   }
 }
