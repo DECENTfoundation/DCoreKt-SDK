@@ -33,7 +33,7 @@ class OperationsHelper internal constructor(api: DCoreApi) : BaseApi(api) {
         if (memo.isNullOrBlank() || !encrypted) {
           TransferOperation(credentials.account, receiver.id, amount, memo?.let { Memo(it) }, fee)
         } else {
-          TransferOperation(credentials.account, receiver.id, amount, Memo(memo!!, credentials.keyPair, receiver.active.keyAuths.first().value), fee)
+          TransferOperation(credentials.account, receiver.id, amount, Memo(memo, credentials.keyPair, receiver.active.keyAuths.first().value), fee)
         }
       }
 
