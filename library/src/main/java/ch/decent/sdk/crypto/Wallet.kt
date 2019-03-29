@@ -53,7 +53,7 @@ object Wallet {
       }
 
   fun create(credentials: Credentials, password: String = ""): WalletFile {
-    val secret = credentials.keyPair.private!!.toByteArray()
+    val secret = credentials.keyPair.privateBytes
     val salt = randomBytes(SALT_LEN)
     val derived = kdf(password, salt)
     val iv = randomBytes(16)

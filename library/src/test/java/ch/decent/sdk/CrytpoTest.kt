@@ -20,7 +20,7 @@ class CrytpoTest : TimeOutTest() {
     val dump = DumpedPrivateKey.toBase58(key)
 
     private.print()
-    ECKeyPair.fromBase58(private).private!!.toByteArray().hex().print()
+    ECKeyPair.fromBase58(private).privateBytes.hex().print()
     public2.print()
     public2.address().publicKey.getEncoded(true).hex().print()
     public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
@@ -43,9 +43,8 @@ class CrytpoTest : TimeOutTest() {
     val pub = BigInteger("5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437")
 
     val key = ECKeyPair.fromBase58(private)
-    val sha512 = MessageDigest.getInstance("SHA-512")
 
-    val hash = sha512.digest(key.private!!.toByteArray())
+    val hash = hash512(key.privateBytes)
 
     val k = BigInteger(1, hash)
 

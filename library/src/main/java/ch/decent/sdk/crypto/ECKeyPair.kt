@@ -2,6 +2,8 @@ package ch.decent.sdk.crypto
 
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
+import ch.decent.sdk.utils.hash256
+import ch.decent.sdk.utils.hash512
 import org.bouncycastle.asn1.x9.X9IntegerConverter
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.ec.CustomNamedCurves
@@ -25,6 +27,9 @@ class ECKeyPair {
   val compressed: Boolean?
   val public
     get() = lazyPublic.value
+  val privateBytes
+    get() = private!!.bytes(32)
+
   private val lazyPublic: Lazy<ECPoint>
 
   private constructor(private: BigInteger? = null, public: ECPoint?, compressed: Boolean? = null) {
@@ -254,3 +259,26 @@ fun DumpedPrivateKey.ecKey() = ECKeyPair.fromPrivate(bytes, compressed)
 fun ECKeyPair.base58() = this.dpk().toString()
 fun ECKeyPair.dpk() = DumpedPrivateKey(this)
 fun ECKeyPair.address() = this.public.address()
+
+/**
+ * Method generates private key from phrase provided by parameter of type [String]. If parameter [normalize] is true, provided pass phrase will be converted
+ * to upper case before private key calculation. In other case word stays as it was provided. Default value for [normalize] parameter is true.
+ *
+ * @param phrase phrase string
+ * @param sequence private key derivation sequence
+ * @param normalized normalization flag
+ */
+@JvmOverloads
+fun generatePrivateFromStringPhrase(phrase: String, sequence: Int = 0, normalized: Boolean = true) =
+    ECKeyPair.fromPrivate(hash256(hash512("${phrase.let { if (normalized) it.toUpperCase() else it }} $sequence".toByteArray())), false)
+
+/**
+ * Method generates private key from pass phrase provided by parameter of type [Passphrase]. If parameter [normalize] is true, provided pass phrase will be
+ * converted to upper case before private key calculation. In other case word stays as it was provided. Default value for [normalize] parameter is true.
+ *
+ * @param phrase pass phrase
+ * @param sequence private key derivation sequence
+ * @param normalized normalization flag
+ */
+@JvmOverloads
+fun generatePrivateFromPassPhrase(phrase: Passphrase, sequence: Int = 0, normalized: Boolean = true) = generatePrivateFromStringPhrase(phrase.toString(), sequence, normalized)
