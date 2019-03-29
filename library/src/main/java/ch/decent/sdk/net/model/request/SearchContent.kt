@@ -20,7 +20,7 @@ internal class SearchContent(
 ) {
 
   init {
-    require(Account.isValidName(user)) { "not a valid account name" }
+    require(Account.isValidName(user) || user.isBlank()) { "not a valid account name" }
     require(startId == ObjectType.NULL_OBJECT.genericId || startId.objectType == ObjectType.CONTENT_OBJECT) { "not a valid null or content object id" }
   }
 }

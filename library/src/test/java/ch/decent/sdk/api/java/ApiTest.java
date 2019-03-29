@@ -50,8 +50,8 @@ public class ApiTest {
         api.getAccountApi().findAll("term", SearchAccountsOrder.ID_ASC, ObjectType.NULL_OBJECT.getGenericId(), 10);
         api.getAccountApi().findAllReferencesByAccount(ObjectType.ACCOUNT_OBJECT.getGenericId());
         api.getAccountApi().findAllReferencesByKeys(Collections.singletonList(Address.decode("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")));
-        api.getAccountApi().getFullAccounts(Collections.singletonList("a name or id"));
-        api.getAccountApi().getFullAccounts(Collections.singletonList("a name or id"), true);
+        api.getAccountApi().getFullAccounts(Collections.singletonList("nameorid"));
+        api.getAccountApi().getFullAccounts(Collections.singletonList("nameorid"), true);
         api.getAccountApi().listAllRelative("abc");
         api.getAccountApi().listAllRelative("abc", 10);
         api.getAccountApi().searchAccountHistory(ObjectType.ACCOUNT_OBJECT.getGenericId());
