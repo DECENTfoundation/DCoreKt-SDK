@@ -78,4 +78,4 @@ val disposable = api.accountApi.transfer(credentials, "1.2.35", amount).subscrib
 References
 ----------
 
-[jitpack]: (https://jitpack.io/#DECENTfoundation/DCoreKt-SDK)
+[jitpack]: https://jitpack.io/#DECENTfoundation/DCoreKt-SDK
