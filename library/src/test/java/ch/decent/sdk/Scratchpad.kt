@@ -3,6 +3,7 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.*
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.utils.hash512
 import ch.decent.sdk.utils.hex
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -152,11 +153,10 @@ class Scratchpad {
     val elPrivate = BigInteger("10264811947384987455806884361188312159337997349773266680031652882869271200883393026310091771774151908862673648846588359689442630336710264201803312709689478")
     val elPublic = BigInteger("7317752633383033582159088041509593492238468350205070200236191783227692402591973343242224306276612029080797696757604654009350847591901976526778157668840202")
     val key = ECKeyPair.fromBase58("5JDFQN3T8CFT1ynhgd5s574mTV9UPf9WamkHojBL4NgbhSBDmBj")
-    val sha512 = MessageDigest.getInstance("SHA-512")
 
 //    val secret = Sha256Hash.hash(keyPair.public.getEncoded(false))
 //    val hash = sha512.digest(secret)
-    val hash = sha512.digest(key.private!!.toByteArray())
+    val hash = hash512(key.privateBytes)
     val k = BigInteger(1, hash)
 
     println(k)

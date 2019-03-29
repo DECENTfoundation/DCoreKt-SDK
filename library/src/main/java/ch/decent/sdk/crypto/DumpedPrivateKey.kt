@@ -1,5 +1,6 @@
 package ch.decent.sdk.crypto
 
+import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Base58
 
 /**
@@ -13,7 +14,7 @@ class DumpedPrivateKey private constructor(
     val compressed: Boolean
 ) {
 
-  constructor(private: ECKeyPair): this(0x80, private.private!!.toByteArray(), private.compressed!!)
+  constructor(private: ECKeyPair): this(0x80, private.privateBytes, private.compressed!!)
 
   /**
    * Returns the base-58 encoded String representation of this
