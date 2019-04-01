@@ -43,12 +43,12 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
   /**
    * Verifies if the signers have enough authority to authorize an account.
    *
-   * @param account account name or object id
+   * @param nameOrId account name or object id
    * @param keys signer keys
    *
    * @return if the signers have enough authority
    */
-  fun verifyAccountAuthority(account: String, keys: List<Address>): Single<Boolean> = VerifyAccountAuthority(account, keys).toRequest()
+  fun verifyAccountAuthority(nameOrId: String, keys: List<Address>): Single<Boolean> = VerifyAccountAuthority(nameOrId, keys).toRequest()
 
   /**
    * Validates a transaction against the current state without broadcasting it on the network.
