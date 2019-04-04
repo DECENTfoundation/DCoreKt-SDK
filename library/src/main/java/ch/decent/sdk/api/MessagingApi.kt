@@ -76,35 +76,20 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
-  fun getAllDecryptedForReceiver(credentials: Credentials,maxCount: Int = 1000): Single<List<Message>> =
+  fun getAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
       getAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
-
-  /**
-   * Create message operation, send a message to one receiver
-   *
-   * @param credentials sender account credentials
-   * @param to receiver address
-   * @param message a message to send
-   *
-   * @return send message operation
-   */
-  fun createMessageOperation(
-      credentials: Credentials,
-      to: ChainObject,
-      message: String
-  ): Single<SendMessageOperation> = createMessageOperation(credentials, listOf(to to message))
 
   /**
    * Create message operation, send messages to multiple receivers
    *
    * @param credentials sender account credentials
-   * @param messages a list of pairs of receiver account id and message
+   * @param messages pairs of receiver account id and message
    *
    * @return send message operation
    */
   fun createMessageOperation(
       credentials: Credentials,
-      messages: List<Pair<ChainObject, String>>
+      vararg messages: Pair<ChainObject, String>
   ): Single<SendMessageOperation> = Single.zip(
       api.accountApi.get(credentials.account),
       Single.merge(messages.map { api.accountApi.get(it.first) }).toList(),
@@ -119,21 +104,6 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
   }
 
   /**
-   * Create message operation, send a message to one receiver, unencrypted
-   *
-   * @param credentials sender account credentials
-   * @param to receiver address
-   * @param message a message to send
-   *
-   * @return send message operation
-   */
-  fun createMessageOperationUnencrypted(
-      credentials: Credentials,
-      to: ChainObject,
-      message: String
-  ): SendMessageOperation = createMessageOperationUnencrypted(credentials, listOf(to to message))
-
-  /**
    * Create message operation, send messages to multiple receivers, unencrypted
    *
    * @param credentials sender account credentials
@@ -143,7 +113,36 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createMessageOperationUnencrypted(
       credentials: Credentials,
-      messages: List<Pair<ChainObject, String>>
-  ): SendMessageOperation = SendMessageOperation(api.core.gson.toJson(MessagePayload(credentials.account, messages)), credentials.account)
+      vararg messages: Pair<ChainObject, String>
+  ): Single<SendMessageOperation> = Single.just(SendMessageOperation(api.core.gson.toJson(MessagePayload(credentials.account, *messages)), credentials.account))
 
+  /**
+   * Send messages to receivers
+   *
+   * @param credentials sender account credentials
+   * @param messages pairs of receiver account id and message
+   *
+   * @return a transaction confirmation
+   */
+  fun send(
+      credentials: Credentials,
+      vararg messages: Pair<ChainObject, String>
+  ): Single<TransactionConfirmation> = createMessageOperation(credentials, *messages).flatMap {
+    api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+  }
+
+  /**
+   * Send unencrypted messages to receivers
+   *
+   * @param credentials sender account credentials
+   * @param messages a list of pairs of receiver account id and message
+   *
+   * @return a transaction confirmation
+   */
+  fun sendUnencrypted(
+      credentials: Credentials,
+      vararg messages: Pair<ChainObject, String>
+  ): Single<TransactionConfirmation> = createMessageOperationUnencrypted(credentials, *messages).flatMap {
+    api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+  }
 }

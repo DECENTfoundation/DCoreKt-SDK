@@ -208,7 +208,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
  * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  *
  */
-class AccountCreateOperation constructor(
+class AccountCreateOperation @JvmOverloads constructor(
     @SerializedName("registrar") val registrar: ChainObject,
     @SerializedName("name") val name: String,
     @SerializedName("owner") val owner: Authority,
@@ -222,8 +222,9 @@ class AccountCreateOperation constructor(
     require(Account.isValidName(name)) { "not a valid name" }
   }
 
-  constructor(registrar: ChainObject, name: String, public: Address) :
-      this(registrar, name, Authority(public), Authority(public), Options(public))
+  @JvmOverloads
+  constructor(registrar: ChainObject, name: String, public: Address, fee: AssetAmount = BaseOperation.FEE_UNSET) :
+      this(registrar, name, Authority(public), Authority(public), Options(public), fee)
 
   override val bytes: ByteArray
     get() = Bytes.concat(

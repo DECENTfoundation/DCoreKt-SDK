@@ -3,6 +3,7 @@ package ch.decent.sdk.model
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
+import java.math.BigInteger
 
 data class Purchase(
     @SerializedName("id") val id: ChainObject,
@@ -14,8 +15,7 @@ data class Purchase(
     @SerializedName("paid_price_after_exchange") val priceAfter: AssetAmount,
     @SerializedName("seeders_answered") val seedersAnswered: List<ChainObject>,
     @SerializedName("size") val size: Int,
-//    java.lang.NumberFormatException: Expected a long but was 18446744073709551615; in c++ uint64_t(-1) = 0xffffffffffffffff which cannot fit into long
-//    @SerializedName("rating") val rating: Long,
+    @SerializedName("rating") val rating: BigInteger,
     @SerializedName("comment") val comment: String,
     @SerializedName("expiration_time") val expiration: LocalDateTime,
     @SerializedName("pubKey") val pubElGamalKey: PubKey,

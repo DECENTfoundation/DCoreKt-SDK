@@ -224,4 +224,22 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
       }
 
+  /**
+   * Create a new account.
+   *
+   * @param registrar credentials used to register the new account
+   * @param name new account name
+   * @param address new account public key address
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a transaction confirmation
+   */
+  fun create(
+      registrar: Credentials,
+      name: String,
+      address: Address,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): Single<TransactionConfirmation> =
+      api.broadcastApi.broadcastWithCallback(registrar.keyPair, AccountCreateOperation(registrar.account, name, address, fee))
+
 }
