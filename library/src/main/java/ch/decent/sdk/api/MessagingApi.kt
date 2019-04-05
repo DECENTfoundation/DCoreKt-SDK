@@ -89,7 +89,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createMessageOperation(
       credentials: Credentials,
-      vararg messages: Pair<ChainObject, String>
+      messages: List<Pair<ChainObject, String>>
   ): Single<SendMessageOperation> = Single.zip(
       api.accountApi.get(credentials.account),
       Single.merge(messages.map { api.accountApi.get(it.first) }).toList(),
@@ -113,8 +113,8 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createMessageOperationUnencrypted(
       credentials: Credentials,
-      vararg messages: Pair<ChainObject, String>
-  ): Single<SendMessageOperation> = Single.just(SendMessageOperation(api.core.gson.toJson(MessagePayload(credentials.account, *messages)), credentials.account))
+      messages: List<Pair<ChainObject, String>>
+  ): Single<SendMessageOperation> = Single.just(SendMessageOperation(api.core.gson.toJson(MessagePayload(credentials.account, messages)), credentials.account))
 
   /**
    * Send messages to receivers
@@ -126,8 +126,8 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun send(
       credentials: Credentials,
-      vararg messages: Pair<ChainObject, String>
-  ): Single<TransactionConfirmation> = createMessageOperation(credentials, *messages).flatMap {
+      messages: List<Pair<ChainObject, String>>
+  ): Single<TransactionConfirmation> = createMessageOperation(credentials, messages).flatMap {
     api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
   }
 
@@ -141,8 +141,8 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun sendUnencrypted(
       credentials: Credentials,
-      vararg messages: Pair<ChainObject, String>
-  ): Single<TransactionConfirmation> = createMessageOperationUnencrypted(credentials, *messages).flatMap {
+      messages: List<Pair<ChainObject, String>>
+  ): Single<TransactionConfirmation> = createMessageOperationUnencrypted(credentials, messages).flatMap {
     api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
   }
 }

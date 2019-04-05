@@ -83,7 +83,7 @@ data class MessagePayload(
    */
   constructor(
       from: ChainObject,
-      vararg messages: Pair<ChainObject, String>
+      messages: List<Pair<ChainObject, String>>
   ) : this(from, messages.map { MessagePayloadReceiver(it.first, Memo(it.second).message) })
 }
 

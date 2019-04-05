@@ -177,7 +177,8 @@ class OperationsTest {
         )
 
     val credentials = Credentials(account, private)
-    val op = api.messagingApi.createMessageOperationUnencrypted(credentials, account2, "hello messaging api unencrypted")
+    val op = api.messagingApi.createMessageOperationUnencrypted(credentials, listOf(account2 to "hello messaging api unencrypted"))
+        .blockingGet()
 
     val trx = api.transactionApi.createTransaction(op)
         .map { it.withSignature(credentials.keyPair) }
@@ -221,13 +222,11 @@ class OperationsTest {
     test.awaitTerminalEvent()
     test.assertComplete()
             .assertNoErrors()
-            .assertValue { it.id != null }
 
   }
 
   @Test fun `should make a vote`() {
 
-    val key = ECKeyPair.fromBase58(private)
     mockWebSocket
             .enqueue(
                     """{"method":"call","params":[0,"get_objects",[["1.4.4"]]],"id":1}""",
@@ -254,14 +253,13 @@ class OperationsTest {
                     """{"method":"notice","params":[6,[{"id":"f4d3e80488de8a565ebad03845bec8a9c9f75c23","block_num":4460425,"trx_num":0,"trx":{"ref_block_num":3976,"ref_block_prefix":239596881,"expiration":"2019-03-01T10:21:01","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"from":"DCT1111111111111111111111111111111114T1Anm","to":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"message":"00000000436f6e74656e74207472616e7366657220746f20"},"extensions":[]}]],"extensions":[],"signatures":["2004e63d74b8915a91a92cd1332432492f061adc191e5f0a317cd1cab777089a7552ad54025bf6dd3145c49347701915d5b2a1d1348325c9bd838d43bbf5149c4c"],"operation_results":[[0,{}]]}}]]}"""
             )
 
-    val test = api.miningApi.vote(Credentials(account, key), account, listOf("1.4.4".toChainObject()))
+    val test = api.miningApi.vote(Credentials(account, private), listOf("1.4.4".toChainObject()))
             .subscribeOn(Schedulers.newThread())
             .test()
 
     test.awaitTerminalEvent()
     test.assertComplete()
             .assertNoErrors()
-            .assertValue { it.id != null }
 
   }
 

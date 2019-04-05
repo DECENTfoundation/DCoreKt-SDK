@@ -1,9 +1,6 @@
 package ch.decent.sdk.mnemonic
 
-import ch.decent.sdk.crypto.wordlist.WordList
-
-val ENGLISH_WORD_LIST = WordList(
-    " ", listOf(
+val ENGLISH_WORD_LIST = listOf(
     "abandon",
     "ability",
     "able",
@@ -2052,5 +2049,4 @@ val ENGLISH_WORD_LIST = WordList(
     "zero",
     "zone",
     "zoo"
-)
 )

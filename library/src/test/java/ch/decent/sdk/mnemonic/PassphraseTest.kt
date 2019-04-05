@@ -4,6 +4,7 @@ import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.crypto.Passphrase
 import ch.decent.sdk.crypto.base58
 import ch.decent.sdk.crypto.generatePrivateFromPassPhrase
+import ch.decent.sdk.print
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -11,53 +12,58 @@ import kotlin.test.assertTrue
 
 class PassphraseTest : TimeOutTest() {
 
+  @Test fun `load default seed`() {
+    val passphrase = Passphrase.generate()
+    passphrase.print()
+  }
+
   @Test fun `generate English normalized brain key test`() {
-    val passphrase = Passphrase.generate(wordListProvider = TestWorldListProvider(), languageId = TestWorldListProvider.ENGLISH)
+    val passphrase = Passphrase.generate(ENGLISH_WORD_LIST)
     assertEquals(16, passphrase.size)
     passphrase.toString().split(" ").forEach {
-      assertTrue { ENGLISH_WORD_LIST.words.contains(it.toLowerCase()) }
+      assertTrue { ENGLISH_WORD_LIST.contains(it.toLowerCase()) }
       assertEquals(1, "^[A-Z]*\$".toRegex().matchEntire(it)!!.groupValues.size)
     }
   }
 
   @Test fun `generate English brain key test`() {
-    val passphrase = Passphrase.generate(wordListProvider = TestWorldListProvider(), languageId = TestWorldListProvider.ENGLISH, normalize = false)
+    val passphrase = Passphrase.generate(ENGLISH_WORD_LIST, normalize = false)
     assertEquals(16, passphrase.size)
     passphrase.toString().split(" ").forEach {
-      assertTrue { ENGLISH_WORD_LIST.words.contains(it) }
+      assertTrue { ENGLISH_WORD_LIST.contains(it) }
       assertNull("^[A-Z]*\$".toRegex().matchEntire(it))
     }
   }
 
   @Test fun `generate Chinese simplified normalized brain key test`() {
-    val passphrase = Passphrase.generate(wordListProvider = TestWorldListProvider(), languageId = TestWorldListProvider.CHINESE_SIMPLIFIED)
+    val passphrase = Passphrase.generate(CHINESE_SIMPLIFIED_WORD_LIST)
     assertEquals(16, passphrase.size)
     passphrase.toString().split(" ").forEach {
-      assertTrue { CHINESE_SIMPLIFIED_WORD_LIST.words.contains(it) }
+      assertTrue { CHINESE_SIMPLIFIED_WORD_LIST.contains(it) }
     }
   }
 
   @Test fun `generate Chinese simplified brain key test`() {
-    val passphrase = Passphrase.generate(wordListProvider = TestWorldListProvider(), languageId = TestWorldListProvider.CHINESE_SIMPLIFIED, normalize = false)
+    val passphrase = Passphrase.generate(CHINESE_SIMPLIFIED_WORD_LIST, normalize = false)
     assertEquals(16, passphrase.size)
     passphrase.toString().split(" ").forEach {
-      assertTrue { CHINESE_SIMPLIFIED_WORD_LIST.words.contains(it) }
+      assertTrue { CHINESE_SIMPLIFIED_WORD_LIST.contains(it) }
     }
   }
 
   @Test fun `generate Chinese traditional normalized brain key test`() {
-    val passphrase = Passphrase.generate(wordListProvider = TestWorldListProvider(), languageId = TestWorldListProvider.CHINESE_TRADITIONAL)
+    val passphrase = Passphrase.generate(CHINESE_TRADITIONAL_WORD_LIST)
     assertEquals(16, passphrase.size)
     passphrase.toString().split(" ").forEach {
-      assertTrue { CHINESE_TRADITIONAL_WORD_LIST.words.contains(it) }
+      assertTrue { CHINESE_TRADITIONAL_WORD_LIST.contains(it) }
     }
   }
 
   @Test fun `generate Chinese traditional brain key test`() {
-    val passphrase = Passphrase.generate(wordListProvider = TestWorldListProvider(), languageId = TestWorldListProvider.CHINESE_TRADITIONAL, normalize = false)
+    val passphrase = Passphrase.generate(CHINESE_TRADITIONAL_WORD_LIST, normalize = false)
     assertEquals(16, passphrase.size)
     passphrase.toString().split(" ").forEach {
-      assertTrue { CHINESE_TRADITIONAL_WORD_LIST.words.contains(it) }
+      assertTrue { CHINESE_TRADITIONAL_WORD_LIST.contains(it) }
     }
   }
 

@@ -1,9 +1,6 @@
 package ch.decent.sdk.mnemonic
 
-import ch.decent.sdk.crypto.wordlist.WordList
-
-val CHINESE_TRADITIONAL_WORD_LIST = WordList(
-    " ", listOf(
+val CHINESE_TRADITIONAL_WORD_LIST = listOf(
     "的",
     "一",
     "是",
@@ -2052,5 +2049,4 @@ val CHINESE_TRADITIONAL_WORD_LIST = WordList(
     "怨",
     "矮",
     "歇"
-)
 )
