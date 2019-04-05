@@ -84,6 +84,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param credentials account credentials
    * @param contentId object id of the content, 2.13.*
+   * @return a purchase content operation
    */
   fun createPurchaseOperation(
       credentials: Credentials,
@@ -97,6 +98,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param credentials account credentials
    * @param uri uri of the content
+   * @return a purchase content operation
    */
   fun createPurchaseOperation(
       credentials: Credentials,
@@ -105,6 +107,33 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       get(uri).map { PurchaseContentOperation(credentials, it) }
 
 
+  /**
+   * Purchase a content.
+   *
+   * @param credentials account credentials
+   * @param contentId object id of the content, 2.13.*
+   * @return a transaction confirmation
+   */
+  fun purchase(
+      credentials: Credentials,
+      contentId: ChainObject
+  ): Single<TransactionConfirmation> = createPurchaseOperation(credentials, contentId).flatMap {
+    api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+  }
+
+  /**
+   * Purchase a content.
+   *
+   * @param credentials account credentials
+   * @param uri uri of the content
+   * @return a transaction confirmation
+   */
+  fun purchase(
+      credentials: Credentials,
+      uri: String
+  ): Single<TransactionConfirmation> = createPurchaseOperation(credentials, uri).flatMap {
+    api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+  }
 
   /**
    * Create amount transfer operation of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
@@ -127,28 +156,28 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       fee: AssetAmount = BaseOperation.FEE_UNSET
   ): Single<TransferOperation> = Single.just(TransferOperation(credentials.account, id, amount, memo?.let { Memo(it) }, fee))
 
-    /**
-     * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
-     * Fees are paid by the "from" account.
-     *
-     * @param credentials account credentials
-     * @param id content id
-     * @param amount amount to send with asset type
-     * @param memo optional unencrypted message
-     * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
-     *
-     * @return a transaction confirmation
-     */
-    @JvmOverloads
-    fun transfer(
-            credentials: Credentials,
-            id: ChainObject,
-            amount: AssetAmount,
-            memo: String? = null,
-            fee: AssetAmount = BaseOperation.FEE_UNSET
-    ): Single<TransactionConfirmation> =
-            createTransfer(credentials, id, amount, memo, fee).flatMap {
-                api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
-            }
+  /**
+   * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
+   * Fees are paid by the "from" account.
+   *
+   * @param credentials account credentials
+   * @param id content id
+   * @param amount amount to send with asset type
+   * @param memo optional unencrypted message
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun transfer(
+      credentials: Credentials,
+      id: ChainObject,
+      amount: AssetAmount,
+      memo: String? = null,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): Single<TransactionConfirmation> =
+      createTransfer(credentials, id, amount, memo, fee).flatMap {
+        api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+      }
 
 }
