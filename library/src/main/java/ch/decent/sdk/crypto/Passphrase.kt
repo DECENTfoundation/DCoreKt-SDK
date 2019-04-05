@@ -3,7 +3,7 @@ package ch.decent.sdk.crypto
 import ch.decent.sdk.crypto.dictonaries.SeedDictionary
 import ch.decent.sdk.utils.generateEntropy
 
-class Passphrase(private val words: Array<String>) {
+class Passphrase(val words: Array<String>) {
 
   val size
     get() = words.size
@@ -11,7 +11,7 @@ class Passphrase(private val words: Array<String>) {
   override fun toString() = words.joinToString(separator = " ")
 
   companion object {
-    private const val WORD_COUNT: Int = 16
+    const val WORD_COUNT: Int = 16
 
     /**
      * If parameter [normalize] is true, all provided word will be converted to upper case before entropy creation. In other case word stays
