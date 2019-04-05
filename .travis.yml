@@ -1,4 +1,3 @@
-#trigger Travis
 language: java
 install: true
 
