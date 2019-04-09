@@ -138,19 +138,18 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * Create vote for miner operation.
+   * Vote for miner.
    *
-   * @param accountId account object id, 1.2.*
+   * @param credentials account credentials
    * @param minerIds list of miner account ids
    *
    * @return a transaction confirmation
    */
   fun vote(
           credentials: Credentials,
-          accountId: ChainObject,
           minerIds: List<ChainObject>
   ): Single<TransactionConfirmation> =
-          createVoteOperation(accountId, minerIds).flatMap {
+          createVoteOperation(credentials.account, minerIds).flatMap {
             api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
           }
 }
