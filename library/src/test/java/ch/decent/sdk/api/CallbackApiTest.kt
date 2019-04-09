@@ -7,10 +7,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
 import org.slf4j.LoggerFactory
-import java.lang.IllegalArgumentException
 
 // todo, unable to cancel callback
 class CallbackApiTest {
@@ -21,8 +18,8 @@ class CallbackApiTest {
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
-//    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {

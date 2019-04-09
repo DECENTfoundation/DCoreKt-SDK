@@ -16,13 +16,13 @@ fun client(logger: Logger = LoggerFactory.getLogger("OkHttpClient")): OkHttpClie
         .addInterceptor(HttpLoggingInterceptor { logger.info(it) }.setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 
-val account = ChainObject.parse("1.2.34")
-val account2 = ChainObject.parse("1.2.35")
-val accountName = "u961279ec8b7ae7bd62f304f7c1c3d345"
-val accountName2 = "u3a7b78084e7d3956442d5a4d439dad51"
-val private = "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn"
-val private2 = "5JVHeRffGsKGyDf7T9i9dBbzVHQrYprYeaBQo2VCSytj7BxpMCq"
-val public = "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz"
-val public2 = "DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP"
+val account = ChainObject.parse("1.2.27")
+val account2 = ChainObject.parse("1.2.28")
+val accountName = "public-account-9"
+val accountName2 = "public-account-10"
+val private = "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"
+val private2 = "5JMpT5C75rcAmuUB81mqVBXbmL1BKea4MYwVK6voMQLvigLKfrE"
+val public = "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+val public2 = "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp"
 
 fun Any.print() = println(this.toString())

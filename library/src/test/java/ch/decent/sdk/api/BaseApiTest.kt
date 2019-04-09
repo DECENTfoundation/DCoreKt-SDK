@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 @RunWith(Parameterized::class)
 abstract class BaseApiTest(private val channel: Channel) : TimeOutTest() {
 
-  open val useMock = true
+  open val useMock = false
 
   protected lateinit var mockWebSocket: CustomWebSocketService
   protected lateinit var mockHttp: MockWebServer
