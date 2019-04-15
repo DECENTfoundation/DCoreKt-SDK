@@ -2,6 +2,7 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.DCoreConstants
 import com.google.gson.annotations.SerializedName
+import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.RoundingMode
@@ -12,6 +13,7 @@ data class Asset(
     @SerializedName("precision") override val precision: Int = 0,
     @SerializedName("issuer") val issuer: ChainObject = ObjectType.NULL_OBJECT.genericId,
     @SerializedName("description") val description: String = "",
+    @SerializedName("monitored_asset_opts") val monitoredAssetOpts: MonitoredAssetOpts? = null,
     @SerializedName("options") val options: Options = Options(),
     @SerializedName("dynamic_asset_data_id") val dataId: ChainObject = ObjectType.NULL_OBJECT.genericId
 ) : AssetFormatter {
@@ -54,6 +56,18 @@ data class Asset(
     }
     return AssetAmount(convertedAmount.toBigInteger(), toAssetId)
   }
+
+  data class MonitoredAssetOpts(
+      @SerializedName("feeds") val feeds: List<Any> = emptyList(),
+      @SerializedName("current_feed") val currentFeed: CurrentFeed = CurrentFeed(),
+      @SerializedName("current_feed_publication_time") val currentFeedPublicationTime: LocalDateTime,
+      @SerializedName("feed_lifetime_sec") val feedLifetimeSec: Long = 0,
+      @SerializedName("minimum_feeds") val minimumFeeds: Int = 0
+  )
+
+  data class CurrentFeed(
+      @SerializedName("core_exchange_rate") val coreExchangeRate: ExchangeRate = ExchangeRate()
+  )
 
   data class Options(
       @SerializedName("max_supply") val maxSupply: Long = 0,

@@ -12,6 +12,7 @@ object DCoreConstants {
       8,
       "1.2.1".toChainObject(),
       "",
+      null,
       Asset.Options(7319777577456900, Asset.ExchangeRate(), true),
       "2.3.0".toChainObject()
   )
