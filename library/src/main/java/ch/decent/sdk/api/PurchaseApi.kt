@@ -1,10 +1,8 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.ObjectType
-import ch.decent.sdk.model.Purchase
-import ch.decent.sdk.model.SearchPurchasesOrder
+import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
 
@@ -94,4 +92,44 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
       count: Int = 100,
       startId: ChainObject = ObjectType.NULL_OBJECT.genericId
   ): Single<List<Purchase>> = SearchFeedback(user, uri, startId, count).toRequest()
+
+  /**
+   * Create a rate and comment content operation.
+   *
+   * @param uri a uri of the content
+   * @param consumer object id of the account, 1.2.*
+   * @param rating 1-5 stars
+   * @param comment max 100 chars
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a rate and comment content operation
+   */
+  fun createRateAndCommentOperation(
+      uri: String,
+      consumer: ChainObject,
+      rating: Int,
+      comment: String,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): Single<LeaveRatingAndCommentOperation> = Single.just(LeaveRatingAndCommentOperation(uri, consumer, rating, comment, fee))
+
+  /**
+   * Rate and comment content operation.
+   *
+   * @param credentials account credentials
+   * @param uri a uri of the content
+   * @param rating 1-5 stars
+   * @param comment max 100 chars
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   *
+   * @return a rate and comment content operation
+   */
+  fun rateAndComment(
+      credentials: Credentials,
+      uri: String,
+      rating: Int,
+      comment: String,
+      fee: AssetAmount = BaseOperation.FEE_UNSET
+  ): Single<TransactionConfirmation> = createRateAndCommentOperation(uri, credentials.account, rating, comment, fee)
+      .flatMap { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
+
 }
