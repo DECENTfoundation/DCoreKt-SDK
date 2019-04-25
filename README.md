@@ -1,18 +1,22 @@
 DCore SDK for JVM
 ================
 
-Set of APIs for accessing the DCore Blockchain.
+Set of APIs for accessing the DCore Blockchain. <br>
+If you are looking for other platforms you can find info [below](#official-dcore-sdks-for-other-platforms).
 
-Download
+Requirements
+--------
+
+- [Java](https://www.java.com)
+- [Gradle](https://gradle.org)
+
+
+Installation
 --------
 
 Available through the JitPack.io
 
 [![](https://jitpack.io/v/DECENTfoundation/DCoreKt-SDK.svg?style=flat-square)][jitpack]
-
-
-Setup
------
 
 Add the JitPack repository to your build file
 Add it in your root build.gradle at the end of repositories:
@@ -36,6 +40,8 @@ If not using `gradle`, check [jitpack] site for instructions.
 
 Usage
 -----
+
+You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-java-android).
 
 Use `DCoreSdk` to initialize the API.
 The `DCoreApi` provides different groups of APIs for accessing the blockchain and default configuration values.
@@ -74,6 +80,13 @@ val disposable = api.accountApi.transfer(credentials, "1.2.27", amount).subscrib
   trxConfirmation.print()
 }
 ```
+
+Official DCore SDKs for other platforms
+----------
+
+- [iOS/Swift](https://github.com/DECENTfoundation/DCoreSwift-SDK)
+- [JavaScript/TypeScript/Node.js](https://github.com/DECENTfoundation/DCoreJS-SDK)
+- [PHP](https://github.com/DECENTfoundation/DCorePHP-SDK)
 
 References
 ----------
