@@ -7,7 +7,9 @@ If you are looking for other platforms you can find info [below](#official-dcore
 Requirements
 --------
 
-- [add](https://add.org)
+- [Java](https://www.java.com)
+- [Gradle](https://gradle.org)
+
 
 Installation
 --------
