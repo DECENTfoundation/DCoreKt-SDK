@@ -23,8 +23,8 @@ class OperationsTest {
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     mockWebSocket = CustomWebSocketService().apply { start() }
-    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
-//    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
+//    api = DCoreSdk.createForWebSocket(client(logger), mockWebSocket.getUrl(), logger)
+    api = DCoreSdk.createForWebSocket(client(logger), url, logger)
   }
 
   @After fun finish() {
@@ -198,69 +198,85 @@ class OperationsTest {
 
     val key = ECKeyPair.fromBase58(private)
     mockWebSocket
-            .enqueue(
-                    """{"method":"call","params":[0,"get_chain_id",[]],"id":0}""",
-                    """{"id":0,"result":"17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc"}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[0,"get_dynamic_global_properties",[]],"id":1}""",
-                    """{"id":1,"result":{"id":"2.1.0","head_block_number":3441407,"head_block_id":"003482ff012880f806baa6f220538425804136be","time":"2018-12-19T14:08:30","current_miner":"1.4.9","next_maintenance_time":"2018-12-20T00:00:00","last_budget_time":"2018-12-19T00:00:00","unspent_fee_budget":11400166,"mined_rewards":"308728000000","miner_budget_from_fees":22030422,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":8,"recently_missed_count":0,"current_aslot":9281631,"recent_slots_filled":"317672346624442248850332726400554761855","dynamic_flags":0,"last_irreversible_block_num":3441407}}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[0,"get_required_fees",[[[39,{"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"message":"00000000436f6e74656e74207472616e7366657220746f20","nonce":0},"fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":2}""",
-                    """{"id":2,"result":[{"amount":500000,"asset_id":"1.3.0"}]}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[2,"broadcast_transaction_with_callback",[4,{"expiration":"2018-12-19T14:09:03","ref_block_num":33535,"ref_block_prefix":4169148417,"extensions":[],"operations":[[39,{"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"message":"00000000436f6e74656e74207472616e7366657220746f20","nonce":0},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["1f7c0e4a9f58f41e1e362e27eddd1c4b54638ba1b2a572e7908d73971a19a17b4535db019ff44b3202187d531ff0f98f1e0a0a70be8f7bafca9cc199aca8fd17e9"]}]],"id":3}""",
-                    """{"method":"notice","params":[4,[{"id":"f4d3e80488de8a565ebad03845bec8a9c9f75c23","block_num":4460425,"trx_num":0,"trx":{"ref_block_num":3976,"ref_block_prefix":239596881,"expiration":"2019-03-01T10:21:01","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"from":"DCT1111111111111111111111111111111114T1Anm","to":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"message":"00000000436f6e74656e74207472616e7366657220746f20"},"extensions":[]}]],"extensions":[],"signatures":["2004e63d74b8915a91a92cd1332432492f061adc191e5f0a317cd1cab777089a7552ad54025bf6dd3145c49347701915d5b2a1d1348325c9bd838d43bbf5149c4c"],"operation_results":[[0,{}]]}}]]}"""
-            )
+        .enqueue(
+            """{"method":"call","params":[0,"get_chain_id",[]],"id":0}""",
+            """{"id":0,"result":"17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc"}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[0,"get_dynamic_global_properties",[]],"id":1}""",
+            """{"id":1,"result":{"id":"2.1.0","head_block_number":3441407,"head_block_id":"003482ff012880f806baa6f220538425804136be","time":"2018-12-19T14:08:30","current_miner":"1.4.9","next_maintenance_time":"2018-12-20T00:00:00","last_budget_time":"2018-12-19T00:00:00","unspent_fee_budget":11400166,"mined_rewards":"308728000000","miner_budget_from_fees":22030422,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":8,"recently_missed_count":0,"current_aslot":9281631,"recent_slots_filled":"317672346624442248850332726400554761855","dynamic_flags":0,"last_irreversible_block_num":3441407}}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[0,"get_required_fees",[[[39,{"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"message":"00000000436f6e74656e74207472616e7366657220746f20","nonce":0},"fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":2}""",
+            """{"id":2,"result":[{"amount":500000,"asset_id":"1.3.0"}]}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[2,"broadcast_transaction_with_callback",[4,{"expiration":"2018-12-19T14:09:03","ref_block_num":33535,"ref_block_prefix":4169148417,"extensions":[],"operations":[[39,{"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"message":"00000000436f6e74656e74207472616e7366657220746f20","nonce":0},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["1f7c0e4a9f58f41e1e362e27eddd1c4b54638ba1b2a572e7908d73971a19a17b4535db019ff44b3202187d531ff0f98f1e0a0a70be8f7bafca9cc199aca8fd17e9"]}]],"id":3}""",
+            """{"method":"notice","params":[4,[{"id":"f4d3e80488de8a565ebad03845bec8a9c9f75c23","block_num":4460425,"trx_num":0,"trx":{"ref_block_num":3976,"ref_block_prefix":239596881,"expiration":"2019-03-01T10:21:01","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"from":"DCT1111111111111111111111111111111114T1Anm","to":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"message":"00000000436f6e74656e74207472616e7366657220746f20"},"extensions":[]}]],"extensions":[],"signatures":["2004e63d74b8915a91a92cd1332432492f061adc191e5f0a317cd1cab777089a7552ad54025bf6dd3145c49347701915d5b2a1d1348325c9bd838d43bbf5149c4c"],"operation_results":[[0,{}]]}}]]}"""
+        )
 
     val test = api.contentApi.transfer(Credentials(account, key), "2.13.3".toChainObject(), AssetAmount(1), "Content transfer to ")
-            .subscribeOn(Schedulers.newThread())
-            .test()
+        .subscribeOn(Schedulers.newThread())
+        .test()
 
     test.awaitTerminalEvent()
     test.assertComplete()
-            .assertNoErrors()
+        .assertNoErrors()
 
   }
 
   @Test fun `should make a vote`() {
 
     mockWebSocket
-            .enqueue(
-                    """{"method":"call","params":[0,"get_objects",[["1.4.4"]]],"id":1}""",
-                    """{"id":1,"result":[{"id":"1.4.4","miner_account":"1.2.7","last_aslot":10596344,"signing_key":"DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4","pay_vb":"1.9.7","vote_id":"0:3","total_votes":"793223016266","url":"","total_missed":478522,"last_confirmed_block_num":4520754,"vote_ranking":4}]}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[0,"get_objects",[["1.2.34"]]],"id":2}""",
-                    """{"id":2,"result":[{"id":"1.2.34","registrar":"1.2.15","name":"u961279ec8b7ae7bd62f304f7c1c3d345","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:3"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.34","top_n_control_flags":0}]}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[0,"get_chain_id",[]],"id":0}""",
-                    """{"id":0,"result":"17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc"}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[0,"get_dynamic_global_properties",[]],"id":3}""",
-                    """{"id":3,"result":{"id":"2.1.0","head_block_number":3441407,"head_block_id":"003482ff012880f806baa6f220538425804136be","time":"2018-12-19T14:08:30","current_miner":"1.4.9","next_maintenance_time":"2018-12-20T00:00:00","last_budget_time":"2018-12-19T00:00:00","unspent_fee_budget":11400166,"mined_rewards":"308728000000","miner_budget_from_fees":22030422,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":8,"recently_missed_count":0,"current_aslot":9281631,"recent_slots_filled":"317672346624442248850332726400554761855","dynamic_flags":0,"last_irreversible_block_num":3441407}}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[0,"get_required_fees",[[[2,{"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:3"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":4}""",
-                    """{"id":4,"result":[{"amount":500000,"asset_id":"1.3.0"}]}"""
-            )
-            .enqueue(
-                    """{"method":"call","params":[2,"broadcast_transaction_with_callback",[6,{"expiration":"2018-12-19T14:09:02","ref_block_num":33535,"ref_block_prefix":4169148417,"extensions":[],"operations":[[2,{"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:3"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["2046d64bf6b11931d29d8b125894d807f81c9af9c1e270ac0bb9212c3f3800fc7677cca63f79303fcac448adc79f820cd559dfc4c4aa76f34ba3a4755b7c48387b"]}]],"id":5}""",
-                    """{"method":"notice","params":[6,[{"id":"f4d3e80488de8a565ebad03845bec8a9c9f75c23","block_num":4460425,"trx_num":0,"trx":{"ref_block_num":3976,"ref_block_prefix":239596881,"expiration":"2019-03-01T10:21:01","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"from":"DCT1111111111111111111111111111111114T1Anm","to":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"message":"00000000436f6e74656e74207472616e7366657220746f20"},"extensions":[]}]],"extensions":[],"signatures":["2004e63d74b8915a91a92cd1332432492f061adc191e5f0a317cd1cab777089a7552ad54025bf6dd3145c49347701915d5b2a1d1348325c9bd838d43bbf5149c4c"],"operation_results":[[0,{}]]}}]]}"""
-            )
+        .enqueue(
+            """{"method":"call","params":[0,"get_objects",[["1.4.4"]]],"id":1}""",
+            """{"id":1,"result":[{"id":"1.4.4","miner_account":"1.2.7","last_aslot":10596344,"signing_key":"DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4","pay_vb":"1.9.7","vote_id":"0:3","total_votes":"793223016266","url":"","total_missed":478522,"last_confirmed_block_num":4520754,"vote_ranking":4}]}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[0,"get_objects",[["1.2.34"]]],"id":2}""",
+            """{"id":2,"result":[{"id":"1.2.34","registrar":"1.2.15","name":"u961279ec8b7ae7bd62f304f7c1c3d345","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",1]]},"options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:3"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"rights_to_publish":{"is_publishing_manager":false,"publishing_rights_received":[],"publishing_rights_forwarded":[]},"statistics":"2.5.34","top_n_control_flags":0}]}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[0,"get_chain_id",[]],"id":0}""",
+            """{"id":0,"result":"17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc"}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[0,"get_dynamic_global_properties",[]],"id":3}""",
+            """{"id":3,"result":{"id":"2.1.0","head_block_number":3441407,"head_block_id":"003482ff012880f806baa6f220538425804136be","time":"2018-12-19T14:08:30","current_miner":"1.4.9","next_maintenance_time":"2018-12-20T00:00:00","last_budget_time":"2018-12-19T00:00:00","unspent_fee_budget":11400166,"mined_rewards":"308728000000","miner_budget_from_fees":22030422,"miner_budget_from_rewards":"639249000000","accounts_registered_this_interval":8,"recently_missed_count":0,"current_aslot":9281631,"recent_slots_filled":"317672346624442248850332726400554761855","dynamic_flags":0,"last_irreversible_block_num":3441407}}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[0,"get_required_fees",[[[2,{"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:3"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"fee":{"amount":0,"asset_id":"1.3.0"}}]],"1.3.0"]],"id":4}""",
+            """{"id":4,"result":[{"amount":500000,"asset_id":"1.3.0"}]}"""
+        )
+        .enqueue(
+            """{"method":"call","params":[2,"broadcast_transaction_with_callback",[6,{"expiration":"2018-12-19T14:09:02","ref_block_num":33535,"ref_block_prefix":4169148417,"extensions":[],"operations":[[2,{"account":"1.2.34","new_options":{"memo_key":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","voting_account":"1.2.3","num_miner":0,"votes":["0:3"],"extensions":[],"allow_subscription":false,"price_per_subscribe":{"amount":0,"asset_id":"1.3.0"},"subscription_period":0},"fee":{"amount":500000,"asset_id":"1.3.0"}}]],"signatures":["2046d64bf6b11931d29d8b125894d807f81c9af9c1e270ac0bb9212c3f3800fc7677cca63f79303fcac448adc79f820cd559dfc4c4aa76f34ba3a4755b7c48387b"]}]],"id":5}""",
+            """{"method":"notice","params":[6,[{"id":"f4d3e80488de8a565ebad03845bec8a9c9f75c23","block_num":4460425,"trx_num":0,"trx":{"ref_block_num":3976,"ref_block_prefix":239596881,"expiration":"2019-03-01T10:21:01","operations":[[39,{"fee":{"amount":500000,"asset_id":"1.3.0"},"from":"1.2.34","to":"2.13.3","amount":{"amount":1,"asset_id":"1.3.0"},"memo":{"from":"DCT1111111111111111111111111111111114T1Anm","to":"DCT1111111111111111111111111111111114T1Anm","nonce":0,"message":"00000000436f6e74656e74207472616e7366657220746f20"},"extensions":[]}]],"extensions":[],"signatures":["2004e63d74b8915a91a92cd1332432492f061adc191e5f0a317cd1cab777089a7552ad54025bf6dd3145c49347701915d5b2a1d1348325c9bd838d43bbf5149c4c"],"operation_results":[[0,{}]]}}]]}"""
+        )
 
     val test = api.miningApi.vote(Credentials(account, private), listOf("1.4.4".toChainObject()))
-            .subscribeOn(Schedulers.newThread())
-            .test()
+        .subscribeOn(Schedulers.newThread())
+        .test()
 
     test.awaitTerminalEvent()
     test.assertComplete()
-            .assertNoErrors()
+        .assertNoErrors()
 
+  }
+
+  @Ignore // already commented
+  @Test fun `leave rating and comment`() {
+    val test = api.purchaseApi.rateAndComment(
+        Credentials("1.2.27".toChainObject(), "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"),
+        "ipfs:QmUuWZihBKYnC7TrhCMjtZrLPrEnPCQLeAkkDEP2tvNcqC",
+        2,
+        "comment KT"
+    )
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
   }
 
 }

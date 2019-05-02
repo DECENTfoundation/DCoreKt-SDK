@@ -26,7 +26,7 @@ enum class OperationType(val clazz: Class<*>? = null) {
   ASSERT_OPERATION,
   CONTENT_SUBMIT_OPERATION(ContentSubmitOperation::class.java),       //20
   REQUEST_TO_BUY_OPERATION(PurchaseContentOperation::class.java),
-  LEAVE_RATING_AND_COMMENT_OPERATION,
+  LEAVE_RATING_AND_COMMENT_OPERATION(LeaveRatingAndCommentOperation::class.java),
   READY_TO_PUBLISH_OPERATION,
   PROOF_OF_CUSTODY_OPERATION,
   DELIVER_KEYS_OPERATION,                 //25

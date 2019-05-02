@@ -314,6 +314,39 @@ class ContentSubmitOperation constructor(
   }
 }
 
+/**
+ * Leave comment and rating operation constructor
+ *
+ * @param uri uri of the content
+ * @param consumer chain object id of the buyer's account
+ * @param rating 1-5 stars
+ * @param comment max 100 chars
+ * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+ */
+class LeaveRatingAndCommentOperation constructor(
+    @SerializedName("URI") val uri: String,
+    @SerializedName("consumer") val consumer: ChainObject,
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("comment") val comment: String,
+    fee: AssetAmount = BaseOperation.FEE_UNSET
+) : BaseOperation(OperationType.LEAVE_RATING_AND_COMMENT_OPERATION, fee) {
+
+  init {
+    require(rating in 1..5) { "rating must be between 0-5" }
+    require(comment.length <= 100) { "comment max length is 100 chars" }
+  }
+
+  override val bytes: ByteArray
+    get() = Bytes.concat(
+        byteArrayOf(type.ordinal.toByte()),
+        fee.bytes,
+        uri.bytes(),
+        consumer.bytes,
+        comment.bytes(),
+        rating.toLong().bytes()
+    )
+}
+
 class SendMessageOperation constructor(
     messagePayloadJson: String,
     payer: ChainObject,
