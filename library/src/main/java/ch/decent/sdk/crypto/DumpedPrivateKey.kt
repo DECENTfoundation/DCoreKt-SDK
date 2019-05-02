@@ -33,7 +33,7 @@ class DumpedPrivateKey private constructor(
     fun fromBase58(encoded: String): DumpedPrivateKey {
       val versionAndData = Base58.decodeChecked(encoded)
       val version = versionAndData[0].toInt() and 0xFF
-      require(version == 0x80, { "$version is not a valid private key version byte" })
+      require(version == 0x80) { "$version is not a valid private key version byte" }
       return versionAndData.copyOfRange(1, versionAndData.size).let {
         if (it.size == 33 && it[32].toInt() == 1) {
           DumpedPrivateKey(version, it.copyOfRange(0, it.size - 1), true)

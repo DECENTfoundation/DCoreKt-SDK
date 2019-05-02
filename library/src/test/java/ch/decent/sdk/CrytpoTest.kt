@@ -15,17 +15,19 @@ import java.util.*
 
 class CrytpoTest : TimeOutTest() {
 
+  val private = "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn"
+
   @Test fun `priv key dump`() {
-    val key = ECKeyPair.fromBase58(private)
+    val key = private.ecKey()
     val dump = DumpedPrivateKey.toBase58(key)
 
     private.print()
     ECKeyPair.fromBase58(private).privateBytes.hex().print()
-    public2.print()
-    public2.address().publicKey.getEncoded(true).hex().print()
-    public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
+    Helpers.public2.print()
+    Helpers.public2.address().publicKey.getEncoded(true).hex().print()
+    Helpers.public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
 
-    key.secret(public2.address(), BigInteger("1234567890")).hex().print()
+    key.secret(Helpers.public2.address(), BigInteger("1234567890")).hex().print()
     dump `should be equal to` private
   }
 
