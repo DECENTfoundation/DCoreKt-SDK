@@ -82,9 +82,7 @@ class ECKeyPair {
     System.arraycopy(signature.s.bytes(32), 0, sigData, 33, 32)
 
 //    canonical tests
-    return if (sigData[0].toInt() and 0x80 != 0 || sigData[0].toInt() == 0 ||
-        sigData[1].toInt() and 0x80 != 0 || sigData[32].toInt() and 0x80 != 0 ||
-        sigData[32].toInt() == 0 || sigData[33].toInt() and 0x80 != 0) {
+    return if (Companion.checkCanonicalSignature(sigData)) {
       ""
     } else {
       Hex.encode(sigData)
@@ -222,6 +220,23 @@ class ECKeyPair {
       compEnc[0] = (if (yBit) 0x03 else 0x02).toByte()
       return curve.curve.decodePoint(compEnc)
     }
+
+    /*
+          https://github.com/steemit/steem/issues/1944
+          bool public_key::is_canonical( const compact_signature& c )
+          {
+            return !(c.data[1] & 0x80)
+            && !(c.data[1] == 0 && !(c.data[2] & 0x80))
+            && !(c.data[33] & 0x80)
+            && !(c.data[33] == 0 && !(c.data[34] & 0x80));
+          }
+        */
+    @JvmStatic
+    fun checkCanonicalSignature(sigData: ByteArray): Boolean =
+        sigData[1] < 0x80
+            && !(sigData[1].toInt() == 0 && sigData[2] < 0x80)
+            && sigData[33] < 0x80
+            && !(sigData[33].toInt() == 0 && sigData[34] < 0x80)
   }
 
   data class ECDSASignature(val r: BigInteger, val s: BigInteger) {
