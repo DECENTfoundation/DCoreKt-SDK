@@ -15,22 +15,24 @@ import java.util.*
 
 class CrytpoTest : TimeOutTest() {
 
+  val private = "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn"
+
   @Test fun `priv key dump`() {
-    val key = ECKeyPair.fromBase58(private)
+    val key = private.ecKey()
     val dump = DumpedPrivateKey.toBase58(key)
 
     private.print()
     ECKeyPair.fromBase58(private).privateBytes.hex().print()
-    public2.print()
-    public2.address().publicKey.getEncoded(true).hex().print()
-    public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
+    Helpers.public2.print()
+    Helpers.public2.address().publicKey.getEncoded(true).hex().print()
+    Helpers.public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
 
-    key.secret(public2.address(), BigInteger("1234567890")).hex().print()
+    key.secret(Helpers.public2.address(), BigInteger("1234567890")).hex().print()
     dump `should be equal to` private
   }
 
   @Test fun `nonce generation`() {
-    var nonce = BigInteger.ZERO
+    var nonce: BigInteger
     for (i in 0..100) {
 //      println("$nonce  ${nonce.toByteArray().size} ${nonce.toLong().bytes().joinToString()}")
       nonce = generateNonce()
@@ -56,7 +58,6 @@ class CrytpoTest : TimeOutTest() {
     val encrypted = "b23f6afb8eb463704d3d752b1fd8fb804c0ce32ba8d18eeffc20a2312e7c60fa"
     val plain = "hello memo here i am"
     val nonce = BigInteger("10872523688190906880")
-    val from = Address.decode("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")
     val to = Address.decode("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP")
     val key = ECKeyPair.fromBase58(private)
 

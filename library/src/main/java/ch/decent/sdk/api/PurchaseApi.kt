@@ -85,7 +85,6 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of purchase objects
    */
-  // todo wait for add feedback OP so we can test
   fun findAllForFeedback(
       uri: String,
       user: String? = null,

@@ -1,8 +1,8 @@
 package ch.decent.sdk.net.ws
 
 import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
-import ch.decent.sdk.client
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
@@ -20,7 +20,7 @@ class ConnectionTest : TimeOutTest() {
     mockWebServer = CustomWebSocketService().apply { start(port) }
     val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
-        client(logger),
+        Helpers.client(logger),
         mockWebServer.getUrl(),
 //        url,
         logger = logger,

@@ -259,6 +259,7 @@ fun DumpedPrivateKey.ecKey() = ECKeyPair.fromPrivate(bytes, compressed)
 fun ECKeyPair.base58() = this.dpk().toString()
 fun ECKeyPair.dpk() = DumpedPrivateKey(this)
 fun ECKeyPair.address() = this.public.address()
+fun String.ecKey() = this.dpk().ecKey()
 
 /**
  * Method generates private key from phrase provided by parameter of type [String]. If parameter [normalize] is true, provided pass phrase will be converted

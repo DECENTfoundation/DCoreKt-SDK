@@ -2,6 +2,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.*
 import ch.decent.sdk.net.model.request.*
 import io.reactivex.Single
@@ -24,7 +25,17 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a content if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
-  fun get(contentId: ChainObject): Single<Content> = GetContentById(contentId).toRequest().map { it.single() }
+  fun get(contentId: ChainObject): Single<Content> = GetContentById(listOf(contentId)).toRequest().map { it.single() }
+
+  /**
+   * Get contents by ids.
+   *
+   * @param contentId object ids of the contents, 2.13.*
+   *
+   * @return a content if found, empty list otherwise
+   */
+  fun getAll(contentId: List<ChainObject>): Single<List<Content>> = GetContentById(contentId).toRequest()
+      .onErrorResumeNext { if (it is ObjectNotFoundException) Single.just(emptyList()) else Single.error(it) }
 
   /**
    * Get content by uri.
@@ -35,7 +46,6 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun get(uri: String): Single<Content> = GetContentByUri(uri).toRequest()
 
-  // todo untested no data
   /**
    * Get a list of accounts holding publishing manager status.
    *
