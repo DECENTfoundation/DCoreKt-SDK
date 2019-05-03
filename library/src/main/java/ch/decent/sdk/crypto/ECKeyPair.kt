@@ -82,7 +82,7 @@ class ECKeyPair {
     System.arraycopy(signature.s.bytes(32), 0, sigData, 33, 32)
 
 //    canonical tests
-    return if (Companion.checkCanonicalSignature(sigData)) {
+    return if (!checkCanonicalSignature(sigData)) {
       ""
     } else {
       Hex.encode(sigData)
@@ -233,10 +233,10 @@ class ECKeyPair {
         */
     @JvmStatic
     fun checkCanonicalSignature(sigData: ByteArray): Boolean =
-        sigData[1] < 0x80
-            && !(sigData[1].toInt() == 0 && sigData[2] < 0x80)
-            && sigData[33] < 0x80
-            && !(sigData[33].toInt() == 0 && sigData[34] < 0x80)
+        sigData.map { it.toInt() and 0xFF }.let {
+          it[1] < 0x80 && !(it[1] == 0 && it[2] < 0x80)
+              && it[33] < 0x80 && !(it[33] == 0 && it[34] < 0x80)
+        }
   }
 
   data class ECDSASignature(val r: BigInteger, val s: BigInteger) {

@@ -6,6 +6,8 @@ import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.*
 import ch.decent.sdk.utils.ElGamal.publicElGamal
 import org.amshove.kluent.`should be equal to`
+import org.amshove.kluent.`should contain all`
+import org.amshove.kluent.`should contain none`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
@@ -244,9 +246,10 @@ class CrytpoTest : TimeOutTest() {
     val sig = listOf(
         "20136f5f01fb54076587670737cc350ef8c1d26d80006a62f28ce80b0df58d052b004fce54c9cc40f6191a94c617410434aab4f19ff35d296a47c1ad2ca6099a13",
         "20c8d1f6ef03ec645b9c406431a325741a2247b25862a731993aa5dd3dbac723a66b73d75c5ba313dde012b499a6e1b1b48551e410a4e8758968b7bcdf64bd9a58",
-        "1fdbfd66ddf7c6cdd100568c15934e3bfef96022f2d335e161cff7ddeade802b5240c117706d004743296696b58138ef342a2cc2008fd5ff2ee3d76a60d2f09f05"
+        "1fdbfd66ddf7c6cdd100568c15934e3bfef96022f2d335e161cff7ddeade802b5240c117706d004743296696b58138ef342a2cc2008fd5ff2ee3d76a60d2f09f05",
+        "1ffa382a4507662fd200e4c2bdef7a90b45362f51d79eef84ae35f0c966680a6172109f519f7709e25207462c54fdf465f8b10f84d04120f4d05db1ee5f99e867b"
     )
-    sig.all { ECKeyPair.checkCanonicalSignature(it.unhex()) } `should be equal to` false
+    sig.forEach { ECKeyPair.checkCanonicalSignature(it.unhex()) `should be equal to` false }
   }
 
   @Test fun `should check canonical on signature valid`() {
@@ -255,7 +258,7 @@ class CrytpoTest : TimeOutTest() {
         "1f62ef0c229f0208642735bf85f20f25550e62dcaacba861e55a477587bed6e8f0490884251bf04cfe116aef02dc82771bd65fa48a6bb599bb1c57e86bcfb8756b",
         "202c177696d954a03798d287cc9d4e48a95745d180db012394f39a42a32bf8e2947a434b7c53a619817d3b5c7c3285c6438c26e203ac16c2fd0c3c7de2300cd86c"
     )
-    sig.all { ECKeyPair.checkCanonicalSignature(it.unhex()) } `should be equal to` true
+    sig.forEach { ECKeyPair.checkCanonicalSignature(it.unhex()) `should be equal to` true }
   }
 
 }
