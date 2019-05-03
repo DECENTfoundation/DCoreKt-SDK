@@ -28,6 +28,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicLong
 
 internal sealed class MessageEvent
 internal data class Message(val id: Long, val obj: JsonObject) : MessageEvent()
@@ -50,8 +51,9 @@ internal class RxWebSocket(
       .publish()
 
   private var webSocketAsync: AsyncProcessor<WebSocket>? = null
-  private var callId: Long = 0
-    get() = field++
+  private val backingId = AtomicLong(0)
+  val callId: Long
+    get() = backingId.getAndIncrement()
 
   internal var timeout = TimeUnit.MINUTES.toSeconds(1)
 
@@ -125,7 +127,7 @@ internal class RxWebSocket(
   private fun clearConnection() {
     webSocketAsync = null
     disposable.clear()
-    callId = 0
+    backingId.set(0)
   }
 
   internal fun webSocket(): Single<WebSocket> {
