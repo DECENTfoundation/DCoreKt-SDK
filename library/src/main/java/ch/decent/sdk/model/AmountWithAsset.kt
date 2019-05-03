@@ -2,7 +2,7 @@ package ch.decent.sdk.model
 
 import java.text.NumberFormat
 
-data class AssetWithAmount(
+data class AmountWithAsset(
     val asset: Asset,
     val amount: AssetAmount
 ) : AssetFormatter by asset {

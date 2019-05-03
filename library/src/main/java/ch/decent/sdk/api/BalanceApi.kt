@@ -3,7 +3,7 @@ package ch.decent.sdk.api
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.AssetWithAmount
+import ch.decent.sdk.model.AmountWithAsset
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.VestingBalance
 import ch.decent.sdk.net.model.request.GetAccountBalances
@@ -64,7 +64,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a pair of asset to amount
    */
-  fun getWithAsset(accountId: ChainObject, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AssetWithAmount> =
+  fun getWithAsset(accountId: ChainObject, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(accountId, listOf(assetSymbol)).map { it.single() }
 
   /**
@@ -75,10 +75,10 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of pairs of assets to amounts
    */
-  fun getAllWithAsset(accountId: ChainObject, assetSymbols: List<String>): Single<List<AssetWithAmount>> =
+  fun getAllWithAsset(accountId: ChainObject, assetSymbols: List<String>): Single<List<AmountWithAsset>> =
       api.assetApi.getAllByName(assetSymbols).flatMap { assets ->
         getAll(accountId, assets.map { it.id }).map {
-          it.map { balance -> AssetWithAmount(assets.single { it.id == balance.assetId }, balance) }
+          it.map { balance -> AmountWithAsset(assets.single { it.id == balance.assetId }, balance) }
         }
       }
 
@@ -90,7 +90,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a pair of asset to amount
    */
-  fun getWithAsset(name: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AssetWithAmount> =
+  fun getWithAsset(name: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(name, listOf(assetSymbol)).map { it.single() }
 
   /**
@@ -101,10 +101,10 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of assets with amounts
    */
-  fun getAllWithAsset(name: String, assetSymbols: List<String>): Single<List<AssetWithAmount>> =
+  fun getAllWithAsset(name: String, assetSymbols: List<String>): Single<List<AmountWithAsset>> =
       api.assetApi.getAllByName(assetSymbols).flatMap { assets ->
         getAll(name, assets.map { it.id }).map {
-          it.map { balance -> AssetWithAmount(assets.single { it.id == balance.assetId }, balance) }
+          it.map { balance -> AmountWithAsset(assets.single { it.id == balance.assetId }, balance) }
         }
       }
 

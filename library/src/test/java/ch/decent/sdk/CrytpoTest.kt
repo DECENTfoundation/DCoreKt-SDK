@@ -32,7 +32,7 @@ class CrytpoTest : TimeOutTest() {
   }
 
   @Test fun `nonce generation`() {
-    var nonce = BigInteger.ZERO
+    var nonce: BigInteger
     for (i in 0..100) {
 //      println("$nonce  ${nonce.toByteArray().size} ${nonce.toLong().bytes().joinToString()}")
       nonce = generateNonce()
@@ -58,7 +58,6 @@ class CrytpoTest : TimeOutTest() {
     val encrypted = "b23f6afb8eb463704d3d752b1fd8fb804c0ce32ba8d18eeffc20a2312e7c60fa"
     val plain = "hello memo here i am"
     val nonce = BigInteger("10872523688190906880")
-    val from = Address.decode("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")
     val to = Address.decode("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP")
     val key = ECKeyPair.fromBase58(private)
 

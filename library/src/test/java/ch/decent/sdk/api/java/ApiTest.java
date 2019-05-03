@@ -20,6 +20,7 @@ import java.util.Collections;
 /**
  * this test checks calling Kotlin from Java
  */
+@SuppressWarnings("all")
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
