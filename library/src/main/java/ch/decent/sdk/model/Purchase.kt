@@ -18,7 +18,7 @@ data class Purchase(
     @SerializedName("rating") val rating: BigInteger,
     @SerializedName("comment") val comment: String,
     @SerializedName("expiration_time") val expiration: LocalDateTime,
-    @SerializedName("pubKey") val pubElGamalKey: PubKey,
+    @SerializedName("pubKey") val pubElGamalKey: PubKey?,
     @SerializedName("key_particles") val keyParticles: List<KeyParts>,
     @SerializedName("expired") val expired: Boolean,
     @SerializedName("delivered") val delivered: Boolean,

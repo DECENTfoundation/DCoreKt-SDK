@@ -20,17 +20,18 @@ import java.util.Collections;
 /**
  * this test checks calling Kotlin from Java
  */
+@SuppressWarnings("all")
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
-    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getUrl(), Helpers.getRestUrl(), logger);
+    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getRestUrl(), logger);
 
     @Test
     public void init() {
         DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl());
         apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl(), logger);
-        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getUrl());
-        apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getUrl(), logger);
+        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl());
+        apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
         Gson gson = DCoreSdk.getGsonBuilder().create();
 
         apiHttp.setTransactionExpiration(100);

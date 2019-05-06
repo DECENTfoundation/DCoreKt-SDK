@@ -26,7 +26,7 @@ enum class OperationType(val clazz: Class<*>? = null) {
   ASSERT_OPERATION,
   CONTENT_SUBMIT_OPERATION(ContentSubmitOperation::class.java),       //20
   REQUEST_TO_BUY_OPERATION(PurchaseContentOperation::class.java),
-  LEAVE_RATING_AND_COMMENT_OPERATION,
+  LEAVE_RATING_AND_COMMENT_OPERATION(LeaveRatingAndCommentOperation::class.java),
   READY_TO_PUBLISH_OPERATION,
   PROOF_OF_CUSTODY_OPERATION,
   DELIVER_KEYS_OPERATION,                 //25
@@ -44,10 +44,11 @@ enum class OperationType(val clazz: Class<*>? = null) {
   UPDATE_MONITORED_ASSET_OPERATION,
   READY_TO_PUBLISH2_OPERATION,
   TRANSFER2_OPERATION(TransferOperation::class.java),
-  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL 40
+  UPDATE_USER_ISSUED_ASSET_ADVANCED,
+  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL 41
   RETURN_ESCROW_SUBMISSION_OPERATION,                    // VIRTUAL
   RETURN_ESCROW_BUYING_OPERATION,                        // VIRTUAL
   PAY_SEEDER_OPERATION,                                  // VIRTUAL
-  FINISH_BUYING_OPERATION,                               // VIRTUAL
-  RENEWAL_OF_SUBSCRIPTION_OPERATION                      // VIRTUAL 45
+  FINISH_BUYING_OPERATION,                               // VIRTUAL 45
+  RENEWAL_OF_SUBSCRIPTION_OPERATION                      // VIRTUAL
 }

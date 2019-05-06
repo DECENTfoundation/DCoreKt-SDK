@@ -85,10 +85,11 @@ object OperationTypeFactory : TypeAdapterFactory {
 }
 
 object PubKeyAdapter : TypeAdapter<PubKey>() {
-  override fun read(reader: JsonReader): PubKey {
+  override fun read(reader: JsonReader): PubKey? {
     reader.beginObject()
     reader.nextName()
-    val key = PubKey(BigInteger(reader.nextString().dropLast(1)))
+    val int = reader.nextString().dropLast(1)
+    val key = if (int.isBlank()) null else PubKey(BigInteger(int))
     reader.endObject()
     return key
   }

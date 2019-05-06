@@ -82,9 +82,7 @@ class ECKeyPair {
     System.arraycopy(signature.s.bytes(32), 0, sigData, 33, 32)
 
 //    canonical tests
-    return if (sigData[0].toInt() and 0x80 != 0 || sigData[0].toInt() == 0 ||
-        sigData[1].toInt() and 0x80 != 0 || sigData[32].toInt() and 0x80 != 0 ||
-        sigData[32].toInt() == 0 || sigData[33].toInt() and 0x80 != 0) {
+    return if (!checkCanonicalSignature(sigData)) {
       ""
     } else {
       Hex.encode(sigData)
@@ -222,6 +220,23 @@ class ECKeyPair {
       compEnc[0] = (if (yBit) 0x03 else 0x02).toByte()
       return curve.curve.decodePoint(compEnc)
     }
+
+    /*
+          https://github.com/steemit/steem/issues/1944
+          bool public_key::is_canonical( const compact_signature& c )
+          {
+            return !(c.data[1] & 0x80)
+            && !(c.data[1] == 0 && !(c.data[2] & 0x80))
+            && !(c.data[33] & 0x80)
+            && !(c.data[33] == 0 && !(c.data[34] & 0x80));
+          }
+        */
+    @JvmStatic
+    fun checkCanonicalSignature(sigData: ByteArray): Boolean =
+        sigData.map { it.toInt() and 0xFF }.let {
+          it[1] < 0x80 && !(it[1] == 0 && it[2] < 0x80)
+              && it[33] < 0x80 && !(it[33] == 0 && it[34] < 0x80)
+        }
   }
 
   data class ECDSASignature(val r: BigInteger, val s: BigInteger) {
@@ -259,6 +274,7 @@ fun DumpedPrivateKey.ecKey() = ECKeyPair.fromPrivate(bytes, compressed)
 fun ECKeyPair.base58() = this.dpk().toString()
 fun ECKeyPair.dpk() = DumpedPrivateKey(this)
 fun ECKeyPair.address() = this.public.address()
+fun String.ecKey() = this.dpk().ecKey()
 
 /**
  * Method generates private key from phrase provided by parameter of type [String]. If parameter [normalize] is true, provided pass phrase will be converted

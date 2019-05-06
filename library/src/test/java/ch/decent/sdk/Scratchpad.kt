@@ -125,7 +125,7 @@ class Scratchpad {
     val plain = "Hello Memo"
     val nonce = 1521105802161233
     val sender = Address.decode("DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4")
-    val key = ECKeyPair.fromBase58(private)
+    val key = ECKeyPair.fromBase58(Helpers.private)
 
     val memo = Memo(plain, key, sender, nonce.toBigInteger())
 
@@ -137,7 +137,7 @@ class Scratchpad {
   @Test fun `encrypt and decrypt long`() {
     val plain = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     val sender = Address.decode("DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4")
-    val key = ECKeyPair.fromBase58(private)
+    val key = ECKeyPair.fromBase58(Helpers.private)
 
     val memo = Memo(plain, key, sender)
 
@@ -187,11 +187,11 @@ class Scratchpad {
   */
 
   @Test fun `transaction signature`() {
-    val key = ECKeyPair.fromBase58(private)
+    val key = ECKeyPair.fromBase58(Helpers.private)
 
     val op = TransferOperation(
-        account,
-        account2,
+        Helpers.account,
+        Helpers.account2,
         AssetAmount(100000),
         fee = AssetAmount(5000)
     )

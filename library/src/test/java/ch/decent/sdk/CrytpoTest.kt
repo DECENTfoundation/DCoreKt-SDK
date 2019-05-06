@@ -6,31 +6,34 @@ import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.*
 import ch.decent.sdk.utils.ElGamal.publicElGamal
 import org.amshove.kluent.`should be equal to`
+import org.amshove.kluent.`should contain all`
+import org.amshove.kluent.`should contain none`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
-import java.util.*
 
 class CrytpoTest : TimeOutTest() {
 
+  val private = "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn"
+
   @Test fun `priv key dump`() {
-    val key = ECKeyPair.fromBase58(private)
+    val key = private.ecKey()
     val dump = DumpedPrivateKey.toBase58(key)
 
     private.print()
     ECKeyPair.fromBase58(private).privateBytes.hex().print()
-    public2.print()
-    public2.address().publicKey.getEncoded(true).hex().print()
-    public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
+    Helpers.public2.print()
+    Helpers.public2.address().publicKey.getEncoded(true).hex().print()
+    Helpers.public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
 
-    key.secret(public2.address(), BigInteger("1234567890")).hex().print()
+    key.secret(Helpers.public2.address(), BigInteger("1234567890")).hex().print()
     dump `should be equal to` private
   }
 
   @Test fun `nonce generation`() {
-    var nonce = BigInteger.ZERO
+    var nonce: BigInteger
     for (i in 0..100) {
 //      println("$nonce  ${nonce.toByteArray().size} ${nonce.toLong().bytes().joinToString()}")
       nonce = generateNonce()
@@ -56,7 +59,6 @@ class CrytpoTest : TimeOutTest() {
     val encrypted = "b23f6afb8eb463704d3d752b1fd8fb804c0ce32ba8d18eeffc20a2312e7c60fa"
     val plain = "hello memo here i am"
     val nonce = BigInteger("10872523688190906880")
-    val from = Address.decode("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")
     val to = Address.decode("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP")
     val key = ECKeyPair.fromBase58(private)
 
@@ -238,4 +240,24 @@ class CrytpoTest : TimeOutTest() {
 
     Wallet.importDCoreWallet(gson.toJson(wallet), "pw") `should equal` credentials
   }
+
+  @Test fun `should check canonical on signature invalid`() {
+    val sig = listOf(
+        "20136f5f01fb54076587670737cc350ef8c1d26d80006a62f28ce80b0df58d052b004fce54c9cc40f6191a94c617410434aab4f19ff35d296a47c1ad2ca6099a13",
+        "20c8d1f6ef03ec645b9c406431a325741a2247b25862a731993aa5dd3dbac723a66b73d75c5ba313dde012b499a6e1b1b48551e410a4e8758968b7bcdf64bd9a58",
+        "1fdbfd66ddf7c6cdd100568c15934e3bfef96022f2d335e161cff7ddeade802b5240c117706d004743296696b58138ef342a2cc2008fd5ff2ee3d76a60d2f09f05",
+        "1ffa382a4507662fd200e4c2bdef7a90b45362f51d79eef84ae35f0c966680a6172109f519f7709e25207462c54fdf465f8b10f84d04120f4d05db1ee5f99e867b"
+    )
+    sig.forEach { ECKeyPair.checkCanonicalSignature(it.unhex()) `should be equal to` false }
+  }
+
+  @Test fun `should check canonical on signature valid`() {
+    val sig = listOf(
+        "1f595122744cc19263b8e73bc8e1d57a045a01c3b4b04bc08216cd8b9104c81f2b154875b1941cef6e76d1d3d89bcbf906d56d4c581807098663c600ab1b0050ef",
+        "1f62ef0c229f0208642735bf85f20f25550e62dcaacba861e55a477587bed6e8f0490884251bf04cfe116aef02dc82771bd65fa48a6bb599bb1c57e86bcfb8756b",
+        "202c177696d954a03798d287cc9d4e48a95745d180db012394f39a42a32bf8e2947a434b7c53a619817d3b5c7c3285c6438c26e203ac16c2fd0c3c7de2300cd86c"
+    )
+    sig.forEach { ECKeyPair.checkCanonicalSignature(it.unhex()) `should be equal to` true }
+  }
+
 }
