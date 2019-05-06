@@ -1,3 +1,6 @@
+@file:Suppress("TooManyFunctions", "MatchingDeclarationName", "MagicNumber", "SpreadOperator")
+// fixme serializer with class adapters as in TS
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,7 +20,6 @@
 
 package ch.decent.sdk.net.serialization
 
-
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.utils.parseVoteId
 import com.google.common.primitives.Bytes
@@ -27,7 +29,6 @@ import java.io.DataOutputStream
 import java.io.IOException
 import java.math.BigInteger
 import java.nio.ByteBuffer
-
 
 /**
  * <p>Encodes signed and unsigned values using a common variable-length
@@ -136,7 +137,6 @@ internal object Varint {
     }
     return out
   }
-
 }
 
 
@@ -207,6 +207,6 @@ internal fun Set<VoteId>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedV
 
 internal fun ByteArray.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), this)
 
-internal fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33, { 0 })
+internal fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33) { 0 }
 
 internal fun ByteSerializable?.optionalBytes() = this?.let { byteArrayOf(1) + bytes } ?: byteArrayOf(0)

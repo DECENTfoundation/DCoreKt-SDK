@@ -6,7 +6,13 @@ import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.Sha256Hash
 import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.utils.*
+import ch.decent.sdk.utils.SIZE_32
+import ch.decent.sdk.utils.decryptAesWithChecksum
+import ch.decent.sdk.utils.encryptAes
+import ch.decent.sdk.utils.generateNonce
+import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.secret
+import ch.decent.sdk.utils.unhex
 import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
@@ -24,7 +30,7 @@ class Memo : ByteSerializable {
    * @param message a message to send
    */
   constructor(message: String) {
-    this.message = (ByteArray(4) { 0 } + message.toByteArray()).hex()
+    this.message = (ByteArray(SIZE_32) { 0 } + message.toByteArray()).hex()
     this.nonce = BigInteger.ZERO
     this.from = null
     this.to = null
@@ -53,11 +59,12 @@ class Memo : ByteSerializable {
     this.nonce = nonce
     this.from = Address(keyPair.public)
     this.to = recipient
-    val checksummed = Sha256Hash.hash(message.toByteArray()).copyOfRange(0, 4) + message.toByteArray()
+    val checksummed = Sha256Hash.hash(message.toByteArray()).copyOfRange(0, SIZE_32) + message.toByteArray()
     val secret = keyPair.secret(recipient, this.nonce)
     this.message = encryptAes(secret, checksummed).hex()
   }
 
+  @Suppress("TooGenericExceptionCaught")
   private fun decryptOrEmpty(secret: ByteArray) = try {
     decryptAesWithChecksum(secret, message.unhex())
   } catch (ex: Exception) {
@@ -74,7 +81,7 @@ class Memo : ByteSerializable {
 
   fun decrypt(keyPair: ECKeyPair): String {
     return if (from == null || to == null) {
-      message.drop(8).unhex().toString(Charset.forName("UTF-8"))
+      message.drop(SIZE_32 * 2).unhex().toString(Charset.forName("UTF-8"))
     } else if (from.publicKey == keyPair.public) {
       decryptOrEmpty(keyPair.secret(to, nonce))
     } else if (to.publicKey == keyPair.public) {

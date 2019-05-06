@@ -1,7 +1,12 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.*
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.MinerVotingInfo
+import ch.decent.sdk.model.ObjectType
+import ch.decent.sdk.model.SearchMinerVotingOrder
 import ch.decent.sdk.net.model.ApiGroup
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import com.google.gson.reflect.TypeToken
 
 internal class SearchMinerVoting(
@@ -10,7 +15,7 @@ internal class SearchMinerVoting(
     onlyMyVotes: Boolean = false,
     order: SearchMinerVotingOrder = SearchMinerVotingOrder.NAME_DESC,
     id: ChainObject? = null,
-    limit: Int = 1000
+    limit: Int = REQ_LIMIT_MAX_1K
 ) : BaseRequest<List<MinerVotingInfo>>(
     ApiGroup.DATABASE,
     "search_miner_voting",

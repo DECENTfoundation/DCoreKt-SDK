@@ -16,6 +16,8 @@ import org.threeten.bp.ZoneOffset
  * @param expiration: Expiration time specified as a POSIX or
  * [Unix time](https://en.wikipedia.org/wiki/Unix_time)
  */
+//fixme remove this class, check TS
+@Suppress("MagicNumber")
 data class BlockData(
     val refBlockNum: Int,
     val refBlockPrefix: Long,

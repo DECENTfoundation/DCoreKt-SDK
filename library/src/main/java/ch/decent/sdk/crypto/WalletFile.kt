@@ -11,5 +11,4 @@ data class WalletFile(
   val iv: String,
   val mac: String,
   val id: UUID = UUID.randomUUID()
-
 )

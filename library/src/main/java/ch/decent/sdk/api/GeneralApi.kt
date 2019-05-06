@@ -1,8 +1,19 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.model.ChainProperties
+import ch.decent.sdk.model.Config
+import ch.decent.sdk.model.DynamicGlobalProps
+import ch.decent.sdk.model.GlobalProperties
+import ch.decent.sdk.model.MinerRewardInput
+import ch.decent.sdk.net.model.request.GetChainId
+import ch.decent.sdk.net.model.request.GetChainProperties
+import ch.decent.sdk.net.model.request.GetConfig
+import ch.decent.sdk.net.model.request.GetDynamicGlobalProps
+import ch.decent.sdk.net.model.request.GetGlobalProperties
+import ch.decent.sdk.net.model.request.GetTimeToMaintenance
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 

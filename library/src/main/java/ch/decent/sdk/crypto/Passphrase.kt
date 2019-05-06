@@ -33,6 +33,7 @@ class Passphrase(val words: Array<String>) {
         val num = (entropy[i].toInt() shl 8) + entropy[i + 1]
 
         // convert into a int between 0 and 1 (inclusive)
+        @Suppress("MagicNumber")
         val multiplier = num / Math.pow(2.0, 16.0)
         val index = Math.abs(Math.round(seed.size * multiplier))
 
@@ -42,4 +43,3 @@ class Passphrase(val words: Array<String>) {
     }
   }
 }
-

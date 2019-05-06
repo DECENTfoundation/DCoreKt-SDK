@@ -1,20 +1,26 @@
 package ch.decent.sdk.crypto
 
 import ch.decent.sdk.DCoreSdk
-import ch.decent.sdk.model.*
-import ch.decent.sdk.utils.*
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.CipherKeyPairAdapter
+import ch.decent.sdk.model.ExtraKeysAdapter
+import ch.decent.sdk.model.PubKey
+import ch.decent.sdk.utils.SIZE_128
+import ch.decent.sdk.utils.SIZE_256
+import ch.decent.sdk.utils.decryptAes
+import ch.decent.sdk.utils.encryptAes
+import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.privateElGamal
+import ch.decent.sdk.utils.publicElGamal
+import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
 import org.bouncycastle.crypto.digests.KeccakDigest
 import org.bouncycastle.crypto.generators.SCrypt
 import org.threeten.bp.LocalDateTime
 import java.nio.charset.Charset
-import java.security.*
-import javax.crypto.BadPaddingException
-import javax.crypto.Cipher
-import javax.crypto.IllegalBlockSizeException
-import javax.crypto.NoSuchPaddingException
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
+import java.security.MessageDigest
+import java.security.SecureRandom
 
 object Wallet {
   private const val SALT_LEN = 16
@@ -41,12 +47,12 @@ object Wallet {
 
   private fun kdf(password: String, salt: ByteArray) =
       SCrypt.generate(password.toByteArray(), salt, N, R, P, DK_LEN).let {
-        it.copyOfRange(0, 16) to it.copyOfRange(16, 32)
+        it.copyOfRange(0, SIZE_128) to it.copyOfRange(SIZE_128, SIZE_128 * 2)
       }
 
   private fun ByteArray.mac() =
-      KeccakDigest(256).let {
-        val digest = ByteArray(32)
+      KeccakDigest(SIZE_256 * 8).let {
+        val digest = ByteArray(SIZE_256)
         it.update(this, 0, size)
         it.doFinal(digest, 0)
         digest
@@ -56,7 +62,7 @@ object Wallet {
     val secret = credentials.keyPair.privateBytes
     val salt = randomBytes(SALT_LEN)
     val derived = kdf(password, salt)
-    val iv = randomBytes(16)
+    val iv = randomBytes(SIZE_128)
     val cipher = encryptAes(iv, derived.first, secret)
     val mac = (derived.second + cipher).mac()
     return WalletFile(1, credentials.account, cipher.hex(), salt.hex(), iv.hex(), mac.hex())
@@ -127,7 +133,7 @@ object Wallet {
       @SerializedName("checksum") val checksum: String,
       @SerializedName("el_gamal_keys") val elGamalKeys: List<PubKeyPair>
   ) {
-    constructor(credentials: Credentials, pass: String): this(
+    constructor(credentials: Credentials, pass: String) : this(
         listOf(CipherKeyPair(credentials.keyPair.address(), credentials.keyPair.dpk())),
         pass,
         listOf(PubKeyPair(credentials.keyPair))
@@ -143,7 +149,7 @@ object Wallet {
       @SerializedName("private_key") val private: PubKey,
       @SerializedName("public_key") val public: PubKey
   ) {
-    constructor(keyPair: ECKeyPair): this(keyPair.privateElGamal(), keyPair.publicElGamal())
+    constructor(keyPair: ECKeyPair) : this(keyPair.privateElGamal(), keyPair.publicElGamal())
   }
 }
 

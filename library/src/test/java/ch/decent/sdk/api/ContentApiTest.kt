@@ -1,7 +1,6 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
-import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.privateElGamal

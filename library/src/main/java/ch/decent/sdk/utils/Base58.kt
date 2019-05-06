@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("MagicNumber")
 
 package ch.decent.sdk.utils
 
@@ -118,6 +119,7 @@ object Base58 {
    * @return the decoded data bytes
    * @throws AddressFormatException if the given string is not a valid base58 string
    */
+  @Suppress("ComplexMethod")
   @Throws(AddressFormatException::class)
   fun decode(input: String): ByteArray {
     if (input.isEmpty()) {

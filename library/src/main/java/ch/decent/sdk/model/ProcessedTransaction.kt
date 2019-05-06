@@ -3,6 +3,7 @@ package ch.decent.sdk.model
 import ch.decent.sdk.crypto.Sha256Hash
 import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.utils.TRX_ID_SIZE
 import ch.decent.sdk.utils.hex
 import com.google.common.primitives.Bytes
 import com.google.gson.JsonArray
@@ -27,5 +28,5 @@ data class ProcessedTransaction(
     )
 
   val id: String
-    get() = Sha256Hash.hash(bytes).take(20).toByteArray().hex()
+    get() = Sha256Hash.hash(bytes).take(TRX_ID_SIZE).toByteArray().hex()
 }

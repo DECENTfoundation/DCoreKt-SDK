@@ -5,13 +5,14 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.Purchase
 import ch.decent.sdk.net.model.ApiGroup
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import com.google.gson.reflect.TypeToken
 
 internal class SearchFeedback(
     user: String?,
     uri: String,
     startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
-    count: Int = 100
+    count: Int = REQ_LIMIT_MAX
 ) : BaseRequest<List<Purchase>>(
     ApiGroup.DATABASE,
     "search_feedback",

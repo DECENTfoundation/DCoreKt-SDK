@@ -1,6 +1,5 @@
 package ch.decent.sdk.net.ws
 
-import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import com.google.gson.Gson
 import okhttp3.Response
 import okhttp3.WebSocket

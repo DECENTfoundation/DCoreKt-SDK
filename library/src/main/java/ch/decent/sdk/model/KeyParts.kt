@@ -13,5 +13,4 @@ data class KeyParts(
         keyC1.bytes,
         keyD1.bytes
     )
-
 }

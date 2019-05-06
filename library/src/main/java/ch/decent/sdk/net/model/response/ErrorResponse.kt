@@ -21,6 +21,7 @@ internal data class Stack(
     val data: Any
 )
 
+@Suppress("ConstructorParameterNaming")
 internal data class Context(
     val level: String,
     val file: String,

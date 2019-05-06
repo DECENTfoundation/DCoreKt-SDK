@@ -1,7 +1,7 @@
 package ch.decent.sdk.crypto
 
-import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Base58
+import ch.decent.sdk.utils.SIZE_256
 
 /**
  * Parses and generates private keys in the form used by the Bitcoin "dumpprivkey" command. This is the private key
@@ -14,7 +14,7 @@ class DumpedPrivateKey private constructor(
     val compressed: Boolean
 ) {
 
-  constructor(private: ECKeyPair): this(0x80, private.privateBytes, private.compressed!!)
+  constructor(private: ECKeyPair) : this(VERSION, private.privateBytes, private.compressed!!)
 
   /**
    * Returns the base-58 encoded String representation of this
@@ -29,13 +29,15 @@ class DumpedPrivateKey private constructor(
   }
 
   companion object {
+    private const val VERSION = 0x80
+
     @JvmStatic
     fun fromBase58(encoded: String): DumpedPrivateKey {
       val versionAndData = Base58.decodeChecked(encoded)
       val version = versionAndData[0].toInt() and 0xFF
-      require(version == 0x80) { "$version is not a valid private key version byte" }
+      require(version == VERSION) { "$version is not a valid private key version byte" }
       return versionAndData.copyOfRange(1, versionAndData.size).let {
-        if (it.size == 33 && it[32].toInt() == 1) {
+        if (it.size == SIZE_256 + 1 && it[SIZE_256].toInt() == 1) {
           DumpedPrivateKey(version, it.copyOfRange(0, it.size - 1), true)
         } else {
           DumpedPrivateKey(version, it, false)

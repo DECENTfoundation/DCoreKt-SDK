@@ -1,7 +1,12 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.*
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.Content
+import ch.decent.sdk.model.ObjectType
+import ch.decent.sdk.model.SearchContentOrder
 import ch.decent.sdk.net.model.ApiGroup
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import com.google.gson.reflect.TypeToken
 
 internal class SearchContent(
@@ -11,7 +16,7 @@ internal class SearchContent(
     regionCode: String,
     type: String,
     startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
-    limit: Int = 100
+    limit: Int = REQ_LIMIT_MAX
 ) : BaseRequest<List<Content>>(
     ApiGroup.DATABASE,
     "search_content",

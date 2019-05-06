@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
@@ -5,7 +7,11 @@ import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.Seeder
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.net.model.request.GetSeeder
+import ch.decent.sdk.net.model.request.ListSeedersByPrice
+import ch.decent.sdk.net.model.request.ListSeedersByRating
+import ch.decent.sdk.net.model.request.ListSeedersByRegion
+import ch.decent.sdk.net.model.request.ListSeedersByUpload
 import io.reactivex.Single
 
 class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {

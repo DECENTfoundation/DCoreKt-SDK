@@ -51,7 +51,7 @@ Use the `BroadcastApi` to apply the operations to DCore or use appropriate metho
 
 Access api using rest
 ```kotlin
-import ch.decent.sdk.model.toChainObject
+import toChainObject
 import okhttp3.OkHttpClient
 
 // create API for HTTP
@@ -64,9 +64,9 @@ val disposable = api.accountApi.get("public-account-10").subscribe { account ->
 
 Access api using websocket
 ```kotlin
-import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.toChainObject
+import Credentials
+import AssetAmount
+import toChainObject
 import okhttp3.OkHttpClient
 
 // create API for websocket

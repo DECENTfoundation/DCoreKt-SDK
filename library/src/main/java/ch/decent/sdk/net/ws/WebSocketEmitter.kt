@@ -1,6 +1,10 @@
 package ch.decent.sdk.net.ws
 
-import ch.decent.sdk.net.ws.model.*
+import ch.decent.sdk.net.ws.model.OnClosing
+import ch.decent.sdk.net.ws.model.OnMessageBytes
+import ch.decent.sdk.net.ws.model.OnMessageText
+import ch.decent.sdk.net.ws.model.OnOpen
+import ch.decent.sdk.net.ws.model.WebSocketEvent
 import io.reactivex.FlowableEmitter
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -18,7 +22,7 @@ internal class WebSocketEmitter(
     emitter.onError(t)
   }
 
-  override fun onClosing(webSocket: WebSocket, code: Int, reason: String?) {
+  override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
     emitter.onNext(OnClosing)
     webSocket.close(code, reason)
   }
@@ -31,7 +35,7 @@ internal class WebSocketEmitter(
     emitter.onNext(OnMessageBytes(bytes))
   }
 
-  override fun onClosed(webSocket: WebSocket, code: Int, reason: String?) {
+  override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
     emitter.onComplete()
   }
 }
