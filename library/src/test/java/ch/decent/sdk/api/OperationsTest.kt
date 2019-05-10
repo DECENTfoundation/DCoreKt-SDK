@@ -9,10 +9,14 @@ import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.toChainObject
 import io.reactivex.schedulers.Schedulers
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.BeforeClass
+import org.junit.FixMethodOrder
+import org.junit.Ignore
+import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.slf4j.LoggerFactory
-import java.math.BigDecimal
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class OperationsTest {
@@ -49,7 +53,7 @@ class OperationsTest {
   }
 
   @Test fun `accounts-2 should make a transfer to new account`() {
-    val test = api.accountApi.transfer(Helpers.credentials, accountName, DCoreConstants.DCT.amount(BigDecimal(1)))
+    val test = api.accountApi.transfer(Helpers.credentials, accountName, DCoreConstants.DCT.amount(1.0))
         .subscribeOn(Schedulers.newThread())
         .test()
 

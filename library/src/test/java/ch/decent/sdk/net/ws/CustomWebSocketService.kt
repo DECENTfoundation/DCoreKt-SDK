@@ -8,7 +8,6 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.ByteString
 import org.slf4j.LoggerFactory
-import java.lang.RuntimeException
 
 class CustomWebSocketService {
 
@@ -44,35 +43,35 @@ class CustomWebSocketService {
   }
 
   private fun createResponse() = MockResponse().withWebSocketUpgrade(object : WebSocketListener() {
-    override fun onOpen(webSocket: WebSocket?, response: Response?) {
+    override fun onOpen(webSocket: WebSocket, response: Response) {
       logger.info("open")
     }
 
-    override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
+    override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
       logger.info("fail")
     }
 
-    override fun onClosing(webSocket: WebSocket?, code: Int, reason: String?) {
+    override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
       logger.info("closing")
       webSocket!!.close(code, reason)
       if (responses.isNotEmpty()) mockWebServer.enqueue(response)
     }
 
-    override fun onMessage(webSocket: WebSocket?, text: String?) {
+    override fun onMessage(webSocket: WebSocket, text: String) {
       logger.info("message")
       if (text == "fail") throw RuntimeException("fail")
-      responses[text!!]?.let {
-        webSocket?.send(it)
+      responses[text]?.let {
+        webSocket.send(it)
         responses.remove(text)
       }
-      if (responses.size == 0) webSocket?.close(1000, "closing...")
+      if (responses.size == 0) webSocket.close(1000, "closing...")
     }
 
-    override fun onMessage(webSocket: WebSocket?, bytes: ByteString?) {
+    override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
       logger.info("message")
     }
 
-    override fun onClosed(webSocket: WebSocket?, code: Int, reason: String?) {
+    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
       logger.info("closed")
     }
   })

@@ -15,11 +15,11 @@ object Versions {
 
   val rxKotlin = "2.3.0"
   val rxJava = "2.2.6"
-
   val threeTen = "1.3.6"
   val slf4j = "1.7.25"
   val guava = "25.0-android" //jdk7 support
   val kluent = "1.41"
+  val okio = "2.2.2"
 
   val bouncyProv = "1.59"
 
@@ -48,10 +48,10 @@ object Libs {
 
   val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
   val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
-
   val threeTen = "org.threeten:threetenbp:${Versions.threeTen}"
   val slf4jApi = "org.slf4j:slf4j-api:${Versions.slf4j}"
   val guava = "com.google.guava:guava:${Versions.guava}"
+  val okio = "com.squareup.okio:okio:${Versions.okio}"
 
   val bouncyProv = "org.bouncycastle:bcprov-jdk15on:${Versions.bouncyProv}"
 

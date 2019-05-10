@@ -3,6 +3,7 @@ package ch.decent.sdk.model
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.model.types.UInt64
 import ch.decent.sdk.utils.SIZE_32
 import ch.decent.sdk.utils.decryptAesWithChecksum
 import ch.decent.sdk.utils.secret
@@ -70,7 +71,7 @@ data class MessageResponse(
 data class MessageReceiver(
     @SerializedName("receiver") val receiver: ChainObject,
     @SerializedName("receiver_pubkey") val receiverAddress: Address?,
-    @SerializedName("nonce") val nonce: BigInteger,
+    @SerializedName("nonce") @UInt64 val nonce: BigInteger,
     @SerializedName("data") val data: String
 )
 
@@ -93,5 +94,5 @@ data class MessagePayloadReceiver(
     @SerializedName("to") val to: ChainObject,
     @SerializedName("data") val data: String,
     @SerializedName("pub_to") val toAddress: Address? = null,
-    @SerializedName("nonce") val nonce: BigInteger? = null
+    @SerializedName("nonce") @UInt64 val nonce: BigInteger? = null
 )

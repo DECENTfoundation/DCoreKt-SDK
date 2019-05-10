@@ -23,24 +23,24 @@ class CallbackApi internal constructor(api: DCoreApi) : BaseApi(api) {
   /**
    * Receive new block notifications. Cannot be cancelled.
    */
-  fun onBlockApplied(): Flowable<String> = SetBlockAppliedCallback.toRequest()
+  fun onBlockApplied(): Flowable<String> = SetBlockAppliedCallback.callbacks()
 
   /**
    * Receive notifications on content update. Cannot be cancelled.
    *
    * @param uri content URI to monitor
    */
-  fun onContentUpdate(uri: String): Flowable<Unit> = SetContentUpdateCallback(uri).toRequest()
+  fun onContentUpdate(uri: String): Flowable<Unit> = SetContentUpdateCallback(uri).callbacks()
 
   /**
    * Receive notifications on pending transactions. Cannot be cancelled.
    */
-  fun onPendingTransaction(): Flowable<Unit> = SetPendingTransactionCallback.toRequest()
+  fun onPendingTransaction(): Flowable<Unit> = SetPendingTransactionCallback.callbacks()
 
   /**
    * Subscribe to callbacks. Can be cancelled. with [cancelAll].
    *
    * @param clearFilter clear current subscriptions created with [AccountApi.getFullAccounts]
    */
-  fun onGlobal(clearFilter: Boolean): Flowable<Unit> = SetSubscribeCallback(clearFilter).toRequest()
+  fun onGlobal(clearFilter: Boolean): Flowable<Unit> = SetSubscribeCallback(clearFilter).callbacks()
 }

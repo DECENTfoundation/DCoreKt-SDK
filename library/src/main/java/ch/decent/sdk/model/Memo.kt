@@ -3,26 +3,24 @@ package ch.decent.sdk.model
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.crypto.Sha256Hash
-import ch.decent.sdk.net.serialization.ByteSerializable
-import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.model.types.UInt64
 import ch.decent.sdk.utils.SIZE_32
 import ch.decent.sdk.utils.decryptAesWithChecksum
 import ch.decent.sdk.utils.encryptAes
 import ch.decent.sdk.utils.generateNonce
+import ch.decent.sdk.utils.hash256
 import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.secret
 import ch.decent.sdk.utils.unhex
-import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 import java.nio.charset.Charset
 
-class Memo : ByteSerializable {
+class Memo {
   @SerializedName("from") val from: Address?
   @SerializedName("to") val to: Address?
   @SerializedName("message") val message: String
-  @SerializedName("nonce") val nonce: BigInteger
+  @SerializedName("nonce") @UInt64 val nonce: BigInteger
 
   /**
    * Create Memo object with unencrypted message
@@ -59,7 +57,7 @@ class Memo : ByteSerializable {
     this.nonce = nonce
     this.from = Address(keyPair.public)
     this.to = recipient
-    val checksummed = Sha256Hash.hash(message.toByteArray()).copyOfRange(0, SIZE_32) + message.toByteArray()
+    val checksummed = message.toByteArray().hash256().copyOfRange(0, SIZE_32) + message.toByteArray()
     val secret = keyPair.secret(recipient, this.nonce)
     this.message = encryptAes(secret, checksummed).hex()
   }
@@ -70,14 +68,6 @@ class Memo : ByteSerializable {
   } catch (ex: Exception) {
     ""
   }
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        from.bytes(),
-        to.bytes(),
-        nonce.toLong().bytes(),
-        message.unhex().bytes()
-    )
 
   fun decrypt(keyPair: ECKeyPair): String {
     return if (from == null || to == null) {

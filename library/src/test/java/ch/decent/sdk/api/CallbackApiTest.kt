@@ -1,6 +1,8 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.*
+import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.Helpers
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before

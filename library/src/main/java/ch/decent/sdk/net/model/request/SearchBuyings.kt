@@ -7,8 +7,6 @@ import ch.decent.sdk.model.SearchPurchasesOrder
 import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import com.google.gson.reflect.TypeToken
-import kotlin.math.max
-import kotlin.math.min
 
 internal class SearchBuyings(
     consumer: ChainObject,
@@ -16,7 +14,7 @@ internal class SearchBuyings(
     startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
     term: String = "",
     limit: Int = REQ_LIMIT_MAX
-): BaseRequest<List<Purchase>>(
+) : BaseRequest<List<Purchase>>(
     ApiGroup.DATABASE,
     "get_buying_objects_by_consumer",
     TypeToken.getParameterized(List::class.java, Purchase::class.java).type,

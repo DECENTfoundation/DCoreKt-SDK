@@ -5,9 +5,9 @@ package ch.decent.sdk.utils
 
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.crypto.Sha256Hash
-import ch.decent.sdk.net.serialization.bytes
-import com.google.common.io.BaseEncoding
+import okio.Buffer
+import okio.ByteString.Companion.decodeHex
+import okio.ByteString.Companion.toByteString
 import org.bouncycastle.crypto.engines.AESEngine
 import org.bouncycastle.crypto.modes.CBCBlockCipher
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher
@@ -19,17 +19,8 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*
 
-/**
- * Hex encoding used throughout the DCore framework.
- */
-val Hex: BaseEncoding = BaseEncoding.base16().lowerCase()
-
-fun ByteArray.hex() = Hex.encode(this)
-fun String.unhex() = Hex.decode(this)
-
-fun String.parseVoteId(): ByteArray = Regex("""(\d+):(\d+)""").matchEntire(this)?.let {
-  it.groupValues[2].toInt().shl(8).or(it.groupValues[1].toInt()).bytes()
-} ?: throw IllegalArgumentException()
+fun ByteArray.hex(): String = this.toByteString().hex()
+fun String.unhex(): ByteArray = this.decodeHex().toByteArray()
 
 fun ECKeyPair.secret(address: Address, nonce: BigInteger): ByteArray = address.publicKey.multiply(this.private).normalize().xCoord.encoded.let {
   val sha512 = MessageDigest.getInstance("SHA-512")
@@ -37,30 +28,30 @@ fun ECKeyPair.secret(address: Address, nonce: BigInteger): ByteArray = address.p
 }
 
 fun generateEntropy(power: Int = 250): ByteArray {
-  val input = Date().toString()
-  var entropy = hash256(input.bytes()) + input.bytes().joinToString().bytes() + input.bytes()
+  val input = Date().toString().toByteArray()
+  var entropy = input.hash256() + input.joinToString().toByteArray() + input
 
   val start = System.currentTimeMillis()
   while ((System.currentTimeMillis() - start) < power) {
-    entropy = hash256(entropy)
+    entropy = entropy.hash256()
   }
 
-  return hash256(entropy + ByteArray(32).apply { Random().nextBytes(this) })
+  return entropy + ByteArray(32).apply { Random().nextBytes(this) }.hash256()
 }
 
-fun hash256(data: ByteArray): ByteArray = MessageDigest.getInstance("SHA-256").digest(data)
+fun ByteArray.hash256(): ByteArray = MessageDigest.getInstance("SHA-256").digest(this)
 
-fun hash512(data: ByteArray): ByteArray = MessageDigest.getInstance("SHA-512").digest(data)
+fun ByteArray.hash512(): ByteArray = MessageDigest.getInstance("SHA-512").digest(this)
 
 fun generateNonce(): BigInteger {
   val sha224 = MessageDigest.getInstance("SHA-224").digest(ECKeyPair(SecureRandom()).privateBytes)
-  return BigInteger(1, sha224.copyOf(1) + System.nanoTime().bytes().copyOf(7))
+  return BigInteger(1, sha224.copyOf(1) + Buffer().writeLongLe(System.nanoTime()).readByteArray().copyOf(7))
 }
 
 fun decryptAesWithChecksum(key: ByteArray, encrypted: ByteArray): String {
   val bytes = decryptAes(key, encrypted)
   val message = bytes.copyOfRange(SIZE_32, bytes.size)
-  val checksum = Sha256Hash.hash(message).copyOfRange(0, SIZE_32)
+  val checksum = message.hash256().copyOfRange(0, SIZE_32)
   if (bytes.copyOfRange(0, SIZE_32).contentEquals(checksum)) {
     return message.toString(Charset.forName("UTF-8"))
   } else {

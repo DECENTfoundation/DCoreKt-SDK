@@ -8,5 +8,5 @@ import io.reactivex.Single
 
 abstract class BaseApi internal constructor(protected val api: DCoreApi) {
   internal fun <T> BaseRequest<T>.toRequest(): Single<T> = api.core.makeRequest(this)
-  internal fun <R, T> T.toRequest(): Flowable<R> where T : BaseRequest<R>, T : WithCallback = api.core.makeRequestStream(this)
+  internal fun <R, T> T.callbacks(): Flowable<R> where T : BaseRequest<R>, T : WithCallback = api.core.makeRequestStream(this)
 }

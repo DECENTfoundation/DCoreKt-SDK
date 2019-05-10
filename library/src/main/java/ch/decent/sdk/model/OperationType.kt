@@ -24,7 +24,7 @@ enum class OperationType(val clazz: Class<*>? = null) {
   VESTING_BALANCE_WITHDRAW_OPERATION,
   CUSTOM_OPERATION(CustomOperation::class.java),
   ASSERT_OPERATION,
-  CONTENT_SUBMIT_OPERATION(ContentSubmitOperation::class.java),       //20
+  CONTENT_SUBMIT_OPERATION(AddOrUpdateContentOperation::class.java),       //20
   REQUEST_TO_BUY_OPERATION(PurchaseContentOperation::class.java),
   LEAVE_RATING_AND_COMMENT_OPERATION(LeaveRatingAndCommentOperation::class.java),
   READY_TO_PUBLISH_OPERATION,

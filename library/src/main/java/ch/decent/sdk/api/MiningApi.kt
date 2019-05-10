@@ -13,6 +13,7 @@ import ch.decent.sdk.model.MinerVotes
 import ch.decent.sdk.model.MinerVotingInfo
 import ch.decent.sdk.model.SearchMinerVotingOrder
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.net.model.request.GetActualVotes
 import ch.decent.sdk.net.model.request.GetAssetPerBlock
 import ch.decent.sdk.net.model.request.GetFeedsByMiner
@@ -23,7 +24,6 @@ import ch.decent.sdk.net.model.request.GetNewAssetPerBlock
 import ch.decent.sdk.net.model.request.LookupMinerAccounts
 import ch.decent.sdk.net.model.request.LookupVoteIds
 import ch.decent.sdk.net.model.request.SearchMinerVoting
-import ch.decent.sdk.net.serialization.VoteId
 import io.reactivex.Single
 import java.math.BigInteger
 
@@ -89,7 +89,8 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun getMiners(): Single<Map<String, Miner>> =
       listMinersRelative().flatMap { ids -> getMiners(ids.map { it.id }).map { ids.map { it.name }.zip(it).toMap() } }
-/**
+
+  /**
    * Returns a reward for a miner from the most recent block.
    *
    * @return amount of newly generated DCT
@@ -151,7 +152,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
       minerIds: List<ChainObject>
   ): Single<AccountUpdateOperation> =
       getMiners(minerIds).flatMap { miners ->
-        api.accountApi.get(accountId).map { AccountUpdateOperation(it, miners.asSequence().map { it.voteId }.toSet()) }
+        api.accountApi.get(accountId).map { AccountUpdateOperation(it, miners.asSequence().map { VoteId.parse(it.voteId) }.toSet()) }
       }
 
   /**
@@ -163,10 +164,10 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   fun vote(
-          credentials: Credentials,
-          minerIds: List<ChainObject>
+      credentials: Credentials,
+      minerIds: List<ChainObject>
   ): Single<TransactionConfirmation> =
-          createVoteOperation(credentials.account, minerIds).flatMap {
-            api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
-          }
+      createVoteOperation(credentials.account, minerIds).flatMap {
+        api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+      }
 }

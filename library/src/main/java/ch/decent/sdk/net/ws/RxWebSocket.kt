@@ -29,6 +29,7 @@ import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicLong
+import kotlin.math.log
 
 internal sealed class MessageEvent
 internal data class Message(val id: Long, val obj: JsonObject) : MessageEvent()
@@ -81,6 +82,7 @@ internal class RxWebSocket(
   }
 
   private fun clearConnection() {
+    logger?.info("clearing connection state")
     webSocketAsync = null
     disposable.clear()
     backingId.set(0)
@@ -106,16 +108,16 @@ internal class RxWebSocket(
           .doOnNext { (_, obj) -> checkObjectNotFound(obj, this) }
           .map { (_, obj) -> parseResultElement(returnClass, obj) }
           .map { gson.fromJson<T>(it, returnClass) }
-          .doOnError { if (it is TimeoutException) clearConnection() }
 
-  private fun <T> BaseRequest<T>.make(callId: Long): Single<T> =
-      makeStream(callId)
+  private fun <T> BaseRequest<T>.make(callId: Long, callback: Long? = null): Single<T> =
+      makeStream(callId, callback)
           .firstOrError()
           .timeout(timeout, TimeUnit.SECONDS)
+          .doOnError { if (it is TimeoutException) clearConnection() }
 
   internal fun <T, R> requestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback = request.makeStream(callId, callId)
 
-  internal fun <T> request(request: BaseRequest<T>): Single<T> = request.make(callId)
+  internal fun <T> request(request: BaseRequest<T>): Single<T> = request.make(callId, if (request is WithCallback) callId else null)
 
   fun disconnect() {
     disposable.add(

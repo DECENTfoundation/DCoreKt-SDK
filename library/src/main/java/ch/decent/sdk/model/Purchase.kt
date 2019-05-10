@@ -1,5 +1,7 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.model.types.UInt32
+import ch.decent.sdk.model.types.UInt64
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
@@ -14,18 +16,18 @@ data class Purchase(
     @SerializedName("paid_price_before_exchange") val priceBefore: AssetAmount,
     @SerializedName("paid_price_after_exchange") val priceAfter: AssetAmount,
     @SerializedName("seeders_answered") val seedersAnswered: List<ChainObject>,
-    @SerializedName("size") val size: Int,
-    @SerializedName("rating") val rating: BigInteger,
+    @SerializedName("size") @UInt64 val size: BigInteger,
+    @SerializedName("rating") @UInt64 val rating: BigInteger,
     @SerializedName("comment") val comment: String,
     @SerializedName("expiration_time") val expiration: LocalDateTime,
     @SerializedName("pubKey") val pubElGamalKey: PubKey?,
-    @SerializedName("key_particles") val keyParticles: List<KeyParts>,
+    @SerializedName("key_particles") val keyParticles: List<KeyPart>,
     @SerializedName("expired") val expired: Boolean,
     @SerializedName("delivered") val delivered: Boolean,
     @SerializedName("expiration_or_delivery_time") val deliveryExpiration: LocalDateTime,
     @SerializedName("rated_or_commented") val ratedOrCommented: Boolean,
     @SerializedName("created") val created: LocalDateTime,
-    @SerializedName("region_code_from") val regionFrom: Int
+    @SerializedName("region_code_from") @UInt32 val regionFrom: Long
 ) {
 
   fun synopsis(): Synopsis =
