@@ -4,6 +4,7 @@ import ch.decent.sdk.net.serialization.ByteSerializable
 import ch.decent.sdk.net.serialization.Varint
 import ch.decent.sdk.net.serialization.bytes
 
+@Suppress("MagicNumber")
 class ChainObject : ByteSerializable {
 
   val objectType: ObjectType

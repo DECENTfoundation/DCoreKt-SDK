@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
@@ -11,7 +13,6 @@ import ch.decent.sdk.net.model.request.BroadcastTransactionWithCallback
 import io.reactivex.Single
 
 class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
-
 
   /**
    * broadcast transaction to DCore

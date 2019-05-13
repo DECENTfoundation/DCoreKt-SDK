@@ -8,5 +8,4 @@ data class BlockHeader(
     @SerializedName("timestamp") val timestamp: LocalDateTime,
     @SerializedName("miner") val miner: ChainObject,
     @SerializedName("transaction_merkle_root") val transactionMerkleRoot: String
-
 )

@@ -4,9 +4,6 @@ import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
-import ch.decent.sdk.net.ws.CustomWebSocketService
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith

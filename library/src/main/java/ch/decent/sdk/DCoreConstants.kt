@@ -3,8 +3,8 @@ package ch.decent.sdk
 import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.toChainObject
 
+@Suppress("MagicNumber")
 object DCoreConstants {
-  const val DEFAULT_EXPIRATION = 30 //seconds
   @JvmField val DCT_ASSET_ID = "1.3.0".toChainObject()
   @JvmField val DCT = Asset(
       DCT_ASSET_ID,

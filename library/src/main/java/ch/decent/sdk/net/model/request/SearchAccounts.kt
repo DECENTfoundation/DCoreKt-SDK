@@ -5,13 +5,14 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.SearchAccountsOrder
 import ch.decent.sdk.net.model.ApiGroup
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import com.google.gson.reflect.TypeToken
 
 internal class SearchAccounts(
     searchTerm: String,
     order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
     id: ChainObject = ObjectType.NULL_OBJECT.genericId,
-    limit: Int = 1000
+    limit: Int = REQ_LIMIT_MAX_1K
 ) : BaseRequest<List<Account>>(
     ApiGroup.DATABASE,
     "search_accounts",

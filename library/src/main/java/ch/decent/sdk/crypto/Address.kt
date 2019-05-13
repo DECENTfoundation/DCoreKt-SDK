@@ -1,6 +1,7 @@
 package ch.decent.sdk.crypto
 
 import ch.decent.sdk.utils.Base58
+import ch.decent.sdk.utils.SIZE_32
 import org.bouncycastle.crypto.digests.RIPEMD160Digest
 import org.bouncycastle.math.ec.ECPoint
 
@@ -22,8 +23,10 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
   }
 
   companion object {
+    private const val DIGEST_SIZE = 20
     const val PREFIX = "DCT"
 
+    @Suppress("TooGenericExceptionCaught")
     @JvmStatic
     fun isValid(address: String) = try {
       decode(address)
@@ -34,10 +37,10 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
 
     @JvmStatic
     fun decode(address: String): Address {
-      val prefix = address.substring(0, 3)
-      val decoded = Base58.decode(address.substring(3, address.length))
-      val pubKey = decoded.copyOfRange(0, decoded.size - 4)
-      val checksum = decoded.copyOfRange(decoded.size - 4, decoded.size)
+      val prefix = address.substring(0, PREFIX.length)
+      val decoded = Base58.decode(address.substring(PREFIX.length, address.length))
+      val pubKey = decoded.copyOfRange(0, decoded.size - SIZE_32)
+      val checksum = decoded.copyOfRange(decoded.size - SIZE_32, decoded.size)
       val key = ECKeyPair.fromPublic(pubKey)
       val calculatedChecksum = calculateChecksum(pubKey)
       if (calculatedChecksum.indices.find { checksum[it] != calculatedChecksum[it] } != null)
@@ -47,17 +50,17 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
 
     @JvmStatic
     fun decodeCheckNull(address: String): Address? {
-      val decoded = Base58.decode(address.substring(3, address.length))
-      val pubKey = decoded.copyOfRange(0, decoded.size - 4)
+      val decoded = Base58.decode(address.substring(PREFIX.length, address.length))
+      val pubKey = decoded.copyOfRange(0, decoded.size - SIZE_32)
       return if (pubKey.all { it == 0x00.toByte() }) null else decode(address)
     }
 
     private fun calculateChecksum(data: ByteArray): ByteArray =
         RIPEMD160Digest().let {
-          val checksum = ByteArray(160 / 8)
+          val checksum = ByteArray(DIGEST_SIZE)
           it.update(data, 0, data.size)
           it.doFinal(checksum, 0)
-          checksum.copyOfRange(0, 4)
+          checksum.copyOfRange(0, SIZE_32)
         }
   }
 }

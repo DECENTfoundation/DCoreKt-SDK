@@ -45,23 +45,51 @@ interface AssetFormatter {
    */
   fun format(value: BigDecimal, formatter: NumberFormat) = formatter.format(value) + " $symbol"
 
-  fun format(value: BigDecimal) = defaultFormatter.format(value) + " $symbol"
-
-  fun format(value: BigDecimal, formatter: NumberFormat.() -> Unit) = defaultFormatter.apply(formatter).format(value) + " $symbol"
+  /**
+   * format asset unit value with asset symbol
+   *
+   * @param value asset unit value
+   * @param formatter default formatter modifier function
+   *
+   * @return asset formatted string
+   */
+  fun format(value: BigDecimal, formatter: NumberFormat.() -> Unit = {}) = defaultFormatter.apply(formatter).format(value) + " $symbol"
 
   /**
    * format raw value with asset symbol
    *
    * @param value raw value
    * @param formatter formatter to use for numeral value
+   *
+   * @return asset formatted string
    */
   fun format(value: BigInteger, formatter: NumberFormat) = formatter.format(fromRaw(value)) + " $symbol"
 
-  fun format(value: BigInteger) = defaultFormatter.format(fromRaw(value)) + " $symbol"
+  /**
+   * format raw value with asset symbol
+   *
+   * @param value raw value
+   * @param formatter default formatter modifier function
+   *
+   * @return asset formatted string
+   */
+  fun format(value: BigInteger, formatter: NumberFormat.() -> Unit = {}) = defaultFormatter.apply(formatter).format(fromRaw(value)) + " $symbol"
 
-  fun format(value: BigInteger, formatter: NumberFormat.() -> Unit) = defaultFormatter.apply(formatter).format(fromRaw(value)) + " $symbol"
-
+  /**
+   * parse string unit asset value to AssetAmount
+   *
+   * @param value asset unit value in string representation
+   *
+   * @return AssetAmount with raw value and asset id
+   */
   fun amount(value: String): AssetAmount = AssetAmount(toRaw(BigDecimal(value)), id)
-  fun amount(value: Double): AssetAmount = AssetAmount(toRaw(BigDecimal(value)), id)
+
+  /**
+   * parse decimal unit asset value to AssetAmount
+   *
+   * @param value decimal unit value in string representation
+   *
+   * @return AssetAmount with raw value and asset id
+   */
   fun amount(value: BigDecimal): AssetAmount = AssetAmount(toRaw(value), id)
 }

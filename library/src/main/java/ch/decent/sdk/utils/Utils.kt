@@ -1,4 +1,5 @@
 @file:JvmName("Utils")
+@file:Suppress("TooManyFunctions", "MagicNumber")
 
 package ch.decent.sdk.utils
 
@@ -58,9 +59,9 @@ fun generateNonce(): BigInteger {
 
 fun decryptAesWithChecksum(key: ByteArray, encrypted: ByteArray): String {
   val bytes = decryptAes(key, encrypted)
-  val message = bytes.copyOfRange(4, bytes.size)
-  val checksum = Sha256Hash.hash(message).copyOfRange(0, 4)
-  if (bytes.copyOfRange(0, 4).contentEquals(checksum)) {
+  val message = bytes.copyOfRange(SIZE_32, bytes.size)
+  val checksum = Sha256Hash.hash(message).copyOfRange(0, SIZE_32)
+  if (bytes.copyOfRange(0, SIZE_32).contentEquals(checksum)) {
     return message.toString(Charset.forName("UTF-8"))
   } else {
     throw IllegalStateException("checksum for the message does not match")

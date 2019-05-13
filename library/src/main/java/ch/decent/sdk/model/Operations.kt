@@ -1,8 +1,15 @@
+@file:Suppress("MagicNumber")
+// fixme, abstract class, separate package
+
 package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.net.serialization.*
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.Varint
+import ch.decent.sdk.net.serialization.VoteId
+import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.net.serialization.optionalBytes
 import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.publicElGamal
 import ch.decent.sdk.utils.unhex
@@ -310,7 +317,21 @@ class ContentSubmitOperation constructor(
     )
 
   override fun toString(): String {
-    return "ContentSubmitOperation(size=$size, author=$author, coauthors=$coauthors, uri='$uri', quorum=$quorum, price=$price, hash='$hash', seeders=$seeders, keyParts=$keyParts, expiration=$expiration, publishingFee=$publishingFee, synopsis='$synopsis', custodyData=$custodyData, fee=$fee)"
+    return "ContentSubmitOperation(" +
+        "size=$size," +
+        " author=$author," +
+        " coauthors=$coauthors," +
+        " uri='$uri'," +
+        " quorum=$quorum," +
+        " price=$price," +
+        " hash='$hash'," +
+        " seeders=$seeders," +
+        " keyParts=$keyParts," +
+        " expiration=$expiration," +
+        " publishingFee=$publishingFee," +
+        " synopsis='$synopsis'," +
+        " custodyData=$custodyData," +
+        " fee=$fee)"
   }
 }
 

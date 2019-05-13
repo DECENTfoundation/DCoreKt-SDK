@@ -1,7 +1,13 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.net.model.request.CancelAllSubscriptions
+import ch.decent.sdk.net.model.request.SetBlockAppliedCallback
+import ch.decent.sdk.net.model.request.SetContentUpdateCallback
+import ch.decent.sdk.net.model.request.SetPendingTransactionCallback
+import ch.decent.sdk.net.model.request.SetSubscribeCallback
 import io.reactivex.Flowable
 import io.reactivex.Single
 

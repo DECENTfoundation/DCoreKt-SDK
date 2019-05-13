@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("TooGenericExceptionThrown")
 
 package ch.decent.sdk.crypto
 
-
 import org.slf4j.LoggerFactory
-import java.io.*
+import java.io.DataInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.security.Provider
 import java.security.SecureRandomSpi
 import java.security.Security
@@ -38,7 +42,7 @@ class LinuxSecureRandom : SecureRandomSpi() {
 
   private val dis: DataInputStream
 
-  private class LinuxSecureRandomProvider : Provider("LinuxSecureRandom", 1.0, "A Linux specific random number provider that uses /dev/urandom") {
+  private class LinuxSecureRandomProvider : Provider("LinuxSecureRandom", "1.0", "A Linux specific random number provider that uses /dev/urandom") {
     init {
       put("SecureRandom.LinuxSecureRandom", LinuxSecureRandom::class.java.name)
     }

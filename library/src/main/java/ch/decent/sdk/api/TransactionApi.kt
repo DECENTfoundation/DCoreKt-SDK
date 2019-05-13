@@ -1,8 +1,18 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.ProcessedTransaction
+import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.net.model.request.GetProposedTransactions
+import ch.decent.sdk.net.model.request.GetRecentTransactionById
+import ch.decent.sdk.net.model.request.GetTransaction
+import ch.decent.sdk.net.model.request.GetTransactionById
+import ch.decent.sdk.net.model.request.GetTransactionHex
 import io.reactivex.Single
 
 class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {

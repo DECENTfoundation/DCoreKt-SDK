@@ -75,5 +75,4 @@ data class Config(
     @SerializedName("GRAPHENE_MINER_ACCOUNT") val grapheneMinerAccount: ChainObject,
     @SerializedName("GRAPHENE_NULL_ACCOUNT") val grapheneNullAccount: ChainObject,
     @SerializedName("GRAPHENE_TEMP_ACCOUNT") val grapheneTempAccount: ChainObject
-
 )

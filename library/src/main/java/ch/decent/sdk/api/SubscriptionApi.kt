@@ -1,10 +1,16 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Subscription
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.net.model.request.GetSubscription
+import ch.decent.sdk.net.model.request.ListActiveSubscriptionsByAuthor
+import ch.decent.sdk.net.model.request.ListActiveSubscriptionsByConsumer
+import ch.decent.sdk.net.model.request.ListSubscriptionsByAuthor
+import ch.decent.sdk.net.model.request.ListSubscriptionsByConsumer
 import io.reactivex.Single
 
 class SubscriptionApi internal constructor(api: DCoreApi) : BaseApi(api) {

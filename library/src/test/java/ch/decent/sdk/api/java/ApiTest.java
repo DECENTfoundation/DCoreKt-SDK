@@ -20,7 +20,7 @@ import java.util.Collections;
 /**
  * this test checks calling Kotlin from Java
  */
-@SuppressWarnings("all")
+@SuppressWarnings({"RxReturnValueIgnored", "UnusedVariable"})
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
@@ -37,6 +37,7 @@ public class ApiTest {
         apiHttp.setTransactionExpiration(100);
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void accountApiTest() {
         api.getAccountApi().get(ObjectType.ACCOUNT_OBJECT.getGenericId());

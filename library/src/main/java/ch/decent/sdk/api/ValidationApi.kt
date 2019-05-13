@@ -1,11 +1,24 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.EmptyOperation
+import ch.decent.sdk.model.OperationType
+import ch.decent.sdk.model.ProcessedTransaction
+import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.net.model.request.GetPotentialSignatures
+import ch.decent.sdk.net.model.request.GetRequiredFees
+import ch.decent.sdk.net.model.request.GetRequiredSignatures
+import ch.decent.sdk.net.model.request.ValidateTransaction
+import ch.decent.sdk.net.model.request.VerifyAccountAuthority
+import ch.decent.sdk.net.model.request.VerifyAuthority
 import io.reactivex.Single
 
 class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {

@@ -3,7 +3,6 @@ package ch.decent.sdk.crypto
 import ch.decent.sdk.utils.Hex
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 class Sha256Hash(val bytes: ByteArray) {
 
@@ -13,27 +12,22 @@ class Sha256Hash(val bytes: ByteArray) {
   fun toBigInteger(): BigInteger = BigInteger(1, bytes)
 
   companion object {
-    private fun newDigest(): MessageDigest {
-      try {
-        return MessageDigest.getInstance("SHA-256")
-      } catch (e: NoSuchAlgorithmException) {
-        throw RuntimeException(e)  // Can't happen.
-      }
-    }
+    private val newDigest: MessageDigest
+      get() = MessageDigest.getInstance("SHA-256")
 
     @JvmStatic
     fun of(input: ByteArray): Sha256Hash = hash(input).wrap()
 
     @JvmOverloads @JvmStatic
     fun hash(input: ByteArray, offset: Int = 0, length: Int = input.size): ByteArray {
-      val digest = newDigest()
+      val digest = newDigest
       digest.update(input, offset, length)
       return digest.digest()
     }
 
     @JvmOverloads @JvmStatic
     fun hashTwice(input: ByteArray, offset: Int = 0, length: Int = input.size): ByteArray {
-      val digest = newDigest()
+      val digest = newDigest
       digest.update(input, offset, length)
       return digest.digest(digest.digest())
     }

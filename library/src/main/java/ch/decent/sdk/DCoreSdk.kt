@@ -1,8 +1,30 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.model.AddressAdapter
+import ch.decent.sdk.model.AuthMap
+import ch.decent.sdk.model.AuthMapAdapter
+import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.BlockData
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.ChainObjectAdapter
+import ch.decent.sdk.model.DateTimeAdapter
+import ch.decent.sdk.model.DynamicGlobalProps
+import ch.decent.sdk.model.FeeParamAdapter
+import ch.decent.sdk.model.FeeParameter
+import ch.decent.sdk.model.MinerId
+import ch.decent.sdk.model.MinerIdAdapter
+import ch.decent.sdk.model.OperationType
+import ch.decent.sdk.model.OperationTypeAdapter
+import ch.decent.sdk.model.OperationTypeFactory
+import ch.decent.sdk.model.PubKey
+import ch.decent.sdk.model.PubKeyAdapter
+import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.net.model.request.BaseRequest
+import ch.decent.sdk.net.model.request.GetChainId
+import ch.decent.sdk.net.model.request.GetDynamicGlobalProps
+import ch.decent.sdk.net.model.request.GetRequiredFees
+import ch.decent.sdk.net.model.request.WithCallback
 import ch.decent.sdk.net.rpc.RpcService
 import ch.decent.sdk.net.ws.RxWebSocket
 import com.google.gson.GsonBuilder
@@ -48,11 +70,12 @@ class DCoreSdk private constructor(
 
   internal fun <T> makeRequest(request: BaseRequest<T>): Single<T> {
     check(rxWebSocket != null || rpc != null)
-    return if (rxWebSocket != null && (rpc == null || rxWebSocket.connected || request is WithCallback)) {
-      rxWebSocket.request(request)
-    } else {
-      if (rpc == null || request is WithCallback) Single.error(IllegalArgumentException("callbacks not available through HTTP API"))
-      else rpc.request(request)
+    return when {
+      request is WithCallback && rxWebSocket != null -> rxWebSocket.request(request)
+      request is WithCallback && rxWebSocket == null -> Single.error(IllegalArgumentException("callbacks not available through HTTP API"))
+      rxWebSocket?.connected ?: false -> rxWebSocket!!.request(request)
+      rpc != null -> rpc.request(request)
+      else -> rxWebSocket!!.request(request)
     }
   }
 

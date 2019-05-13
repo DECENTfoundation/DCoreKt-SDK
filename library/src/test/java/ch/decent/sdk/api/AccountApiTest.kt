@@ -131,6 +131,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
         .assertNoErrors()
   }
 
+  @Suppress("DEPRECATION")
   @Test fun `search account history`() {
     val test = api.accountApi.searchAccountHistory(Helpers.account)
         .subscribeOn(Schedulers.newThread())

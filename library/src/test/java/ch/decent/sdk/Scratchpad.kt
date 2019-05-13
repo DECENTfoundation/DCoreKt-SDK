@@ -14,7 +14,6 @@ import org.junit.Ignore
 import org.junit.Test
 import java.math.BigInteger
 import java.nio.ByteBuffer
-import java.security.MessageDigest
 import java.text.DecimalFormat
 
 @Ignore
@@ -27,7 +26,7 @@ class Scratchpad {
     println("%${f}f".format(v))
 
     d = 2
-    f = d?.let { ".$d" } ?: ""
+    f = d.let { ".$d" }
     println("%${f}f".format(v))
 
     val df = DecimalFormat.getInstance()
@@ -76,7 +75,7 @@ class Scratchpad {
     println(333781 and 0xffff) //6100 + 1
     println("----------")
 
-    "10:100"
+//    "10:100"
     val b = "0".toByte()
     val i = "1".toInt()
     val ba = byteArrayOf(b, i.toByte(), (i shr 8).toByte(), (i shr 16).toByte())
@@ -149,9 +148,9 @@ class Scratchpad {
   fun publicElGamal(private: BigInteger) = generator.modPow(private, modulus)
 
   @Test fun `el gamal keys generation`() {
-    val g = 3.toBigInteger()
-    val elPrivate = BigInteger("10264811947384987455806884361188312159337997349773266680031652882869271200883393026310091771774151908862673648846588359689442630336710264201803312709689478")
-    val elPublic = BigInteger("7317752633383033582159088041509593492238468350205070200236191783227692402591973343242224306276612029080797696757604654009350847591901976526778157668840202")
+//    val g = 3.toBigInteger()
+//    val elPrivate = BigInteger("10264811947384987455806884361188312159337997349773266680031652882869271200883393026310091771774151908862673648846588359689442630336710264201803312709689478")
+//    val elPublic = BigInteger("7317752633383033582159088041509593492238468350205070200236191783227692402591973343242224306276612029080797696757604654009350847591901976526778157668840202")
     val key = ECKeyPair.fromBase58("5JDFQN3T8CFT1ynhgd5s574mTV9UPf9WamkHojBL4NgbhSBDmBj")
 
 //    val secret = Sha256Hash.hash(keyPair.public.getEncoded(false))

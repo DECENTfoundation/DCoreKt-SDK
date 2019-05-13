@@ -2,6 +2,7 @@ package ch.decent.sdk.crypto
 
 import ch.decent.sdk.net.serialization.bytes
 import ch.decent.sdk.utils.Hex
+import ch.decent.sdk.utils.SIZE_256
 import ch.decent.sdk.utils.hash256
 import ch.decent.sdk.utils.hash512
 import org.bouncycastle.asn1.x9.X9IntegerConverter
@@ -28,7 +29,7 @@ class ECKeyPair {
   val public
     get() = lazyPublic.value
   val privateBytes
-    get() = private!!.bytes(32)
+    get() = private!!.bytes(SIZE_256)
 
   private val lazyPublic: Lazy<ECPoint>
 
@@ -64,6 +65,7 @@ class ECKeyPair {
     val signature = sign(data)
     var recId = -1
 
+    @Suppress("MagicNumber")
     for (i in 0..3) {
       val k = ECKeyPair.recoverFromSignature(i, signature, data)
       if (k != null && k.public.equals(public)) {
@@ -72,14 +74,14 @@ class ECKeyPair {
       }
     }
 
-    if (recId == -1) throw RuntimeException("Could not construct a recoverable keyPair. This should never happen.")
+    if (recId == -1) throw IllegalStateException("Could not construct a recoverable keyPair. This should never happen.")
 
 //    the public keyPair is always in a compressed format in DCore
     val headerByte = (recId + headerCompressed).toByte()
-    val sigData = ByteArray(65)  // 1 header + 32 bytes for R + 32 bytes for S
+    val sigData = ByteArray(1 + SIZE_256 * 2)  // 1 header + 32 bytes for R + 32 bytes for S
     sigData[0] = headerByte
-    System.arraycopy(signature.r.bytes(32), 0, sigData, 1, 32)
-    System.arraycopy(signature.s.bytes(32), 0, sigData, 33, 32)
+    System.arraycopy(signature.r.bytes(SIZE_256), 0, sigData, 1, SIZE_256)
+    System.arraycopy(signature.s.bytes(SIZE_256), 0, sigData, SIZE_256 + 1, SIZE_256)
 
 //    canonical tests
     return if (!checkCanonicalSignature(sigData)) {
@@ -163,12 +165,12 @@ class ECKeyPair {
      * @param message Hash of the data that was signed.
      * @return An ECKeyPair containing only the public part, or null if recovery wasn't possible.
      */
+    @Suppress("ReturnCount")
     @JvmStatic
     fun recoverFromSignature(recId: Int, sig: ECDSASignature, message: Sha256Hash): ECKeyPair? {
       require(recId >= 0, { "recId must be positive" })
       require(sig.r.signum() >= 0, { "r must be positive" })
       require(sig.s.signum() >= 0, { "s must be positive" })
-      requireNotNull(message)
       // 1.0 For j from 0 to h   (h == recId here and the loop is outside this function)
       //   1.1 Let x = r + jn
       val n = curve.n  // Curve order.
@@ -214,6 +216,7 @@ class ECKeyPair {
     }
 
     /** Decompress a compressed public keyPair (x co-ord and low-bit of y-coord).  */
+    @Suppress("MagicNumber")
     private fun decompressKey(xBN: BigInteger, yBit: Boolean): ECPoint {
       val x9 = X9IntegerConverter()
       val compEnc = x9.integerToBytes(xBN, 1 + x9.getByteLength(curve.curve))
@@ -232,6 +235,7 @@ class ECKeyPair {
           }
         */
     @JvmStatic
+    @Suppress("MagicNumber")
     fun checkCanonicalSignature(sigData: ByteArray): Boolean =
         sigData.map { it.toInt() and 0xFF }.let {
           it[1] < 0x80 && !(it[1] == 0 && it[2] < 0x80)
