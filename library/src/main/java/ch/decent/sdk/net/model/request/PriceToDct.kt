@@ -5,7 +5,7 @@ import ch.decent.sdk.net.model.ApiGroup
 
 internal class PriceToDct(
     amount: AssetAmount
-): BaseRequest<AssetAmount>(
+) : BaseRequest<AssetAmount>(
     ApiGroup.DATABASE,
     "price_to_dct",
     AssetAmount::class.java,

@@ -1,6 +1,10 @@
 package ch.decent.sdk
 
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import org.slf4j.LoggerFactory
 
 /**

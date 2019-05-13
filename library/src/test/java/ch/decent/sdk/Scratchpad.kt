@@ -1,13 +1,19 @@
 package ch.decent.sdk
 
-import ch.decent.sdk.crypto.*
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.DumpedPrivateKey
+import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.TransferOperation
 import ch.decent.sdk.utils.hash512
 import ch.decent.sdk.utils.hex
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import okio.Buffer
+import okio.ByteString.Companion.decodeHex
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
@@ -38,18 +44,18 @@ class Scratchpad {
     println(df.format(1))
     println(df.format(1.22))
 
-    println(DCoreConstants.DCT.format(BigInteger.valueOf(9)))
+    println(DCoreConstants.DCT.format(9))
   }
 
   @Test fun `chain object id`() {
 //    ByteBuffer.allocate(8).putLong(10).put(0, 1).put(1, 2).getLong(0).print()
-    val b = "1.2.34".toChainObject().objectTypeIdBytes
+//    val b = "1.2.34".toChainObject().objectTypeIdBytes
 //    Longs.fromByteArray(b).shl(56).print()
     val l = 1L.shl(56) or (2L.shl(48)) or 34L
-    1L.shl(56).bytes().hex().print()
-    2L.shl(48).bytes().hex().print()
-    l.bytes().hex().print()
-    b.hex().print()
+//    1L.shl(56).bytes().hex().print()
+//    2L.shl(48).bytes().hex().print()
+//    l.bytes().hex().print()
+//    b.hex().print()
   }
 
   @Test fun bitwise() {
@@ -69,7 +75,7 @@ class Scratchpad {
     val m = 5616123156
     println(ByteArray(8, { idx -> (m shr 8 * idx).toByte() }).joinToString())
     println(ByteBuffer.allocate(8).putLong(m).array().reversed().joinToString())
-    println(m.bytes().joinToString())
+//    println(m.bytes().joinToString())
 
     println("----------")
     println(333781 and 0xffff) //6100 + 1
@@ -82,7 +88,7 @@ class Scratchpad {
 
     val vote = i shl 8 or b.toInt()
     println(vote)
-    println(vote.bytes().hex())
+//    println(vote.bytes().hex())
     println(ba.hex())
 
   }
@@ -110,7 +116,7 @@ class Scratchpad {
     var sig = ""
     while (sig.isEmpty()) {
       bytes = "${i}asdasdsa12easdas".toByteArray()
-      sig = key.signature(bytes.wrap())
+      sig = key.signature(bytes)
       i++
     }
 
@@ -155,7 +161,7 @@ class Scratchpad {
 
 //    val secret = Sha256Hash.hash(keyPair.public.getEncoded(false))
 //    val hash = sha512.digest(secret)
-    val hash = hash512(key.privateBytes)
+    val hash = key.privateBytes.hash512()
     val k = BigInteger(1, hash)
 
     println(k)
@@ -194,8 +200,8 @@ class Scratchpad {
         AssetAmount(100000),
         fee = AssetAmount(5000)
     )
-    Sha256Hash.of(op.bytes).hex.print()
-    key.signature(Sha256Hash.of(op.bytes)).print()
+//    op.bytes.hash256().print()
+//    key.signature(op.bytes.hash256()).print()
 
   }
 
@@ -256,5 +262,23 @@ class Scratchpad {
 
     o.test().awaitTerminalEvent()
   }
+
+  @Test fun `ref block`() {
+    val id = "003482ff012880f806baa6f220538425804136be"
+//    val num = 3441407
+    val refId = 4169148417
+    val refNum = 33535
+
+    val bytes = Buffer().write(id.decodeHex())
+    bytes.skip(2)
+    bytes.readShort().toInt() and 0xFFFF `should be equal to` refNum
+    bytes.readIntLe().toLong() and 0xFFFFFFFF `should be equal to` refId
+
+//    val b = ByteBuffer.fromHex(id, true);
+//    b.readUint32(4).should.equal(refId);
+//    b.BE().readUint32(0).should.equal(num);
+//    b.BE().readUint16(2).should.equal(refNum);
+  }
+
 
 }

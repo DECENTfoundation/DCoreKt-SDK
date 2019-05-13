@@ -1,6 +1,6 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.*
+import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.Credentials
 import io.reactivex.schedulers.Schedulers
 import org.amshove.kluent.`should equal`

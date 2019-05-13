@@ -16,6 +16,7 @@ dependencies {
   api(Libs.rxJava)
 
   implementation(Libs.bouncyProv)
+  implementation(Libs.okio)
   api(Libs.slf4jApi)
   api(Libs.threeTen)
   api(Libs.guava)

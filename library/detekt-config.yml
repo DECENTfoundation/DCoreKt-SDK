@@ -433,7 +433,7 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: true
-    ignoreNumbers: '-1,0,1,2,8,10,0xFF'
+    ignoreNumbers: '-1,0,1,2,8,10,0xFF,0xFFFF,0xFFFFFFFF'
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: false
     ignoreConstantDeclaration: true

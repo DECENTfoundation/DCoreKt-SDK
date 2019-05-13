@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.threeten.bp.Duration;
 import org.threeten.bp.LocalDateTime;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class ApiTest {
         apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
         Gson gson = DCoreSdk.getGsonBuilder().create();
 
-        apiHttp.setTransactionExpiration(100);
+        apiHttp.setTransactionExpiration(Duration.ofSeconds(100L));
     }
 
     @SuppressWarnings("deprecation")
@@ -97,26 +98,26 @@ public class ApiTest {
     public void BroadcastApiTest() {
         ECKeyPair keyPair = ECKeyPair.fromBase58(Helpers.getPrivate());
         TransferOperation operation = new TransferOperation(ObjectType.ACCOUNT_OBJECT.getGenericId(), ObjectType.ACCOUNT_OBJECT.getGenericId(), new AssetAmount(1));
-        Transaction trx = new Transaction(new BlockData(0, 0, 0), Collections.singletonList(operation), "")
+        Transaction trx = new Transaction(Collections.singletonList(operation), LocalDateTime.now(), 0, 0, "fff4")
                 .withSignature(keyPair);
         api.getBroadcastApi().broadcast(trx);
         api.getBroadcastApi().broadcast(Helpers.getPrivate(), operation);
-        api.getBroadcastApi().broadcast(Helpers.getPrivate(), operation, 100);
+        api.getBroadcastApi().broadcast(Helpers.getPrivate(), operation, Duration.ofSeconds(100));
         api.getBroadcastApi().broadcast(Helpers.getPrivate(), Collections.singletonList(operation));
-        api.getBroadcastApi().broadcast(Helpers.getPrivate(), Collections.singletonList(operation), 100);
+        api.getBroadcastApi().broadcast(Helpers.getPrivate(), Collections.singletonList(operation), Duration.ofSeconds(100));
         api.getBroadcastApi().broadcast(keyPair, operation);
-        api.getBroadcastApi().broadcast(keyPair, operation, 100);
+        api.getBroadcastApi().broadcast(keyPair, operation, Duration.ofSeconds(100));
         api.getBroadcastApi().broadcast(keyPair, Collections.singletonList(operation));
-        api.getBroadcastApi().broadcast(keyPair, Collections.singletonList(operation), 100);
+        api.getBroadcastApi().broadcast(keyPair, Collections.singletonList(operation), Duration.ofSeconds(100));
         api.getBroadcastApi().broadcastWithCallback(trx);
         api.getBroadcastApi().broadcastWithCallback(Helpers.getPrivate(), operation);
-        api.getBroadcastApi().broadcastWithCallback(Helpers.getPrivate(), operation, 100);
+        api.getBroadcastApi().broadcastWithCallback(Helpers.getPrivate(), operation, Duration.ofSeconds(100));
         api.getBroadcastApi().broadcastWithCallback(Helpers.getPrivate(), Collections.singletonList(operation));
-        api.getBroadcastApi().broadcastWithCallback(Helpers.getPrivate(), Collections.singletonList(operation), 100);
+        api.getBroadcastApi().broadcastWithCallback(Helpers.getPrivate(), Collections.singletonList(operation), Duration.ofSeconds(100));
         api.getBroadcastApi().broadcastWithCallback(keyPair, operation);
-        api.getBroadcastApi().broadcastWithCallback(keyPair, operation, 100);
+        api.getBroadcastApi().broadcastWithCallback(keyPair, operation, Duration.ofSeconds(100));
         api.getBroadcastApi().broadcastWithCallback(keyPair, Collections.singletonList(operation));
-        api.getBroadcastApi().broadcastWithCallback(keyPair, Collections.singletonList(operation), 100);
+        api.getBroadcastApi().broadcastWithCallback(keyPair, Collections.singletonList(operation), Duration.ofSeconds(100));
     }
 
     @Test
@@ -196,9 +197,9 @@ public class ApiTest {
         api.getTransactionApi().get(new TransactionConfirmation("", 1, 1,
                 new ProcessedTransaction(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), 1, 1, Collections.emptyList())));
         api.getTransactionApi().createTransaction(operation);
-        api.getTransactionApi().createTransaction(operation, 100);
+        api.getTransactionApi().createTransaction(operation, Duration.ofSeconds(100));
         api.getTransactionApi().createTransaction(Arrays.asList(operation, operation));
-        api.getTransactionApi().createTransaction(Arrays.asList(operation, operation), 100);
+        api.getTransactionApi().createTransaction(Arrays.asList(operation, operation), Duration.ofSeconds(100));
     }
 
     @Test

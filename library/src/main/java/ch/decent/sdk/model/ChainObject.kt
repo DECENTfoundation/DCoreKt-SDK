@@ -1,28 +1,27 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.net.serialization.ByteSerializable
-import ch.decent.sdk.net.serialization.Varint
-import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.model.types.UInt64
+import java.math.BigInteger
 
 @Suppress("MagicNumber")
-class ChainObject : ByteSerializable {
+class ChainObject {
 
   val objectType: ObjectType
-  val instance: Long
+  @UInt64 val instance: BigInteger
 
   private constructor(id: String) {
     val g = regex.matchEntire(id)!!.groupValues
     objectType = ObjectType.fromSpaceType(g[1].toInt(), g[2].toInt())
-    instance = g[3].toLong()
+    instance = g[3].toBigInteger()
   }
 
   internal constructor(objectType: ObjectType) {
     this.objectType = objectType
-    this.instance = 0
+    this.instance = BigInteger.ZERO
   }
 
-  internal val objectTypeIdBytes: ByteArray
-    get() = (objectType.space.toLong().shl(56) or objectType.type.toLong().shl(48) or instance).bytes()
+  internal val fullInstance: Long
+    get() = (objectType.space.toLong().shl(56) or objectType.type.toLong().shl(48) or instance.toLong())
 
   /**
    *
@@ -30,9 +29,6 @@ class ChainObject : ByteSerializable {
    */
   val objectId: String
     get() = String.format("%d.%d.%d", objectType.space, objectType.type, instance)
-
-  override val bytes: ByteArray
-    get() = Varint.writeUnsignedVarLong(instance)
 
   override fun toString(): String = objectId
 

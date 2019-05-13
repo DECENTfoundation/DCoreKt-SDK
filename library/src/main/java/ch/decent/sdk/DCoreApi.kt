@@ -1,5 +1,6 @@
 package ch.decent.sdk
 
+import ch.decent.sdk.DCoreConstants.EXPIRATION_DEF
 import ch.decent.sdk.api.AccountApi
 import ch.decent.sdk.api.AssetApi
 import ch.decent.sdk.api.BalanceApi
@@ -16,7 +17,7 @@ import ch.decent.sdk.api.SeederApi
 import ch.decent.sdk.api.SubscriptionApi
 import ch.decent.sdk.api.TransactionApi
 import ch.decent.sdk.api.ValidationApi
-import ch.decent.sdk.utils.EXPIRATION_DEF
+import org.threeten.bp.Duration
 
 class DCoreApi internal constructor(internal val core: DCoreSdk) {
 
@@ -24,7 +25,7 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    * default transaction expiration in seconds used when broadcasting transactions,
    * after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
-  var transactionExpiration = EXPIRATION_DEF
+  var transactionExpiration: Duration = Duration.ofSeconds(EXPIRATION_DEF)
 
   fun setTimeout(seconds: Long) {
     core.setTimeout(seconds)

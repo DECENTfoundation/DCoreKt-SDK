@@ -166,8 +166,8 @@ object FeeParamAdapter : TypeAdapter<FeeParameter>() {
   override fun read(reader: JsonReader): FeeParameter {
     reader.beginObject()
     reader.nextName()
-    val fee = AssetAmount(BigInteger(reader.nextString()))
-    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); AssetAmount(BigInteger(reader.nextString())) }
+    val fee = AssetAmount(reader.nextString().toLong())
+    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); AssetAmount(reader.nextString().toLong()) }
     reader.endObject()
     return FeeParameter(fee, perKb)
   }
@@ -179,4 +179,12 @@ object OperationTypeAdapter : TypeAdapter<OperationType>() {
   }
 
   override fun read(reader: JsonReader): OperationType = OperationType.values()[reader.nextInt()]
+}
+
+object VoteIdAdapter : TypeAdapter<VoteId>() {
+  override fun write(out: JsonWriter, value: VoteId) {
+    out.value(value.toString())
+  }
+
+  override fun read(reader: JsonReader): VoteId = VoteId.parse(reader.nextString())
 }

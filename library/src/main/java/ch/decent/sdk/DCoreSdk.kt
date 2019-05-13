@@ -5,7 +5,6 @@ import ch.decent.sdk.model.AddressAdapter
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.AuthMapAdapter
 import ch.decent.sdk.model.BaseOperation
-import ch.decent.sdk.model.BlockData
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ChainObjectAdapter
 import ch.decent.sdk.model.DateTimeAdapter
@@ -20,6 +19,8 @@ import ch.decent.sdk.model.OperationTypeFactory
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.PubKeyAdapter
 import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.VoteId
+import ch.decent.sdk.model.VoteIdAdapter
 import ch.decent.sdk.net.model.request.BaseRequest
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.GetDynamicGlobalProps
@@ -33,6 +34,7 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
+import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 
 class DCoreSdk private constructor(
@@ -44,25 +46,22 @@ class DCoreSdk private constructor(
   internal val gson = gsonBuilder.create()
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gson, logger) }
   private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gson) }
-  private val chainId = GetChainId.toRequest().cache()
+  private val chainId = makeRequest(GetChainId).cache()
 
   init {
     require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
   }
 
-  private fun <T> BaseRequest<T>.toRequest(): Single<T> = makeRequest(this)
-  internal fun <R, T> T.toRequest(): Flowable<R> where T : BaseRequest<R>, T : WithCallback = makeRequestStream(this)
-
-  internal fun prepareTransaction(operations: List<BaseOperation>, expiration: Int): Single<Transaction> =
+  internal fun prepareTransaction(operations: List<BaseOperation>, expiration: Duration): Single<Transaction> =
       chainId.flatMap { id ->
-        GetDynamicGlobalProps.toRequest().zipWith(
+        makeRequest(GetDynamicGlobalProps).zipWith(
             operations.partition { it.fee !== BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
               if (noFees.isNotEmpty()) {
-                GetRequiredFees(noFees).toRequest().map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
+                makeRequest(GetRequiredFees(noFees)).map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
               } else {
                 Single.just(fees)
               }
-            }, BiFunction { props: DynamicGlobalProps, ops: List<BaseOperation> -> Transaction(BlockData(props, expiration), ops, id) })
+            }, BiFunction { props: DynamicGlobalProps, ops: List<BaseOperation> -> Transaction.create(ops, id, props, expiration) })
       }
 
   internal fun <T, R> makeRequestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback =
@@ -95,6 +94,7 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(MinerId::class.java, MinerIdAdapter)
         .registerTypeAdapter(FeeParameter::class.java, FeeParamAdapter)
         .registerTypeAdapter(OperationType::class.java, OperationTypeAdapter)
+        .registerTypeAdapter(VoteId::class.java, VoteIdAdapter)
 
     @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =

@@ -1,12 +1,11 @@
-@file:Suppress("TooManyFunctions", "MatchingDeclarationName", "MagicNumber", "SpreadOperator")
-// fixme serializer with class adapters as in TS
+@file:Suppress("TooManyFunctions", "MatchingDeclarationName", "MagicNumber")
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
+ * (the "License") you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
@@ -21,14 +20,38 @@
 package ch.decent.sdk.net.serialization
 
 import ch.decent.sdk.crypto.Address
-import ch.decent.sdk.utils.parseVoteId
-import com.google.common.primitives.Bytes
+import ch.decent.sdk.model.AccountCreateOperation
+import ch.decent.sdk.model.AccountOptions
+import ch.decent.sdk.model.AccountUpdateOperation
+import ch.decent.sdk.model.AddOrUpdateContentOperation
+import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.AuthMap
+import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.CustodyData
+import ch.decent.sdk.model.CustomOperation
+import ch.decent.sdk.model.KeyPart
+import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.PubKey
+import ch.decent.sdk.model.Publishing
+import ch.decent.sdk.model.PurchaseContentOperation
+import ch.decent.sdk.model.RegionalPrice
+import ch.decent.sdk.model.SendMessageOperation
+import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.TransferOperation
+import ch.decent.sdk.model.VoteId
+import ch.decent.sdk.utils.SIZE_OF_POINT_ON_CURVE_COMPRESSED
+import ch.decent.sdk.utils.unhex
+import okio.Buffer
+import okio.BufferedSink
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
 import java.io.ByteArrayOutputStream
 import java.io.DataOutput
 import java.io.DataOutputStream
 import java.io.IOException
 import java.math.BigInteger
-import java.nio.ByteBuffer
+import kotlin.reflect.KClass
 
 /**
  * <p>Encodes signed and unsigned values using a common variable-length
@@ -158,55 +181,236 @@ internal object Varint {
  * @return numBytes byte long array.
  */
 internal fun BigInteger.bytes(numBytes: Int): ByteArray {
-  require(signum() >= 0, { "b must be positive or zero" })
-  require(numBytes > 0, { "numBytes must be positive" })
+  require(signum() >= 0) { "b must be positive or zero" }
+  require(numBytes > 0) { "numBytes must be positive" }
   val src = toByteArray()
   val dest = ByteArray(numBytes)
   val isFirstByteOnlyForSign = src[0].toInt() == 0
   val length = if (isFirstByteOnlyForSign) src.size - 1 else src.size
-  check(length <= numBytes, { "The given number does not fit in $numBytes" })
+  check(length <= numBytes) { "The given number does not fit in $numBytes" }
   val srcPos = if (isFirstByteOnlyForSign) 1 else 0
   val destPos = numBytes - length
   System.arraycopy(src, srcPos, dest, destPos, length)
   return dest
 }
 
-/**
- * Returns an array of bytes with the underlying data used to represent an integer in the reverse form.
- * This is useful for endianess switches, meaning that if you give this function a big-endian integer
- * it will return it's little-endian bytes.
- * @return The array of bytes that represent this value in the reverse format.
- */
-internal fun Int.bytes(): ByteArray {
-  return ByteBuffer.allocate(Integer.SIZE / 8).putInt(Integer.reverseBytes(this)).array()
+typealias Adapter<T> = (BufferedSink, obj: T) -> Unit
+
+object Serializer {
+  private val chainObjectAdapter: Adapter<ChainObject> = { buffer, obj ->
+    buffer.write(Varint.writeUnsignedVarLong(obj.instance.toLong()))
+  }
+
+  private val byteArrayAdapter: Adapter<ByteArray> = { buffer, obj ->
+    buffer.write(Varint.writeUnsignedVarInt(obj.size))
+    buffer.write(obj)
+  }
+
+  private val stringAdapter: Adapter<String> = { buffer, obj ->
+    append(buffer, obj.toByteArray())
+  }
+
+  private val addressAdapter: Adapter<Address> = { buffer, obj ->
+    buffer.write(obj.publicKey.getEncoded(true))
+  }
+
+  private val authorityAdapter: Adapter<Authority> = { buffer, obj ->
+    buffer.writeIntLe(obj.weightThreshold.toInt())
+    append(buffer, obj.accountAuths)
+    append(buffer, obj.keyAuths)
+  }
+
+  private val authorityMapAdapter: Adapter<AuthMap> = { buffer, obj ->
+    append(buffer, obj.value)
+    buffer.writeShortLe(obj.weight.toInt())
+  }
+
+  private val assetAmountAdapter: Adapter<AssetAmount> = { buffer, obj ->
+    buffer.writeLongLe(obj.amount)
+    append(buffer, obj.assetId)
+  }
+
+  private val memoAdapter: Adapter<Memo> = { buffer, obj ->
+    if (obj.from != null) append(buffer, obj.from) else buffer.write(ByteArray(SIZE_OF_POINT_ON_CURVE_COMPRESSED) { 0 })
+    if (obj.to != null) append(buffer, obj.to) else buffer.write(ByteArray(SIZE_OF_POINT_ON_CURVE_COMPRESSED) { 0 })
+    buffer.writeLongLe(obj.nonce.toLong())
+    append(buffer, obj.message.unhex())
+  }
+
+  private val voteAdapter: Adapter<VoteId> = { buffer, obj -> buffer.writeIntLe(obj.id.shl(8) or obj.type) }
+
+  private val booleanAdapter: Adapter<Boolean> = { buffer, obj -> buffer.writeByte(if (obj) 1 else 0) }
+
+  private val optionsAdapter: Adapter<AccountOptions> = { buffer, obj ->
+    append(buffer, obj.memoKey)
+    append(buffer, obj.votingAccount)
+    buffer.writeShortLe(obj.numMiner)
+    append(buffer, obj.votes)
+    append(buffer, obj.extensions)
+    append(buffer, obj.allowSubscription)
+    append(buffer, obj.pricePerSubscribe)
+    buffer.writeIntLe(obj.subscriptionPeriod.toInt())
+  }
+
+  private val pubKeyAdapter: Adapter<PubKey> = { buffer, obj -> append(buffer, obj.keyString) }
+
+  private val publishingAdapter: Adapter<Publishing> = { buffer, obj ->
+    append(buffer, obj.isPublishingManager)
+    append(buffer, obj.publishRightsReceived)
+    append(buffer, obj.publishRightsForwarded)
+  }
+
+  private val localDateTimeAdapter: Adapter<LocalDateTime> = { buffer, obj -> buffer.writeIntLe(obj.toEpochSecond(ZoneOffset.UTC).toInt()) }
+
+  private val transactionAdapter: Adapter<Transaction> = { buffer, obj ->
+    buffer.writeShortLe(obj.refBlockNum)
+    buffer.writeIntLe(obj.refBlockPrefix.toInt())
+    append(buffer, obj.expiration)
+    append(buffer, obj.operations)
+    buffer.writeByte(0)
+  }
+
+  private val accountCreateOperationAdapter: Adapter<AccountCreateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.registrar)
+    append(buffer, obj.name)
+    append(buffer, obj.owner)
+    append(buffer, obj.active)
+    append(buffer, obj.options)
+    buffer.writeByte(0)
+  }
+
+  private val accountUpdateOperationAdapter: Adapter<AccountUpdateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountId)
+    append(buffer, obj.owner, true)
+    append(buffer, obj.active, true)
+    append(buffer, obj.options, true)
+    buffer.writeByte(0)
+  }
+
+  private val purchaseContentOperationAdapter: Adapter<PurchaseContentOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.uri)
+    append(buffer, obj.consumer)
+    append(buffer, obj.price)
+    buffer.writeIntLe(obj.regionCode.toInt())
+    append(buffer, obj.publicElGamal)
+  }
+
+  private val transferOperationAdapter: Adapter<TransferOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.from)
+    buffer.writeLongLe(obj.to.fullInstance)
+    append(buffer, obj.amount)
+    append(buffer, obj.memo, true)
+    buffer.writeByte(0)
+  }
+
+/*
+  private val coAuthorsAdapter: Adapter<> = { buffer, obj ->
+    buffer.writeVarint64(obj.length)
+    obj.forEach(([id, weight]) => {
+      append(buffer, id)
+      buffer.writeUint32(weight)
+    })
+  }
+*/
+
+  private val regionalPriceAdapter: Adapter<RegionalPrice> = { buffer, obj ->
+    buffer.writeIntLe(obj.region.toInt())
+    append(buffer, obj.price)
+  }
+
+  private val keyPartAdapter: Adapter<KeyPart> = { buffer, obj ->
+    append(buffer, obj.keyC1)
+    append(buffer, obj.keyD1)
+  }
+
+  private val custodyDataAdapter: Adapter<CustodyData> = { buffer, obj ->
+    buffer.writeIntLe(obj.n.toInt())
+    buffer.write(obj.seed.unhex())
+    buffer.write(obj.pubKey.unhex())
+  }
+
+  private val addOrUpdateContentOperationAdapter: Adapter<AddOrUpdateContentOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.size)
+    append(buffer, obj.author)
+//    this.coAuthorsAdapter(buffer, obj.coAuthors)
+    append(buffer, obj.uri)
+    buffer.writeIntLe(obj.quorum)
+    append(buffer, obj.price)
+    buffer.write(obj.hash.unhex())
+    append(buffer, obj.seeders)
+    append(buffer, obj.keyParts)
+    append(buffer, obj.expiration)
+    append(buffer, obj.publishingFee)
+    append(buffer, obj.synopsis)
+    append(buffer, obj.custodyData, true)
+  }
+
+  private val customOperationAdapter: Adapter<CustomOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.requiredAuths)
+    buffer.writeShortLe(obj.id)
+    append(buffer, obj.data.unhex())
+  }
+
+
+  @Suppress("UNCHECKED_CAST")
+  private fun <T : Any> append(buffer: BufferedSink, obj: T?, optional: Boolean = false) {
+    if (optional && obj == null) {
+      buffer.writeByte(0)
+      return
+    } else if (optional) {
+      buffer.writeByte(1)
+    }
+    requireNotNull(obj)
+
+    if (obj is Collection<*>) {
+      buffer.write(if (obj.isEmpty()) byteArrayOf(0) else Varint.writeUnsignedVarLong(obj.size.toLong()))
+      obj.forEach { append(buffer, it) }
+    } else {
+      val adapter = adapters[obj::class] as Adapter<T>?
+      requireNotNull(adapter) { "missing adapter for ${obj::class}" }
+      adapter(buffer, obj)
+    }
+  }
+
+  private val adapters: Map<KClass<*>, Adapter<*>> = mapOf(
+      ChainObject::class to chainObjectAdapter,
+      ByteArray::class to byteArrayAdapter,
+      String::class to stringAdapter,
+      Address::class to addressAdapter,
+      Authority::class to authorityAdapter,
+      AuthMap::class to authorityMapAdapter,
+      AssetAmount::class to assetAmountAdapter,
+      Memo::class to memoAdapter,
+      VoteId::class to voteAdapter,
+      Boolean::class to booleanAdapter,
+      AccountOptions::class to optionsAdapter,
+      PubKey::class to pubKeyAdapter,
+      Publishing::class to publishingAdapter,
+      LocalDateTime::class to localDateTimeAdapter,
+      Transaction::class to transactionAdapter,
+      AccountCreateOperation::class to accountCreateOperationAdapter,
+      AccountUpdateOperation::class to accountUpdateOperationAdapter,
+      PurchaseContentOperation::class to purchaseContentOperationAdapter,
+      TransferOperation::class to transferOperationAdapter,
+      RegionalPrice::class to regionalPriceAdapter,
+      KeyPart::class to keyPartAdapter,
+      CustodyData::class to custodyDataAdapter,
+      AddOrUpdateContentOperation::class to addOrUpdateContentOperationAdapter,
+      SendMessageOperation::class to customOperationAdapter
+  )
+
+  fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()
 }
-
-/**
- * Same operation as in the Int.reverse function, but in this case for a short (2 bytes) value.
- * @return The array of bytes that represent this value in the reverse format.
- */
-internal fun Short.bytes(): ByteArray {
-  return ByteBuffer.allocate(java.lang.Short.SIZE / 8).putShort(java.lang.Short.reverseBytes(this)).array()
-}
-
-/**
- * Same operation as in the Int.reverse function, but in this case for a long (8 bytes) value.
- * @return The array of bytes that represent this value in the reverse format.
- */
-internal fun Long.bytes(): ByteArray = ByteBuffer.allocate(java.lang.Long.SIZE / 8).putLong(java.lang.Long.reverseBytes(this)).array()
-
-internal fun String.bytes() = toByteArray().bytes()
-
-internal fun Boolean.bytes() = byteArrayOf(if (this) 1 else 0)
-
-internal fun List<ByteSerializable>.bytes(): ByteArray = if (size == 0) byteArrayOf(0) else Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.bytes }.toTypedArray())
-
-typealias VoteId = String
-
-internal fun Set<VoteId>.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), *map { it.parseVoteId() }.toTypedArray())
-
-internal fun ByteArray.bytes(): ByteArray = Bytes.concat(Varint.writeUnsignedVarInt(size), this)
-
-internal fun Address?.bytes() = this?.publicKey?.getEncoded(true) ?: ByteArray(33) { 0 }
-
-internal fun ByteSerializable?.optionalBytes() = this?.let { byteArrayOf(1) + bytes } ?: byteArrayOf(0)

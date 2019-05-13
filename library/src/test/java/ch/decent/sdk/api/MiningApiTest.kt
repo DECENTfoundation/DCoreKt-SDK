@@ -1,6 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
+import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.toChainObject
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
@@ -98,7 +99,7 @@ class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `lookup votes`() {
-    val test = api.miningApi.findVotedMiners(listOf("0:0", "0:1"))
+    val test = api.miningApi.findVotedMiners(listOf(VoteId.parse("0:0"), VoteId.parse("0:1")))
         .subscribeOn(Schedulers.newThread())
         .test()
 

@@ -18,7 +18,6 @@
 
 package ch.decent.sdk.utils
 
-import ch.decent.sdk.crypto.Sha256Hash
 import ch.decent.sdk.exception.AddressFormatException
 import java.util.*
 
@@ -107,9 +106,9 @@ object Base58 {
     bytes[0] = version.toByte()
     System.arraycopy(payload, 0, bytes, 1, payload.size)
     if (compressed) bytes[payload.size + 2] = 0x01
-    val checksum = Sha256Hash.hashTwice(bytes, 0, bytes.size - 4)
+    val checksum = bytes.dropLast(4).toByteArray().hash256().hash256()
     System.arraycopy(checksum, 0, bytes, bytes.size - 4, 4)
-    return Base58.encode(bytes)
+    return encode(bytes)
   }
 
   /**
@@ -173,7 +172,7 @@ object Base58 {
       throw AddressFormatException("Input too short")
     val data = Arrays.copyOfRange(decoded, 0, decoded.size - 4)
     val checksum = Arrays.copyOfRange(decoded, decoded.size - 4, decoded.size)
-    val actualChecksum = Arrays.copyOfRange(Sha256Hash.hashTwice(data), 0, 4)
+    val actualChecksum = Arrays.copyOfRange(data.hash256().hash256(), 0, 4)
     if (!Arrays.equals(checksum, actualChecksum))
       throw AddressFormatException("Checksum does not validate")
     return data

@@ -1,16 +1,34 @@
 package ch.decent.sdk
 
-import ch.decent.sdk.crypto.*
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.utils.*
+import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.crypto.DumpedPrivateKey
+import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.crypto.Wallet
+import ch.decent.sdk.crypto.dpk
+import ch.decent.sdk.crypto.ecKey
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.CipherKeyPairAdapter
+import ch.decent.sdk.model.ExtraKeysAdapter
+import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.ElGamal.publicElGamal
+import ch.decent.sdk.utils.decryptAes
+import ch.decent.sdk.utils.decryptAesWithChecksum
+import ch.decent.sdk.utils.encryptAes
+import ch.decent.sdk.utils.generateNonce
+import ch.decent.sdk.utils.hash512
+import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.secret
+import ch.decent.sdk.utils.unhex
+import okio.Buffer
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
+import kotlin.test.Ignore
 
 class CrytpoTest : TimeOutTest() {
 
@@ -19,14 +37,6 @@ class CrytpoTest : TimeOutTest() {
   @Test fun `priv key dump`() {
     val key = private.ecKey()
     val dump = DumpedPrivateKey.toBase58(key)
-
-    private.print()
-    ECKeyPair.fromBase58(private).privateBytes.hex().print()
-    Helpers.public2.print()
-    Helpers.public2.address().publicKey.getEncoded(true).hex().print()
-    Helpers.public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
-
-    key.secret(Helpers.public2.address(), BigInteger("1234567890")).hex().print()
     dump `should be equal to` private
   }
 
@@ -35,7 +45,7 @@ class CrytpoTest : TimeOutTest() {
     for (i in 0..100) {
 //      println("$nonce  ${nonce.toByteArray().size} ${nonce.toLong().bytes().joinToString()}")
       nonce = generateNonce()
-      nonce.toLong().bytes().size `should be equal to` 8
+      Buffer().writeLongLe(nonce.toLong()).readByteArray().size `should be equal to` 8
     }
   }
 
@@ -45,7 +55,7 @@ class CrytpoTest : TimeOutTest() {
 
     val key = ECKeyPair.fromBase58(private)
 
-    val hash = hash512(key.privateBytes)
+    val hash = key.privateBytes.hash512()
 
     val k = BigInteger(1, hash)
 
@@ -62,10 +72,10 @@ class CrytpoTest : TimeOutTest() {
 
     val memo = Memo(plain, key, to, nonce)
 
-    val secret = key.secret(to, nonce).also { it.hex().print() }
-    val ivBytes = secret.copyOfRange(32, 32 + 16).also { it.hex().print() }
-    val sks = secret.copyOfRange(0, 32).also { it.hex().print() }
-    decryptAes(ivBytes, sks, encrypted.unhex()).hex().print()
+//    val secret = key.secret(to, nonce).also { it.hex().print() }
+//    val ivBytes = secret.copyOfRange(32, 32 + 16).also { it.hex().print() }
+//    val sks = secret.copyOfRange(0, 32).also { it.hex().print() }
+//    decryptAes(ivBytes, sks, encrypted.unhex()).hex().print()
 
     memo.message `should be equal to` encrypted
     memo.decrypt(key) `should be equal to` plain
@@ -73,8 +83,8 @@ class CrytpoTest : TimeOutTest() {
     val msg = decryptAesWithChecksum(key.secret(to, nonce), encrypted.unhex())
     msg `should be equal to` plain
 
-    "995ea94b18bd2fa351719ceab961c67daac5379d82be1f8bd5006eed419a3e8718facad5a65fd3557d6c0ee3e3c0166087593b96fad136b46c7c2aa4d3ed0978".unhex()
-        .toString(Charset.forName("utf8")).print()
+//    "995ea94b18bd2fa351719ceab961c67daac5379d82be1f8bd5006eed419a3e8718facad5a65fd3557d6c0ee3e3c0166087593b96fad136b46c7c2aa4d3ed0978".unhex()
+//        .toString(Charset.forName("utf8")).print()
   }
 
   @Test fun `decrypt public memo`() {
@@ -89,7 +99,7 @@ class CrytpoTest : TimeOutTest() {
   @Test fun `encrypt private key as wallet file`() {
     val pass = "quick brown fox jumped over a lazy dog"
     val key = ECKeyPair.fromBase58(private)
-    encryptAes(MessageDigest.getInstance("SHA-512").digest(pass.toByteArray()), private.toByteArray()).hex().print()
+//    encryptAes(MessageDigest.getInstance("SHA-512").digest(pass.toByteArray()), private.toByteArray()).hex().print()
     val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key), pass)
     Wallet.decrypt(wallet, pass).keyPair.private `should equal` key.private
   }
@@ -100,7 +110,7 @@ class CrytpoTest : TimeOutTest() {
     Wallet.decrypt(wallet).keyPair.private `should equal` key.private
   }
 
-  @Test fun `decrypt walet`() {
+  @Test @Ignore fun `decrypt walet`() {
     val cipher = "4d09b1b3ba398c40aaaa03c988df25597254a84137c0ef90e2f426f57dafc6ed12f65f98d346ecaa0a2911ac7d6d07adb19c26e24107356ede6f56e56de3541ccf02594d4fd94134d7426933e697e9f430ed4756a2952d81fd05ebce027f6a8cae2cf5247e0b3429d006c454c4a33dfc527aa7e16a399b98ede29ad7ccf0d5539dbb96e6aab74c7eafa659267cf8862298822f0f3b5e757d569deebe9105e3ab6c4f82fdc4ef3d99c6ba16af92dde5973a27051295c6712aae2c2572e7f386ac8b2cd45663c102103024da870ca740af8ea14128034c3cf99a26812867ae8779281d9006afc5ad17e41bf1e60e621b3827f1be30b1092a972c1e51d71f0b39bc7fe4e409ac5fda97262507843c08096de60d9818778df0648146756dc3aea740cd034b17662b9372ecb32bf3dcb7274d490a76fb8f16ee819b6240e660b0ca4dccc018dc8bdf53b7695ac2d7b53a1f597f5385c80955b28298295f49d4a1284cbd495286532c848ddeda981c809aee400944facab124592e79f710b95090016b330856e81e761448d03586ab80c6840032c9e292f7b2604752eef91043734501c00f51e6d95b191d0ec7f70c743165d6b5ce9652df979729430463b02047e830e610d5dcad65db49a14a0a09171fa609a5dd13c6fa8fa4b4a3b39dfdc6be6379cc55599d119a59a3c077d90e17ecc7c603f762455abafe0c7cc2fe071a48b1c651b4f93f0c988c4cecec5e7e7264e96def636387cc61f85f37b96ca05861a3e0becf99d946ff7498e38fe78cc9c9620d93348ecf1535bbe265decd0fdd43169c8dfef8a3ddcbbdc2153092f949038a45d02d607062f44c177235dc062cc2086bc881526d20f5d3e5b84c275a2922b7993f896dcb5d9688b5251d676d6f6af39bac25dea55c044cbfe09bcc79bde4fbc0db2a279be361bd7f8f9bd32c737c99de40fe9d5a8c690bf7ed2541be6ad80bff0fc46bac5a27532462264b17220e7a45cfb74d7651ed193f5ac8596094c631270d361baf1d63b329f675bfdb3b2370ea33ca9f4ac6fddbd87762158890da7bec3fec156fa8836767a93c8ca74e0f6a011e65ce14442cf8c86a7311150c8a604b58c7b239a8b87ca9eb80ea1cae9deccdec6e3598ba076f82da7f56215ce911c766b93e3aca54348861b8b536b7157e06a3a70ed486367090d99b695c5992df06754869967cb820883027a9c39708c653a117c0928528bad99cd75bac0445d2a103117270c2f14c41a7ecd46717f165bc75303f8952aa7ee2e27754f196eb2ce1aa4571f40795720fb068541f4ac89d18dcada2584f2333755610e6202318bb140c0dc014d593720ae09f221eaaabe7c6cf9a0a0a0af759b916dfbbe97b307cde1963b75d2b02567fdf1fe77c295362e826f669f4bab9d7f2d261ef54ca45d33d1b4158fed5854b98467c5cd2fc2c6eaa57a5885de93cf00d2816d21b20871cd473970956b957b3683c9389358c1d37c0186c9cce92a0198f3dd816ca1f756766f91960ab74a81d9605a524f728d5d9b4d620cea3e2200db4daa1de520117abfc"
     val pass = MessageDigest.getInstance("SHA-512").digest("aaa".toByteArray())
 

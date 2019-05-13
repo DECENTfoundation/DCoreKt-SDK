@@ -1,35 +1,31 @@
-@file:Suppress("MagicNumber")
-// fixme, abstract class, separate package
-
 package ch.decent.sdk.model
 
+import ch.decent.sdk.DCoreConstants.COMMENT_MAX_CHARS
+import ch.decent.sdk.DCoreConstants.RATING_ALLOWED
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.net.serialization.ByteSerializable
-import ch.decent.sdk.net.serialization.Varint
-import ch.decent.sdk.net.serialization.VoteId
-import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.net.serialization.optionalBytes
+import ch.decent.sdk.model.types.UInt32
+import ch.decent.sdk.net.serialization.Serializer
+import ch.decent.sdk.utils.TRX_ID_SIZE
 import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.publicElGamal
 import ch.decent.sdk.utils.unhex
-import com.google.common.primitives.Bytes
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
-import java.math.BigInteger
 import java.net.URL
 import java.util.*
 import java.util.regex.Pattern
 
+// fixme, abstract class, separate package
 sealed class BaseOperation(
     @Transient var type: OperationType,
     @SerializedName("fee") open var fee: AssetAmount = FEE_UNSET
-) : ByteSerializable {
+) {
 
   companion object {
     @JvmField
-    val FEE_UNSET = AssetAmount(BigInteger.ZERO)
+    val FEE_UNSET = AssetAmount(0)
   }
 
   override fun equals(other: Any?): Boolean {
@@ -38,17 +34,14 @@ sealed class BaseOperation(
 
     other as BaseOperation
 
-    if (!bytes.contentEquals(other.bytes)) return false
+    if (!Serializer.serialize(this).contentEquals(Serializer.serialize(other))) return false
     return true
   }
 
-  override fun hashCode(): Int = Arrays.hashCode(bytes)
+  override fun hashCode(): Int = Arrays.hashCode(Serializer.serialize(this))
 }
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
-  override val bytes: ByteArray
-    get() = byteArrayOf(0)
-
   override fun toString(): String = type.toString()
 }
 
@@ -65,20 +58,10 @@ open class CustomOperation constructor(
     @SerializedName("payer") val payer: ChainObject,
     @SerializedName("required_auths") val requiredAuths: List<ChainObject>,
     @SerializedName("data") val data: String,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.CUSTOM_OPERATION, fee) {
 
   @SerializedName("id") val id: Int = type.ordinal
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        payer.bytes,
-        requiredAuths.bytes(),
-        id.toShort().bytes(),
-        data.unhex().bytes()
-    )
 }
 
 /**
@@ -95,24 +78,13 @@ class TransferOperation @JvmOverloads constructor(
     @SerializedName("to") val to: ChainObject,
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION, fee) {
 
   init {
     require(from.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(to.objectType == ObjectType.ACCOUNT_OBJECT || to.objectType == ObjectType.CONTENT_OBJECT) { "not an account or content object id" }
   }
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        from.bytes,
-        if (type == OperationType.TRANSFER2_OPERATION) to.objectTypeIdBytes else to.bytes,
-        amount.bytes,
-        memo.optionalBytes(),
-        byteArrayOf(0)
-    )
 
   override fun toString(): String {
     return "TransferOperation(from=$from, to=$to, amount=$amount, memo=$memo, fee=$fee, fee=$fee)"
@@ -134,8 +106,8 @@ class PurchaseContentOperation @JvmOverloads constructor(
     @SerializedName("consumer") val consumer: ChainObject,
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
-    @SerializedName("region_code_from") val regionCode: Int = Regions.ALL.id,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    @SerializedName("region_code_from") @UInt32 val regionCode: Long = Regions.ALL.id,
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
   constructor(credentials: Credentials, content: Content) :
@@ -144,20 +116,8 @@ class PurchaseContentOperation @JvmOverloads constructor(
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
-    require(price.amount >= BigInteger.ZERO) { "amount must be >= 0" }
+    require(price.amount >= 0) { "amount must be >= 0" }
   }
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        Varint.writeUnsignedVarInt(uri.toByteArray().size),
-        uri.toByteArray(),
-        consumer.bytes,
-        price.bytes,
-        regionCode.bytes(),
-        publicElGamal.bytes
-    )
 
   override fun toString(): String {
     return "PurchaseContentOperation(uri='$uri', consumer=$consumer, price=$price, publicElGamal=$publicElGamal, regionCode=$regionCode, fee=$fee)"
@@ -178,8 +138,8 @@ class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("account") val accountId: ChainObject,
     @SerializedName("owner") val owner: Authority? = null,
     @SerializedName("active") val active: Authority? = null,
-    @SerializedName("new_options") val options: Options? = null,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    @SerializedName("new_options") val options: AccountOptions? = null,
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
   constructor(account: Account, votes: Set<VoteId>) : this(account.id, options = account.options.copy(votes = votes))
@@ -187,17 +147,6 @@ class AccountUpdateOperation @JvmOverloads constructor(
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
   }
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        accountId.bytes,
-        owner.optionalBytes(),
-        active.optionalBytes(),
-        options.optionalBytes(),
-        byteArrayOf(0)
-    )
 
   override fun toString(): String {
     return "AccountUpdateOperation(accountId=$accountId, owner=$owner, active=$active, options=$options, fee=$fee)"
@@ -220,8 +169,8 @@ class AccountCreateOperation @JvmOverloads constructor(
     @SerializedName("name") val name: String,
     @SerializedName("owner") val owner: Authority,
     @SerializedName("active") val active: Authority,
-    @SerializedName("options") val options: Options,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    @SerializedName("options") val options: AccountOptions,
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION, fee) {
 
   init {
@@ -230,20 +179,8 @@ class AccountCreateOperation @JvmOverloads constructor(
   }
 
   @JvmOverloads
-  constructor(registrar: ChainObject, name: String, public: Address, fee: AssetAmount = BaseOperation.FEE_UNSET) :
-      this(registrar, name, Authority(public), Authority(public), Options(public), fee)
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        registrar.bytes,
-        name.bytes(),
-        owner.bytes,
-        active.bytes,
-        options.bytes,
-        byteArrayOf(0)
-    )
+  constructor(registrar: ChainObject, name: String, public: Address, fee: AssetAmount = FEE_UNSET) :
+      this(registrar, name, Authority(public), Authority(public), AccountOptions(public), fee)
 
   override fun toString(): String {
     return "AccountCreateOperation(registrar=$registrar, name='$name', owner=$owner, active=$active, options=$options, fee=$fee)"
@@ -271,7 +208,7 @@ class AccountCreateOperation @JvmOverloads constructor(
  * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
  *
  */
-class ContentSubmitOperation constructor(
+class AddOrUpdateContentOperation constructor(
     @SerializedName("size") val size: Long,
     @SerializedName("author") val author: ChainObject,
     @SerializedName("co_authors") val coauthors: List<List<Any>>? = null,
@@ -280,12 +217,12 @@ class ContentSubmitOperation constructor(
     @SerializedName("price") val price: List<RegionalPrice>,
     @SerializedName("hash") val hash: String,
     @SerializedName("seeders") val seeders: List<ChainObject>,
-    @SerializedName("key_parts") val keyParts: List<KeyParts>,
+    @SerializedName("key_parts") val keyParts: List<KeyPart>,
     @SerializedName("expiration") val expiration: LocalDateTime,
     @SerializedName("publishing_fee") val publishingFee: AssetAmount,
     @SerializedName("synopsis") val synopsis: String,
     @SerializedName("cd") val custodyData: CustodyData? = null,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION, fee) {
 
   init {
@@ -294,30 +231,11 @@ class ContentSubmitOperation constructor(
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
     require(quorum >= 0) { "invalid seeders count" }
     require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }
-    require(hash.unhex().size == 20) { "invalid file hash size, should be 40 chars long, hex encoded" }
+    require(hash.unhex().size == TRX_ID_SIZE) { "invalid file hash size, should be 40 chars long, hex encoded" }
   }
 
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        size.bytes(),
-        author.bytes,
-        byteArrayOf(0),
-        uri.bytes(),
-        quorum.bytes(),
-        price.bytes(),
-        hash.unhex(),
-        seeders.bytes(),
-        keyParts.bytes(),
-        expiration.toEpochSecond(ZoneOffset.UTC).toInt().bytes(),
-        publishingFee.bytes,
-        synopsis.bytes(),
-        custodyData.optionalBytes()
-    )
-
   override fun toString(): String {
-    return "ContentSubmitOperation(" +
+    return "AddOrUpdateContentOperation(" +
         "size=$size," +
         " author=$author," +
         " coauthors=$coauthors," +
@@ -349,23 +267,13 @@ class LeaveRatingAndCommentOperation constructor(
     @SerializedName("consumer") val consumer: ChainObject,
     @SerializedName("rating") val rating: Int,
     @SerializedName("comment") val comment: String,
-    fee: AssetAmount = BaseOperation.FEE_UNSET
+    fee: AssetAmount = FEE_UNSET
 ) : BaseOperation(OperationType.LEAVE_RATING_AND_COMMENT_OPERATION, fee) {
 
   init {
-    require(rating in 1..5) { "rating must be between 0-5" }
-    require(comment.length <= 100) { "comment max length is 100 chars" }
+    require(rating in RATING_ALLOWED) { "rating must be between 1-5" }
+    require(comment.length <= COMMENT_MAX_CHARS) { "comment max length is $COMMENT_MAX_CHARS chars" }
   }
-
-  override val bytes: ByteArray
-    get() = Bytes.concat(
-        byteArrayOf(type.ordinal.toByte()),
-        fee.bytes,
-        uri.bytes(),
-        consumer.bytes,
-        comment.bytes(),
-        rating.toLong().bytes()
-    )
 }
 
 class SendMessageOperation constructor(

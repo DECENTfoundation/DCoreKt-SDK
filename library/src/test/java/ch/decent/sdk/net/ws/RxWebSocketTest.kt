@@ -6,8 +6,6 @@ import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
-import ch.decent.sdk.print
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.amshove.kluent.`should be equal to`

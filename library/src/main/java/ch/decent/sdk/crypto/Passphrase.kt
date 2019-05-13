@@ -1,6 +1,7 @@
 package ch.decent.sdk.crypto
 
 import ch.decent.sdk.crypto.dictonaries.SeedDictionary
+import ch.decent.sdk.utils.SIZE_32
 import ch.decent.sdk.utils.generateEntropy
 
 class Passphrase(val words: Array<String>) {

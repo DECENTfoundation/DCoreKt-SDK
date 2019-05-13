@@ -7,8 +7,6 @@ import ch.decent.sdk.model.TransactionDetail
 import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import com.google.gson.reflect.TypeToken
-import kotlin.math.max
-import kotlin.math.min
 
 internal class SearchAccountHistory(
     accountId: ChainObject,
