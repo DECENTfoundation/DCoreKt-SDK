@@ -2,6 +2,8 @@ package ch.decent.sdk
 
 import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.utils.PRECISION_MAX
+import ch.decent.sdk.utils.RATING_MAX
 
 object DCoreConstants {
   private const val DCT_PRECISION: Short = 8
@@ -14,7 +16,7 @@ object DCoreConstants {
       DCT_PRECISION,
       "1.2.1".toChainObject(),
       "",
-      Asset.Options(DCT_SUPPLY, Asset.ExchangeRate(), true),
+      Asset.AssetOptions(DCT_SUPPLY),
       "2.3.0".toChainObject()
   )
 
@@ -27,5 +29,7 @@ object DCoreConstants {
   const val EXPIRATION_DEF = 30L // 30s
   const val MAX_SHARE_SUPPLY = 7319777577456890
   const val COMMENT_MAX_CHARS = 100
-  val RATING_ALLOWED = 1..5
+  val RATING_ALLOWED = 1..RATING_MAX
+  val PRECISION_ALLOWED = 0..PRECISION_MAX
+  const val UIA_DESCRIPTION_MAX_CHARS = 1000
 }

@@ -6,6 +6,7 @@ import ch.decent.sdk.crypto.address
 import ch.decent.sdk.crypto.dpk
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.EmptyOperation
+import ch.decent.sdk.model.operation.OperationType
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory

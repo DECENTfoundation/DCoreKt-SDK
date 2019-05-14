@@ -7,7 +7,6 @@ import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.ObjectType
-import ch.decent.sdk.model.OperationType
 import com.google.gson.annotations.SerializedName
 
 /**

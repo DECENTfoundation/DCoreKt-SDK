@@ -38,6 +38,7 @@ object GradlePlugins {
 
 object Libs {
   val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+  val kotlin_reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
 
   val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retorfit}"
   val retrofitGson = "com.squareup.retrofit2:converter-gson:${Versions.retorfit}"

@@ -1,7 +1,6 @@
 package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.CustomOperationType
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.utils.hex
 

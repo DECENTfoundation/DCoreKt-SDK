@@ -19,7 +19,7 @@ class AssetTest {
           0,
           ObjectType.ACCOUNT_OBJECT.genericId,
           "",
-          Asset.Options(
+          Asset.AssetOptions(
               exchangeRate = Asset.ExchangeRate(
                   base = base,
                   quote = quote

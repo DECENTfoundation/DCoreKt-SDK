@@ -6,7 +6,6 @@ import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Content
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.ObjectType
-import ch.decent.sdk.model.OperationType
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.types.UInt32

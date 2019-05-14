@@ -3,7 +3,7 @@ package ch.decent.sdk.api
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.OperationType
+import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import io.reactivex.schedulers.Schedulers

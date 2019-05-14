@@ -1,13 +1,9 @@
 package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.CustomOperationType
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.OperationType
 import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
-import okio.Utf8
-import java.nio.charset.Charset
 
 /**
  * Custom operation

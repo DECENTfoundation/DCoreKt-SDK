@@ -1,12 +1,4 @@
-package ch.decent.sdk.model
-
-import ch.decent.sdk.model.operation.AccountCreateOperation
-import ch.decent.sdk.model.operation.AccountUpdateOperation
-import ch.decent.sdk.model.operation.AddOrUpdateContentOperation
-import ch.decent.sdk.model.operation.CustomOperation
-import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
-import ch.decent.sdk.model.operation.PurchaseContentOperation
-import ch.decent.sdk.model.operation.TransferOperation
+package ch.decent.sdk.model.operation
 
 /**
  * The order of operation types is important
@@ -15,9 +7,9 @@ enum class OperationType(val clazz: Class<*>? = null) {
   TRANSFER_OPERATION(TransferOperation::class.java),
   ACCOUNT_CREATE_OPERATION(AccountCreateOperation::class.java),
   ACCOUNT_UPDATE_OPERATION(AccountUpdateOperation::class.java),
-  ASSET_CREATE_OPERATION,
-  ASSET_ISSUE_OPERATION,
-  ASSET_PUBLISH_FEED_OPERATION,
+  ASSET_CREATE_OPERATION(AssetCreateOperation::class.java),
+  ASSET_ISSUE_OPERATION(AssetIssueOperation::class.java),
+  ASSET_PUBLISH_FEED_OPERATION(AssetPublishFeedOperation::class.java),
   MINER_CREATE_OPERATION,
   MINER_UPDATE_OPERATION,
   MINER_UPDATE_GLOBAL_PARAMETERS_OPERATION,
@@ -44,15 +36,15 @@ enum class OperationType(val clazz: Class<*>? = null) {
   REPORT_STATS_OPERATION,
   SET_PUBLISHING_MANAGER_OPERATION, //30
   SET_PUBLISHING_RIGHT_OPERATION,
-  CONTENT_CANCELLATION_OPERATION,
-  ASSET_FUND_POOLS_OPERATION,
-  ASSET_RESERVE_OPERATION,
-  ASSET_CLAIM_FEES_OPERATION,     //35
-  UPDATE_USER_ISSUED_ASSET_OPERATION,
-  UPDATE_MONITORED_ASSET_OPERATION,
+  CONTENT_CANCELLATION_OPERATION(RemoveContentOperation::class.java),
+  ASSET_FUND_POOLS_OPERATION(AssetFundPoolsOperation::class.java),
+  ASSET_RESERVE_OPERATION(AssetReserveOperation::class.java),
+  ASSET_CLAIM_FEES_OPERATION(AssetClaimFeesOperation::class.java),     //35
+  UPDATE_USER_ISSUED_ASSET_OPERATION(AssetUpdateOperation::class.java),
+  UPDATE_MONITORED_ASSET_OPERATION(AssetUpdateMonitoredOperation::class.java),
   READY_TO_PUBLISH2_OPERATION,
   TRANSFER2_OPERATION(TransferOperation::class.java),
-  UPDATE_USER_ISSUED_ASSET_ADVANCED,
+  UPDATE_USER_ISSUED_ASSET_ADVANCED(AssetUpdateAdvancedOperation::class.java),
   DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL 41
   RETURN_ESCROW_SUBMISSION_OPERATION,                    // VIRTUAL
   RETURN_ESCROW_BUYING_OPERATION,                        // VIRTUAL

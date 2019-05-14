@@ -8,7 +8,7 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.OperationType
+import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.operation.BaseOperation

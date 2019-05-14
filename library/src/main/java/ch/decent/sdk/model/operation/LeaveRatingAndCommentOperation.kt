@@ -3,7 +3,6 @@ package ch.decent.sdk.model.operation
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.OperationType
 import com.google.gson.annotations.SerializedName
 
 /**

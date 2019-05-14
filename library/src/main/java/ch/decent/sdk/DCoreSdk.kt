@@ -12,7 +12,7 @@ import ch.decent.sdk.model.FeeParamAdapter
 import ch.decent.sdk.model.FeeParameter
 import ch.decent.sdk.model.MinerId
 import ch.decent.sdk.model.MinerIdAdapter
-import ch.decent.sdk.model.OperationType
+import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.OperationTypeAdapter
 import ch.decent.sdk.model.OperationTypeFactory
 import ch.decent.sdk.model.PubKey

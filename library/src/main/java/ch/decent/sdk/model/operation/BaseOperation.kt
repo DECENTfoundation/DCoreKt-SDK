@@ -2,7 +2,6 @@ package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.OperationType
 import ch.decent.sdk.net.serialization.Serializer
 import com.google.gson.annotations.SerializedName
 import java.util.*

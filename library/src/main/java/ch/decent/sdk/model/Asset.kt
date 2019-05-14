@@ -1,6 +1,8 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.DCoreConstants
+import ch.decent.sdk.model.types.Int64
+import ch.decent.sdk.model.types.UInt32
 import ch.decent.sdk.model.types.UInt8
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
@@ -13,10 +15,15 @@ data class Asset(
     @SerializedName("precision") @UInt8 override val precision: Short,
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("description") val description: String,
-    @SerializedName("options") val options: Options,
+    @SerializedName("options") val options: AssetOptions,
     @SerializedName("dynamic_asset_data_id") val dataId: ChainObject,
     @SerializedName("monitored_asset_opts") val monitoredAssetOpts: MonitoredAssetOpts? = null
 ) : AssetFormatter {
+
+  companion object {
+    private val regex = Regex("(?=.{3,16}$)^[A-Z][A-Z0-9]+(\\.[A-Z0-9]*)?[A-Z]$")
+    @JvmStatic fun isValidSymbol(symbol: String) = regex.matches(symbol)
+  }
 
   init {
     check(id.objectType == ObjectType.ASSET_OBJECT)
@@ -52,32 +59,32 @@ data class Asset(
     val convertedAmount = when (toAssetId) {
       options.exchangeRate.quote.assetId -> (quoteAmount * amount.toBigDecimal()).divide(baseAmount, roundingMode)
       options.exchangeRate.base.assetId -> (baseAmount * amount.toBigDecimal()).divide(quoteAmount, roundingMode)
-      else -> throw IllegalArgumentException("cannot convert ${id} with $symbol:$toAssetId")
+      else -> throw IllegalArgumentException("cannot convert $id with $symbol:$toAssetId")
     }
     return AssetAmount(convertedAmount.toLong(), toAssetId)
   }
 
   data class MonitoredAssetOpts(
-      @SerializedName("feeds") val feeds: List<Any> = emptyList(),
-      @SerializedName("current_feed") val currentFeed: CurrentFeed = CurrentFeed(),
+      @SerializedName("feeds") val feeds: List<Any>,
+      @SerializedName("current_feed") val currentFeed: CurrentFeed,
       @SerializedName("current_feed_publication_time") val currentFeedPublicationTime: LocalDateTime,
-      @SerializedName("feed_lifetime_sec") val feedLifetimeSec: Long = 0,
-      @SerializedName("minimum_feeds") val minimumFeeds: Int = 0
+      @SerializedName("feed_lifetime_sec") @UInt32 val feedLifetimeSec: Long,
+      @SerializedName("minimum_feeds") @UInt8 val minimumFeeds: Short
   )
 
   data class CurrentFeed(
-      @SerializedName("core_exchange_rate") val coreExchangeRate: ExchangeRate = ExchangeRate()
+      @SerializedName("core_exchange_rate") val coreExchangeRate: ExchangeRate
   )
 
-  data class Options(
-      @SerializedName("max_supply") val maxSupply: Long = 0,
-      @SerializedName("core_exchange_rate") val exchangeRate: ExchangeRate = ExchangeRate(),
-      @SerializedName("is_exchangeable") val exchangeable: Boolean = false,
+  data class AssetOptions(
+      @SerializedName("max_supply") @Int64 val maxSupply: Long = DCoreConstants.MAX_SHARE_SUPPLY,
+      @SerializedName("core_exchange_rate") val exchangeRate: ExchangeRate = ExchangeRate(AssetAmount(1), AssetAmount(1)),
+      @SerializedName("is_exchangeable") val exchangeable: Boolean = true,
       @SerializedName("extensions") val extensions: List<Any> = emptyList()
   )
 
   data class ExchangeRate(
-      @SerializedName("base") val base: AssetAmount = AssetAmount(1),
-      @SerializedName("quote") val quote: AssetAmount = AssetAmount(1)
+      @SerializedName("base") val base: AssetAmount,
+      @SerializedName("quote") val quote: AssetAmount
   )
 }

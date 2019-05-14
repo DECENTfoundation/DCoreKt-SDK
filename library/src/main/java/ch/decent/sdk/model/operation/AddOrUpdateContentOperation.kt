@@ -6,7 +6,6 @@ import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.ObjectType
-import ch.decent.sdk.model.OperationType
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.utils.TRX_ID_SIZE
 import ch.decent.sdk.utils.unhex

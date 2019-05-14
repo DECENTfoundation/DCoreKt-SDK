@@ -1,4 +1,3 @@
-import net.ltgt.gradle.errorprone.errorprone
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
@@ -11,6 +10,7 @@ plugins {
 
 dependencies {
   implementation(Libs.kotlin)
+  implementation(Libs.kotlin_reflect)
 
   api(Libs.rxKotlin)
   api(Libs.rxJava)

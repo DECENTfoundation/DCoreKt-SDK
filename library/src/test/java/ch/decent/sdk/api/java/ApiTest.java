@@ -9,6 +9,7 @@ import ch.decent.sdk.crypto.ECKeyPair;
 import ch.decent.sdk.model.*;
 import ch.decent.sdk.model.operation.BaseOperation;
 import ch.decent.sdk.model.operation.EmptyOperation;
+import ch.decent.sdk.model.operation.OperationType;
 import ch.decent.sdk.model.operation.TransferOperation;
 import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;

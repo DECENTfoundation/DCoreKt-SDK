@@ -1,5 +1,6 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.types.UInt32
 import com.google.gson.annotations.SerializedName
 
