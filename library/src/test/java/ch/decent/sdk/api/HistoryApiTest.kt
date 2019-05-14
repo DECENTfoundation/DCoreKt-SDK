@@ -28,7 +28,9 @@ class HistoryApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should list relative account history`() {
-    val test = api.historyApi.listOperationsRelative(Helpers.account, limit = 10)
+    val test = api.historyApi.listOperationsRelative(Helpers.account, limit = 100)
+        .map { it.joinToString("\n") { it.operation.toString() } }
+        .doOnSuccess { System.out.println(it) }
         .subscribeOn(Schedulers.newThread())
         .test()
 

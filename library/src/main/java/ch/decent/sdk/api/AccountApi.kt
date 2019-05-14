@@ -8,17 +8,18 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.AccountCreateOperation
+import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.SearchAccountHistoryOrder
 import ch.decent.sdk.model.SearchAccountsOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.TransactionDetail
-import ch.decent.sdk.model.TransferOperation
+import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.request.GetAccountById
 import ch.decent.sdk.net.model.request.GetAccountByName
@@ -200,7 +201,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param amount amount to send with asset type
    * @param memo optional message
    * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
+   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
@@ -211,7 +213,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       amount: AssetAmount,
       memo: String? = null,
       encrypted: Boolean = true,
-      fee: AssetAmount = BaseOperation.FEE_UNSET
+      fee: Fee = Fee()
   ): Single<TransferOperation> =
       if ((memo.isNullOrBlank() || !encrypted) && ChainObject.isValid(nameOrId)) {
         Single.just(TransferOperation(credentials.account, nameOrId.toChainObject(), amount, memo?.let { Memo(it) }, fee))
@@ -230,7 +232,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param amount amount to send with asset type
    * @param memo optional message
    * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
+   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
@@ -241,7 +244,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       amount: AssetAmount,
       memo: String? = null,
       encrypted: Boolean = true,
-      fee: AssetAmount = BaseOperation.FEE_UNSET
+      fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       createTransfer(credentials, nameOrId, amount, memo, encrypted, fee).flatMap {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
@@ -253,7 +256,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param registrar credentials used to register the new account
    * @param name new account name
    * @param address new account public key address
-   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
+   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
@@ -261,7 +265,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       registrar: Credentials,
       name: String,
       address: Address,
-      fee: AssetAmount = BaseOperation.FEE_UNSET
+      fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       api.broadcastApi.broadcastWithCallback(registrar.keyPair, AccountCreateOperation(registrar.account, name, address, fee))
 

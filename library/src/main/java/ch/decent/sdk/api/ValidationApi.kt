@@ -7,12 +7,12 @@ import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.EmptyOperation
 import ch.decent.sdk.model.OperationType
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.net.model.request.GetPotentialSignatures
 import ch.decent.sdk.net.model.request.GetRequiredFees
 import ch.decent.sdk.net.model.request.GetRequiredSignatures
@@ -95,24 +95,50 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun getFee(op: BaseOperation, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> = getFees(listOf(op), assetId).map { it.single() }
 
   /**
-   * Returns fee for operation type, not valid for operation per size fees:
+   * Returns fees for operation type, not valid for operation per size fees:
+   * [OperationType.ASSET_CREATE_OPERATION],
+   * [OperationType.ASSET_ISSUE_OPERATION],
    * [OperationType.PROPOSAL_CREATE_OPERATION],
    * [OperationType.PROPOSAL_UPDATE_OPERATION],
    * [OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION],
-   * [OperationType.CUSTOM_OPERATION]
+   * [OperationType.CUSTOM_OPERATION],
+   * [OperationType.ASSERT_OPERATION],
+   * [OperationType.CONTENT_SUBMIT_OPERATION]
+   *
+   * @param types operation types
+   *
+   * @return a fee asset amount
+   */
+  @JvmOverloads
+  fun getFeesForType(types: List<OperationType>, assetId: ChainObject = DCoreConstants.DCT.id): Single<List<AssetAmount>> =
+      require(listOf(
+          OperationType.ASSET_CREATE_OPERATION,
+          OperationType.ASSET_ISSUE_OPERATION,
+          OperationType.PROPOSAL_CREATE_OPERATION,
+          OperationType.PROPOSAL_UPDATE_OPERATION,
+          OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION,
+          OperationType.CUSTOM_OPERATION,
+          OperationType.ASSERT_OPERATION,
+          OperationType.CONTENT_SUBMIT_OPERATION)
+          .intersect(types).isEmpty()
+      ).let { getFees(types.map { EmptyOperation(it) }, assetId) }
+
+  /**
+   * Returns fee for operation type, not valid for operation per size fees:
+   * [OperationType.ASSET_CREATE_OPERATION],
+   * [OperationType.ASSET_ISSUE_OPERATION],
+   * [OperationType.PROPOSAL_CREATE_OPERATION],
+   * [OperationType.PROPOSAL_UPDATE_OPERATION],
+   * [OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION],
+   * [OperationType.CUSTOM_OPERATION],
+   * [OperationType.ASSERT_OPERATION],
+   * [OperationType.CONTENT_SUBMIT_OPERATION]
    *
    * @param type operation type
    *
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFee(type: OperationType, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> =
-      require(listOf(
-          OperationType.PROPOSAL_CREATE_OPERATION,
-          OperationType.PROPOSAL_UPDATE_OPERATION,
-          OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION,
-          OperationType.CUSTOM_OPERATION)
-          .contains(type).not()
-      ).let { getFee(EmptyOperation(type), assetId) }
-
+  fun getFeeForType(type: OperationType, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> =
+      getFeesForType(listOf(type), assetId).map { it.single() }
 }

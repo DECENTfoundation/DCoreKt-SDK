@@ -3,7 +3,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
