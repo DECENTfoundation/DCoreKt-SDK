@@ -17,7 +17,7 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class AssetUpdateAdvancedOperation(
+class AssetUpdateAdvancedOperation @JvmOverloads constructor(
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("asset_to_update") val assetToUpdate: ChainObject,
     @SerializedName("new_precision") @UInt8 val precision: Byte,

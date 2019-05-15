@@ -13,7 +13,7 @@ import ch.decent.sdk.utils.hex
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class SendMessageOperation constructor(
+class SendMessageOperation @JvmOverloads constructor(
     messagePayloadJson: String,
     payer: ChainObject,
     requiredAuths: List<ChainObject> = listOf(payer),

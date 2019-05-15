@@ -2,6 +2,7 @@ package ch.decent.sdk.crypto
 
 import ch.decent.sdk.utils.Base58
 import ch.decent.sdk.utils.SIZE_32
+import ch.decent.sdk.utils.ripemd160
 import org.bouncycastle.crypto.digests.RIPEMD160Digest
 import org.bouncycastle.math.ec.ECPoint
 
@@ -23,7 +24,6 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
   }
 
   companion object {
-    private const val DIGEST_SIZE = 20
     const val PREFIX = "DCT"
 
     @Suppress("TooGenericExceptionCaught")
@@ -55,13 +55,13 @@ data class Address(val publicKey: ECPoint, private val prefix: String = PREFIX) 
       return if (pubKey.all { it == 0x00.toByte() }) null else decode(address)
     }
 
-    private fun calculateChecksum(data: ByteArray): ByteArray =
-        RIPEMD160Digest().let {
-          val checksum = ByteArray(DIGEST_SIZE)
-          it.update(data, 0, data.size)
-          it.doFinal(checksum, 0)
-          checksum.copyOfRange(0, SIZE_32)
-        }
+    private fun calculateChecksum(data: ByteArray): ByteArray = data.ripemd160().copyOfRange(0, SIZE_32)
+//        RIPEMD160Digest().let {
+//          val checksum = ByteArray(DIGEST_SIZE)
+//          it.update(data, 0, data.size)
+//          it.doFinal(checksum, 0)
+//          checksum.copyOfRange(0, SIZE_32)
+//        }
   }
 }
 

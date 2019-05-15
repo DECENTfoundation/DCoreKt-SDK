@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName
  * asset_create_op has account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
  * therefore throws Missing Active Authority 1.2.0
  */
-class AssetUpdateMonitoredOperation(
+class AssetUpdateMonitoredOperation @JvmOverloads constructor(
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("asset_to_update") val assetToUpdate: ChainObject,
     @SerializedName("new_description") val description: String,

@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class RemoveContentOperation(
+class RemoveContentOperation @JvmOverloads constructor(
     @SerializedName("author") val author: ChainObject,
     @SerializedName("URI") val uri: String,
     fee: Fee = Fee()

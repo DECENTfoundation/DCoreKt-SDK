@@ -1,6 +1,7 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.PRECISION_MAX
 import ch.decent.sdk.utils.RATING_MAX
@@ -16,7 +17,7 @@ object DCoreConstants {
       DCT_PRECISION,
       "1.2.1".toChainObject(),
       "",
-      Asset.AssetOptions(DCT_SUPPLY),
+      AssetOptions(maxSupply = DCT_SUPPLY),
       "2.3.0".toChainObject()
   )
 
@@ -32,4 +33,6 @@ object DCoreConstants {
   val RATING_ALLOWED = 1..RATING_MAX
   val PRECISION_ALLOWED = 0..PRECISION_MAX
   const val UIA_DESCRIPTION_MAX_CHARS = 1000
+  const val BASIS_POINTS_TOTAL = 10000
+
 }

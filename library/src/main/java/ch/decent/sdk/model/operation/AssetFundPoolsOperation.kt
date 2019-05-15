@@ -16,7 +16,7 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class AssetFundPoolsOperation(
+class AssetFundPoolsOperation @JvmOverloads constructor(
     @SerializedName("from_account") val from: ChainObject,
     @SerializedName("uia_asset") val uia: AssetAmount,
     @SerializedName("dct_asset") val dct: AssetAmount,

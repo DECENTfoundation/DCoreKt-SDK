@@ -68,7 +68,7 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get asset for symbol`() {
-    val test = api.assetApi.getByName("DCT")
+    val test = api.assetApi.getByName("SDK.1557392438T")
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -89,6 +89,16 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get price in DCT`() {
     val test = api.assetApi.convertToDct(AssetAmount(1000, "1.3.35"))
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `should list all assets`() {
+    val test = api.assetApi.listAll(true)
         .subscribeOn(Schedulers.newThread())
         .test()
 

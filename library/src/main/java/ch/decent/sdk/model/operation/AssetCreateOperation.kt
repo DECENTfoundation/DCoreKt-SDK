@@ -4,8 +4,10 @@ import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreConstants.PRECISION_ALLOWED
 import ch.decent.sdk.DCoreConstants.UIA_DESCRIPTION_MAX_CHARS
 import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.types.UInt8
 import com.google.gson.annotations.SerializedName
@@ -22,13 +24,13 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class AssetCreateOperation(
+class AssetCreateOperation @JvmOverloads constructor(
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("symbol") val symbol: String,
     @SerializedName("precision") @UInt8 val precision: Byte,
     @SerializedName("description") val description: String,
-    @SerializedName("options") val options: Asset.AssetOptions,
-    @SerializedName("monitored_asset_opts") val monitoredOptions: Asset.MonitoredAssetOpts?,
+    @SerializedName("options") val options: AssetOptions,
+    @SerializedName("monitored_asset_opts") val monitoredOptions: MonitoredAssetOptions? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.ASSET_CREATE_OPERATION, fee) {
 

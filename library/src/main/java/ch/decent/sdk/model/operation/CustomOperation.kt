@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-open class CustomOperation constructor(
+open class CustomOperation @JvmOverloads constructor(
     type: CustomOperationType,
     @SerializedName("payer") val payer: ChainObject,
     @SerializedName("required_auths") val requiredAuths: List<ChainObject>,

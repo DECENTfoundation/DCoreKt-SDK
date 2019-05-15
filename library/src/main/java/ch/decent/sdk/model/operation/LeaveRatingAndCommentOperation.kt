@@ -3,6 +3,7 @@ package ch.decent.sdk.model.operation
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.types.UInt64
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -15,10 +16,10 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class LeaveRatingAndCommentOperation constructor(
+class LeaveRatingAndCommentOperation @JvmOverloads constructor(
     @SerializedName("URI") val uri: String,
     @SerializedName("consumer") val consumer: ChainObject,
-    @SerializedName("rating") val rating: Int,
+    @SerializedName("rating") @UInt64 val rating: Byte, // 1-5 stars
     @SerializedName("comment") val comment: String,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.LEAVE_RATING_AND_COMMENT_OPERATION, fee) {

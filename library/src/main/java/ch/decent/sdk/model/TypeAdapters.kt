@@ -8,6 +8,8 @@ import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.model.operation.OperationType
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonNull
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory
 import com.google.gson.internal.Streams
@@ -16,6 +18,7 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import org.threeten.bp.LocalDateTime
+import java.lang.reflect.ParameterizedType
 import java.math.BigInteger
 
 object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
@@ -84,6 +87,66 @@ object OperationTypeFactory : TypeAdapterFactory {
       }
     }
     return null
+  }
+}
+
+// typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions;
+// fixed_max_supply_struct has index 1 therefore we write '1'
+
+@Suppress("UNCHECKED_CAST")
+object StaticVariantFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, typeToken: TypeToken<T>): TypeAdapter<T?>? {
+    if (!StaticVariant::class.javaObjectType.isAssignableFrom(typeToken.rawType)) return null
+    return if (StaticVariantParametrized::class.javaObjectType.isAssignableFrom(typeToken.rawType)) {
+      val types = (typeToken.type as ParameterizedType).actualTypeArguments.mapIndexed { idx, t -> idx to TypeToken.get(t) }
+      val delegates = types
+          .filter { (_, t) -> t.rawType != Unit::class.javaObjectType }
+          .map { (idx, t) -> idx to gson.getDelegateAdapter(this, t) }
+          .toMap()
+
+      object : TypeAdapter<T?>() {
+        override fun write(out: JsonWriter, value: T?) {
+          out.beginArray()
+          delegates.map { (idx, adapter) ->
+            out.beginArray()
+            out.value(idx)
+            (adapter as TypeAdapter<Any>).write(out, (value as StaticVariantParametrized).objects[idx])
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(reader: JsonReader): T? {
+          val arr = Streams.parse(reader) as JsonArray
+          val vals = arr.map { it.asJsonArray[0].asInt to it.asJsonArray[1] }.toMap()
+          val objs = types.map { (idx, t) ->
+            if (Unit::class.javaObjectType == t.rawType) Unit
+            else delegates[idx]?.fromJsonTree(vals.getOrDefault(idx, JsonNull.INSTANCE))
+          }
+          @Suppress("SpreadOperator")
+          return typeToken.rawType.constructors[0].newInstance(*objs.toTypedArray()) as T?
+        }
+      }
+    } else {
+      val delegate = gson.getDelegateAdapter(this, typeToken) as TypeAdapter<T>
+      object : TypeAdapter<T?>() {
+        override fun write(out: JsonWriter, value: T?) {
+          out.beginArray()
+          (value as StaticVariantSingle<T>?)?.get?.let { (idx, obj) ->
+            out.beginArray()
+            out.value(idx)
+            delegate.write(out, obj)
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(reader: JsonReader): T? {
+          val arr = Streams.parse(reader) as JsonArray
+          return if (arr.size() != 0) delegate.fromJsonTree(arr[0].asJsonArray[1]) else null
+        }
+      }
+    }
   }
 }
 

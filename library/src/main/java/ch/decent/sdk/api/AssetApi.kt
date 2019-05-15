@@ -15,6 +15,7 @@ import ch.decent.sdk.net.model.request.GetRealSupply
 import ch.decent.sdk.net.model.request.ListAssets
 import ch.decent.sdk.net.model.request.LookupAssets
 import ch.decent.sdk.net.model.request.PriceToDct
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 
 class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -73,6 +74,11 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun listAllRelative(lowerBound: String, limit: Int = 100): Single<List<Asset>> = ListAssets(lowerBound, limit).toRequest()
 
+  @JvmOverloads
+  fun listAll(includeMonitored: Boolean = false): Single<List<Asset>> =
+      if (includeMonitored) pageAll("")
+      else pageAll("").map { it.filter { it.monitoredAssetOpts == null } }
+
   /**
    * Lookup asset by symbol.
    *
@@ -99,4 +105,16 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return price in DCT
    */
   fun convertToDct(amount: AssetAmount): Single<AssetAmount> = PriceToDct(amount).toRequest()
+
+  private fun pageAll(lowerBound: String): Single<List<Asset>> {
+    return listAllRelative(lowerBound, REQ_LIMIT_MAX)
+        .flatMap { prev ->
+          if (prev.size < REQ_LIMIT_MAX) {
+            Single.just(prev)
+          } else {
+            pageAll(prev.last().symbol).map { next -> next.drop(1) + prev }
+          }
+        }
+  }
+
 }

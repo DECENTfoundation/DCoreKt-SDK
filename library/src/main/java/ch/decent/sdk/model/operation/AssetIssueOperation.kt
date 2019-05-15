@@ -17,11 +17,11 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class AssetIssueOperation(
+class AssetIssueOperation @JvmOverloads constructor(
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("asset_to_issue") val assetToIssue: AssetAmount,
     @SerializedName("issue_to_account") val issueToAccount: ChainObject,
-    @SerializedName("memo") val memo: Memo?,
+    @SerializedName("memo") val memo: Memo? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.ASSET_ISSUE_OPERATION, fee) {
 

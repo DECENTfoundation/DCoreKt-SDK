@@ -8,6 +8,7 @@ import ch.decent.sdk.crypto.ECKeyPair
 import okio.Buffer
 import okio.ByteString.Companion.decodeHex
 import okio.ByteString.Companion.toByteString
+import org.bouncycastle.crypto.digests.RIPEMD160Digest
 import org.bouncycastle.crypto.engines.AESEngine
 import org.bouncycastle.crypto.modes.CBCBlockCipher
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher
@@ -42,6 +43,13 @@ fun generateEntropy(power: Int = 250): ByteArray {
 fun ByteArray.hash256(): ByteArray = MessageDigest.getInstance("SHA-256").digest(this)
 
 fun ByteArray.hash512(): ByteArray = MessageDigest.getInstance("SHA-512").digest(this)
+
+fun ByteArray.ripemd160(): ByteArray = RIPEMD160Digest().run {
+  val final = ByteArray(RIPEMD160_DIGEST_SIZE)
+  update(this@ripemd160, 0, this@ripemd160.size)
+  doFinal(final, 0)
+  final
+}
 
 fun generateNonce(): BigInteger {
   val sha224 = MessageDigest.getInstance("SHA-224").digest(ECKeyPair(SecureRandom()).privateBytes)

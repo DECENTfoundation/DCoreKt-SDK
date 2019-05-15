@@ -2,8 +2,8 @@ package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreConstants.UIA_DESCRIPTION_MAX_CHARS
-import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.types.UInt64
@@ -22,13 +22,13 @@ import com.google.gson.annotations.SerializedName
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class AssetUpdateOperation(
+class AssetUpdateOperation @JvmOverloads constructor(
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("asset_to_update") val assetToUpdate: ChainObject,
     @SerializedName("new_description") val newDescription: String,
     @SerializedName("new_issuer") val newIssuer: ChainObject?,
     @SerializedName("max_supply") @UInt64 val maxSupply: Long, // Asset.options.maxSupply is @Int64 therefore we use Long here
-    @SerializedName("core_exchange_rate") val coreExchangeRate: Asset.ExchangeRate,
+    @SerializedName("core_exchange_rate") val coreExchangeRate: ExchangeRate,
     @SerializedName("is_exchangeable") val exchangeable: Boolean,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.UPDATE_USER_ISSUED_ASSET_OPERATION, fee) {

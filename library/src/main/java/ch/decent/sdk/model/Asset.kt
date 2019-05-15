@@ -1,11 +1,8 @@
 package ch.decent.sdk.model
 
 import ch.decent.sdk.DCoreConstants
-import ch.decent.sdk.model.types.Int64
-import ch.decent.sdk.model.types.UInt32
 import ch.decent.sdk.model.types.UInt8
 import com.google.gson.annotations.SerializedName
-import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -17,7 +14,7 @@ data class Asset(
     @SerializedName("description") val description: String,
     @SerializedName("options") val options: AssetOptions,
     @SerializedName("dynamic_asset_data_id") val dataId: ChainObject,
-    @SerializedName("monitored_asset_opts") val monitoredAssetOpts: MonitoredAssetOpts? = null
+    @SerializedName("monitored_asset_opts") val monitoredAssetOpts: MonitoredAssetOptions? = null
 ) : AssetFormatter {
 
   companion object {
@@ -63,28 +60,4 @@ data class Asset(
     }
     return AssetAmount(convertedAmount.toLong(), toAssetId)
   }
-
-  data class MonitoredAssetOpts(
-      @SerializedName("feeds") val feeds: List<Any>,
-      @SerializedName("current_feed") val currentFeed: CurrentFeed,
-      @SerializedName("current_feed_publication_time") val currentFeedPublicationTime: LocalDateTime,
-      @SerializedName("feed_lifetime_sec") @UInt32 val feedLifetimeSec: Long,
-      @SerializedName("minimum_feeds") @UInt8 val minimumFeeds: Short
-  )
-
-  data class CurrentFeed(
-      @SerializedName("core_exchange_rate") val coreExchangeRate: ExchangeRate
-  )
-
-  data class AssetOptions(
-      @SerializedName("max_supply") @Int64 val maxSupply: Long = DCoreConstants.MAX_SHARE_SUPPLY,
-      @SerializedName("core_exchange_rate") val exchangeRate: ExchangeRate = ExchangeRate(AssetAmount(1), AssetAmount(1)),
-      @SerializedName("is_exchangeable") val exchangeable: Boolean = true,
-      @SerializedName("extensions") val extensions: List<Any> = emptyList()
-  )
-
-  data class ExchangeRate(
-      @SerializedName("base") val base: AssetAmount,
-      @SerializedName("quote") val quote: AssetAmount
-  )
 }

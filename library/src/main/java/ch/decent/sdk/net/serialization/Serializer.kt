@@ -22,13 +22,15 @@ package ch.decent.sdk.net.serialization
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CustodyData
-import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Publishing
 import ch.decent.sdk.model.RegionalPrice
@@ -37,8 +39,17 @@ import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
 import ch.decent.sdk.model.operation.AddOrUpdateContentOperation
+import ch.decent.sdk.model.operation.AssetClaimFeesOperation
+import ch.decent.sdk.model.operation.AssetCreateOperation
+import ch.decent.sdk.model.operation.AssetFundPoolsOperation
+import ch.decent.sdk.model.operation.AssetIssueOperation
+import ch.decent.sdk.model.operation.AssetReserveOperation
+import ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation
+import ch.decent.sdk.model.operation.AssetUpdateOperation
 import ch.decent.sdk.model.operation.CustomOperation
+import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
+import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.utils.SIZE_OF_POINT_ON_CURVE_COMPRESSED
@@ -312,15 +323,13 @@ object Serializer {
     buffer.writeByte(0)
   }
 
-/*
-  private val coAuthorsAdapter: Adapter<> = { buffer, obj ->
-    buffer.writeVarint64(obj.length)
-    obj.forEach(([id, weight]) => {
+  private val coAuthorsAdapter: Adapter<Map<ChainObject, Int>> = { buffer, obj ->
+    buffer.write(Varint.writeUnsignedVarInt(obj.size))
+    obj.forEach { (id, weight) ->
       append(buffer, id)
-      buffer.writeUint32(weight)
-    })
+      buffer.writeIntLe(weight)
+    }
   }
-*/
 
   private val regionalPriceAdapter: Adapter<RegionalPrice> = { buffer, obj ->
     buffer.writeIntLe(obj.region.toInt())
@@ -341,9 +350,9 @@ object Serializer {
   private val addOrUpdateContentOperationAdapter: Adapter<AddOrUpdateContentOperation> = { buffer, obj ->
     buffer.writeByte(obj.type.ordinal)
     append(buffer, obj.fee)
-    append(buffer, obj.size)
+    buffer.writeLongLe(obj.size.toLong())
     append(buffer, obj.author)
-//    this.coAuthorsAdapter(buffer, obj.coAuthors)
+    coAuthorsAdapter(buffer, obj.coAuthors)
     append(buffer, obj.uri)
     buffer.writeIntLe(obj.quorum)
     append(buffer, obj.price)
@@ -356,6 +365,13 @@ object Serializer {
     append(buffer, obj.custodyData, true)
   }
 
+  private val removeContentOperationAdapter: Adapter<RemoveContentOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.author)
+    append(buffer, obj.uri)
+  }
+
   private val customOperationAdapter: Adapter<CustomOperation> = { buffer, obj ->
     buffer.writeByte(obj.type.ordinal)
     append(buffer, obj.fee)
@@ -363,6 +379,112 @@ object Serializer {
     append(buffer, obj.requiredAuths)
     buffer.writeShortLe(obj.id)
     append(buffer, obj.data.unhex())
+  }
+
+  private val rateAndCommentOperationAdapter: Adapter<LeaveRatingAndCommentOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.uri)
+    append(buffer, obj.consumer)
+    append(buffer, obj.comment)
+    buffer.writeLongLe(obj.rating.toLong())
+  }
+
+  private val exchangeRateAdapter: Adapter<ExchangeRate> = { buffer, obj ->
+    append(buffer, obj.base)
+    append(buffer, obj.quote)
+  }
+
+  private val assetOptionsAdapter: Adapter<AssetOptions> = { buffer, obj ->
+    buffer.writeLongLe(obj.maxSupply)
+    append(buffer, obj.exchangeRate)
+    append(buffer, obj.exchangeable)
+    append(buffer, obj.extensions != null) // size of extensions flat_set
+    obj.extensions?.let {
+      buffer.writeByte(it.get.first)
+      append(buffer, it.isFixedMaxSupply)
+    }
+  }
+
+  private val monitoredAssetOptionsAdapter: Adapter<MonitoredAssetOptions> = { buffer, obj ->
+    append(buffer, obj.feeds)
+    append(buffer, obj.currentFeed.coreExchangeRate)
+    append(buffer, obj.currentFeedPublicationTime)
+    buffer.writeIntLe(obj.feedLifetimeSec.toInt())
+    buffer.writeByte(obj.minimumFeeds.toInt())
+//    03a086010000000000001b0453444b4d041368656c6c6f20617069206d6f6e69746f7265640000000000000000000000000000000000000000000000000000010101000100000000000000000000000000000000000000480fb65c80510100010100
+  }
+
+  private val assetCreateAdapter: Adapter<AssetCreateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.symbol)
+    buffer.writeByte(obj.precision.toInt())
+    append(buffer, obj.description)
+    append(buffer, obj.options)
+    append(buffer, obj.monitoredOptions, true)
+    append(buffer, true)
+    buffer.writeByte(0)
+  }
+
+  private val assetUpdateAdapter: Adapter<AssetUpdateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.assetToUpdate)
+    append(buffer, obj.newDescription)
+    append(buffer, obj.newIssuer, true)
+    buffer.writeLongLe(obj.maxSupply)
+    append(buffer, obj.coreExchangeRate)
+    append(buffer, obj.exchangeable)
+    buffer.writeByte(0)
+  }
+
+  private val assetUpdateAdvAdapter: Adapter<AssetUpdateAdvancedOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.assetToUpdate)
+    buffer.writeByte(obj.precision.toInt())
+    append(buffer, obj.fixedMaxSupply)
+    buffer.writeByte(0)
+  }
+
+  private val assetIssueAdapter: Adapter<AssetIssueOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.assetToIssue)
+    append(buffer, obj.issueToAccount)
+    append(buffer, obj.memo, true)
+    buffer.writeByte(0)
+  }
+
+  private val assetFundAdapter: Adapter<AssetFundPoolsOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.from)
+    append(buffer, obj.uia)
+    append(buffer, obj.dct)
+    buffer.writeByte(0)
+  }
+
+  private val assetReserveAdapter: Adapter<AssetReserveOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.amount)
+    buffer.writeByte(0)
+  }
+
+  private val assetClaimAdapter: Adapter<AssetClaimFeesOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.uia)
+    append(buffer, obj.dct)
+    buffer.writeByte(0)
   }
 
 
@@ -410,7 +532,19 @@ object Serializer {
       KeyPart::class to keyPartAdapter,
       CustodyData::class to custodyDataAdapter,
       AddOrUpdateContentOperation::class to addOrUpdateContentOperationAdapter,
-      SendMessageOperation::class to customOperationAdapter
+      RemoveContentOperation::class to removeContentOperationAdapter,
+      SendMessageOperation::class to customOperationAdapter,
+      LeaveRatingAndCommentOperation::class to rateAndCommentOperationAdapter,
+      ExchangeRate::class to exchangeRateAdapter,
+      AssetOptions::class to assetOptionsAdapter,
+      MonitoredAssetOptions::class to monitoredAssetOptionsAdapter,
+      AssetCreateOperation::class to assetCreateAdapter,
+      AssetUpdateOperation::class to assetUpdateAdapter,
+      AssetUpdateAdvancedOperation::class to assetUpdateAdvAdapter,
+      AssetIssueOperation::class to assetIssueAdapter,
+      AssetFundPoolsOperation::class to assetFundAdapter,
+      AssetReserveOperation::class to assetReserveAdapter,
+      AssetClaimFeesOperation::class to assetClaimAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()

@@ -121,7 +121,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createRateAndCommentOperation(
       uri: String,
       consumer: ChainObject,
-      rating: Int,
+      rating: Byte,
       comment: String,
       fee: Fee = Fee()
   ): Single<LeaveRatingAndCommentOperation> = Single.just(LeaveRatingAndCommentOperation(uri, consumer, rating, comment, fee))
@@ -141,7 +141,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun rateAndComment(
       credentials: Credentials,
       uri: String,
-      rating: Int,
+      rating: Byte,
       comment: String,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createRateAndCommentOperation(uri, credentials.account, rating, comment, fee)

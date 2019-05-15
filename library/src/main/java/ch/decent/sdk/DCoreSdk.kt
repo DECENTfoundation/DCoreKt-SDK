@@ -12,15 +12,16 @@ import ch.decent.sdk.model.FeeParamAdapter
 import ch.decent.sdk.model.FeeParameter
 import ch.decent.sdk.model.MinerId
 import ch.decent.sdk.model.MinerIdAdapter
-import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.OperationTypeAdapter
 import ch.decent.sdk.model.OperationTypeFactory
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.PubKeyAdapter
+import ch.decent.sdk.model.StaticVariantFactory
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.VoteIdAdapter
 import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.net.model.request.BaseRequest
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.GetDynamicGlobalProps
@@ -89,6 +90,7 @@ class DCoreSdk private constructor(
     @JvmStatic val gsonBuilder = GsonBuilder()
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
+        .registerTypeAdapterFactory(StaticVariantFactory)
         .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
         .registerTypeAdapter(Address::class.java, AddressAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)

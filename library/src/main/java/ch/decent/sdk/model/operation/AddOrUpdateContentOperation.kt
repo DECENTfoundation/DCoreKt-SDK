@@ -1,5 +1,6 @@
 package ch.decent.sdk.model.operation
 
+import ch.decent.sdk.DCoreConstants.BASIS_POINTS_TOTAL
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CustodyData
@@ -7,11 +8,17 @@ import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.RegionalPrice
+import ch.decent.sdk.model.Synopsis
+import ch.decent.sdk.model.types.UInt32
+import ch.decent.sdk.model.types.UInt64
 import ch.decent.sdk.utils.TRX_ID_SIZE
+import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.ripemd160
 import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
+import java.math.BigInteger
 import java.util.regex.Pattern
 
 /**
@@ -19,8 +26,8 @@ import java.util.regex.Pattern
  *
  * @param size size of content, including samples, in megabytes
  * @param author author of the content. If co-authors is not filled, this account will receive full payout
- * @param coauthors optional parameter. If map is not empty, payout will be splitted - the parameter maps co-authors
- * to basis points split, e.g. author1:9000 (bp), auhtor2:1000 (bp)
+ * @param coAuthors optional parameter. If map is not empty, payout will be splitted - the parameter maps co-authors
+ * to basis points split, e.g. author1:9000 (bp), auhtor2:1000 (bp), sum should be [BASIS_POINTS_TOTAL]
  * @param uri URI where the content can be found
  * @param quorum how many seeders needs to cooperate to recover the key
  * @param price list of regional prices
@@ -34,26 +41,27 @@ import java.util.regex.Pattern
  * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
-class AddOrUpdateContentOperation constructor(
-    @SerializedName("size") val size: Long,
+class AddOrUpdateContentOperation @JvmOverloads constructor(
+    @SerializedName("size") @UInt64 val size: BigInteger = BigInteger.ONE,
     @SerializedName("author") val author: ChainObject,
-    @SerializedName("co_authors") val coauthors: List<List<Any>>? = null,
+    @SerializedName("co_authors") @UInt32 val coAuthors: Map<ChainObject, Int> = emptyMap(), //sums to 10000 so Int is ok
     @SerializedName("URI") val uri: String,
-    @SerializedName("quorum") val quorum: Int,
+    @SerializedName("quorum") @UInt32 val quorum: Int = 0, // seeders count won't overflow Int.max
     @SerializedName("price") val price: List<RegionalPrice>,
-    @SerializedName("hash") val hash: String,
-    @SerializedName("seeders") val seeders: List<ChainObject>,
-    @SerializedName("key_parts") val keyParts: List<KeyPart>,
+    @SerializedName("hash") val hash: String = uri.toByteArray().ripemd160().hex(),
+    @SerializedName("seeders") val seeders: List<ChainObject> = emptyList(),
+    @SerializedName("key_parts") val keyParts: List<KeyPart> = emptyList(),
     @SerializedName("expiration") val expiration: LocalDateTime,
-    @SerializedName("publishing_fee") val publishingFee: AssetAmount,
+    @SerializedName("publishing_fee") val publishingFee: AssetAmount = AssetAmount(0),
     @SerializedName("synopsis") val synopsis: String,
     @SerializedName("cd") val custodyData: CustodyData? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION, fee) {
 
   init {
-    require(size > 0) { "invalid file size" }
+    require(size > BigInteger.ZERO) { "invalid file size" }
     require(author.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
+    require(coAuthors.isEmpty() || coAuthors.values.sum() == BASIS_POINTS_TOTAL) { "split values should sum to $BASIS_POINTS_TOTAL" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
     require(quorum >= 0) { "invalid seeders count" }
     require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }
@@ -61,7 +69,7 @@ class AddOrUpdateContentOperation constructor(
   }
 
   override fun toString(): String {
-    return "AddOrUpdateContentOperation(size=$size, author=$author, coauthors=$coauthors, uri='$uri', " +
+    return "AddOrUpdateContentOperation(size=$size, author=$author, coauthors=$coAuthors, uri='$uri', " +
         "quorum=$quorum, price=$price, hash='$hash', seeders=$seeders, keyParts=$keyParts, expiration=$expiration," +
         " publishingFee=$publishingFee, synopsis='$synopsis', custodyData=$custodyData)"
   }
