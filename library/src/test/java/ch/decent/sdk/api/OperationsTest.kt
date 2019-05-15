@@ -4,28 +4,33 @@ import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.Helpers
-import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.CoAuthors
+import ch.decent.sdk.model.RegionalPrice
+import ch.decent.sdk.model.Synopsis
 import ch.decent.sdk.model.toChainObject
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.FixMethodOrder
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.slf4j.LoggerFactory
+import org.threeten.bp.LocalDateTime
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class OperationsTest {
 
   companion object {
     private lateinit var timestamp: String
+    private lateinit var uri: String
+
 
     @BeforeClass @JvmStatic fun before() {
       timestamp = System.currentTimeMillis().toString()
+      uri = "http://hello.world.io?timestamp=$timestamp"
     }
   }
 
@@ -104,13 +109,14 @@ class OperationsTest {
         .assertNoErrors()
   }
 
-  @Ignore // already commented
-  @Test fun `leave rating and comment`() {
-    val test = api.purchaseApi.rateAndComment(
-        Credentials("1.2.27".toChainObject(), "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"),
-        "ipfs:QmUuWZihBKYnC7TrhCMjtZrLPrEnPCQLeAkkDEP2tvNcqC",
-        2,
-        "comment KT"
+  @Test fun `content-1 should add a content`() {
+    val test = api.contentApi.add(
+        Helpers.credentials,
+        CoAuthors(mapOf(Helpers.account2 to 1000)), // 10%
+        uri,
+        listOf(RegionalPrice(AssetAmount(2))),
+        LocalDateTime.now().plusDays(100),
+        Synopsis("hello", "world")
     )
         .subscribeOn(Schedulers.newThread())
         .test()
@@ -118,5 +124,58 @@ class OperationsTest {
     test.awaitTerminalEvent()
     test.assertComplete()
         .assertNoErrors()
+
+  }
+
+  @Test fun `content-2 should update a content`() {
+    val test = api.contentApi.update(
+        Helpers.credentials,
+        uri,
+        { it.copy(description = "hello update") }
+    )
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
+
+  @Test fun `content-3 should make a purchase`() {
+    val test = api.contentApi.purchase(Helpers.credentials, uri)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+
+  }
+
+  @Test fun `content-4 should rate and comment a purchased content`() {
+    val test = api.purchaseApi.rateAndComment(
+        Helpers.credentials,
+        uri,
+        4,
+        "hello comment"
+    )
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+
+  }
+
+  @Test fun `content-5 should remove a content`() {
+    val test = api.contentApi.remove(Helpers.credentials, uri)
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+
   }
 }

@@ -6,6 +6,8 @@ import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.AuthMapAdapter
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ChainObjectAdapter
+import ch.decent.sdk.model.CoAuthors
+import ch.decent.sdk.model.CoAuthorsAdapter
 import ch.decent.sdk.model.DateTimeAdapter
 import ch.decent.sdk.model.DynamicGlobalProps
 import ch.decent.sdk.model.FeeParamAdapter
@@ -100,6 +102,7 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(FeeParameter::class.java, FeeParamAdapter)
         .registerTypeAdapter(OperationType::class.java, OperationTypeAdapter)
         .registerTypeAdapter(VoteId::class.java, VoteIdAdapter)
+        .registerTypeAdapter(CoAuthors::class.java, CoAuthorsAdapter)
 
     @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =

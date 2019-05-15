@@ -26,6 +26,7 @@ import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyPart
@@ -323,9 +324,9 @@ object Serializer {
     buffer.writeByte(0)
   }
 
-  private val coAuthorsAdapter: Adapter<Map<ChainObject, Int>> = { buffer, obj ->
-    buffer.write(Varint.writeUnsignedVarInt(obj.size))
-    obj.forEach { (id, weight) ->
+  private val coAuthorsAdapter: Adapter<CoAuthors> = { buffer, obj ->
+    buffer.write(Varint.writeUnsignedVarInt(obj.authors.size))
+    obj.authors.forEach { (id, weight) ->
       append(buffer, id)
       buffer.writeIntLe(weight)
     }
@@ -412,7 +413,6 @@ object Serializer {
     append(buffer, obj.currentFeedPublicationTime)
     buffer.writeIntLe(obj.feedLifetimeSec.toInt())
     buffer.writeByte(obj.minimumFeeds.toInt())
-//    03a086010000000000001b0453444b4d041368656c6c6f20617069206d6f6e69746f7265640000000000000000000000000000000000000000000000000000010101000100000000000000000000000000000000000000480fb65c80510100010100
   }
 
   private val assetCreateAdapter: Adapter<AssetCreateOperation> = { buffer, obj ->
