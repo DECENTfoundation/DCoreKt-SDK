@@ -8,9 +8,9 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.operation.AccountCreateOperation
+import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
@@ -19,6 +19,8 @@ import ch.decent.sdk.model.SearchAccountHistoryOrder
 import ch.decent.sdk.model.SearchAccountsOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.TransactionDetail
+import ch.decent.sdk.model.operation.AccountCreateOperation
+import ch.decent.sdk.model.operation.AccountUpdateOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.request.GetAccountById
@@ -251,6 +253,25 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
+   * Create a register new account operation.
+   *
+   * @param registrar credentials used to register the new account
+   * @param name new account name
+   * @param address new account public key address
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun createAccountOperation(
+      registrar: ChainObject,
+      name: String,
+      address: Address,
+      fee: Fee = Fee()
+  ): Single<AccountCreateOperation> = Single.just(AccountCreateOperation(registrar, name, address, fee))
+
+  /**
    * Create a new account.
    *
    * @param registrar credentials used to register the new account
@@ -261,12 +282,52 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun create(
       registrar: Credentials,
       name: String,
       address: Address,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> =
-      api.broadcastApi.broadcastWithCallback(registrar.keyPair, AccountCreateOperation(registrar.account, name, address, fee))
+  ): Single<TransactionConfirmation> = createAccountOperation(registrar.account, name, address, fee).flatMap {
+    api.broadcastApi.broadcastWithCallback(registrar.keyPair, it)
+  }
+
+  /**
+   * Create update account operation. Fills model with actual account values.
+   *
+   * @param nameOrId account id or name
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   */
+  @JvmOverloads
+  fun createUpdateOperation(
+      nameOrId: String,
+      fee: Fee = Fee()
+  ): Single<AccountUpdateOperation> = get(nameOrId).map { AccountUpdateOperation(it, fee) }
+
+  /**
+   * Update account
+   *
+   * @param credentials account credentials
+   * @param options new account options
+   * @param active new active authority
+   * @param owner new owner authority
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   */
+  @JvmOverloads
+  fun update(
+      credentials: Credentials,
+      options: AccountOptions? = null,
+      active: Authority? = null,
+      owner: Authority? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createUpdateOperation(credentials.account.objectId, fee).map {
+    it.apply {
+      this.options = options
+      this.active = active
+      this.owner = owner
+    }
+  }.flatMap { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
 
 }

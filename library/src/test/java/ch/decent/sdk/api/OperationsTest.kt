@@ -6,6 +6,7 @@ import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Synopsis
@@ -67,9 +68,9 @@ class OperationsTest {
         .assertNoErrors()
   }
 
-  @Test fun `accounts-3 should make a vote on a new account`() {
+  @Test fun `accounts-3 should update credentials on a new account`() {
     val test = api.accountApi.createCredentials(accountName, Helpers.private)
-        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toChainObject())) }
+        .flatMap { api.accountApi.update(it, active = Authority(Helpers.public2.address())) }
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -78,6 +79,16 @@ class OperationsTest {
         .assertNoErrors()
   }
 
+  @Test fun `accounts-4 should make a vote on a new account`() {
+    val test = api.accountApi.createCredentials(accountName, Helpers.private2)
+        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toChainObject())) }
+        .subscribeOn(Schedulers.newThread())
+        .test()
+
+    test.awaitTerminalEvent()
+    test.assertComplete()
+        .assertNoErrors()
+  }
 
   @Test fun `should send message`() {
     val test = api.messagingApi.send(Helpers.credentials, listOf(Helpers.account2 to "test message encrypted t=$timestamp"))
@@ -131,7 +142,7 @@ class OperationsTest {
     val test = api.contentApi.update(
         Helpers.credentials,
         uri,
-        { it.copy(description = "hello update") }
+        Synopsis("hello", "update")
     )
         .subscribeOn(Schedulers.newThread())
         .test()

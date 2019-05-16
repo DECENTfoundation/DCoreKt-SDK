@@ -45,16 +45,16 @@ import java.util.regex.Pattern
 class AddOrUpdateContentOperation @JvmOverloads constructor(
     @SerializedName("size") @UInt64 val size: BigInteger = BigInteger.ONE,
     @SerializedName("author") val author: ChainObject,
-    @SerializedName("co_authors") val coAuthors: CoAuthors = CoAuthors(emptyMap()),
+    @SerializedName("co_authors") var coAuthors: CoAuthors = CoAuthors(emptyMap()),
     @SerializedName("URI") val uri: String,
     @SerializedName("quorum") @UInt32 val quorum: Int = 0, // seeders count won't overflow Int.max
-    @SerializedName("price") val price: List<RegionalPrice>,
+    @SerializedName("price") var price: List<RegionalPrice>,
     @SerializedName("hash") val hash: String = uri.toByteArray().ripemd160().hex(),
     @SerializedName("seeders") val seeders: List<ChainObject> = emptyList(),
     @SerializedName("key_parts") val keyParts: List<KeyPart> = emptyList(),
     @SerializedName("expiration") val expiration: LocalDateTime,
     @SerializedName("publishing_fee") val publishingFee: AssetAmount = AssetAmount(0),
-    @SerializedName("synopsis") val synopsis: String,
+    @SerializedName("synopsis") var synopsis: String,
     @SerializedName("cd") val custodyData: CustodyData? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.CONTENT_SUBMIT_OPERATION, fee) {

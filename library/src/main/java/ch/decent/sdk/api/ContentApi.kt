@@ -247,6 +247,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun createRemoveContentOperation(content: ChainObject, fee: Fee = Fee()): Single<RemoveContentOperation> =
       get(content).map { RemoveContentOperation(it.author, it.uri, fee) }
 
@@ -257,6 +258,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun createRemoveContentOperation(content: String, fee: Fee = Fee()): Single<RemoveContentOperation> =
       get(content).map { RemoveContentOperation(it.author, it.uri, fee) }
 
@@ -268,6 +270,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun remove(credentials: Credentials, content: ChainObject, fee: Fee = Fee()): Single<TransactionConfirmation> =
       createRemoveContentOperation(content, fee).flatMap {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
@@ -281,6 +284,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun remove(credentials: Credentials, content: String, fee: Fee = Fee()): Single<TransactionConfirmation> =
       createRemoveContentOperation(content, fee).flatMap {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
@@ -300,6 +304,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun createAddContentOperation(
       author: ChainObject,
       coAuthors: CoAuthors,
@@ -332,6 +337,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun add(
       credentials: Credentials,
       coAuthors: CoAuthors,
@@ -346,70 +352,65 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   private fun createUpdateContentOperation(
       old: Content,
-      synopsis: (old: Synopsis) -> Synopsis = { it },
-      price: (old: List<RegionalPrice>) -> List<RegionalPrice> = { it },
-      coAuthors: (old: CoAuthors) -> CoAuthors = { it },
       fee: Fee = Fee()
   ): AddOrUpdateContentOperation = AddOrUpdateContentOperation(
       old.size,
       old.author,
-      coAuthors(old.coAuthors),
+      old.coAuthors,
       old.uri,
       old.quorum,
-      price(old.price.regionalPrice),
+      old.price.regionalPrice,
       old.hash,
       old.seederPrice.keys.toList(),
       old.keyParts.values.toList(),
       old.expiration,
       old.publishingFeeEscrow,
-      synopsis(Synopsis.fromJson(old.synopsis)).json,
+      old.synopsis,
       old.custodyData,
       fee
   )
 
   /**
-   * Create request to update content operation. Update parameters are functions that have current values as arguments.
+   * Create request to update content operation. Fills the model with actual content values.
    *
    * @param content content id
-   * @param synopsis JSON formatted structure containing content information
-   * @param price list of regional prices
-   * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
-   * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp),
-   * if author is omitted from this map, it is assigned 10000 (bp_total) minus sum of splits
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
-  private fun createUpdateContentOperation(
+  @JvmOverloads
+  fun createUpdateContentOperation(
       content: ChainObject,
-      synopsis: (old: Synopsis) -> Synopsis = { it },
-      price: (old: List<RegionalPrice>) -> List<RegionalPrice> = { it },
-      coAuthors: (old: CoAuthors) -> CoAuthors = { it },
       fee: Fee = Fee()
-  ): Single<AddOrUpdateContentOperation> = get(content).map { createUpdateContentOperation(it, synopsis, price, coAuthors, fee) }
+  ): Single<AddOrUpdateContentOperation> = get(content).map { createUpdateContentOperation(it, fee) }
 
   /**
-   * Create request to update content operation. Update parameters are functions that have current values as arguments.
+   * Create request to update content operation. Fills the model with actual content values.
    *
    * @param content content uri
-   * @param synopsis JSON formatted structure containing content information
-   * @param price list of regional prices
-   * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
-   * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp),
-   * if author is omitted from this map, it is assigned 10000 (bp_total) minus sum of splits
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
-  private fun createUpdateContentOperation(
+  @JvmOverloads
+  fun createUpdateContentOperation(
       content: String,
-      synopsis: (old: Synopsis) -> Synopsis = { it },
-      price: (old: List<RegionalPrice>) -> List<RegionalPrice> = { it },
-      coAuthors: (old: CoAuthors) -> CoAuthors = { it },
       fee: Fee = Fee()
-  ): Single<AddOrUpdateContentOperation> = get(content).map { createUpdateContentOperation(it, synopsis, price, coAuthors, fee) }
+  ): Single<AddOrUpdateContentOperation> = get(content).map { createUpdateContentOperation(it, fee) }
 
+  private fun update(
+      credentials: Credentials,
+      content: Content,
+      synopsis: Synopsis? = null,
+      price: List<RegionalPrice>? = null,
+      coAuthors: CoAuthors? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createUpdateContentOperation(content, fee).apply {
+    if (synopsis != null) this.synopsis = synopsis.json
+    if (price != null) this.price = price
+    if (coAuthors != null) this.coAuthors = coAuthors
+  }.let { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
 
   /**
-   * Update content. Update parameters are functions that have current values as arguments.
+   * Update content.
    *
    * @param credentials author credentials
    * @param content content id
@@ -421,16 +422,15 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun update(
       credentials: Credentials,
       content: ChainObject,
-      synopsis: (old: Synopsis) -> Synopsis = { it },
-      price: (old: List<RegionalPrice>) -> List<RegionalPrice> = { it },
-      coAuthors: (old: CoAuthors) -> CoAuthors = { it },
+      synopsis: Synopsis? = null,
+      price: List<RegionalPrice>? = null,
+      coAuthors: CoAuthors? = null,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> = createUpdateContentOperation(content, synopsis, price, coAuthors, fee).flatMap {
-    api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
-  }
+  ): Single<TransactionConfirmation> = get(content).flatMap { update(credentials, it, synopsis, price, coAuthors, fee) }
 
   /**
    * Update content. Update parameters are functions that have current values as arguments.
@@ -445,14 +445,13 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun update(
       credentials: Credentials,
       content: String,
-      synopsis: (old: Synopsis) -> Synopsis = { it },
-      price: (old: List<RegionalPrice>) -> List<RegionalPrice> = { it },
-      coAuthors: (old: CoAuthors) -> CoAuthors = { it },
+      synopsis: Synopsis? = null,
+      price: List<RegionalPrice>? = null,
+      coAuthors: CoAuthors? = null,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> = createUpdateContentOperation(content, synopsis, price, coAuthors, fee).flatMap {
-    api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
-  }
+  ): Single<TransactionConfirmation> = get(content).flatMap { update(credentials, it, synopsis, price, coAuthors, fee) }
 }

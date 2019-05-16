@@ -21,13 +21,15 @@ import com.google.gson.annotations.SerializedName
  */
 class AccountUpdateOperation @JvmOverloads constructor(
     @SerializedName("account") val accountId: ChainObject,
-    @SerializedName("owner") val owner: Authority? = null,
-    @SerializedName("active") val active: Authority? = null,
-    @SerializedName("new_options") val options: AccountOptions? = null,
+    @SerializedName("owner") var owner: Authority? = null,
+    @SerializedName("active") var active: Authority? = null,
+    @SerializedName("new_options") var options: AccountOptions? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
-  constructor(account: Account, votes: Set<VoteId>) : this(account.id, options = account.options.copy(votes = votes))
+  constructor(account: Account, fee: Fee) : this(account.id, account.owner, account.active, account.options, fee)
+
+  constructor(account: Account, votes: Set<VoteId>, fee: Fee) : this(account.id, options = account.options.copy(votes = votes), fee = fee)
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
