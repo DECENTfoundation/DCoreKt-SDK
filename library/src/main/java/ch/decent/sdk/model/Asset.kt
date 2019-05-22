@@ -9,7 +9,7 @@ import java.math.RoundingMode
 data class Asset(
     @SerializedName("id") override val id: ChainObject,
     @SerializedName("symbol") override val symbol: String,
-    @SerializedName("precision") @UInt8 override val precision: Short,
+    @SerializedName("precision") @UInt8 override val precision: Byte,
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("description") val description: String,
     @SerializedName("options") val options: AssetOptions,

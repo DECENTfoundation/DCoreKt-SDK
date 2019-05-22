@@ -8,7 +8,7 @@ interface AssetFormatter {
 
   val id: ChainObject
   val symbol: String
-  val precision: Short
+  val precision: Byte
 
   /**
    * default formatter with max number of decimals per precision of asset

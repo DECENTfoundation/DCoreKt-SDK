@@ -69,7 +69,8 @@ public class ApiTest {
 
     @Test
     public void AssetApiTest() {
-        api.getAssetApi().convertToDct(new AssetAmount(10));
+        api.getAssetApi().convertToDCT(ChainObject.parse("1.3.33"), 10);
+        api.getAssetApi().convertFromDCT(ChainObject.parse("1.3.33"), 10);
         api.getAssetApi().get(ObjectType.ASSET_OBJECT.getGenericId());
         api.getAssetApi().getAll(Arrays.asList(ObjectType.ASSET_OBJECT.getGenericId(), ObjectType.ASSET_OBJECT.getGenericId()));
         api.getAssetApi().getAllByName(Arrays.asList("dct", "dct"));

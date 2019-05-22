@@ -2,109 +2,68 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.testCheck
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get asset for id`() {
-    val test = api.assetApi.get("1.3.0".toChainObject())
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.get("1.3.0".toChainObject()).testCheck()
   }
 
   @Test fun `should get assets for ids`() {
-    val test = api.assetApi.getAll(listOf("1.3.0".toChainObject(), "1.3.1".toChainObject()))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.getAll(listOf("1.3.0".toChainObject(), "1.3.1".toChainObject())).testCheck()
   }
 
   @Test fun `should get real supply`() {
-    val test = api.assetApi.getRealSupply()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.getRealSupply().testCheck()
   }
 
   @Test fun `should get asset data for id`() {
-    val test = api.assetApi.getAssetData("2.3.0".toChainObject())
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.getAssetData("2.3.0".toChainObject()).testCheck()
   }
 
   @Test fun `should get assets data for id`() {
-    val test = api.assetApi.getAssetsData(listOf("2.3.0".toChainObject(), "2.3.35".toChainObject()))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.getAssetsData(listOf("2.3.0".toChainObject(), "2.3.35".toChainObject())).testCheck()
   }
 
   @Test fun `should list assets for lower bound symbol`() {
-    val test = api.assetApi.listAllRelative("A")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.listAllRelative("A").testCheck()
   }
 
   @Test fun `should get asset for symbol`() {
-    val test = api.assetApi.getByName("SDK.1557392438T")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.getByName("SDK.1557392016T").testCheck()
   }
 
   @Test fun `should get assets for symbols`() {
-    val test = api.assetApi.getAllByName(listOf("DCT", "USD"))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-  }
-
-  @Test fun `should get price in DCT`() {
-    val test = api.assetApi.convertToDct(AssetAmount(1000, "1.3.35"))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.assetApi.getAllByName(listOf("DCT", "USD")).testCheck()
   }
 
   @Test fun `should list all assets`() {
-    val test = api.assetApi.listAll(true)
-        .subscribeOn(Schedulers.newThread())
-        .test()
+    api.assetApi.listAll(true).testCheck()
+  }
 
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+  @Test fun `should convert asset to DCT`() {
+    api.assetApi.priceToDct(AssetAmount(3, "1.3.33".toChainObject())).testCheck {
+      assertComplete()
+      assertNoErrors()
+      assertValue { it.amount == 3000000L }
+    }
+
+    api.assetApi.convertToDCT("1.3.33".toChainObject(), 3).testCheck {
+      assertComplete()
+      assertNoErrors()
+      assertValue { it.amount == 3000000L }
+    }
+  }
+
+  @Test fun `should convert asset from DCT`() {
+    api.assetApi.convertFromDCT("1.3.33".toChainObject(), 3000000).testCheck {
+      assertComplete()
+      assertNoErrors()
+      assertValue { it.amount == 3L }
+    }
   }
 
 }

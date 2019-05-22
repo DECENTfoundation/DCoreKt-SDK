@@ -145,6 +145,6 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
       comment: String,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createRateAndCommentOperation(uri, credentials.account, rating, comment, fee)
-      .flatMap { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
+      .broadcast(credentials)
 
 }

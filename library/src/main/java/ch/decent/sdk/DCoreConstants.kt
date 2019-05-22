@@ -7,7 +7,7 @@ import ch.decent.sdk.utils.PRECISION_MAX
 import ch.decent.sdk.utils.RATING_MAX
 
 object DCoreConstants {
-  private const val DCT_PRECISION: Short = 8
+  private const val DCT_PRECISION: Byte = 8
   private const val DCT_SUPPLY = 7319777577456900
 
   @JvmField val DCT_ASSET_ID = "1.3.0".toChainObject()

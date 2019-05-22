@@ -53,7 +53,7 @@ class CustomWebSocketService {
 
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
       logger.info("closing")
-      webSocket!!.close(code, reason)
+      webSocket.close(code, reason)
       if (responses.isNotEmpty()) mockWebServer.enqueue(response)
     }
 

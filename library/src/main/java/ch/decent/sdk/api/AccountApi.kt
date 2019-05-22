@@ -288,9 +288,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       name: String,
       address: Address,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> = createAccountOperation(registrar.account, name, address, fee).flatMap {
-    api.broadcastApi.broadcastWithCallback(registrar.keyPair, it)
-  }
+  ): Single<TransactionConfirmation> = createAccountOperation(registrar.account, name, address, fee)
+      .broadcast(registrar)
 
   /**
    * Create update account operation. Fills model with actual account values.
@@ -322,12 +321,14 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       active: Authority? = null,
       owner: Authority? = null,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> = createUpdateOperation(credentials.account.objectId, fee).map {
-    it.apply {
-      this.options = options
-      this.active = active
-      this.owner = owner
-    }
-  }.flatMap { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
+  ): Single<TransactionConfirmation> = createUpdateOperation(credentials.account.objectId, fee)
+      .map {
+        it.apply {
+          this.options = options
+          this.active = active
+          this.owner = owner
+        }
+      }
+      .broadcast(credentials)
 
 }

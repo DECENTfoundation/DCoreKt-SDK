@@ -20,8 +20,8 @@ import com.google.gson.annotations.SerializedName
 class AssetUpdateAdvancedOperation @JvmOverloads constructor(
     @SerializedName("issuer") val issuer: ChainObject,
     @SerializedName("asset_to_update") val assetToUpdate: ChainObject,
-    @SerializedName("new_precision") @UInt8 val precision: Byte,
-    @SerializedName("set_fixed_max_supply") val fixedMaxSupply: Boolean,
+    @SerializedName("new_precision") @UInt8 var precision: Byte,
+    @SerializedName("set_fixed_max_supply") var fixedMaxSupply: Boolean,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.UPDATE_USER_ISSUED_ASSET_ADVANCED, fee) {
 

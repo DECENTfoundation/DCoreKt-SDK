@@ -3,6 +3,9 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.TrustAllCerts
+import io.reactivex.Single
+import io.reactivex.observers.TestObserver
+import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.Logger
@@ -28,3 +31,15 @@ object Helpers {
 }
 
 fun Any.print() = println(this.toString())
+
+fun <T> Single<T>.testCheck(check: TestObserver<T>.() -> Unit = {
+  assertComplete()
+  assertNoErrors()
+}) {
+  val test = this
+      .subscribeOn(Schedulers.newThread())
+      .test()
+
+  test.awaitTerminalEvent()
+  check(test)
+}
