@@ -34,8 +34,13 @@ class PurchaseContentOperation @JvmOverloads constructor(
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
-  constructor(credentials: Credentials, content: Content) :
-      this(content.uri, credentials.account, content.price(), if (URL(content.uri).protocol != "ipfs") PubKey() else credentials.keyPair.publicElGamal())
+  constructor(credentials: Credentials, content: Content, fee: Fee) :
+      this(content.uri,
+          credentials.account,
+          content.price(),
+          if (URL(content.uri).protocol != "ipfs") PubKey() else credentials.keyPair.publicElGamal(),
+          fee = fee
+      )
 
   init {
     require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }

@@ -169,7 +169,7 @@ class SerializerTest : TimeOutTest() {
         uri = "http://hello.io/world2",
         price = listOf(RegionalPrice(AssetAmount(1000), Regions.NONE.id)),
         expiration = LocalDateTime.parse("2019-05-28T13:32:34"),
-        synopsis = Synopsis("Game Title", "Description", "1.5.5".toChainObject()).json,
+        synopsis = Synopsis("Game Title", "Description", "1.5.5").json,
         hash = "2222222222222222222222222222222222222222"
     )
 

@@ -3,12 +3,12 @@ package ch.decent.sdk.model.operation
 import ch.decent.sdk.DCoreConstants.BASIS_POINTS_TOTAL
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.RegionalPrice
-import ch.decent.sdk.model.Synopsis
 import ch.decent.sdk.model.types.UInt32
 import ch.decent.sdk.model.types.UInt64
 import ch.decent.sdk.utils.TRX_ID_SIZE
@@ -26,8 +26,9 @@ import java.util.regex.Pattern
  *
  * @param size size of content, including samples, in megabytes
  * @param author author of the content. If co-authors is not filled, this account will receive full payout
- * @param coAuthors optional parameter. If map is not empty, payout will be splitted - the parameter maps co-authors
- * to basis points split, e.g. author1:9000 (bp), auhtor2:1000 (bp), sum should be [BASIS_POINTS_TOTAL]
+ * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
+ * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp),
+ * if author is omitted from this map, it is assigned 10000 (bp_total) minus sum of splits
  * @param uri URI where the content can be found
  * @param quorum how many seeders needs to cooperate to recover the key
  * @param price list of regional prices
@@ -44,7 +45,7 @@ import java.util.regex.Pattern
 class AddOrUpdateContentOperation @JvmOverloads constructor(
     @SerializedName("size") @UInt64 val size: BigInteger = BigInteger.ONE,
     @SerializedName("author") val author: ChainObject,
-    @SerializedName("co_authors") @UInt32 val coAuthors: Map<ChainObject, Int> = emptyMap(), //sums to 10000 so Int is ok
+    @SerializedName("co_authors") val coAuthors: CoAuthors = CoAuthors(emptyMap()),
     @SerializedName("URI") val uri: String,
     @SerializedName("quorum") @UInt32 val quorum: Int = 0, // seeders count won't overflow Int.max
     @SerializedName("price") val price: List<RegionalPrice>,
@@ -61,7 +62,6 @@ class AddOrUpdateContentOperation @JvmOverloads constructor(
   init {
     require(size > BigInteger.ZERO) { "invalid file size" }
     require(author.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
-    require(coAuthors.isEmpty() || coAuthors.values.sum() == BASIS_POINTS_TOTAL) { "split values should sum to $BASIS_POINTS_TOTAL" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
     require(quorum >= 0) { "invalid seeders count" }
     require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }

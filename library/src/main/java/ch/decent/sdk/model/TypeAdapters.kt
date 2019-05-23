@@ -254,3 +254,28 @@ object VoteIdAdapter : TypeAdapter<VoteId>() {
 
   override fun read(reader: JsonReader): VoteId = VoteId.parse(reader.nextString())
 }
+
+object CoAuthorsAdapter : TypeAdapter<CoAuthors>() {
+  override fun write(out: JsonWriter, value: CoAuthors) {
+    out.beginArray()
+    value.authors.forEach { (id, bp) ->
+      out.beginArray()
+      out.value(id.objectId)
+      out.value(bp)
+      out.endArray()
+    }
+    out.endArray()
+  }
+
+  override fun read(reader: JsonReader): CoAuthors {
+    val map = mutableMapOf<ChainObject, Int>()
+    reader.beginArray()
+    while (reader.hasNext()) {
+      reader.beginArray()
+      map[reader.nextString().toChainObject()] = reader.nextInt()
+      reader.endArray()
+    }
+    reader.endArray()
+    return CoAuthors(map)
+  }
+}
