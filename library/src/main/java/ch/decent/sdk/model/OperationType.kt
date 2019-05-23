@@ -1,5 +1,13 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.model.operation.AccountCreateOperation
+import ch.decent.sdk.model.operation.AccountUpdateOperation
+import ch.decent.sdk.model.operation.AddOrUpdateContentOperation
+import ch.decent.sdk.model.operation.CustomOperation
+import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.PurchaseContentOperation
+import ch.decent.sdk.model.operation.TransferOperation
+
 /**
  * The order of operation types is important
  */

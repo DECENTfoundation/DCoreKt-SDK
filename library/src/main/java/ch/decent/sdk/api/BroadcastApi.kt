@@ -4,7 +4,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.model.BaseOperation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.net.model.request.BroadcastTransaction
