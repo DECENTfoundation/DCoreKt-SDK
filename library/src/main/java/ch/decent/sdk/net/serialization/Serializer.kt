@@ -32,6 +32,8 @@ import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
+import ch.decent.sdk.model.NftDataType
+import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Publishing
 import ch.decent.sdk.model.RegionalPrice
@@ -49,6 +51,7 @@ import ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation
 import ch.decent.sdk.model.operation.AssetUpdateOperation
 import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
@@ -487,6 +490,29 @@ object Serializer {
     buffer.writeByte(0)
   }
 
+  private val nftOptionsAdapter: Adapter<NftOptions> = { buffer, obj ->
+    append(buffer, obj.issuer)
+    buffer.writeIntLe(obj.maxSupply.toInt())
+    append(buffer, obj.fixedMaxSupply)
+    append(buffer, obj.description)
+  }
+
+  private val nftDataAdapter: Adapter<NftDataType> = { buffer, obj ->
+    append(buffer, obj.unique)
+    buffer.writeLongLe(obj.modifiable.ordinal.toLong())
+    buffer.writeLongLe(obj.type.ordinal.toLong())
+    append(buffer, obj.name, true)
+  }
+
+  private val nftCreateAdapter: Adapter<NftCreateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.symbol)
+    append(buffer, obj.options)
+    append(buffer, obj.definitions)
+    append(buffer, obj.transferable)
+    buffer.writeByte(0)
+  }
 
   @Suppress("UNCHECKED_CAST")
   private fun <T : Any> append(buffer: BufferedSink, obj: T?, optional: Boolean = false) {
@@ -544,7 +570,10 @@ object Serializer {
       AssetIssueOperation::class to assetIssueAdapter,
       AssetFundPoolsOperation::class to assetFundAdapter,
       AssetReserveOperation::class to assetReserveAdapter,
-      AssetClaimFeesOperation::class to assetClaimAdapter
+      AssetClaimFeesOperation::class to assetClaimAdapter,
+      NftOptions::class to nftOptionsAdapter,
+      NftDataType::class to nftDataAdapter,
+      NftCreateOperation::class to nftCreateAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()

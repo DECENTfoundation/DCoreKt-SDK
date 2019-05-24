@@ -45,5 +45,10 @@ enum class OperationType(val clazz: Class<*>? = null) {
   READY_TO_PUBLISH2_OPERATION,
   TRANSFER2_OPERATION(TransferOperation::class.java),
   UPDATE_USER_ISSUED_ASSET_ADVANCED(AssetUpdateAdvancedOperation::class.java),
+  NFT_CREATE_DEFINITION(NftCreateOperation::class.java),
+  NFT_UPDATE_DEFINITION,
+  NFT_ISSUE,
+  NFT_TRANSFER,
+  NFT_UPDATE_DATA,
   UNKNOWN_OPERATION
 }

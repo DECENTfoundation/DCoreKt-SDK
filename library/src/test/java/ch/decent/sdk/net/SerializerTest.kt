@@ -16,6 +16,9 @@ import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
 import ch.decent.sdk.model.MonitoredAssetOptions
+import ch.decent.sdk.model.NftApple
+import ch.decent.sdk.model.NftDataType
+import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Regions
@@ -30,6 +33,7 @@ import ch.decent.sdk.model.operation.AssetFundPoolsOperation
 import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.AssetReserveOperation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
@@ -37,6 +41,7 @@ import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.serialization.Serializer
+import ch.decent.sdk.print
 import ch.decent.sdk.utils.hex
 import org.amshove.kluent.`should be equal to`
 import org.junit.Test
@@ -276,6 +281,19 @@ class SerializerTest : TimeOutTest() {
 
     val op = AssetClaimFeesOperation(Helpers.account, AssetAmount(10, ChainObject.parse("1.3.36")), AssetAmount(10))
     op.fee = AssetAmount(10)
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize nft create operation`() {
+    val expected = "2920a1070000000000000953444b2e4150504c451b640000000008616e206170706c65030000000000000000000100000000000000010473697a6500000000000000000000000000000000000105636f6c6f7200000000000000000002000000000000000105656174656e0100"
+
+    val op = NftCreateOperation(
+        "SDK.APPLE",
+        NftOptions(Helpers.account,100,false,"an apple"),
+        NftDataType.createDefinitions(NftApple::class),
+        true
+    )
+    op.fee = AssetAmount(500000)
     Serializer.serialize(op).hex() `should be equal to` expected
   }
 

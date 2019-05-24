@@ -83,6 +83,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Duration = api.transactionExpiration): Single<TransactionConfirmation> =
       api.transactionApi.createTransaction(operations, expiration)
+          .flatMap { trx -> api.transactionApi.getHexDump(trx).doOnSuccess { System.out.println(it) }.map { trx } }
           .map { it.withSignature(privateKey) }
           .flatMap { broadcastWithCallback(it) }
 

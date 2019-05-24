@@ -12,6 +12,7 @@ import ch.decent.sdk.api.GeneralApi
 import ch.decent.sdk.api.HistoryApi
 import ch.decent.sdk.api.MessagingApi
 import ch.decent.sdk.api.MiningApi
+import ch.decent.sdk.api.NftApi
 import ch.decent.sdk.api.PurchaseApi
 import ch.decent.sdk.api.SeederApi
 import ch.decent.sdk.api.SubscriptionApi
@@ -47,4 +48,5 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val subscriptionApi = SubscriptionApi(this)
   val transactionApi = TransactionApi(this)
   val messagingApi = MessagingApi(this)
+  val nftApi = NftApi(this)
 }
