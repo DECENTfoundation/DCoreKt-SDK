@@ -2,8 +2,8 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.net.model.request.PriceToDct
 import ch.decent.sdk.testCheck
-import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
@@ -45,7 +45,7 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should convert asset to DCT`() {
-    api.assetApi.priceToDct(AssetAmount(3, "1.3.33".toChainObject())).testCheck {
+    api.core.makeRequest(PriceToDct(AssetAmount(3, "1.3.33".toChainObject()))).testCheck {
       assertComplete()
       assertNoErrors()
       assertValue { it.amount == 3000000L }
