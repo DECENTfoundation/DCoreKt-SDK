@@ -4,7 +4,7 @@ import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.OperationType
-import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
@@ -68,7 +68,7 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get fee for transfer OP`() {
-    val test = api.validationApi.getFeeForType(OperationType.TRANSFER2_OPERATION, "1.3.35".toChainObject())
+    val test = api.validationApi.getFee(OperationType.TRANSFER2_OPERATION, "1.3.35".toChainObject())
         .subscribeOn(Schedulers.newThread())
         .test()
 

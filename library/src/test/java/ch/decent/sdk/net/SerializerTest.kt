@@ -7,17 +7,16 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountCreateOperation
+import ch.decent.sdk.model.AccountUpdateOperation
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
 import ch.decent.sdk.model.PubKey
-import ch.decent.sdk.model.operation.AccountCreateOperation
-import ch.decent.sdk.model.operation.AccountUpdateOperation
-import ch.decent.sdk.model.operation.PurchaseContentOperation
-import ch.decent.sdk.model.operation.SendMessageOperation
-import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.PurchaseContentOperation
+import ch.decent.sdk.model.SendMessageOperation
+import ch.decent.sdk.model.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.serialization.Serializer
 import ch.decent.sdk.utils.hex
@@ -36,9 +35,8 @@ class SerializerTest : TimeOutTest() {
         "1.2.30".toChainObject(),
         "1.2.31".toChainObject(),
         AssetAmount(10000000),
-        Memo("hello memo", priv, address, BigInteger("132456789")),
-        Fee(amount = 5000)
-    )
+        Memo("hello memo", priv, address, BigInteger("132456789"))
+    ).apply { fee = AssetAmount(5000) }
 
 //    op.bytes.hex() `should be equal to` bytes
 
@@ -54,7 +52,7 @@ class SerializerTest : TimeOutTest() {
         "1.2.30".toChainObject(),
         AssetAmount(10000000),
         PubKey("9108409595926410618584909688806123815350070889187120060090262698305971998526501009804554058758289676257609340949615914583138841456997698133991004991473670")
-    )
+    ).apply { fee = AssetAmount(0) }
 
 //    op.bytes.hex() `should be equal to` bytes
     Serializer.serialize(op).hex() `should be equal to` bytes
@@ -69,7 +67,7 @@ class SerializerTest : TimeOutTest() {
         "1.2.30".toChainObject(),
         AssetAmount(100000000),
         PubKey("5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437")
-    )
+    ).apply { fee = AssetAmount(0) }
 
 //    op.bytes.hex() `should be equal to` bytes
     Serializer.serialize(op).hex() `should be equal to` bytes
@@ -135,9 +133,7 @@ class SerializerTest : TimeOutTest() {
         account.id,
         null,
         null,
-        account.options,
-        Fee(amount = 500000)
-    )
+        account.options).apply { fee = AssetAmount(500000) }
 
 //    op.bytes.hex() `should be equal to` bytes
     Serializer.serialize(op).hex() `should be equal to` bytes
@@ -147,6 +143,7 @@ class SerializerTest : TimeOutTest() {
     val bytes = "010000000000000000001b086d696b656565656501000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010001000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010002a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd330300000000000000000000000000000000000000"
 
     val op = AccountCreateOperation(Helpers.account, "mikeeeee", "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address())
+        .apply { fee = AssetAmount(0) }
 
 //    op.bytes.hex() `should be equal to` bytes
     Serializer.serialize(op).hex() `should be equal to` bytes
@@ -160,7 +157,7 @@ class SerializerTest : TimeOutTest() {
     val payloadReceiver = MessagePayloadReceiver(Helpers.account2, memo.message, Helpers.public2.address(), memo.nonce)
     val payload = MessagePayload(Helpers.account, listOf(payloadReceiver), Helpers.public.address())
     val json = DCoreSdk.gsonBuilder.create().toJson(payload)
-    val op = SendMessageOperation(json, Helpers.account, fee = Fee(amount = 500002))
+    val op = SendMessageOperation(json, Helpers.account).apply { fee = AssetAmount(500002) }
 
 //    op.bytes.hex() `should be equal to` bytes
     Serializer.serialize(op).hex() `should be equal to` bytes

@@ -1,6 +1,5 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.types.UInt16
 import ch.decent.sdk.model.types.UInt32
 import com.google.gson.JsonArray

@@ -7,20 +7,20 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.ApplicationType
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.CategoryType
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Content
 import ch.decent.sdk.model.ContentKeys
-import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.PubKey
+import ch.decent.sdk.model.PurchaseContentOperation
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.SearchContentOrder
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.TransferOperation
 import ch.decent.sdk.model.contentType
-import ch.decent.sdk.model.operation.PurchaseContentOperation
-import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.net.model.request.GenerateContentKeys
 import ch.decent.sdk.net.model.request.GetContentById
 import ch.decent.sdk.net.model.request.GetContentByUri
@@ -175,8 +175,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param id content id
    * @param amount amount to send with asset type
    * @param memo optional unencrypted message
-   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
    *
    * @return a transfer operation
    */
@@ -186,7 +185,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       id: ChainObject,
       amount: AssetAmount,
       memo: String? = null,
-      fee: Fee = Fee()
+      fee: AssetAmount = BaseOperation.FEE_UNSET
   ): Single<TransferOperation> = Single.just(TransferOperation(credentials.account, id, amount, memo?.let { Memo(it) }, fee))
 
   /**
@@ -197,8 +196,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param id content id
    * @param amount amount to send with asset type
    * @param memo optional unencrypted message
-   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
    *
    * @return a transaction confirmation
    */
@@ -208,7 +206,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       id: ChainObject,
       amount: AssetAmount,
       memo: String? = null,
-      fee: Fee = Fee()
+      fee: AssetAmount = BaseOperation.FEE_UNSET
   ): Single<TransactionConfirmation> =
       createTransfer(credentials, id, amount, memo, fee).flatMap {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)

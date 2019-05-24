@@ -5,7 +5,7 @@ package ch.decent.sdk.api
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.operation.AccountUpdateOperation
+import ch.decent.sdk.model.AccountUpdateOperation
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Miner
 import ch.decent.sdk.model.MinerId

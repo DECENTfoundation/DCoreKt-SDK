@@ -4,7 +4,7 @@ import ch.decent.sdk.Helpers
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.TransactionConfirmation
-import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.TransferOperation
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 

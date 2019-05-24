@@ -4,13 +4,14 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.LeaveRatingAndCommentOperation
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.Purchase
 import ch.decent.sdk.model.SearchPurchasesOrder
 import ch.decent.sdk.model.TransactionConfirmation
-import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
 import ch.decent.sdk.net.model.request.GetBuyingByUri
 import ch.decent.sdk.net.model.request.GetHistoryBuyingsByConsumer
 import ch.decent.sdk.net.model.request.GetOpenBuyings
@@ -113,8 +114,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param consumer object id of the account, 1.2.*
    * @param rating 1-5 stars
    * @param comment max 100 chars
-   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
    *
    * @return a rate and comment content operation
    */
@@ -123,7 +123,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
       consumer: ChainObject,
       rating: Int,
       comment: String,
-      fee: Fee = Fee()
+      fee: AssetAmount = BaseOperation.FEE_UNSET
   ): Single<LeaveRatingAndCommentOperation> = Single.just(LeaveRatingAndCommentOperation(uri, consumer, rating, comment, fee))
 
   /**
@@ -133,8 +133,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param uri a uri of the content
    * @param rating 1-5 stars
    * @param comment max 100 chars
-   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
    *
    * @return a rate and comment content operation
    */
@@ -143,7 +142,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
       uri: String,
       rating: Int,
       comment: String,
-      fee: Fee = Fee()
+      fee: AssetAmount = BaseOperation.FEE_UNSET
   ): Single<TransactionConfirmation> = createRateAndCommentOperation(uri, credentials.account, rating, comment, fee)
       .flatMap { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
 

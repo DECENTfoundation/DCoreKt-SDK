@@ -4,10 +4,9 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
-import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.TransferOperation
 import ch.decent.sdk.utils.hash512
 import ch.decent.sdk.utils.hex
 import io.reactivex.Observable
@@ -199,7 +198,7 @@ class Scratchpad {
         Helpers.account,
         Helpers.account2,
         AssetAmount(100000),
-        fee = Fee(amount = 5000)
+        fee = AssetAmount(5000)
     )
 //    op.bytes.hash256().print()
 //    key.signature(op.bytes.hash256()).print()

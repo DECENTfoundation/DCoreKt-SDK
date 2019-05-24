@@ -7,9 +7,6 @@ import ch.decent.sdk.Helpers;
 import ch.decent.sdk.crypto.Address;
 import ch.decent.sdk.crypto.ECKeyPair;
 import ch.decent.sdk.model.*;
-import ch.decent.sdk.model.operation.BaseOperation;
-import ch.decent.sdk.model.operation.EmptyOperation;
-import ch.decent.sdk.model.operation.TransferOperation;
 import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -211,9 +208,7 @@ public class ApiTest {
         api.getValidationApi().getFee(new EmptyOperation(OperationType.TRANSFER2_OPERATION), DCoreConstants.DCT_ASSET_ID);
         api.getValidationApi().getFees(Arrays.asList(new EmptyOperation(OperationType.TRANSFER2_OPERATION), new EmptyOperation(OperationType.TRANSFER2_OPERATION)));
         api.getValidationApi().getFees(Arrays.asList(new EmptyOperation(OperationType.TRANSFER2_OPERATION), new EmptyOperation(OperationType.TRANSFER2_OPERATION)), DCoreConstants.DCT_ASSET_ID);
-        api.getValidationApi().getFeeForType(OperationType.TRANSFER2_OPERATION);
-        api.getValidationApi().getFeeForType(OperationType.TRANSFER2_OPERATION, DCoreConstants.DCT_ASSET_ID);
-        api.getValidationApi().getFeesForType(Collections.singletonList(OperationType.TRANSFER2_OPERATION));
-        api.getValidationApi().getFeesForType(Collections.singletonList(OperationType.TRANSFER2_OPERATION), DCoreConstants.DCT_ASSET_ID);
+        api.getValidationApi().getFee(OperationType.TRANSFER2_OPERATION);
+        api.getValidationApi().getFee(OperationType.TRANSFER2_OPERATION, DCoreConstants.DCT_ASSET_ID);
     }
 }

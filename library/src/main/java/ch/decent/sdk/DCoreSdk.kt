@@ -4,6 +4,7 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.model.AddressAdapter
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.AuthMapAdapter
+import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ChainObjectAdapter
 import ch.decent.sdk.model.DateTimeAdapter
@@ -20,7 +21,6 @@ import ch.decent.sdk.model.PubKeyAdapter
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.VoteIdAdapter
-import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.net.model.request.BaseRequest
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.GetDynamicGlobalProps
@@ -55,12 +55,9 @@ class DCoreSdk private constructor(
   internal fun prepareTransaction(operations: List<BaseOperation>, expiration: Duration): Single<Transaction> =
       chainId.flatMap { id ->
         makeRequest(GetDynamicGlobalProps).zipWith(
-            operations.partition { it.fetchFee }.let { (noFees, fees) ->
+            operations.partition { it.fee !== BaseOperation.FEE_UNSET }.let { (fees, noFees) ->
               if (noFees.isNotEmpty()) {
-                val feeRequests = noFees.groupBy { it.fee.assetId }.map { (assetId, ops) ->
-                  makeRequest(GetRequiredFees(ops, assetId)).map { ops.mapIndexed { idx, op -> op.apply { fee = it[idx] } } }
-                }
-                Single.merge(feeRequests).toList().map { it.flatten() + fees }
+                makeRequest(GetRequiredFees(noFees)).map { noFees.mapIndexed { idx, op -> op.apply { fee = it[idx] } } + fees }
               } else {
                 Single.just(fees)
               }
