@@ -1,40 +1,39 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.model.annotations.Unique
 import ch.decent.sdk.model.types.Int64
 import ch.decent.sdk.model.types.UInt64
+import com.google.gson.JsonArray
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.findAnnotation
+
+data class GenericNft(
+    val values: List<Any>
+) : NftModel {
+  override fun values(): List<Any> = values
+
+  companion object {
+    fun create(values: JsonArray) = values.map {
+      when {
+        it.isJsonPrimitive.not() -> IllegalArgumentException("value type not supported: $it")
+        it.asJsonPrimitive.isNumber -> it.asNumber
+        it.asJsonPrimitive.isBoolean -> it.asBoolean
+        it.asJsonPrimitive.isString -> it.asString
+        else -> IllegalArgumentException("value type not supported: ${it::class.createType()}")
+      }
+    }.let { GenericNft(it) }
+  }
+}
 
 data class NftDataType(
     @SerializedName("type") val type: Type = Type.STRING,
     @SerializedName("unique") val unique: Boolean = false,
-    @SerializedName("modifiable") val modifiable: Modifiable = Modifiable.NOBODY,
+    @SerializedName("modifiable") val modifiable: ModifiableBy = ModifiableBy.NOBODY,
     @SerializedName("name") val name: String? = null
 ) {
 
-  companion object {
-
-    fun createDefinitions(model: Class<*>): List<NftDataType> = createDefinitions(model.kotlin)
-
-    fun createDefinitions(model: KClass<*>): List<NftDataType> {
-      val order = model.constructors.first().parameters.withIndex().associate { it.value.name to it.index }
-      return model.declaredMemberProperties.map {
-        val type = Type[it.returnType]
-        val unique = it.findAnnotation<Unique>() != null
-        val modifiable = it.findAnnotation<ch.decent.sdk.model.annotations.Modifiable>()?.let { it.modifiable } ?: Modifiable.NOBODY
-        val name = it.name
-        NftDataType(type, unique, modifiable, name)
-      }.sortedBy { order[it.name] }
-    }
-  }
-
-  enum class Modifiable {
+  enum class ModifiableBy {
     @SerializedName("nobody") NOBODY,
     @SerializedName("issuer") ISSUER,
     @SerializedName("owner") OWNER,

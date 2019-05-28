@@ -19,7 +19,7 @@ class NftCreateOperation @JvmOverloads constructor(
     require(Asset.isValidSymbol(symbol)) { "invalid nft symbol: $symbol" }
     require(options.description.length <= DCoreConstants.UIA_DESCRIPTION_MAX_CHARS)
     { "description cannot be longer then ${DCoreConstants.UIA_DESCRIPTION_MAX_CHARS} chars" }
-    require(definitions.all { it.modifiable == NftDataType.Modifiable.NOBODY || it.name != null }) { "modifiable data type must have name" }
+    require(definitions.all { it.modifiable == NftDataType.ModifiableBy.NOBODY || it.name != null }) { "modifiable data type must have name" }
     require(definitions.all { it.name == null || it.name.length <= DCoreConstants.NFT_NAME_MAX_CHARS })
     { "name cannot be longer then ${DCoreConstants.NFT_NAME_MAX_CHARS} chars" }
     require(options.maxSupply <= 0xFFFFFFFF)

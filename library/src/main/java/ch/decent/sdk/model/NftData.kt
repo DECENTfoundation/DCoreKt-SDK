@@ -1,9 +1,10 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.model.annotations.Modifiable
-import ch.decent.sdk.model.annotations.Unique
-import kotlin.reflect.full.findAnnotation
+import com.google.gson.annotations.SerializedName
 
-interface NftData {
-
-}
+data class NftData<T : NftModel>(
+    @SerializedName("id") val id: ChainObject,
+    @SerializedName("nft_id") val nftId: ChainObject,
+    @SerializedName("owner") val owner: ChainObject,
+    @SerializedName("data") val data: T?
+)

@@ -6,7 +6,6 @@ import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
 import org.junit.After
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.FixMethodOrder
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
