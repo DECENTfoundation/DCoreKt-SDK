@@ -5,7 +5,6 @@ jdk:
   - oraclejdk11
 
 script:
-  - ./gradlew test
 deploy:
   - provider: pages
     skip_cleanup: true
