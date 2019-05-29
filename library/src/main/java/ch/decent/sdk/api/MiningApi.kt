@@ -5,10 +5,11 @@ package ch.decent.sdk.api
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Miner
 import ch.decent.sdk.model.MinerId
+import ch.decent.sdk.model.MinerObjectId
 import ch.decent.sdk.model.MinerVotes
 import ch.decent.sdk.model.MinerVotingInfo
 import ch.decent.sdk.model.SearchMinerVotingOrder
@@ -56,7 +57,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    */
   // todo model
-  fun getFeedsByMiner(account: ChainObject, count: Int = 100) = GetFeedsByMiner(account, count).toRequest()
+  fun getFeedsByMiner(account: AccountObjectId, count: Int = 100) = GetFeedsByMiner(account, count).toRequest()
 
   /**
    * Get the miner owned by a given account.
@@ -65,7 +66,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return the miner object, or [ObjectNotFoundException] if the account does not have a miner
    */
-  fun getMinerByAccount(account: ChainObject): Single<Miner> = GetMinerByAccount(account).toRequest()
+  fun getMinerByAccount(account: AccountObjectId): Single<Miner> = GetMinerByAccount(account).toRequest()
 
   /**
    * Get the total number of miners registered in DCore.
@@ -81,7 +82,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of miners
    */
-  fun getMiners(minerIds: List<ChainObject>): Single<List<Miner>> = GetMiners(minerIds).toRequest()
+  fun getMiners(minerIds: List<MinerObjectId>): Single<List<Miner>> = GetMiners(minerIds).toRequest()
 
   /**
    * Returns map of the first 1000 miners by their name to miner account
@@ -134,7 +135,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun findAllVotingInfo(
       searchTerm: String,
       order: SearchMinerVotingOrder = SearchMinerVotingOrder.NAME_DESC,
-      id: ChainObject? = null,
+      id: MinerObjectId? = null,
       accountName: String? = null,
       onlyMyVotes: Boolean = false,
       limit: Int = 1000
@@ -151,8 +152,8 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   fun createVoteOperation(
-      accountId: ChainObject,
-      minerIds: List<ChainObject>,
+      accountId: AccountObjectId,
+      minerIds: List<MinerObjectId>,
       fee: Fee = Fee()
   ): Single<AccountUpdateOperation> =
       getMiners(minerIds).flatMap { miners ->
@@ -171,7 +172,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun vote(
       credentials: Credentials,
-      minerIds: List<ChainObject>,
+      minerIds: List<MinerObjectId>,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       createVoteOperation(credentials.account, minerIds, fee).flatMap {

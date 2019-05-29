@@ -1,6 +1,6 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.utils.hex
 
@@ -15,7 +15,7 @@ import ch.decent.sdk.utils.hex
  */
 class SendMessageOperation @JvmOverloads constructor(
     messagePayloadJson: String,
-    payer: ChainObject,
-    requiredAuths: List<ChainObject> = listOf(payer),
+    payer: AccountObjectId,
+    requiredAuths: List<AccountObjectId> = listOf(payer),
     fee: Fee = Fee()
 ) : CustomOperation(CustomOperationType.MESSAGING, payer, requiredAuths, messagePayloadJson.toByteArray().hex(), fee)

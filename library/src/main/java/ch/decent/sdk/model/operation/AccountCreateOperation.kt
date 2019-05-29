@@ -2,11 +2,10 @@ package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.Authority
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.ObjectType
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -21,7 +20,7 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class AccountCreateOperation @JvmOverloads constructor(
-    @SerializedName("registrar") val registrar: ChainObject,
+    @SerializedName("registrar") val registrar: AccountObjectId,
     @SerializedName("name") val name: String,
     @SerializedName("owner") val owner: Authority,
     @SerializedName("active") val active: Authority,
@@ -30,12 +29,11 @@ class AccountCreateOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.ACCOUNT_CREATE_OPERATION, fee) {
 
   init {
-    require(registrar.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Account.isValidName(name)) { "not a valid name" }
   }
 
   @JvmOverloads
-  constructor(registrar: ChainObject, name: String, public: Address, fee: Fee = Fee()) :
+  constructor(registrar: AccountObjectId, name: String, public: Address, fee: Fee = Fee()) :
       this(registrar, name, Authority(public), Authority(public), AccountOptions(public), fee)
 
   override fun toString(): String {

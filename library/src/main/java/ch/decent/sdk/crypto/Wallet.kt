@@ -2,7 +2,7 @@ package ch.decent.sdk.crypto
 
 import ch.decent.sdk.DCoreSdk
 import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.CipherKeyPairAdapter
 import ch.decent.sdk.model.ExtraKeysAdapter
 import ch.decent.sdk.model.PubKey
@@ -124,7 +124,7 @@ object Wallet {
   }
 
   data class ExtraKeys(
-      val account: ChainObject,
+      val account: AccountObjectId,
       val keys: List<Address>
   )
 

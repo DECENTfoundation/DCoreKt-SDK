@@ -14,11 +14,11 @@ import java.math.BigInteger
 import java.nio.charset.Charset
 
 data class Message(
-    val operationId: ChainObject,
+    val operationId: MessagingObjectId,
     val timestamp: LocalDateTime,
-    val sender: ChainObject,
+    val sender: AccountObjectId,
     val senderAddress: Address?,
-    val receiver: ChainObject,
+    val receiver: AccountObjectId,
     val receiverAddress: Address?,
     val message: String,
     val nonce: BigInteger = BigInteger.ZERO,
@@ -60,23 +60,23 @@ data class Message(
 }
 
 data class MessageResponse(
-    @SerializedName("id") val id: ChainObject,
+    @SerializedName("id") val id: MessagingObjectId,
     @SerializedName("created") val created: LocalDateTime,
-    @SerializedName("sender") val sender: ChainObject,
+    @SerializedName("sender") val sender: AccountObjectId,
     @SerializedName("sender_pubkey") val senderAddress: Address?,
     @SerializedName("receivers_data") val receiversData: List<MessageReceiver>,
     @SerializedName("text") val text: String
 )
 
 data class MessageReceiver(
-    @SerializedName("receiver") val receiver: ChainObject,
+    @SerializedName("receiver") val receiver: AccountObjectId,
     @SerializedName("receiver_pubkey") val receiverAddress: Address?,
     @SerializedName("nonce") @UInt64 val nonce: BigInteger,
     @SerializedName("data") val data: String
 )
 
 data class MessagePayload(
-    @SerializedName("from") val from: ChainObject,
+    @SerializedName("from") val from: AccountObjectId,
     @SerializedName("receivers_data") val receiversData: List<MessagePayloadReceiver>,
     @SerializedName("pub_from") val fromAddress: Address? = null
 ) {
@@ -85,13 +85,13 @@ data class MessagePayload(
    * unencrypted message payload constructor
    */
   constructor(
-      from: ChainObject,
-      messages: List<Pair<ChainObject, String>>
+      from: AccountObjectId,
+      messages: List<Pair<AccountObjectId, String>>
   ) : this(from, messages.map { MessagePayloadReceiver(it.first, Memo(it.second).message) })
 }
 
 data class MessagePayloadReceiver(
-    @SerializedName("to") val to: ChainObject,
+    @SerializedName("to") val to: AccountObjectId,
     @SerializedName("data") val data: String,
     @SerializedName("pub_to") val toAddress: Address? = null,
     @SerializedName("nonce") @UInt64 val nonce: BigInteger? = null

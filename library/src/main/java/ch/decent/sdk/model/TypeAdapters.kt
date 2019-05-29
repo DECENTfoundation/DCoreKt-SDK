@@ -7,6 +7,7 @@ import ch.decent.sdk.crypto.dpk
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.UnknownOperation
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonNull
@@ -29,6 +30,7 @@ object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
   override fun read(reader: JsonReader): LocalDateTime = LocalDateTime.parse(reader.nextString())
 }
 
+/*
 object ChainObjectAdapter : TypeAdapter<ChainObject>() {
   override fun read(reader: JsonReader): ChainObject = ChainObject.parse(reader.nextString())
 
@@ -36,6 +38,7 @@ object ChainObjectAdapter : TypeAdapter<ChainObject>() {
     value?.let { out.value(it.objectId) } ?: out.nullValue()
   }
 }
+*/
 
 object AddressAdapter : TypeAdapter<Address>() {
   override fun read(reader: JsonReader): Address? = Address.decodeCheckNull(reader.nextString())
@@ -62,6 +65,27 @@ object AuthMapAdapter : TypeAdapter<AuthMap>() {
 }
 
 @Suppress("UNCHECKED_CAST")
+object ObjectIdFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (ObjectId::class.javaObjectType.isAssignableFrom(type.rawType)) {
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T) {
+          out.value(value.toString())
+        }
+
+        override fun read(reader: JsonReader): T {
+          val id = reader.nextString()
+          val oid = if (type.rawType == ObjectId::class.javaObjectType) ObjectId.parse(id) else ObjectId.parseToType(id)
+          return oid as T
+        }
+
+      }
+    }
+    return null
+  }
+}
+
+@Suppress("UNCHECKED_CAST")
 object OperationTypeFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
     if (type.rawType == BaseOperation::class.javaObjectType) {
@@ -77,7 +101,11 @@ object OperationTypeFactory : TypeAdapterFactory {
 
         override fun read(reader: JsonReader): T? {
           val el = Streams.parse(reader)
-          val op = OperationType.values()[el.asJsonArray[0].asInt]
+          val idx = el.asJsonArray[0].asInt
+          val op = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
+
+          if (op == OperationType.UNKNOWN_OPERATION) return UnknownOperation(idx) as T?
+
           val obj = el.asJsonArray[1].asJsonObject
           return op.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
@@ -171,7 +199,7 @@ object PubKeyAdapter : TypeAdapter<PubKey>() {
 object ExtraKeysAdapter : TypeAdapter<Wallet.ExtraKeys>() {
   override fun read(reader: JsonReader): Wallet.ExtraKeys {
     reader.beginArray()
-    val account = reader.nextString().toChainObject()
+    val account = reader.nextString().toObjectId<AccountObjectId>()
     reader.beginArray()
     val keys = mutableListOf<Address>()
     while (reader.peek() != JsonToken.END_ARRAY) {
@@ -184,7 +212,7 @@ object ExtraKeysAdapter : TypeAdapter<Wallet.ExtraKeys>() {
 
   override fun write(out: JsonWriter, value: Wallet.ExtraKeys) {
     out.beginArray()
-    out.value(value.account.objectId)
+    out.value(value.account.toString())
     out.beginArray()
     value.keys.forEach { out.value(it.encode()) }
     out.endArray()
@@ -212,13 +240,13 @@ object MinerIdAdapter : TypeAdapter<MinerId>() {
   override fun write(out: JsonWriter, value: MinerId) {
     out.beginArray()
     out.value(value.name)
-    out.value(value.id.objectId)
+    out.value(value.id.toString())
     out.endArray()
   }
 
   override fun read(reader: JsonReader): MinerId {
     reader.beginArray()
-    val minerId = MinerId(reader.nextString(), reader.nextString().toChainObject())
+    val minerId = MinerId(reader.nextString(), reader.nextString().toObjectId())
     reader.endArray()
     return minerId
   }
@@ -244,7 +272,7 @@ object OperationTypeAdapter : TypeAdapter<OperationType>() {
     out.value(value.ordinal)
   }
 
-  override fun read(reader: JsonReader): OperationType = OperationType.values()[reader.nextInt()]
+  override fun read(reader: JsonReader): OperationType = OperationType.values().getOrElse(reader.nextInt()) { OperationType.UNKNOWN_OPERATION }
 }
 
 object VoteIdAdapter : TypeAdapter<VoteId>() {
@@ -260,7 +288,7 @@ object CoAuthorsAdapter : TypeAdapter<CoAuthors>() {
     out.beginArray()
     value.authors.forEach { (id, bp) ->
       out.beginArray()
-      out.value(id.objectId)
+      out.value(id.toString())
       out.value(bp)
       out.endArray()
     }
@@ -268,11 +296,11 @@ object CoAuthorsAdapter : TypeAdapter<CoAuthors>() {
   }
 
   override fun read(reader: JsonReader): CoAuthors {
-    val map = mutableMapOf<ChainObject, Int>()
+    val map = mutableMapOf<AccountObjectId, Int>()
     reader.beginArray()
     while (reader.hasNext()) {
       reader.beginArray()
-      map[reader.nextString().toChainObject()] = reader.nextInt()
+      map[reader.nextString().toObjectId()] = reader.nextInt()
       reader.endArray()
     }
     reader.endArray()

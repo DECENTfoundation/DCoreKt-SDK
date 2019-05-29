@@ -1,11 +1,10 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreConstants.UIA_DESCRIPTION_MAX_CHARS
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.types.UInt64
 import com.google.gson.annotations.SerializedName
 
@@ -23,10 +22,10 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class AssetUpdateOperation @JvmOverloads constructor(
-    @SerializedName("issuer") val issuer: ChainObject,
-    @SerializedName("asset_to_update") val assetToUpdate: ChainObject,
+    @SerializedName("issuer") val issuer: AccountObjectId,
+    @SerializedName("asset_to_update") val assetToUpdate: AssetObjectId,
     @SerializedName("new_description") var newDescription: String,
-    @SerializedName("new_issuer") val newIssuer: ChainObject?,
+    @SerializedName("new_issuer") val newIssuer: AccountObjectId?,
     @SerializedName("max_supply") @UInt64 var maxSupply: Long, // Asset.options.maxSupply is @Int64 therefore we use Long here
     @SerializedName("core_exchange_rate") var coreExchangeRate: ExchangeRate,
     @SerializedName("is_exchangeable") var exchangeable: Boolean,
@@ -34,10 +33,7 @@ class AssetUpdateOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.UPDATE_USER_ISSUED_ASSET_OPERATION, fee) {
 
   init {
-    require(issuer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-    require(assetToUpdate.objectType == ObjectType.ASSET_OBJECT) { "not a valid asset object id" }
     require(newDescription.length <= UIA_DESCRIPTION_MAX_CHARS) { "description cannot be longer then $UIA_DESCRIPTION_MAX_CHARS chars" }
-    require(newIssuer?.objectType?.equals(ObjectType.ACCOUNT_OBJECT) ?: true) { "not a valid account object id" }
 //    require(maxSupply <= DCoreConstants.MAX_SHARE_SUPPLY) { "max supply max value overflow" }
   }
 

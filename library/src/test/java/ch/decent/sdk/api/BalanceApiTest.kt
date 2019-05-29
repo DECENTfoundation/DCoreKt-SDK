@@ -1,14 +1,14 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
 class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get balance for account id`() {
-    val test = api.balanceApi.get(Helpers.account, "1.3.35".toChainObject())
+    val test = api.balanceApi.get(Helpers.account, "1.3.35".toObjectId())
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -28,7 +28,7 @@ class BalanceApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get balance for account name`() {
-    val test = api.balanceApi.get(Helpers.accountName, "1.3.35".toChainObject())
+    val test = api.balanceApi.get(Helpers.accountName, "1.3.35".toObjectId())
         .subscribeOn(Schedulers.newThread())
         .test()
 

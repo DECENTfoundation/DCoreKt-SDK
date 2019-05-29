@@ -4,7 +4,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.Seeder
 import ch.decent.sdk.net.model.request.GetSeeder
@@ -22,7 +22,7 @@ class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a seeder object or [ObjectNotFoundException] if not found
    */
-  fun get(accountId: ChainObject): Single<Seeder> = GetSeeder(accountId).toRequest()
+  fun get(accountId: AccountObjectId): Single<Seeder> = GetSeeder(accountId).toRequest()
 
   /**
    * Get a list of seeders by price, in increasing order.

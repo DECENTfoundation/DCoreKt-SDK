@@ -1,8 +1,8 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.ContentObjectId
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.utils.privateElGamal
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
@@ -13,7 +13,7 @@ import org.junit.runners.Parameterized
 class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should generate content keys`() {
-    val test = api.contentApi.generateKeys(listOf(ChainObject.parse("1.2.17"), ChainObject.parse("1.2.18")))
+    val test = api.contentApi.generateKeys(listOf("1.2.17".toObjectId(), "1.2.18".toObjectId()))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -23,7 +23,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get content by id`() {
-    val test = api.contentApi.get("2.13.3".toChainObject())
+    val test = api.contentApi.get("2.13.3".toObjectId<ContentObjectId>())
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -33,7 +33,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get contents by ids`() {
-    val test = api.contentApi.getAll(listOf("2.13.3".toChainObject(), "2.13.4".toChainObject()))
+    val test = api.contentApi.getAll(listOf("2.13.3".toObjectId(), "2.13.4".toObjectId()))
         .subscribeOn(Schedulers.newThread())
         .test()
 
@@ -63,7 +63,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should restore content encryption key`() {
-    val test = api.contentApi.restoreEncryptionKey(Helpers.credentials.keyPair.privateElGamal(), "2.12.3".toChainObject())
+    val test = api.contentApi.restoreEncryptionKey(Helpers.credentials.keyPair.privateElGamal(), "2.12.3".toObjectId())
         .subscribeOn(Schedulers.newThread())
         .test()
 

@@ -1,11 +1,11 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.net.model.ApiGroup
 import java.lang.reflect.Type
 
 internal open class GetObjects<T>(
-    objects: List<ChainObject>,
+    objects: List<ObjectId>,
     returnClass: Type
 ) : BaseRequest<T>(
     ApiGroup.DATABASE,

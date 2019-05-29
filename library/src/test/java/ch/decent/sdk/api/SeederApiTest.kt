@@ -1,7 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.model.Regions
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,7 +11,7 @@ import org.junit.runners.Parameterized
 class SeederApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get seeder by id`() {
-    val test = api.seedersApi.get("1.2.17".toChainObject())
+    val test = api.seedersApi.get("1.2.17".toObjectId())
         .subscribeOn(Schedulers.newThread())
         .test()
 

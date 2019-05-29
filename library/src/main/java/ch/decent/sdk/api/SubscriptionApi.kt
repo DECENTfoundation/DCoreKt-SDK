@@ -4,8 +4,9 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Subscription
+import ch.decent.sdk.model.SubscriptionObjectId
 import ch.decent.sdk.net.model.request.GetSubscription
 import ch.decent.sdk.net.model.request.ListActiveSubscriptionsByAuthor
 import ch.decent.sdk.net.model.request.ListActiveSubscriptionsByConsumer
@@ -23,7 +24,7 @@ class SubscriptionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return the subscription object corresponding to the provided ID, [ObjectNotFoundException] otherwise
    */
   // todo subscriptions: wait for subscribe operation to test
-  fun get(id: ChainObject): Single<Subscription> = GetSubscription(id).toRequest()
+  fun get(id: SubscriptionObjectId): Single<Subscription> = GetSubscription(id).toRequest()
 
   /**
    * Get a list of active (not expired) subscriptions by account (consumer).
@@ -33,7 +34,7 @@ class SubscriptionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of active subscription objects
    */
-  fun getAllActiveByConsumer(consumer: ChainObject, count: Int): Single<List<Subscription>> =
+  fun getAllActiveByConsumer(consumer: AccountObjectId, count: Int): Single<List<Subscription>> =
       ListActiveSubscriptionsByConsumer(consumer, count).toRequest()
 
   /**
@@ -44,7 +45,7 @@ class SubscriptionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of active subscription objects
    */
-  fun getAllActiveByAuthor(author: ChainObject, count: Int): Single<List<Subscription>> =
+  fun getAllActiveByAuthor(author: AccountObjectId, count: Int): Single<List<Subscription>> =
       ListActiveSubscriptionsByAuthor(author, count).toRequest()
 
   /**
@@ -55,7 +56,7 @@ class SubscriptionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of subscription objects
    */
-  fun getAllByConsumer(consumer: ChainObject, count: Int): Single<List<Subscription>> =
+  fun getAllByConsumer(consumer: AccountObjectId, count: Int): Single<List<Subscription>> =
       ListSubscriptionsByConsumer(consumer, count).toRequest()
 
   /**
@@ -66,6 +67,6 @@ class SubscriptionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of subscription objects
    */
-  fun getAllByAuthor(author: ChainObject, count: Int): Single<List<Subscription>> =
+  fun getAllByAuthor(author: AccountObjectId, count: Int): Single<List<Subscription>> =
       ListSubscriptionsByAuthor(author, count).toRequest()
 }

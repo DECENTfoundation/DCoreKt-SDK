@@ -1,10 +1,10 @@
 package ch.decent.sdk.crypto
 
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 
 data class Credentials(
-    val account: ChainObject,
+    val account: AccountObjectId,
     val keyPair: ECKeyPair
 ) {
-  constructor(account: ChainObject, encodedPrivate: String) : this(account, ECKeyPair.fromBase58(encodedPrivate))
+  constructor(account: AccountObjectId, encodedPrivate: String) : this(account, ECKeyPair.fromBase58(encodedPrivate))
 }

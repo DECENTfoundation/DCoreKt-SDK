@@ -1,63 +1,78 @@
 package ch.decent.sdk.model
 
-import kotlin.math.max
-
 /**
  * Enum type used to list all possible object types and obtain their space + type id
  */
-enum class ObjectType {
-  // dcore/libraries/chain/include/graphene/chain/protocol/types.hpp
-  //  enum object_type, space = 1
-  NULL_OBJECT, // ordinal = 0, type = 0, space = any
-  BASE_OBJECT,
-  ACCOUNT_OBJECT,
-  ASSET_OBJECT,
-  MINER_OBJECT,
-  CUSTOM_OBJECT, //5
-  PROPOSAL_OBJECT,
-  OPERATION_HISTORY_OBJECT,
-  WITHDRAW_PERMISSION_OBJECT,
-  VESTING_BALANCE_OBJECT,
+enum class ObjectType(val space: Int, val type: Int) {
+  NULL_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.NULL_OBJECT.ordinal),
+  BASE_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.BASE_OBJECT.ordinal),
+  ACCOUNT_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.ACCOUNT_OBJECT.ordinal),
+  ASSET_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.ASSET_OBJECT.ordinal),
+  MINER_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.MINER_OBJECT.ordinal),
+  CUSTOM_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.CUSTOM_OBJECT.ordinal),
+  PROPOSAL_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.PROPOSAL_OBJECT.ordinal),
+  OPERATION_HISTORY_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.OPERATION_HISTORY_OBJECT.ordinal),
+  WITHDRAW_PERMISSION_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.WITHDRAW_PERMISSION_OBJECT.ordinal),
+  VESTING_BALANCE_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.VESTING_BALANCE_OBJECT.ordinal),
+  GLOBAL_PROPERTY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.GLOBAL_PROPERTY_OBJECT.ordinal),
+  DYNAMIC_GLOBAL_PROPERTY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.DYNAMIC_GLOBAL_PROPERTY_OBJECT.ordinal),
+  RESERVED_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.RESERVED_OBJECT.ordinal),
+  ASSET_DYNAMIC_DATA(Space.IMPLEMENTATION.ordinal, ImplementationId.ASSET_DYNAMIC_DATA.ordinal),
+  ACCOUNT_BALANCE_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.ACCOUNT_BALANCE_OBJECT.ordinal),
+  ACCOUNT_STATISTICS_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.ACCOUNT_STATISTICS_OBJECT.ordinal),
+  TRANSACTION_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.TRANSACTION_OBJECT.ordinal),
+  BLOCK_SUMMARY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.BLOCK_SUMMARY_OBJECT.ordinal),
+  ACCOUNT_TRANSACTION_HISTORY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.ACCOUNT_TRANSACTION_HISTORY_OBJECT.ordinal),
+  CHAIN_PROPERTY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.CHAIN_PROPERTY_OBJECT.ordinal),
+  MINER_SCHEDULE_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.MINER_SCHEDULE_OBJECT.ordinal),
+  BUDGET_RECORD_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.BUDGET_RECORD_OBJECT.ordinal),
+  PURCHASE_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.PURCHASE_OBJECT.ordinal),
+  CONTENT_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.CONTENT_OBJECT.ordinal),
+  PUBLISHER_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.PUBLISHER_OBJECT.ordinal),
+  SUBSCRIPTION_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.SUBSCRIPTION_OBJECT.ordinal),
+  SEEDING_STATISTICS_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.SEEDING_STATISTICS_OBJECT.ordinal),
+  TRANSACTION_DETAIL_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.TRANSACTION_DETAIL_OBJECT.ordinal),
+  MESSAGING_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.MESSAGING_OBJECT.ordinal),
+  UNKNOWN_OBJECT(0, 0);
 
-  //  enum impl_object_type, space = 2
-  GLOBAL_PROPERTY_OBJECT, // ordinal = 10, type 0
-  DYNAMIC_GLOBAL_PROPERTY_OBJECT,
-  RESERVED_OBJECT,
-  ASSET_DYNAMIC_DATA,
-  ACCOUNT_BALANCE_OBJECT,
-  ACCOUNT_STATISTICS_OBJECT, //5
-  TRANSACTION_OBJECT,
-  BLOCK_SUMMARY_OBJECT,
-  ACCOUNT_TRANSACTION_HISTORY_OBJECT,
-  CHAIN_PROPERTY_OBJECT,
-  MINER_SCHEDULE_OBJECT, //10
-  BUDGET_RECORD_OBJECT,
-  PURCHASE_OBJECT,
-  CONTENT_OBJECT,
-  PUBLISHER_OBJECT,
-  SUBSCRIPTION_OBJECT, //15
-  SEEDING_STATISTICS_OBJECT,
-  TRANSACTION_DETAIL_OBJECT,
-  MESSAGING_OBJECT;
+  internal enum class Space {
+    NULL,
+    PROTOCOL,
+    IMPLEMENTATION
+  }
 
-  val space: Byte
-    get() = if (ordinal < 10) 1 else 2
+  internal enum class ProtocolId {
+    NULL_OBJECT, // 0
+    BASE_OBJECT,
+    ACCOUNT_OBJECT,
+    ASSET_OBJECT,
+    MINER_OBJECT,
+    CUSTOM_OBJECT, //5
+    PROPOSAL_OBJECT,
+    OPERATION_HISTORY_OBJECT,
+    WITHDRAW_PERMISSION_OBJECT,
+    VESTING_BALANCE_OBJECT
+  }
 
-  val type: Byte
-    get() = (ordinal - (space - 1) * 10).toByte()
-
-  /**
-   * This method is used to return the generic object type in the form space.type.0.
-   *
-   * Not to be confused with [ChainObject.objectId], which will return
-   * the full object id in the form space.type.id.
-   *
-   * @return: The generic object type
-   */
-  val genericId: ChainObject
-    get() = ChainObject(this)
-
-  companion object {
-    fun fromSpaceType(space: Int, type: Int) = ObjectType.values()[max(space - 1, 0) * 10 + type]
+  internal enum class ImplementationId {
+    GLOBAL_PROPERTY_OBJECT, //0
+    DYNAMIC_GLOBAL_PROPERTY_OBJECT,
+    RESERVED_OBJECT,
+    ASSET_DYNAMIC_DATA,
+    ACCOUNT_BALANCE_OBJECT,
+    ACCOUNT_STATISTICS_OBJECT, //5
+    TRANSACTION_OBJECT,
+    BLOCK_SUMMARY_OBJECT,
+    ACCOUNT_TRANSACTION_HISTORY_OBJECT,
+    CHAIN_PROPERTY_OBJECT,
+    MINER_SCHEDULE_OBJECT, //10
+    BUDGET_RECORD_OBJECT,
+    PURCHASE_OBJECT,
+    CONTENT_OBJECT,
+    PUBLISHER_OBJECT,
+    SUBSCRIPTION_OBJECT, //15
+    SEEDING_STATISTICS_OBJECT,
+    TRANSACTION_DETAIL_OBJECT,
+    MESSAGING_OBJECT
   }
 }
