@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BroadcastApi.broadcast - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">BroadcastApi</a>&nbsp;/&nbsp;<a href="./broadcast.html">broadcast</a><br/>
+<br/>
+<h1>broadcast</h1>
+<a name="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.model.Transaction)"></a>
+<code><span class="keyword">fun </span><span class="identifier">broadcast</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.model.Transaction)/transaction">transaction</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-transaction/index.html"><span class="identifier">Transaction</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>broadcast transaction to DCore</p>
+<h3>Parameters</h3>
+<p><a name="transaction"></a>
+<code>transaction</code> - transaction to broadcast</p>
+<a name="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">broadcast</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)/operations">operations</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-base-operation/index.html"><span class="identifier">BaseOperation</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)/expiration">expiration</span><span class="symbol">:</span>&nbsp;<span class="identifier">Duration</span>&nbsp;<span class="symbol">=</span>&nbsp;api.transactionExpiration<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>broadcast operations to DCore</p>
+<h3>Parameters</h3>
+<p><a name="privateKey"></a>
+<code>privateKey</code> - private key</p>
+<p><a name="operations"></a>
+<code>operations</code> - operations to be submitted to DCore</p>
+<p><a name="expiration"></a>
+<code>expiration</code> - transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block</p>
+<a name="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">broadcast</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)/operation">operation</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model.operation/-base-operation/index.html"><span class="identifier">BaseOperation</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)/expiration">expiration</span><span class="symbol">:</span>&nbsp;<span class="identifier">Duration</span>&nbsp;<span class="symbol">=</span>&nbsp;api.transactionExpiration<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>broadcast operation to DCore</p>
+<h3>Parameters</h3>
+<p><a name="privateKey"></a>
+<code>privateKey</code> - private key</p>
+<p><a name="operation"></a>
+<code>operation</code> - operation to be submitted to DCore</p>
+<p><a name="expiration"></a>
+<code>expiration</code> - transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block</p>
+<a name="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">broadcast</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)/operations">operations</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-base-operation/index.html"><span class="identifier">BaseOperation</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, kotlin.collections.List((ch.decent.sdk.model.operation.BaseOperation)), org.threeten.bp.Duration)/expiration">expiration</span><span class="symbol">:</span>&nbsp;<span class="identifier">Duration</span>&nbsp;<span class="symbol">=</span>&nbsp;api.transactionExpiration<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>broadcast operations to DCore</p>
+<h3>Parameters</h3>
+<p><a name="privateKey"></a>
+<code>privateKey</code> - private key in base58 format</p>
+<p><a name="operations"></a>
+<code>operations</code> - operations to be submitted to DCore</p>
+<p><a name="expiration"></a>
+<code>expiration</code> - transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block</p>
+<a name="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">broadcast</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)/operation">operation</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model.operation/-base-operation/index.html"><span class="identifier">BaseOperation</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BroadcastApi$broadcast(kotlin.String, ch.decent.sdk.model.operation.BaseOperation, org.threeten.bp.Duration)/expiration">expiration</span><span class="symbol">:</span>&nbsp;<span class="identifier">Duration</span>&nbsp;<span class="symbol">=</span>&nbsp;api.transactionExpiration<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>broadcast operation to DCore</p>
+<h3>Parameters</h3>
+<p><a name="privateKey"></a>
+<code>privateKey</code> - private key in base58 format</p>
+<p><a name="operation"></a>
+<code>operation</code> - operation to be submitted to DCore</p>
+<p><a name="expiration"></a>
+<code>expiration</code> - transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block</p>
+</BODY>
+</HTML>

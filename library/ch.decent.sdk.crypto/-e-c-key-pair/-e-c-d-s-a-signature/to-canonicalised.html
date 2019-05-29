@@ -1,0 +1,19 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ECKeyPair.ECDSASignature.toCanonicalised - library</title>
+<link rel="stylesheet" href="../../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../../index.html">library</a>&nbsp;/&nbsp;<a href="../../index.html">ch.decent.sdk.crypto</a>&nbsp;/&nbsp;<a href="../index.html">ECKeyPair</a>&nbsp;/&nbsp;<a href="index.html">ECDSASignature</a>&nbsp;/&nbsp;<a href="./to-canonicalised.html">toCanonicalised</a><br/>
+<br/>
+<h1>toCanonicalised</h1>
+<a name="ch.decent.sdk.crypto.ECKeyPair.ECDSASignature$toCanonicalised()"></a>
+<code><span class="keyword">fun </span><span class="identifier">toCanonicalised</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="index.html"><span class="identifier">ECDSASignature</span></a></code>
+<p>Will automatically adjust the S component to be less than or equal to half the curve order, if necessary.
+This is required because for every signature (r,s) the signature (r, -s (mod N)) is a valid signature of
+the same message. However, we dislike the ability to modify the bits of a Bitcoin transaction after it's
+been signed, as that violates various assumed invariants. Thus in future only one of those forms will be
+considered legal and the other will be banned.</p>
+</BODY>
+</HTML>

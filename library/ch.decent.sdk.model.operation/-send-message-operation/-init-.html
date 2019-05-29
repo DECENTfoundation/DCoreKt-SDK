@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SendMessageOperation.<init> - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="index.html">SendMessageOperation</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="ch.decent.sdk.model.operation.SendMessageOperation$&lt;init&gt;(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">SendMessageOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/messagePayloadJson">messagePayloadJson</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/payer">payer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/requiredAuths">requiredAuths</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;listOf(payer)<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Send message operation.</p>
+<h3>Parameters</h3>
+<p><a name="messagePayloadJson"></a>
+<code>messagePayloadJson</code> - message payload</p>
+<p><a name="payer"></a>
+<code>payer</code> - account id to pay for the operation</p>
+<p><a name="requiredAuths"></a>
+<code>requiredAuths</code> - account ids required to authorize this operation</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

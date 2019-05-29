@@ -1,0 +1,203 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AccountApi - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="./index.html">AccountApi</a><br/>
+<br/>
+<h1>AccountApi</h1>
+<code><span class="keyword">class </span><span class="identifier">AccountApi</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-api/index.html"><span class="identifier">BaseApi</span></a></code>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-api/api.html">api</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../ch.decent.sdk/-d-core-api/index.html"><span class="identifier">DCoreApi</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="count-all.html">countAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">countAll</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">&gt;</span></code>
+<p>Get the total number of accounts registered on the blockchain.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create.html">create</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/registrar">registrar</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/address">address</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Create a new account.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-account-operation.html">createAccountOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createAccountOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createAccountOperation(ch.decent.sdk.model.ChainObject, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/registrar">registrar</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createAccountOperation(ch.decent.sdk.model.ChainObject, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createAccountOperation(ch.decent.sdk.model.ChainObject, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/address">address</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createAccountOperation(ch.decent.sdk.model.ChainObject, kotlin.String, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-account-create-operation/index.html"><span class="identifier">AccountCreateOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create a register new account operation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-credentials.html">createCredentials</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createCredentials</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createCredentials(kotlin.String, kotlin.String)/account">account</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createCredentials(kotlin.String, kotlin.String)/privateKey">privateKey</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">&gt;</span></code>
+<p>Create API credentials.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-transfer.html">createTransfer</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createTransfer</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createTransfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createTransfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/nameOrId">nameOrId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createTransfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createTransfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/memo">memo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createTransfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/encrypted">encrypted</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createTransfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-transfer-operation/index.html"><span class="identifier">TransferOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create a transfer operation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-update-operation.html">createUpdateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createUpdateOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createUpdateOperation(kotlin.String, ch.decent.sdk.model.Fee)/nameOrId">nameOrId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$createUpdateOperation(kotlin.String, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-account-update-operation/index.html"><span class="identifier">AccountUpdateOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create update account operation. Fills model with actual account values.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="exist.html">exist</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">exist</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$exist(kotlin.String)/nameOrId">nameOrId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">&gt;</span></code>
+<p>Check if the account exist.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="find-all.html">findAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">findAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/searchTerm">searchTerm</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/order">order</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-search-accounts-order/index.html"><span class="identifier">SearchAccountsOrder</span></a>&nbsp;<span class="symbol">=</span>&nbsp;SearchAccountsOrder.NAME_DESC<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/id">id</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a>&nbsp;<span class="symbol">=</span>&nbsp;ObjectType.NULL_OBJECT.genericId<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;1000<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get names and IDs for registered accounts that match search term.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="find-all-references-by-account.html">findAllReferencesByAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">findAllReferencesByAccount</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAllReferencesByAccount(ch.decent.sdk.model.ChainObject)/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get all accounts that refer to the account id in their owner or active authorities.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="find-all-references-by-keys.html">findAllReferencesByKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">findAllReferencesByKeys</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAllReferencesByKeys(kotlin.collections.List((ch.decent.sdk.crypto.Address)))/keys">keys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get account object ids by public key addresses.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get.html">get</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$get(ch.decent.sdk.model.ChainObject)/id">id</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code>
+<p>Get account by id.</p>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$get(kotlin.String)/nameOrId">nameOrId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code>
+<p>Get account by name or id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all.html">getAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$getAll(kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/accountIds">accountIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get account objects by ids.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-by-names.html">getAllByNames</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAllByNames</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$getAllByNames(kotlin.collections.List((kotlin.String)))/names">names</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get a list of accounts by name.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-by-name.html">getByName</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getByName</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$getByName(kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code>
+<p>Get account object by name.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-full-accounts.html">getFullAccounts</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getFullAccounts</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$getFullAccounts(kotlin.collections.List((kotlin.String)), kotlin.Boolean)/namesOrIds">namesOrIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$getFullAccounts(kotlin.collections.List((kotlin.String)), kotlin.Boolean)/subscribe">subscribe</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="../../ch.decent.sdk.model/-full-account/index.html"><span class="identifier">FullAccount</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Fetch all objects relevant to the specified accounts and subscribe to updates.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="list-all-relative.html">listAllRelative</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">listAllRelative</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$listAllRelative(kotlin.String, kotlin.Int)/lowerBound">lowerBound</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$listAllRelative(kotlin.String, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;1000<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get names and IDs for registered accounts.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="search-account-history.html">searchAccountHistory</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><s><span class="identifier">searchAccountHistory</span></s><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$searchAccountHistory(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.SearchAccountHistoryOrder, kotlin.Int)/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$searchAccountHistory(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.SearchAccountHistoryOrder, kotlin.Int)/from">from</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a>&nbsp;<span class="symbol">=</span>&nbsp;ObjectType.NULL_OBJECT.genericId<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$searchAccountHistory(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.SearchAccountHistoryOrder, kotlin.Int)/order">order</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-search-account-history-order/index.html"><span class="identifier">SearchAccountHistoryOrder</span></a>&nbsp;<span class="symbol">=</span>&nbsp;SearchAccountHistoryOrder.TIME_DESC<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$searchAccountHistory(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.SearchAccountHistoryOrder, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;100<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-detail/index.html"><span class="identifier">TransactionDetail</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Search account history.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="transfer.html">transfer</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">transfer</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$transfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$transfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/nameOrId">nameOrId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$transfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$transfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/memo">memo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$transfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/encrypted">encrypted</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$transfer(ch.decent.sdk.crypto.Credentials, kotlin.String, ch.decent.sdk.model.AssetAmount, kotlin.String, kotlin.Boolean, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Make a transfer.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update.html">update</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">update</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$update(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.AccountOptions, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$update(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.AccountOptions, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-account-options/index.html"><span class="identifier">AccountOptions</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$update(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.AccountOptions, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Fee)/active">active</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-authority/index.html"><span class="identifier">Authority</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$update(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.AccountOptions, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Fee)/owner">owner</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-authority/index.html"><span class="identifier">Authority</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$update(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.AccountOptions, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Authority, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Update account</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

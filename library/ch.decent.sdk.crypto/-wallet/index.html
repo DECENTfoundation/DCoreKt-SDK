@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Wallet - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.crypto</a>&nbsp;/&nbsp;<a href="./index.html">Wallet</a><br/>
+<br/>
+<h1>Wallet</h1>
+<code><span class="keyword">object </span><span class="identifier">Wallet</span></code>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-cipher-key-pair/index.html">CipherKeyPair</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CipherKeyPair</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-cipher-keys/index.html">CipherKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CipherKeys</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-d-core-wallet/index.html">DCoreWallet</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">DCoreWallet</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-extra-keys/index.html">ExtraKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ExtraKeys</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-pub-key-pair/index.html">PubKeyPair</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PubKeyPair</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="create.html">create</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$create(ch.decent.sdk.crypto.Credentials, kotlin.String)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$create(ch.decent.sdk.crypto.Credentials, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">)</span><span class="symbol">: </span><a href="../-wallet-file/index.html"><span class="identifier">WalletFile</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="decrypt.html">decrypt</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$decrypt(ch.decent.sdk.crypto.WalletFile, kotlin.String)/walletFile">walletFile</span><span class="symbol">:</span>&nbsp;<a href="../-wallet-file/index.html"><span class="identifier">WalletFile</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$decrypt(ch.decent.sdk.crypto.WalletFile, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">)</span><span class="symbol">: </span><a href="../-credentials/index.html"><span class="identifier">Credentials</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="export-d-core-wallet.html">exportDCoreWallet</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">exportDCoreWallet</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$exportDCoreWallet(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.String, kotlin.String)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$exportDCoreWallet(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.String, kotlin.String)/account">account</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$exportDCoreWallet(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.String, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$exportDCoreWallet(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.String, kotlin.String)/chainId">chainId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="-d-core-wallet/index.html"><span class="identifier">DCoreWallet</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="import-d-core-wallet.html">importDCoreWallet</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">importDCoreWallet</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$importDCoreWallet(kotlin.String, kotlin.String)/walletJson">walletJson</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet$importDCoreWallet(kotlin.String, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-credentials/index.html"><span class="identifier">Credentials</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AssetReserveOperation.<init> - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="index.html">AssetReserveOperation</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="ch.decent.sdk.model.operation.AssetReserveOperation$&lt;init&gt;(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">AssetReserveOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.AssetReserveOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Fee)/payer">payer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetReserveOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetReserveOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Reserve funds operation constructor. Return issued funds to the issuer of the asset.</p>
+<h3>Parameters</h3>
+<p><a name="payer"></a>
+<code>payer</code> - account id providing the funds</p>
+<p><a name="amount"></a>
+<code>amount</code> - asset amount to remove from current supply</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

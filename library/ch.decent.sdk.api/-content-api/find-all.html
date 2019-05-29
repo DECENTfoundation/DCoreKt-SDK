@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ContentApi.findAll - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">ContentApi</a>&nbsp;/&nbsp;<a href="./find-all.html">findAll</a><br/>
+<br/>
+<h1>findAll</h1>
+<a name="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)"></a>
+<code><span class="keyword">fun </span><span class="identifier">findAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/term">term</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/order">order</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-search-content-order/index.html"><span class="identifier">SearchContentOrder</span></a>&nbsp;<span class="symbol">=</span>&nbsp;SearchContentOrder.CREATED_DESC<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/user">user</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/regionCode">regionCode</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Regions.ALL.code<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/type">type</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;contentType(ApplicationType.DECENT_CORE, CategoryType.NONE)<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/startId">startId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a>&nbsp;<span class="symbol">=</span>&nbsp;ObjectType.NULL_OBJECT.genericId<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$findAll(kotlin.String, ch.decent.sdk.model.SearchContentOrder, kotlin.String, kotlin.String, kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;100<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-content/index.html"><span class="identifier">Content</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Search for term in contents (author, title and description).</p>
+<h3>Parameters</h3>
+<p><a name="term"></a>
+<code>term</code> - search term</p>
+<p><a name="order"></a>
+<code>order</code> - ordering field. Available options are defined in <a href="../../ch.decent.sdk.model/-search-content-order/index.html">SearchContentOrder</a></p>
+<p><a name="user"></a>
+<code>user</code> - content owner account name</p>
+<p><a name="regionCode"></a>
+<code>regionCode</code> - two letter region code, defined in <a href="../../ch.decent.sdk.model/-regions/index.html">Regions</a></p>
+<p><a name="type"></a>
+<code>type</code> - the application and content type to be filtered, use <a href="../../ch.decent.sdk.model/content-type.html">contentType</a> method</p>
+<p><a name="startId"></a>
+<code>startId</code> - the id of content object to start searching from</p>
+<p><a name="limit"></a>
+<code>limit</code> - maximum number of contents to fetch (must not exceed 100)</p>
+<p><strong>Return</strong><br/>
+the contents found</p>
+</BODY>
+</HTML>

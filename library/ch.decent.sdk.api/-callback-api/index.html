@@ -1,0 +1,75 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CallbackApi - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="./index.html">CallbackApi</a><br/>
+<br/>
+<h1>CallbackApi</h1>
+<code><span class="keyword">class </span><span class="identifier">CallbackApi</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-api/index.html"><span class="identifier">BaseApi</span></a></code>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-api/api.html">api</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../ch.decent.sdk/-d-core-api/index.html"><span class="identifier">DCoreApi</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="cancel-all.html">cancelAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">cancelAll</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>Stop receiving any notifications. This unsubscribes from all subscribed objects (<a href="on-global.html">onGlobal</a> and <a href="../-account-api/get-full-accounts.html">AccountApi.getFullAccounts</a>).</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-block-applied.html">onBlockApplied</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onBlockApplied</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Flowable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code>
+<p>Receive new block notifications. Cannot be cancelled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-content-update.html">onContentUpdate</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onContentUpdate</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.CallbackApi$onContentUpdate(kotlin.String)/uri">uri</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Flowable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>Receive notifications on content update. Cannot be cancelled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-global.html">onGlobal</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onGlobal</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.CallbackApi$onGlobal(kotlin.Boolean)/clearFilter">clearFilter</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Flowable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>Subscribe to callbacks. Can be cancelled. with <a href="cancel-all.html">cancelAll</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-pending-transaction.html">onPendingTransaction</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onPendingTransaction</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Flowable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">&gt;</span></code>
+<p>Receive notifications on pending transactions. Cannot be cancelled.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

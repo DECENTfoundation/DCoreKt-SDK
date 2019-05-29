@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AssetApi.create - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">AssetApi</a>&nbsp;/&nbsp;<a href="./create.html">create</a><br/>
+<br/>
+<h1>create</h1>
+<a name="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/symbol">symbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-options/index.html"><span class="identifier">AssetOptions</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AssetOptions(ExchangeRate.forCreateOp(1, 1))<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Create a new Asset.</p>
+<h3>Parameters</h3>
+<p><a name="credentials"></a>
+<code>credentials</code> - account credentials issuing the asset</p>
+<p><a name="symbol"></a>
+<code>symbol</code> - the string symbol, 3-16 uppercase chars</p>
+<p><a name="precision"></a>
+<code>precision</code> - base unit precision, decimal places used in string representation</p>
+<p><a name="description"></a>
+<code>description</code> - optional description</p>
+<p><a name="options"></a>
+<code>options</code> - asset options</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

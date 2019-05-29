@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Memo.<init> - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model</a>&nbsp;/&nbsp;<a href="index.html">Memo</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="ch.decent.sdk.model.Memo$&lt;init&gt;(kotlin.String)"></a>
+<code><span class="identifier">Memo</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String)/message">message</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span></code>
+<p>Create Memo object with unencrypted message</p>
+<h3>Parameters</h3>
+<p><a name="message"></a>
+<code>message</code> - a message to send</p>
+<a name="ch.decent.sdk.model.Memo$&lt;init&gt;(kotlin.String, ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account)"></a>
+<code><span class="identifier">Memo</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account)/message">message</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account)/recipient">recipient</span><span class="symbol">:</span>&nbsp;<a href="../-account/index.html"><span class="identifier">Account</span></a><span class="symbol">)</span></code>
+<p>Create Memo object with encrypted message</p>
+<h3>Parameters</h3>
+<p><a name="message"></a>
+<code>message</code> - a message to send</p>
+<p><a name="credentials"></a>
+<code>credentials</code> - sender credentials</p>
+<p><a name="recipient"></a>
+<code>recipient</code> - receiver account</p>
+<a name="ch.decent.sdk.model.Memo$&lt;init&gt;(kotlin.String, ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)"></a>
+<code><span class="identifier">Memo</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)/message">message</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)/keyPair">keyPair</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)/recipient">recipient</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Memo$<init>(kotlin.String, ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)/nonce">nonce</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a>&nbsp;<span class="symbol">=</span>&nbsp;generateNonce()<span class="symbol">)</span></code>
+<p>Create Memo object with encrypted message</p>
+<h3>Parameters</h3>
+<p><a name="message"></a>
+<code>message</code> - a message to send</p>
+<p><a name="keyPair"></a>
+<code>keyPair</code> - sender keys, use <a href="../../ch.decent.sdk.crypto/-credentials/key-pair.html">ch.decent.sdk.crypto.Credentials.keyPair</a></p>
+<p><a name="recipient"></a>
+<code>recipient</code> - receiver public key, use address from <a href="../-account/active.html">Account.active</a> keys</p>
+<p><a name="nonce"></a>
+<code>nonce</code> - unique positive number</p>
+</BODY>
+</HTML>

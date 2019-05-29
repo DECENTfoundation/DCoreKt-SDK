@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Miner - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model</a>&nbsp;/&nbsp;<a href="./index.html">Miner</a><br/>
+<br/>
+<h1>Miner</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Miner</span></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">Miner</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/id">id</span><span class="symbol">:</span>&nbsp;<a href="../-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/minerAccount">minerAccount</span><span class="symbol">:</span>&nbsp;<a href="../-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/lastAslot">lastAslot</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/signingKey">signingKey</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/payVb">payVb</span><span class="symbol">:</span>&nbsp;<a href="../-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/voteId">voteId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/totalVotes">totalVotes</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/url">url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/totalMissed">totalMissed</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/lastConfirmedBlockNum">lastConfirmedBlockNum</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Miner$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, java.math.BigInteger, ch.decent.sdk.crypto.Address, ch.decent.sdk.model.ChainObject, kotlin.String, java.math.BigInteger, kotlin.String, kotlin.Long, kotlin.Long, kotlin.Long)/voteRanking">voteRanking</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="id.html">id</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">id</span><span class="symbol">: </span><a href="../-chain-object/index.html"><span class="identifier">ChainObject</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="last-aslot.html">lastAslot</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">lastAslot</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="last-confirmed-block-num.html">lastConfirmedBlockNum</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">lastConfirmedBlockNum</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="miner-account.html">minerAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">minerAccount</span><span class="symbol">: </span><a href="../-chain-object/index.html"><span class="identifier">ChainObject</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="pay-vb.html">payVb</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">payVb</span><span class="symbol">: </span><a href="../-chain-object/index.html"><span class="identifier">ChainObject</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="signing-key.html">signingKey</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">signingKey</span><span class="symbol">: </span><a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="total-missed.html">totalMissed</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">totalMissed</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="total-votes.html">totalVotes</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">totalVotes</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="url.html">url</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">url</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="vote-id.html">voteId</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">voteId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="vote-ranking.html">voteRanking</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">voteRanking</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

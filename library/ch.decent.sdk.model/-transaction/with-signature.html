@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Transaction.withSignature - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model</a>&nbsp;/&nbsp;<a href="index.html">Transaction</a>&nbsp;/&nbsp;<a href="./with-signature.html">withSignature</a><br/>
+<br/>
+<h1>withSignature</h1>
+<a name="ch.decent.sdk.model.Transaction$withSignature(ch.decent.sdk.crypto.ECKeyPair, kotlin.String)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">withSignature</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.Transaction$withSignature(ch.decent.sdk.crypto.ECKeyPair, kotlin.String)/key">key</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.Transaction$withSignature(ch.decent.sdk.crypto.ECKeyPair, kotlin.String)/chainId">chainId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;this.chainId ?: ""<span class="symbol">)</span><span class="symbol">: </span><a href="index.html"><span class="identifier">Transaction</span></a></code>
+<p>Set a single signature to transaction and return it. May change expiration time to meet valid signature checks for DCore.</p>
+<h3>Parameters</h3>
+<p><a name="key"></a>
+<code>key</code> - private key</p>
+<p><a name="chainId"></a>
+<code>chainId</code> - id of the DCore chain, different for live/testnet/custom net...</p>
+</BODY>
+</HTML>

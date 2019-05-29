@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ContentApi.createAddContentOperation - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">ContentApi</a>&nbsp;/&nbsp;<a href="./create-add-content-operation.html">createAddContentOperation</a><br/>
+<br/>
+<h1>createAddContentOperation</h1>
+<a name="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">createAddContentOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/author">author</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/coAuthors">coAuthors</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-co-authors/index.html"><span class="identifier">CoAuthors</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/uri">uri</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/price">price</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-regional-price/index.html"><span class="identifier">RegionalPrice</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/expiration">expiration</span><span class="symbol">:</span>&nbsp;<span class="identifier">LocalDateTime</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/synopsis">synopsis</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-synopsis/index.html"><span class="identifier">Synopsis</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ContentApi$createAddContentOperation(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.Synopsis, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-add-or-update-content-operation/index.html"><span class="identifier">AddOrUpdateContentOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create request to submit content operation.</p>
+<h3>Parameters</h3>
+<p><a name="author"></a>
+<code>author</code> - author of the content. If co-authors is not filled, this account will receive full payout</p>
+<p><a name="coAuthors"></a>
+<code>coAuthors</code> - if map is not empty, payout will be split - the parameter maps co-authors
+to basis points split, e.g. author1:9000 (bp), author2:1000 (bp),
+if author is omitted from this map, it is assigned 10000 (bp_total) minus sum of splits</p>
+<p><a name="uri"></a>
+<code>uri</code> - URI where the content can be found</p>
+<p><a name="price"></a>
+<code>price</code> - list of regional prices</p>
+<p><a name="expiration"></a>
+<code>expiration</code> - content expiration time</p>
+<p><a name="synopsis"></a>
+<code>synopsis</code> - JSON formatted structure containing content information</p>
+<p><a name="fee"></a>
+<code>fee</code> - {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

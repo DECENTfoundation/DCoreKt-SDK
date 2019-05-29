@@ -1,0 +1,187 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ch.decent.sdk.crypto - library</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">library</a>&nbsp;/&nbsp;<a href="./index.html">ch.decent.sdk.crypto</a><br/>
+<br/>
+<h2>Package ch.decent.sdk.crypto</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-address/index.html">Address</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Address</span></code>
+<p>Class used to encapsulate address-related operations.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-credentials/index.html">Credentials</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Credentials</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-dumped-private-key/index.html">DumpedPrivateKey</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DumpedPrivateKey</span></code>
+<p>Parses and generates private keys in the form used by the Bitcoin "dumpprivkey" command. This is the private key
+bytes with a header byte and 4 checksum bytes at the end. If there are 33 private keyPair bytes instead of 32, then
+the last byte is a discriminator value for the compressed pubkey.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-e-c-key-pair/index.html">ECKeyPair</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">ECKeyPair</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-linux-secure-random/index.html">LinuxSecureRandom</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">LinuxSecureRandom</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/security/SecureRandomSpi.html"><span class="identifier">SecureRandomSpi</span></a></code>
+<p>Implementation from
+<a href="https://github.com/bitcoinj/bitcoinj/blob/master/core/src/main/java/org/bitcoinj/crypto/LinuxSecureRandom.java">BitcoinJ implementation</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-passphrase/index.html">Passphrase</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Passphrase</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-wallet/index.html">Wallet</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">Wallet</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-wallet-file/index.html">WalletFile</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">WalletFile</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Exceptions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-cipher-exception/index.html">CipherException</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">CipherException</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html"><span class="identifier">Exception</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extensions for External Classes</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="kotlin.-string/index.html">kotlin.String</a></p>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="org.bouncycastle.math.ec.-e-c-point/index.html">org.bouncycastle.math.ec.ECPoint</a></p>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="address.html">address</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">address</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="-address/index.html"><span class="identifier">Address</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="base58.html">base58</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">base58</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="bytes.html">bytes</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-address/index.html"><span class="identifier">Address</span></a><span class="symbol">.</span><span class="identifier">bytes</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="credentials.html">credentials</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-wallet-file/index.html"><span class="identifier">WalletFile</span></a><span class="symbol">.</span><span class="identifier">credentials</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto$credentials(ch.decent.sdk.crypto.WalletFile, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">)</span><span class="symbol">: </span><a href="-credentials/index.html"><span class="identifier">Credentials</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="dpk.html">dpk</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">dpk</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="-dumped-private-key/index.html"><span class="identifier">DumpedPrivateKey</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="ec-key.html">ecKey</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-dumped-private-key/index.html"><span class="identifier">DumpedPrivateKey</span></a><span class="symbol">.</span><span class="identifier">ecKey</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="generate-private-from-pass-phrase.html">generatePrivateFromPassPhrase</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">generatePrivateFromPassPhrase</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto$generatePrivateFromPassPhrase(ch.decent.sdk.crypto.Passphrase, kotlin.Int, kotlin.Boolean)/phrase">phrase</span><span class="symbol">:</span>&nbsp;<a href="-passphrase/index.html"><span class="identifier">Passphrase</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto$generatePrivateFromPassPhrase(ch.decent.sdk.crypto.Passphrase, kotlin.Int, kotlin.Boolean)/sequence">sequence</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;0<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto$generatePrivateFromPassPhrase(ch.decent.sdk.crypto.Passphrase, kotlin.Int, kotlin.Boolean)/normalized">normalized</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">)</span><span class="symbol">: </span><a href="-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a></code>
+<p>Method generates private key from pass phrase provided by parameter of type <a href="-passphrase/index.html">Passphrase</a>. If parameter <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-file/normalize.html">normalize</a> is true, provided pass phrase will be
+converted to upper case before private key calculation. In other case word stays as it was provided. Default value for <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-file/normalize.html">normalize</a> parameter is true.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="generate-private-from-string-phrase.html">generatePrivateFromStringPhrase</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">generatePrivateFromStringPhrase</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto$generatePrivateFromStringPhrase(kotlin.String, kotlin.Int, kotlin.Boolean)/phrase">phrase</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto$generatePrivateFromStringPhrase(kotlin.String, kotlin.Int, kotlin.Boolean)/sequence">sequence</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;0<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto$generatePrivateFromStringPhrase(kotlin.String, kotlin.Int, kotlin.Boolean)/normalized">normalized</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">)</span><span class="symbol">: </span><a href="-e-c-key-pair/index.html"><span class="identifier">ECKeyPair</span></a></code>
+<p>Method generates private key from phrase provided by parameter of type <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>. If parameter <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-file/normalize.html">normalize</a> is true, provided pass phrase will be converted
+to upper case before private key calculation. In other case word stays as it was provided. Default value for <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-file/normalize.html">normalize</a> parameter is true.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="wallet-file.html">walletFile</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">.</span><span class="identifier">walletFile</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto$walletFile(ch.decent.sdk.crypto.Credentials, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">)</span><span class="symbol">: </span><a href="-wallet-file/index.html"><span class="identifier">WalletFile</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

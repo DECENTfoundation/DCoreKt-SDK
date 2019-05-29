@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SendMessageOperation - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="./index.html">SendMessageOperation</a><br/>
+<br/>
+<h1>SendMessageOperation</h1>
+<code><span class="keyword">class </span><span class="identifier">SendMessageOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-custom-operation/index.html"><span class="identifier">CustomOperation</span></a></code>
+<p>Send message operation.</p>
+<h3>Parameters</h3>
+<p><a name="messagePayloadJson"></a>
+<code>messagePayloadJson</code> - message payload</p>
+<p><a name="payer"></a>
+<code>payer</code> - account id to pay for the operation</p>
+<p><a name="requiredAuths"></a>
+<code>requiredAuths</code> - account ids required to authorize this operation</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">SendMessageOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/messagePayloadJson">messagePayloadJson</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/payer">payer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/requiredAuths">requiredAuths</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;listOf(payer)<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.SendMessageOperation$<init>(kotlin.String, ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Send message operation.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-custom-operation/data.html">data</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">data</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>data payload encoded in hex string</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-custom-operation/id.html">id</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">id</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-custom-operation/payer.html">payer</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">payer</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a></code>
+<p>account which pays for the fee</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-custom-operation/required-auths.html">requiredAuths</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">requiredAuths</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span></code>
+<p>accounts required to authorize this operation with signatures</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-custom-operation/to-string.html">toString</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

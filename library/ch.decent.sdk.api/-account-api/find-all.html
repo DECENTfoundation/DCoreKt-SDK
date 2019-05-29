@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AccountApi.findAll - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">AccountApi</a>&nbsp;/&nbsp;<a href="./find-all.html">findAll</a><br/>
+<br/>
+<h1>findAll</h1>
+<a name="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">findAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/searchTerm">searchTerm</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/order">order</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-search-accounts-order/index.html"><span class="identifier">SearchAccountsOrder</span></a>&nbsp;<span class="symbol">=</span>&nbsp;SearchAccountsOrder.NAME_DESC<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/id">id</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a>&nbsp;<span class="symbol">=</span>&nbsp;ObjectType.NULL_OBJECT.genericId<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AccountApi$findAll(kotlin.String, ch.decent.sdk.model.SearchAccountsOrder, ch.decent.sdk.model.ChainObject, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;1000<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get names and IDs for registered accounts that match search term.</p>
+<h3>Parameters</h3>
+<p><a name="searchTerm"></a>
+<code>searchTerm</code> - will try to partially match account name or id</p>
+<p><a name="order"></a>
+<code>order</code> - sort data by field</p>
+<p><a name="id"></a>
+<code>id</code> - object id to start searching from</p>
+<p><a name="limit"></a>
+<code>limit</code> - number of items to get, max 1000</p>
+<p><strong>Return</strong><br/>
+list of found accounts</p>
+</BODY>
+</HTML>

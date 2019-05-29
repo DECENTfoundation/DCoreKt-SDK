@@ -1,0 +1,684 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ch.decent.sdk.model - library</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">library</a>&nbsp;/&nbsp;<a href="./index.html">ch.decent.sdk.model</a><br/>
+<br/>
+<h2>Package ch.decent.sdk.model</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-account/index.html">Account</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Account</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-account-balance/index.html">AccountBalance</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AccountBalance</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-account-options/index.html">AccountOptions</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AccountOptions</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-account-statistics/index.html">AccountStatistics</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AccountStatistics</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-address-adapter/index.html">AddressAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">AddressAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-amount-with-asset/index.html">AmountWithAsset</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AmountWithAsset</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-asset-formatter/index.html"><span class="identifier">AssetFormatter</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-application-type/index.html">ApplicationType</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">ApplicationType</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-asset/index.html">Asset</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Asset</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-asset-formatter/index.html"><span class="identifier">AssetFormatter</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-asset-amount/index.html">AssetAmount</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AssetAmount</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-asset-data/index.html">AssetData</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AssetData</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-asset-formatter/index.html">AssetFormatter</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AssetFormatter</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-asset-options/index.html">AssetOptions</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AssetOptions</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-auth-map/index.html">AuthMap</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AuthMap</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-auth-map-adapter/index.html">AuthMapAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">AuthMapAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-auth-map/index.html"><span class="identifier">AuthMap</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-authority/index.html">Authority</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Authority</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-balance/index.html">Balance</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Balance</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-balance-change/index.html">BalanceChange</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">BalanceChange</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-block-header/index.html">BlockHeader</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">BlockHeader</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-category-type/index.html">CategoryType</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">CategoryType</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-chain-object/index.html">ChainObject</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">ChainObject</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-chain-object-adapter/index.html">ChainObjectAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">ChainObjectAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-chain-parameters/index.html">ChainParameters</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ChainParameters</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-chain-properties/index.html">ChainProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ChainProperties</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-cipher-key-pair-adapter/index.html">CipherKeyPairAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">CipherKeyPairAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="../ch.decent.sdk.crypto/-wallet/-cipher-key-pair/index.html"><span class="identifier">CipherKeyPair</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-co-authors/index.html">CoAuthors</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CoAuthors</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-co-authors-adapter/index.html">CoAuthorsAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">CoAuthorsAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-co-authors/index.html"><span class="identifier">CoAuthors</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-config/index.html">Config</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Config</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-content/index.html">Content</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Content</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-content-keys/index.html">ContentKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ContentKeys</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-custody-data/index.html">CustodyData</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">CustodyData</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-date-time-adapter/index.html">DateTimeAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">DateTimeAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><span class="identifier">LocalDateTime</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-dynamic-global-props/index.html">DynamicGlobalProps</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">DynamicGlobalProps</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-exchange-rate/index.html">ExchangeRate</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ExchangeRate</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-extra-keys-adapter/index.html">ExtraKeysAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">ExtraKeysAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="../ch.decent.sdk.crypto/-wallet/-extra-keys/index.html"><span class="identifier">ExtraKeys</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-fee/index.html">Fee</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Fee</span></code>
+<p>Fee asset amount.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-fee-param-adapter/index.html">FeeParamAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">FeeParamAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-fee-parameter/index.html"><span class="identifier">FeeParameter</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-fee-parameter/index.html">FeeParameter</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">FeeParameter</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-fee-schedule/index.html">FeeSchedule</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">FeeSchedule</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-fixed-max-supply/index.html">FixedMaxSupply</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">FixedMaxSupply</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-static-variant-single/index.html"><span class="identifier">StaticVariantSingle</span></a><span class="symbol">&lt;</span><a href="-fixed-max-supply/index.html"><span class="identifier">FixedMaxSupply</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-full-account/index.html">FullAccount</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">FullAccount</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-global-parameters/index.html">GlobalParameters</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">GlobalParameters</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-global-properties/index.html">GlobalProperties</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">GlobalProperties</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-key-part/index.html">KeyPart</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">KeyPart</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-memo/index.html">Memo</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Memo</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-message/index.html">Message</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Message</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-message-payload/index.html">MessagePayload</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MessagePayload</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-message-payload-receiver/index.html">MessagePayloadReceiver</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MessagePayloadReceiver</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-message-receiver/index.html">MessageReceiver</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MessageReceiver</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-message-response/index.html">MessageResponse</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MessageResponse</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-miner/index.html">Miner</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Miner</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-miner-id/index.html">MinerId</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MinerId</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-miner-id-adapter/index.html">MinerIdAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">MinerIdAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-miner-id/index.html"><span class="identifier">MinerId</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-miner-reward-input/index.html">MinerRewardInput</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MinerRewardInput</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-miner-votes/index.html">MinerVotes</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MinerVotes</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-miner-voting-info/index.html">MinerVotingInfo</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MinerVotingInfo</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-monitored-asset-options/index.html">MonitoredAssetOptions</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MonitoredAssetOptions</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-object-type/index.html">ObjectType</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">ObjectType</span></code>
+<p>Enum type used to list all possible object types and obtain their space + type id</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-operation-history/index.html">OperationHistory</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">OperationHistory</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-operation-type-adapter/index.html">OperationTypeAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">OperationTypeAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="../ch.decent.sdk.model.operation/-operation-type/index.html"><span class="identifier">OperationType</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-operation-type-factory/index.html">OperationTypeFactory</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">OperationTypeFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapterFactory</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-price-feed/index.html">PriceFeed</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PriceFeed</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-price-per-region/index.html">PricePerRegion</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PricePerRegion</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-processed-transaction/index.html">ProcessedTransaction</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ProcessedTransaction</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-pub-key/index.html">PubKey</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PubKey</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-pub-key-adapter/index.html">PubKeyAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">PubKeyAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-pub-key/index.html"><span class="identifier">PubKey</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-publishing/index.html">Publishing</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Publishing</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-purchase/index.html">Purchase</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Purchase</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-real-supply/index.html">RealSupply</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">RealSupply</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-regional-price/index.html">RegionalPrice</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">RegionalPrice</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-regions/index.html">Regions</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">Regions</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-search-account-history-order/index.html">SearchAccountHistoryOrder</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">SearchAccountHistoryOrder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-search-accounts-order/index.html">SearchAccountsOrder</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">SearchAccountsOrder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-search-content-order/index.html">SearchContentOrder</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">SearchContentOrder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-search-miner-voting-order/index.html">SearchMinerVotingOrder</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">SearchMinerVotingOrder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-search-purchases-order/index.html">SearchPurchasesOrder</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">SearchPurchasesOrder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-seeder/index.html">Seeder</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Seeder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-signed-block/index.html">SignedBlock</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">SignedBlock</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-variant.html">StaticVariant</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">StaticVariant</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-variant1/index.html">StaticVariant1</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">StaticVariant1</span><span class="symbol">&lt;</span><span class="identifier">T1</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-static-variant-parametrized/index.html"><span class="identifier">StaticVariantParametrized</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-variant2/index.html">StaticVariant2</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">StaticVariant2</span><span class="symbol">&lt;</span><span class="identifier">T1</span><span class="symbol">, </span><span class="identifier">T2</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-static-variant-parametrized/index.html"><span class="identifier">StaticVariantParametrized</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-variant-factory/index.html">StaticVariantFactory</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">StaticVariantFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapterFactory</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-variant-parametrized/index.html">StaticVariantParametrized</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">StaticVariantParametrized</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-static-variant.html"><span class="identifier">StaticVariant</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-static-variant-single/index.html">StaticVariantSingle</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">StaticVariantSingle</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-static-variant.html"><span class="identifier">StaticVariant</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-subscription/index.html">Subscription</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Subscription</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-synopsis/index.html">Synopsis</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Synopsis</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction/index.html">Transaction</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Transaction</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-confirmation/index.html">TransactionConfirmation</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TransactionConfirmation</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-detail/index.html">TransactionDetail</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TransactionDetail</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-vesting-balance/index.html">VestingBalance</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">VestingBalance</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-vote-id/index.html">VoteId</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">VoteId</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-vote-id-adapter/index.html">VoteIdAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">object </span><span class="identifier">VoteIdAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">TypeAdapter</span><span class="symbol">&lt;</span><a href="-vote-id/index.html"><span class="identifier">VoteId</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extensions for External Classes</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="kotlin.-string/index.html">kotlin.String</a></p>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="content-type.html">contentType</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">contentType</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model$contentType(ch.decent.sdk.model.ApplicationType, ch.decent.sdk.model.CategoryType)/app">app</span><span class="symbol">:</span>&nbsp;<a href="-application-type/index.html"><span class="identifier">ApplicationType</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model$contentType(ch.decent.sdk.model.ApplicationType, ch.decent.sdk.model.CategoryType)/category">category</span><span class="symbol">:</span>&nbsp;<a href="-category-type/index.html"><span class="identifier">CategoryType</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>create content type string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

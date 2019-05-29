@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MiningApi.createVoteOperation - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">MiningApi</a>&nbsp;/&nbsp;<a href="./create-vote-operation.html">createVoteOperation</a><br/>
+<br/>
+<h1>createVoteOperation</h1>
+<a name="ch.decent.sdk.api.MiningApi$createVoteOperation(ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)"></a>
+<code><span class="keyword">fun </span><span class="identifier">createVoteOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.MiningApi$createVoteOperation(ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.MiningApi$createVoteOperation(ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/minerIds">minerIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.MiningApi$createVoteOperation(ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-account-update-operation/index.html"><span class="identifier">AccountUpdateOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create vote for miner operation.</p>
+<h3>Parameters</h3>
+<p><a name="accountId"></a>
+<code>accountId</code> - account object id, 1.2.*</p>
+<p><a name="minerIds"></a>
+<code>minerIds</code> - list of miner account ids</p>
+<p><a name="fee"></a>
+<code>fee</code> - {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+<p><strong>Return</strong><br/>
+a transaction confirmation</p>
+</BODY>
+</HTML>

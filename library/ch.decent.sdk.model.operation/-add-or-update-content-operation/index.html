@@ -1,0 +1,245 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AddOrUpdateContentOperation - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="./index.html">AddOrUpdateContentOperation</a><br/>
+<br/>
+<h1>AddOrUpdateContentOperation</h1>
+<code><span class="keyword">class </span><span class="identifier">AddOrUpdateContentOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-operation/index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Request to submit content operation constructor</p>
+<h3>Parameters</h3>
+<p><a name="size"></a>
+<code>size</code> - size of content, including samples, in megabytes</p>
+<p><a name="author"></a>
+<code>author</code> - author of the content. If co-authors is not filled, this account will receive full payout</p>
+<p><a name="coAuthors"></a>
+<code>coAuthors</code> - if map is not empty, payout will be split - the parameter maps co-authors
+to basis points split, e.g. author1:9000 (bp), author2:1000 (bp),
+if author is omitted from this map, it is assigned 10000 (bp_total) minus sum of splits</p>
+<p><a name="uri"></a>
+<code>uri</code> - URI where the content can be found</p>
+<p><a name="quorum"></a>
+<code>quorum</code> - how many seeders needs to cooperate to recover the key</p>
+<p><a name="price"></a>
+<code>price</code> - list of regional prices</p>
+<p><a name="hash"></a>
+<code>hash</code> - hash of the content. Should be 40 chars long, hex encoded</p>
+<p><a name="seeders"></a>
+<code>seeders</code> - list of selected seeders</p>
+<p><a name="keyParts"></a>
+<code>keyParts</code> - key particles, each assigned to one of the seeders, encrypted with his key</p>
+<p><a name="expiration"></a>
+<code>expiration</code> - content expiration time</p>
+<p><a name="publishingFee"></a>
+<code>publishingFee</code> - fee must be greater than the sum of seeders' publishing prices * number of days. Is paid by author</p>
+<p><a name="synopsis"></a>
+<code>synopsis</code> - JSON formatted structure containing content information</p>
+<p><a name="custodyData"></a>
+<code>custodyData</code> - if cd.n == 0 then no custody is submitted, and simplified verification is done.</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">AddOrUpdateContentOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/size">size</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a>&nbsp;<span class="symbol">=</span>&nbsp;BigInteger.ONE<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/author">author</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/coAuthors">coAuthors</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-co-authors/index.html"><span class="identifier">CoAuthors</span></a>&nbsp;<span class="symbol">=</span>&nbsp;CoAuthors(emptyMap())<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/uri">uri</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/quorum">quorum</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;0<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/price">price</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-regional-price/index.html"><span class="identifier">RegionalPrice</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/hash">hash</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;uri.toByteArray().ripemd160().hex()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/seeders">seeders</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyList()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/keyParts">keyParts</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-key-part/index.html"><span class="identifier">KeyPart</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyList()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/expiration">expiration</span><span class="symbol">:</span>&nbsp;<span class="identifier">LocalDateTime</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/publishingFee">publishingFee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AssetAmount(0)<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/synopsis">synopsis</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/custodyData">custodyData</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-custody-data/index.html"><span class="identifier">CustodyData</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AddOrUpdateContentOperation$<init>(java.math.BigInteger, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.CoAuthors, kotlin.String, kotlin.Int, kotlin.collections.List((ch.decent.sdk.model.RegionalPrice)), kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)), kotlin.collections.List((ch.decent.sdk.model.KeyPart)), org.threeten.bp.LocalDateTime, ch.decent.sdk.model.AssetAmount, kotlin.String, ch.decent.sdk.model.CustodyData, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Request to submit content operation constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="author.html">author</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">author</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a></code>
+<p>author of the content. If co-authors is not filled, this account will receive full payout</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="co-authors.html">coAuthors</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">coAuthors</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-co-authors/index.html"><span class="identifier">CoAuthors</span></a></code>
+<p>if map is not empty, payout will be split - the parameter maps co-authors
+to basis points split, e.g. author1:9000 (bp), author2:1000 (bp),
+if author is omitted from this map, it is assigned 10000 (bp_total) minus sum of splits</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="custody-data.html">custodyData</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">custodyData</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-custody-data/index.html"><span class="identifier">CustodyData</span></a><span class="symbol">?</span></code>
+<p>if cd.n == 0 then no custody is submitted, and simplified verification is done.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="expiration.html">expiration</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">expiration</span><span class="symbol">: </span><span class="identifier">LocalDateTime</span></code>
+<p>content expiration time</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="hash.html">hash</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">hash</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>hash of the content. Should be 40 chars long, hex encoded</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="key-parts.html">keyParts</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">keyParts</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-key-part/index.html"><span class="identifier">KeyPart</span></a><span class="symbol">&gt;</span></code>
+<p>key particles, each assigned to one of the seeders, encrypted with his key</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="price.html">price</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">price</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-regional-price/index.html"><span class="identifier">RegionalPrice</span></a><span class="symbol">&gt;</span></code>
+<p>list of regional prices</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="publishing-fee.html">publishingFee</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">publishingFee</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a></code>
+<p>fee must be greater than the sum of seeders' publishing prices * number of days. Is paid by author</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="quorum.html">quorum</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">quorum</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>how many seeders needs to cooperate to recover the key</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="seeders.html">seeders</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">seeders</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span></code>
+<p>list of selected seeders</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="size.html">size</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">size</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a></code>
+<p>size of content, including samples, in megabytes</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="synopsis.html">synopsis</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">synopsis</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>JSON formatted structure containing content information</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="uri.html">uri</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">uri</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>URI where the content can be found</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-operation/fee.html">fee</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fee</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a></code>
+<p>Fee for the operation, must be set to valid value when broadcasting to network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-base-operation/fetch-fee.html">fetchFee</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fetchFee</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Defines whether to fetch required fee for the operation when using the API methods to create transaction or broadcast operation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-base-operation/type.html">type</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-operation-type/index.html"><span class="identifier">OperationType</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="to-string.html">toString</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-operation/equals.html">equals</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">equals</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.BaseOperation$equals(kotlin.Any)/other">other</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-base-operation/hash-code.html">hashCode</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">hashCode</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

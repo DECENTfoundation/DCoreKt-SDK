@@ -1,0 +1,196 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ECKeyPair - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.crypto</a>&nbsp;/&nbsp;<a href="./index.html">ECKeyPair</a><br/>
+<br/>
+<h1>ECKeyPair</h1>
+<code><span class="keyword">class </span><span class="identifier">ECKeyPair</span></code>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-e-c-d-s-a-signature/index.html">ECDSASignature</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ECDSASignature</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">ECKeyPair</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair$<init>(java.security.SecureRandom)/secureRandom">secureRandom</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/security/SecureRandom.html"><span class="identifier">SecureRandom</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="compressed.html">compressed</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">compressed</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="private.html">private</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">private</span><span class="symbol">: </span><a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="private-bytes.html">privateBytes</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">privateBytes</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="public.html">public</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">public</span><span class="symbol">: </span><span class="identifier">ECPoint</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="equals.html">equals</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">equals</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair$equals(kotlin.Any)/other">other</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="hash-code.html">hashCode</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">hashCode</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="sign.html">sign</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">sign</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair$sign(kotlin.ByteArray)/input">input</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="-e-c-d-s-a-signature/index.html"><span class="identifier">ECDSASignature</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="signature.html">signature</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">signature</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair$signature(kotlin.ByteArray)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>should be called in a loop until a 'canonical' signature is returned, slightly changing input data on every call</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="check-canonical-signature.html">checkCanonicalSignature</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">checkCanonicalSignature</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$checkCanonicalSignature(kotlin.ByteArray)/sigData">sigData</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="from-base58.html">fromBase58</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">fromBase58</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$fromBase58(kotlin.String)/encoded">encoded</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="from-private.html">fromPrivate</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">fromPrivate</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$fromPrivate(kotlin.ByteArray, kotlin.Boolean)/key">key</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$fromPrivate(kotlin.ByteArray, kotlin.Boolean)/compressed">compressed</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="from-public.html">fromPublic</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">fromPublic</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$fromPublic(kotlin.ByteArray)/key">key</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a></code><br/>
+<code><span class="keyword">fun </span><span class="identifier">fromPublic</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$fromPublic(org.bouncycastle.math.ec.ECPoint)/point">point</span><span class="symbol">:</span>&nbsp;<span class="identifier">ECPoint</span><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="recover-from-signature.html">recoverFromSignature</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">recoverFromSignature</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$recoverFromSignature(kotlin.Int, ch.decent.sdk.crypto.ECKeyPair.ECDSASignature, kotlin.ByteArray)/recId">recId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$recoverFromSignature(kotlin.Int, ch.decent.sdk.crypto.ECKeyPair.ECDSASignature, kotlin.ByteArray)/sig">sig</span><span class="symbol">:</span>&nbsp;<a href="-e-c-d-s-a-signature/index.html"><span class="identifier">ECDSASignature</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.ECKeyPair.Companion$recoverFromSignature(kotlin.Int, ch.decent.sdk.crypto.ECKeyPair.ECDSASignature, kotlin.ByteArray)/message">message</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">?</span></code>
+<p>Given the components of a signature and a selector value, recover and return the public keyPair
+that generated the signature according to the algorithm in SEC1v2 section 4.1.6.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../address.html">address</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">address</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-address/index.html"><span class="identifier">Address</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../base58.html">base58</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">base58</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../dpk.html">dpk</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">dpk</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-dumped-private-key/index.html"><span class="identifier">DumpedPrivateKey</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../ch.decent.sdk.utils/private-el-gamal.html">privateElGamal</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">privateElGamal</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-pub-key/index.html"><span class="identifier">PubKey</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../ch.decent.sdk.utils/public-el-gamal.html">publicElGamal</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">publicElGamal</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-pub-key/index.html"><span class="identifier">PubKey</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../../ch.decent.sdk.utils/secret.html">secret</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><a href="./index.html"><span class="identifier">ECKeyPair</span></a><span class="symbol">.</span><span class="identifier">secret</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.utils$secret(ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)/address">address</span><span class="symbol">:</span>&nbsp;<a href="../-address/index.html"><span class="identifier">Address</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.utils$secret(ch.decent.sdk.crypto.ECKeyPair, ch.decent.sdk.crypto.Address, java.math.BigInteger)/nonce">nonce</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html"><span class="identifier">BigInteger</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

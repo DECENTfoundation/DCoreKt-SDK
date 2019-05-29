@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TransferOperation.<init> - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="index.html">TransferOperation</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="ch.decent.sdk.model.operation.TransferOperation$&lt;init&gt;(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">TransferOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.TransferOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/from">from</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.TransferOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/to">to</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.TransferOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.TransferOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/memo">memo</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-memo/index.html"><span class="identifier">Memo</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.TransferOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.AssetAmount, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Transfer operation constructor</p>
+<h3>Parameters</h3>
+<p><a name="from"></a>
+<code>from</code> - account object id of the sender</p>
+<p><a name="to"></a>
+<code>to</code> - account object id or content object id of the receiver</p>
+<p><a name="amount"></a>
+<code>amount</code> - an <a href="../../ch.decent.sdk.model/-asset-amount/index.html">AssetAmount</a> to transfer</p>
+<p><a name="memo"></a>
+<code>memo</code> - optional string note</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

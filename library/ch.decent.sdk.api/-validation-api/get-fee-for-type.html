@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ValidationApi.getFeeForType - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">ValidationApi</a>&nbsp;/&nbsp;<a href="./get-fee-for-type.html">getFeeForType</a><br/>
+<br/>
+<h1>getFeeForType</h1>
+<a name="ch.decent.sdk.api.ValidationApi$getFeeForType(ch.decent.sdk.model.operation.OperationType, ch.decent.sdk.model.ChainObject)"></a>
+<code><span class="identifier">@JvmOverloads</span> <span class="keyword">fun </span><span class="identifier">getFeeForType</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.ValidationApi$getFeeForType(ch.decent.sdk.model.operation.OperationType, ch.decent.sdk.model.ChainObject)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model.operation/-operation-type/index.html"><span class="identifier">OperationType</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ValidationApi$getFeeForType(ch.decent.sdk.model.operation.OperationType, ch.decent.sdk.model.ChainObject)/assetId">assetId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a>&nbsp;<span class="symbol">=</span>&nbsp;DCoreConstants.DCT.id<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span></code>
+<p>Returns fee for operation type, not valid for operation per size fees:
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-a-s-s-e-t_-c-r-e-a-t-e_-o-p-e-r-a-t-i-o-n.html">OperationType.ASSET_CREATE_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-a-s-s-e-t_-i-s-s-u-e_-o-p-e-r-a-t-i-o-n.html">OperationType.ASSET_ISSUE_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-p-r-o-p-o-s-a-l_-c-r-e-a-t-e_-o-p-e-r-a-t-i-o-n.html">OperationType.PROPOSAL_CREATE_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-p-r-o-p-o-s-a-l_-u-p-d-a-t-e_-o-p-e-r-a-t-i-o-n.html">OperationType.PROPOSAL_UPDATE_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-w-i-t-h-d-r-a-w_-p-e-r-m-i-s-s-i-o-n_-c-l-a-i-m_-o-p-e-r-a-t-i-o-n.html">OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-c-u-s-t-o-m_-o-p-e-r-a-t-i-o-n.html">OperationType.CUSTOM_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-a-s-s-e-r-t_-o-p-e-r-a-t-i-o-n.html">OperationType.ASSERT_OPERATION</a>,
+<a href="../../ch.decent.sdk.model.operation/-operation-type/-c-o-n-t-e-n-t_-s-u-b-m-i-t_-o-p-e-r-a-t-i-o-n.html">OperationType.CONTENT_SUBMIT_OPERATION</a></p>
+<h3>Parameters</h3>
+<p><a name="type"></a>
+<code>type</code> - operation type</p>
+<p><strong>Return</strong><br/>
+a fee asset amount</p>
+</BODY>
+</HTML>

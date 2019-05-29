@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AssetCreateOperation - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="./index.html">AssetCreateOperation</a><br/>
+<br/>
+<h1>AssetCreateOperation</h1>
+<code><span class="keyword">class </span><span class="identifier">AssetCreateOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-operation/index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Create Asset operation constructor.</p>
+<h3>Parameters</h3>
+<p><a name="issuer"></a>
+<code>issuer</code> - account id issuing the asset</p>
+<p><a name="symbol"></a>
+<code>symbol</code> - the string symbol, 3-16 uppercase chars</p>
+<p><a name="precision"></a>
+<code>precision</code> - base unit precision, decimal places used in string representation</p>
+<p><a name="description"></a>
+<code>description</code> - optional description</p>
+<p><a name="options"></a>
+<code>options</code> - asset options</p>
+<p><a name="monitoredOptions"></a>
+<code>monitoredOptions</code> - options for monitored asset</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">AssetCreateOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/issuer">issuer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/symbol">symbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-options/index.html"><span class="identifier">AssetOptions</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/monitoredOptions">monitoredOptions</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-monitored-asset-options/index.html"><span class="identifier">MonitoredAssetOptions</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Create Asset operation constructor.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="description.html">description</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">description</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>optional description</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="issuer.html">issuer</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">issuer</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a></code>
+<p>account id issuing the asset</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="monitored-options.html">monitoredOptions</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">monitoredOptions</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-monitored-asset-options/index.html"><span class="identifier">MonitoredAssetOptions</span></a><span class="symbol">?</span></code>
+<p>options for monitored asset</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="options.html">options</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">options</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-asset-options/index.html"><span class="identifier">AssetOptions</span></a></code>
+<p>asset options</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="precision.html">precision</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">precision</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a></code>
+<p>base unit precision, decimal places used in string representation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="symbol.html">symbol</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">symbol</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>the string symbol, 3-16 uppercase chars</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-operation/fee.html">fee</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fee</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a></code>
+<p>Fee for the operation, must be set to valid value when broadcasting to network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-base-operation/fetch-fee.html">fetchFee</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fetchFee</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Defines whether to fetch required fee for the operation when using the API methods to create transaction or broadcast operation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-base-operation/type.html">type</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-operation-type/index.html"><span class="identifier">OperationType</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="to-string.html">toString</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-operation/equals.html">equals</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">equals</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.BaseOperation$equals(kotlin.Any)/other">other</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-base-operation/hash-code.html">hashCode</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">hashCode</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

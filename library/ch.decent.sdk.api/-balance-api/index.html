@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BalanceApi - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="./index.html">BalanceApi</a><br/>
+<br/>
+<h1>BalanceApi</h1>
+<code><span class="keyword">class </span><span class="identifier">BalanceApi</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-api/index.html"><span class="identifier">BaseApi</span></a></code>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-api/api.html">api</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../ch.decent.sdk/-d-core-api/index.html"><span class="identifier">DCoreApi</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="get.html">get</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$get(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject)/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$get(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject)/asset">asset</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span></code>
+<p>Get account balance by id.</p>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$get(kotlin.String, ch.decent.sdk.model.ChainObject)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$get(kotlin.String, ch.decent.sdk.model.ChainObject)/asset">asset</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span></code>
+<p>get account balance by name.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all.html">getAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAll(ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAll(ch.decent.sdk.model.ChainObject, kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/assets">assets</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyList()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get account balance by id.</p>
+<code><span class="keyword">fun </span><span class="identifier">getAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAll(kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAll(kotlin.String, kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/assets">assets</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyList()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get account balance by name.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-vesting.html">getAllVesting</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAllVesting</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAllVesting(ch.decent.sdk.model.ChainObject)/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-vesting-balance/index.html"><span class="identifier">VestingBalance</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get information about a vesting balance object.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-with-asset.html">getAllWithAsset</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAllWithAsset</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAllWithAsset(ch.decent.sdk.model.ChainObject, kotlin.collections.List((kotlin.String)))/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAllWithAsset(ch.decent.sdk.model.ChainObject, kotlin.collections.List((kotlin.String)))/assetSymbols">assetSymbols</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-amount-with-asset/index.html"><span class="identifier">AmountWithAsset</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get account balance by id with asset.</p>
+<code><span class="keyword">fun </span><span class="identifier">getAllWithAsset</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAllWithAsset(kotlin.String, kotlin.collections.List((kotlin.String)))/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getAllWithAsset(kotlin.String, kotlin.collections.List((kotlin.String)))/assetSymbols">assetSymbols</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-amount-with-asset/index.html"><span class="identifier">AmountWithAsset</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get account balance by name.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-with-asset.html">getWithAsset</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getWithAsset</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getWithAsset(ch.decent.sdk.model.ChainObject, kotlin.String)/accountId">accountId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getWithAsset(ch.decent.sdk.model.ChainObject, kotlin.String)/assetSymbol">assetSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;DCoreConstants.DCT_SYMBOL<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-amount-with-asset/index.html"><span class="identifier">AmountWithAsset</span></a><span class="symbol">&gt;</span></code><br/>
+<code><span class="keyword">fun </span><span class="identifier">getWithAsset</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getWithAsset(kotlin.String, kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.BalanceApi$getWithAsset(kotlin.String, kotlin.String)/assetSymbol">assetSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;DCoreConstants.DCT_SYMBOL<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-amount-with-asset/index.html"><span class="identifier">AmountWithAsset</span></a><span class="symbol">&gt;</span></code>
+<p>Get account balance by name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ValidationApi.getRequiredSignatures - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">ValidationApi</a>&nbsp;/&nbsp;<a href="./get-required-signatures.html">getRequiredSignatures</a><br/>
+<br/>
+<h1>getRequiredSignatures</h1>
+<a name="ch.decent.sdk.api.ValidationApi$getRequiredSignatures(ch.decent.sdk.model.Transaction, kotlin.collections.List((ch.decent.sdk.crypto.Address)))"></a>
+<code><span class="keyword">fun </span><span class="identifier">getRequiredSignatures</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.ValidationApi$getRequiredSignatures(ch.decent.sdk.model.Transaction, kotlin.collections.List((ch.decent.sdk.crypto.Address)))/transaction">transaction</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-transaction/index.html"><span class="identifier">Transaction</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.ValidationApi$getRequiredSignatures(ch.decent.sdk.model.Transaction, kotlin.collections.List((ch.decent.sdk.crypto.Address)))/keys">keys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>This API will take a partially signed transaction and a set of public keys that the owner has the ability to sign for
+and return the minimal subset of public keys that should add signatures to the transaction.</p>
+<h3>Parameters</h3>
+<p><a name="transaction"></a>
+<code>transaction</code> - partially signed transaction</p>
+<p><a name="keys"></a>
+<code>keys</code> - available owner public keys</p>
+<p><strong>Return</strong><br/>
+public keys that should add signatures</p>
+</BODY>
+</HTML>

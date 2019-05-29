@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ValidationApi.getPotentialSignatures - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">ValidationApi</a>&nbsp;/&nbsp;<a href="./get-potential-signatures.html">getPotentialSignatures</a><br/>
+<br/>
+<h1>getPotentialSignatures</h1>
+<a name="ch.decent.sdk.api.ValidationApi$getPotentialSignatures(ch.decent.sdk.model.Transaction)"></a>
+<code><span class="keyword">fun </span><span class="identifier">getPotentialSignatures</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.ValidationApi$getPotentialSignatures(ch.decent.sdk.model.Transaction)/transaction">transaction</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-transaction/index.html"><span class="identifier">Transaction</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.crypto/-address/index.html"><span class="identifier">Address</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>This method will return the set of all public keys that could possibly sign for a given transaction.
+This call can be used by wallets to filter their set of public keys to just the relevant subset prior to calling get_required_signatures() to get the minimum subset.</p>
+<h3>Parameters</h3>
+<p><a name="transaction"></a>
+<code>transaction</code> - unsigned transaction</p>
+<p><strong>Return</strong><br/>
+public keys that can sign transaction</p>
+</BODY>
+</HTML>

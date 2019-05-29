@@ -1,0 +1,264 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AssetApi - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="./index.html">AssetApi</a><br/>
+<br/>
+<h1>AssetApi</h1>
+<code><span class="keyword">class </span><span class="identifier">AssetApi</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-base-api/index.html"><span class="identifier">BaseApi</span></a></code>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-base-api/api.html">api</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">api</span><span class="symbol">: </span><a href="../../ch.decent.sdk/-d-core-api/index.html"><span class="identifier">DCoreApi</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="claim.html">claim</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">claim</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$claim(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$claim(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$claim(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/uia">uia</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$claim(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/dct">dct</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$claim(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Claim fees. Claim funds from asset pool, only the asset issuer can claim.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="convert-from-d-c-t.html">convertFromDCT</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">convertFromDCT</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$convertFromDCT(ch.decent.sdk.model.ChainObject, kotlin.Long, java.math.RoundingMode)/assetId">assetId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$convertFromDCT(ch.decent.sdk.model.ChainObject, kotlin.Long, java.math.RoundingMode)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$convertFromDCT(ch.decent.sdk.model.ChainObject, kotlin.Long, java.math.RoundingMode)/roundingMode">roundingMode</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/RoundingMode.html"><span class="identifier">RoundingMode</span></a>&nbsp;<span class="symbol">=</span>&nbsp;RoundingMode.CEILING<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span></code>
+<p>Get asset by id and convert amount in DCT to this asset</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="convert-to-d-c-t.html">convertToDCT</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">convertToDCT</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$convertToDCT(ch.decent.sdk.model.ChainObject, kotlin.Long, java.math.RoundingMode)/assetId">assetId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$convertToDCT(ch.decent.sdk.model.ChainObject, kotlin.Long, java.math.RoundingMode)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$convertToDCT(ch.decent.sdk.model.ChainObject, kotlin.Long, java.math.RoundingMode)/roundingMode">roundingMode</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/math/RoundingMode.html"><span class="identifier">RoundingMode</span></a>&nbsp;<span class="symbol">=</span>&nbsp;RoundingMode.CEILING<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a><span class="symbol">&gt;</span></code>
+<p>Get asset by id and convert amount in this asset to DCT</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create.html">create</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">create</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/symbol">symbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-options/index.html"><span class="identifier">AssetOptions</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AssetOptions(ExchangeRate.forCreateOp(1, 1))<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$create(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Create a new Asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-asset-create-operation.html">createAssetCreateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createAssetCreateOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/issuer">issuer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/symbol">symbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-options/index.html"><span class="identifier">AssetOptions</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/monitoredOptions">monitoredOptions</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-monitored-asset-options/index.html"><span class="identifier">MonitoredAssetOptions</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetCreateOperation(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-create-operation/index.html"><span class="identifier">AssetCreateOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create asset create operation.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-asset-issue-operation.html">createAssetIssueOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createAssetIssueOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetIssueOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetIssueOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetIssueOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/to">to</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetIssueOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/memo">memo</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-memo/index.html"><span class="identifier">Memo</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetIssueOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-issue-operation/index.html"><span class="identifier">AssetIssueOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create issue asset operation. Only the issuer of the asset can issue some funds until maxSupply is reached.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-asset-update-advanced-operation.html">createAssetUpdateAdvancedOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createAssetUpdateAdvancedOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetUpdateAdvancedOperation(kotlin.String, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetUpdateAdvancedOperation(kotlin.String, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-update-advanced-operation/index.html"><span class="identifier">AssetUpdateAdvancedOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create update advanced options operation for the asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-asset-update-operation.html">createAssetUpdateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createAssetUpdateOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetUpdateOperation(kotlin.String, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetUpdateOperation(kotlin.String, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/newIssuer">newIssuer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createAssetUpdateOperation(kotlin.String, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-update-operation/index.html"><span class="identifier">AssetUpdateOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create update asset operation. Fills model with actual asset values.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-claim-fees-operation.html">createClaimFeesOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createClaimFeesOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createClaimFeesOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createClaimFeesOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/uia">uia</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createClaimFeesOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/dct">dct</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createClaimFeesOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-claim-fees-operation/index.html"><span class="identifier">AssetClaimFeesOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create claim fees operation. Claim funds from asset pool, only the asset issuer can claim.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-fund-pools-operation.html">createFundPoolsOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createFundPoolsOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createFundPoolsOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createFundPoolsOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/uia">uia</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createFundPoolsOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/dct">dct</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createFundPoolsOperation(kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-fund-pools-operation/index.html"><span class="identifier">AssetFundPoolsOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create fund asset pool operation. Any account can fund a pool.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-monitored-asset.html">createMonitoredAsset</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createMonitoredAsset</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createMonitoredAsset(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createMonitoredAsset(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/symbol">symbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createMonitoredAsset(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createMonitoredAsset(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createMonitoredAsset(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-monitored-asset-options/index.html"><span class="identifier">MonitoredAssetOptions</span></a>&nbsp;<span class="symbol">=</span>&nbsp;MonitoredAssetOptions()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createMonitoredAsset(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>cannot create
+asset_create_op has account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
+therefore throws Missing Active Authority 1.2.0</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="create-reserve-operation.html">createReserveOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createReserveOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createReserveOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createReserveOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$createReserveOperation(kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model.operation/-asset-reserve-operation/index.html"><span class="identifier">AssetReserveOperation</span></a><span class="symbol">&gt;</span></code>
+<p>Create reserve funds operation. Return issued funds to the issuer of the asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="fund.html">fund</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">fund</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$fund(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$fund(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$fund(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/uia">uia</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$fund(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/dct">dct</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$fund(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, kotlin.Long, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Fund asset pool. Any account can fund a pool.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get.html">get</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$get(ch.decent.sdk.model.ChainObject)/assetId">assetId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset/index.html"><span class="identifier">Asset</span></a><span class="symbol">&gt;</span></code>
+<p>Get asset by id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all.html">getAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$getAll(kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/assetIds">assetIds</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset/index.html"><span class="identifier">Asset</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get assets by id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-by-name.html">getAllByName</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAllByName</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$getAllByName(kotlin.collections.List((kotlin.String)))/assetSymbols">assetSymbols</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset/index.html"><span class="identifier">Asset</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Lookup assets by symbol.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-asset-data.html">getAssetData</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAssetData</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$getAssetData(ch.decent.sdk.model.ChainObject)/assetId">assetId</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-data/index.html"><span class="identifier">AssetData</span></a><span class="symbol">&gt;</span></code>
+<p>Get asset dynamic data by id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-assets-data.html">getAssetsData</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAssetsData</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$getAssetsData(kotlin.collections.List((ch.decent.sdk.model.ChainObject)))/assetId">assetId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset-data/index.html"><span class="identifier">AssetData</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get asset dynamic data by id.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-by-name.html">getByName</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getByName</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$getByName(kotlin.String)/assetSymbol">assetSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset/index.html"><span class="identifier">Asset</span></a><span class="symbol">&gt;</span></code>
+<p>Lookup asset by symbol.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-real-supply.html">getRealSupply</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getRealSupply</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-real-supply/index.html"><span class="identifier">RealSupply</span></a><span class="symbol">&gt;</span></code>
+<p>Return current core asset supply.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="issue.html">issue</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">issue</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$issue(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$issue(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$issue(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$issue(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/to">to</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$issue(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/memo">memo</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-memo/index.html"><span class="identifier">Memo</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$issue(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Memo, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Issue asset. Only the issuer of the asset can issue some funds until maxSupply is reached.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="list-all.html">listAll</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">listAll</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$listAll(kotlin.Boolean)/includeMonitored">includeMonitored</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset/index.html"><span class="identifier">Asset</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="list-all-relative.html">listAllRelative</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">listAllRelative</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$listAllRelative(kotlin.String, kotlin.Int)/lowerBound">lowerBound</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$listAllRelative(kotlin.String, kotlin.Int)/limit">limit</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;100<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-asset/index.html"><span class="identifier">Asset</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get assets alphabetically by symbol name.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="reserve.html">reserve</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">reserve</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$reserve(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$reserve(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$reserve(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$reserve(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Long, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Reserve funds. Return issued funds to the issuer of the asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update.html">update</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">update</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/exchangeRate">exchangeRate</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/index.html"><span class="identifier">Pair</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">&gt;</span><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/exchangeable">exchangeable</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/maxSupply">maxSupply</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/newIssuer">newIssuer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$update(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Pair((kotlin.Int, )), kotlin.String, kotlin.Boolean, kotlin.Long, ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Update asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update-advanced.html">updateAdvanced</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">updateAdvanced</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AssetApi$updateAdvanced(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.crypto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$updateAdvanced(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/assetIdOrSymbol">assetIdOrSymbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$updateAdvanced(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$updateAdvanced(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/fixedMaxSupply">fixedMaxSupply</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.api.AssetApi$updateAdvanced(ch.decent.sdk.crypto.Credentials, kotlin.String, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-transaction-confirmation/index.html"><span class="identifier">TransactionConfirmation</span></a><span class="symbol">&gt;</span></code>
+<p>Update advanced options for the asset.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

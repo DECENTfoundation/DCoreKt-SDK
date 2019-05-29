@@ -1,0 +1,243 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BaseOperation - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="./index.html">BaseOperation</a><br/>
+<br/>
+<h1>BaseOperation</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">BaseOperation</span></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">BaseOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.BaseOperation$<init>(ch.decent.sdk.model.operation.OperationType, ch.decent.sdk.model.Fee)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../-operation-type/index.html"><span class="identifier">OperationType</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.BaseOperation$<init>(ch.decent.sdk.model.operation.OperationType, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="fee.html">fee</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fee</span><span class="symbol">: </span><a href="../../ch.decent.sdk.model/-asset-amount/index.html"><span class="identifier">AssetAmount</span></a></code>
+<p>Fee for the operation, must be set to valid value when broadcasting to network</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="fetch-fee.html">fetchFee</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">fetchFee</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Defines whether to fetch required fee for the operation when using the API methods to create transaction or broadcast operation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="type.html">type</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-operation-type/index.html"><span class="identifier">OperationType</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="equals.html">equals</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">equals</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.BaseOperation$equals(kotlin.Any)/other">other</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="hash-code.html">hashCode</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">hashCode</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-account-create-operation/index.html">AccountCreateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AccountCreateOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Request to create account operation constructor</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-account-update-operation/index.html">AccountUpdateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AccountUpdateOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Request to account update operation constructor</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-add-or-update-content-operation/index.html">AddOrUpdateContentOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AddOrUpdateContentOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Request to submit content operation constructor</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-claim-fees-operation/index.html">AssetClaimFeesOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetClaimFeesOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Claim fees operation constructor. Claim funds from asset pool, only the asset issuer can clam.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-create-operation/index.html">AssetCreateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetCreateOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Create Asset operation constructor.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-fund-pools-operation/index.html">AssetFundPoolsOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetFundPoolsOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Fund asset pool operation constructor. Any account can fund a pool.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-issue-operation/index.html">AssetIssueOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetIssueOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Issue asset operation constructor. Only the issuer of the asset can issue some funds until maxSupply is reached.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-publish-feed-operation/index.html">AssetPublishFeedOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetPublishFeedOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>skip, cannot create monitored asset, also only miner account can publish feeds
+asset_create_op has account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
+therefore throws Missing Active Authority 1.2.0</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-reserve-operation/index.html">AssetReserveOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetReserveOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Reserve funds operation constructor. Return issued funds to the issuer of the asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-update-advanced-operation/index.html">AssetUpdateAdvancedOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetUpdateAdvancedOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Update advanced options for the asset.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-update-monitored-operation/index.html">AssetUpdateMonitoredOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetUpdateMonitoredOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>skip, cannot create
+asset_create_op has account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
+therefore throws Missing Active Authority 1.2.0</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-asset-update-operation/index.html">AssetUpdateOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">AssetUpdateOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Update asset operation constructor.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-custom-operation/index.html">CustomOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">CustomOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Custom operation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-empty-operation/index.html">EmptyOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">EmptyOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="../-leave-rating-and-comment-operation/index.html">LeaveRatingAndCommentOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">LeaveRatingAndCommentOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Leave comment and rating operation constructor</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-purchase-content-operation/index.html">PurchaseContentOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">PurchaseContentOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Request to purchase content operation constructor</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-remove-content-operation/index.html">RemoveContentOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">RemoveContentOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-transfer-operation/index.html">TransferOperation</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">TransferOperation</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BaseOperation</span></a></code>
+<p>Transfer operation constructor</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

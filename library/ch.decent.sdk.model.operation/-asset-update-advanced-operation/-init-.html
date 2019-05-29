@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AssetUpdateAdvancedOperation.<init> - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="index.html">AssetUpdateAdvancedOperation</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation$&lt;init&gt;(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">AssetUpdateAdvancedOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/issuer">issuer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/assetToUpdate">assetToUpdate</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/fixedMaxSupply">fixedMaxSupply</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation$<init>(ch.decent.sdk.model.ChainObject, ch.decent.sdk.model.ChainObject, kotlin.Byte, kotlin.Boolean, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Update advanced options for the asset.</p>
+<h3>Parameters</h3>
+<p><a name="issuer"></a>
+<code>issuer</code> - account id issuing the asset</p>
+<p><a name="assetToUpdate"></a>
+<code>assetToUpdate</code> - asset to update</p>
+<p><a name="precision"></a>
+<code>precision</code> - new precision</p>
+<p><a name="fixedMaxSupply"></a>
+<code>fixedMaxSupply</code> - whether it should be allowed to change max supply, cannot be reverted once set to true</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

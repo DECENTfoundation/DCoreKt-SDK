@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AssetCreateOperation.<init> - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.model.operation</a>&nbsp;/&nbsp;<a href="index.html">AssetCreateOperation</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="ch.decent.sdk.model.operation.AssetCreateOperation$&lt;init&gt;(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)"></a>
+<code><span class="identifier">AssetCreateOperation</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/issuer">issuer</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/symbol">symbol</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html"><span class="identifier">Byte</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/description">description</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/options">options</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-asset-options/index.html"><span class="identifier">AssetOptions</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/monitoredOptions">monitoredOptions</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-monitored-asset-options/index.html"><span class="identifier">MonitoredAssetOptions</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.model.operation.AssetCreateOperation$<init>(ch.decent.sdk.model.ChainObject, kotlin.String, kotlin.Byte, kotlin.String, ch.decent.sdk.model.AssetOptions, ch.decent.sdk.model.MonitoredAssetOptions, ch.decent.sdk.model.Fee)/fee">fee</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-fee/index.html"><span class="identifier">Fee</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Fee()<span class="symbol">)</span></code>
+<p>Create Asset operation constructor.</p>
+<h3>Parameters</h3>
+<p><a name="issuer"></a>
+<code>issuer</code> - account id issuing the asset</p>
+<p><a name="symbol"></a>
+<code>symbol</code> - the string symbol, 3-16 uppercase chars</p>
+<p><a name="precision"></a>
+<code>precision</code> - base unit precision, decimal places used in string representation</p>
+<p><a name="description"></a>
+<code>description</code> - optional description</p>
+<p><a name="options"></a>
+<code>options</code> - asset options</p>
+<p><a name="monitoredOptions"></a>
+<code>monitoredOptions</code> - options for monitored asset</p>
+<p><a name="fee"></a>
+<code>fee</code> - <a href="../../ch.decent.sdk.model/-fee/index.html">Fee</a> fee for the operation, by default the fee will be computed in DCT asset.
+When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+</BODY>
+</HTML>

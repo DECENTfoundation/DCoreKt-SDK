@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Wallet.DCoreWallet - library</title>
+<link rel="stylesheet" href="../../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../../index.html">library</a>&nbsp;/&nbsp;<a href="../../index.html">ch.decent.sdk.crypto</a>&nbsp;/&nbsp;<a href="../index.html">Wallet</a>&nbsp;/&nbsp;<a href="./index.html">DCoreWallet</a><br/>
+<br/>
+<h1>DCoreWallet</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">DCoreWallet</span></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">DCoreWallet</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.ByteArray, kotlin.String, kotlin.String)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.ByteArray, kotlin.String, kotlin.String)/account">account</span><span class="symbol">:</span>&nbsp;<a href="../../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.ByteArray, kotlin.String, kotlin.String)/pass">pass</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.ByteArray, kotlin.String, kotlin.String)/cipherJson">cipherJson</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(ch.decent.sdk.crypto.Credentials, ch.decent.sdk.model.Account, kotlin.ByteArray, kotlin.String, kotlin.String)/chainId">chainId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span></code><br/>
+<code><span class="identifier">DCoreWallet</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/version">version</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;1<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/updateTime">updateTime</span><span class="symbol">:</span>&nbsp;<span class="identifier">LocalDateTime</span>&nbsp;<span class="symbol">=</span>&nbsp;LocalDateTime.now()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/chainId">chainId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/accounts">accounts</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/cipher">cipher</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/extraKeys">extraKeys</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-extra-keys/index.html"><span class="identifier">ExtraKeys</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/pendingAccountRegistrations">pendingAccountRegistrations</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyList()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/pendingMinerRegistrations">pendingMinerRegistrations</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;emptyList()<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/wsServer">wsServer</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;"ws://localhost:8090"<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/wsUser">wsUser</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">, </span><span class="identifier" id="ch.decent.sdk.crypto.Wallet.DCoreWallet$<init>(kotlin.Int, org.threeten.bp.LocalDateTime, kotlin.String, kotlin.collections.List((ch.decent.sdk.model.Account)), kotlin.String, kotlin.collections.List((ch.decent.sdk.crypto.Wallet.ExtraKeys)), kotlin.collections.List((kotlin.Any)), kotlin.collections.List((kotlin.Any)), kotlin.String, kotlin.String, kotlin.String)/wsPassword">wsPassword</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a>&nbsp;<span class="symbol">=</span>&nbsp;""<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="accounts.html">accounts</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">accounts</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="chain-id.html">chainId</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">chainId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="cipher.html">cipher</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">cipher</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="extra-keys.html">extraKeys</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">extraKeys</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-extra-keys/index.html"><span class="identifier">ExtraKeys</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="pending-account-registrations.html">pendingAccountRegistrations</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">pendingAccountRegistrations</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="pending-miner-registrations.html">pendingMinerRegistrations</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">pendingMinerRegistrations</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update-time.html">updateTime</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">updateTime</span><span class="symbol">: </span><span class="identifier">LocalDateTime</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="version.html">version</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">version</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="ws-password.html">wsPassword</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">wsPassword</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="ws-server.html">wsServer</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">wsServer</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="ws-user.html">wsUser</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">wsUser</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

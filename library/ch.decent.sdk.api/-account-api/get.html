@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AccountApi.get - library</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">library</a>&nbsp;/&nbsp;<a href="../index.html">ch.decent.sdk.api</a>&nbsp;/&nbsp;<a href="index.html">AccountApi</a>&nbsp;/&nbsp;<a href="./get.html">get</a><br/>
+<br/>
+<h1>get</h1>
+<a name="ch.decent.sdk.api.AccountApi$get(ch.decent.sdk.model.ChainObject)"></a>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$get(ch.decent.sdk.model.ChainObject)/id">id</span><span class="symbol">:</span>&nbsp;<a href="../../ch.decent.sdk.model/-chain-object/index.html"><span class="identifier">ChainObject</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code>
+<p>Get account by id.</p>
+<h3>Parameters</h3>
+<p><a name="id"></a>
+<code>id</code> - account id</p>
+<p><strong>Return</strong><br/>
+an account if exist, <a href="../../ch.decent.sdk.exception/-object-not-found-exception/index.html">ObjectNotFoundException</a> if not found</p>
+<a name="ch.decent.sdk.api.AccountApi$get(kotlin.String)"></a>
+<code><span class="keyword">fun </span><span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="ch.decent.sdk.api.AccountApi$get(kotlin.String)/nameOrId">nameOrId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="../../ch.decent.sdk.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">&gt;</span></code>
+<p>Get account by name or id.</p>
+<h3>Parameters</h3>
+<p><a name="nameOrId"></a>
+<code>nameOrId</code> - account id or name</p>
+<p><strong>Return</strong><br/>
+an account if exist, <a href="../../ch.decent.sdk.exception/-object-not-found-exception/index.html">ObjectNotFoundException</a> if not found, or <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-state-exception/index.html">IllegalStateException</a> if the account name or id is not valid</p>
+</BODY>
+</HTML>
