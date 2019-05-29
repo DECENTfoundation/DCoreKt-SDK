@@ -2,7 +2,11 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.net.serialization.*
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.Varint
+import ch.decent.sdk.net.serialization.VoteId
+import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.net.serialization.optionalBytes
 import ch.decent.sdk.utils.publicElGamal
 import ch.decent.sdk.utils.unhex
 import com.google.common.primitives.Bytes
@@ -35,6 +39,15 @@ sealed class BaseOperation(
   }
 
   override fun hashCode(): Int = Arrays.hashCode(bytes)
+}
+
+class UnknownOperation(val id: Int) : BaseOperation(OperationType.UNKNOWN_OPERATION) {
+  override val bytes: ByteArray
+    get() = byteArrayOf()
+
+  override fun toString(): String {
+    return "UnknownOperation(id=$id)"
+  }
 }
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
@@ -101,7 +114,7 @@ class BuyContentOperation @JvmOverloads constructor(
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.REQUEST_TO_BUY_OPERATION, fee) {
 
-  constructor(credentials: Credentials, content: Content):
+  constructor(credentials: Credentials, content: Content) :
       this(content.uri, credentials.account, content.price(), if (URL(content.uri).protocol != "ipfs") PubKey() else credentials.keyPair.publicElGamal())
 
   init {
@@ -145,7 +158,7 @@ class AccountUpdateOperation @JvmOverloads constructor(
     fee: AssetAmount = BaseOperation.FEE_UNSET
 ) : BaseOperation(OperationType.ACCOUNT_UPDATE_OPERATION, fee) {
 
-  constructor(account: Account, votes: Set<VoteId>): this(account.id, options = account.options.copy(votes = votes))
+  constructor(account: Account, votes: Set<VoteId>) : this(account.id, options = account.options.copy(votes = votes))
 
   init {
     require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
@@ -281,3 +294,4 @@ class ContentSubmitOperation constructor(
     return "ContentSubmitOperation(size=$size, author=$author, coauthors=$coauthors, uri='$uri', quorum=$quorum, price=$price, hash='$hash', seeders=$seeders, keyParts=$keyParts, expiration=$expiration, publishingFee=$publishingFee, synopsis='$synopsis', custodyData=$custodyData, fee=$fee)"
   }
 }
+

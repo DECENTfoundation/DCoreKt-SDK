@@ -44,10 +44,5 @@ enum class OperationType(val clazz: Class<*>? = null) {
   UPDATE_MONITORED_ASSET_OPERATION,
   READY_TO_PUBLISH2_OPERATION,
   TRANSFER2_OPERATION(TransferOperation::class.java),
-  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL 40
-  RETURN_ESCROW_SUBMISSION_OPERATION,                    // VIRTUAL
-  RETURN_ESCROW_BUYING_OPERATION,                        // VIRTUAL
-  PAY_SEEDER_OPERATION,                                  // VIRTUAL
-  FINISH_BUYING_OPERATION,                               // VIRTUAL
-  RENEWAL_OF_SUBSCRIPTION_OPERATION                      // VIRTUAL 45
+  UNKNOWN_OPERATION
 }
