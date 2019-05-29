@@ -1,14 +1,6 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreConstants.BASIS_POINTS_TOTAL
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.CoAuthors
-import ch.decent.sdk.model.CustodyData
-import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.KeyPart
-import ch.decent.sdk.model.ObjectType
-import ch.decent.sdk.model.RegionalPrice
+import ch.decent.sdk.model.*
 import ch.decent.sdk.model.types.UInt32
 import ch.decent.sdk.model.types.UInt64
 import ch.decent.sdk.utils.TRX_ID_SIZE
@@ -17,7 +9,6 @@ import ch.decent.sdk.utils.ripemd160
 import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
 import java.util.regex.Pattern
 
@@ -64,7 +55,7 @@ class AddOrUpdateContentOperation @JvmOverloads constructor(
     require(author.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
     require(quorum >= 0) { "invalid seeders count" }
-    require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }
+//    require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }
     require(hash.unhex().size == TRX_ID_SIZE) { "invalid file hash size, should be 40 chars long, hex encoded" }
   }
 
