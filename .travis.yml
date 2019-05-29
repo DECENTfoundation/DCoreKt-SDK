@@ -17,6 +17,4 @@ deploy:
 #    on:
 #      tags: true
 before_deploy:
-  - cd ./
   - touch library/build/javadoc/.nojekyll
-  - sed -i '/library/build/javadoc/d' .gitignore
