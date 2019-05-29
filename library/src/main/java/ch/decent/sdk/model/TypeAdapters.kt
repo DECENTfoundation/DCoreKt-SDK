@@ -77,7 +77,7 @@ object OperationTypeFactory : TypeAdapterFactory {
 
         override fun read(reader: JsonReader): T? {
           val el = Streams.parse(reader)
-          val op = OperationType.values()[el.asJsonArray[0].asInt]
+          val op = OperationType.values().getOrElse(el.asJsonArray[0].asInt) { OperationType.UNKNOWN_OPERATION }
           val obj = el.asJsonArray[1].asJsonObject
           return op.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
@@ -244,7 +244,7 @@ object OperationTypeAdapter : TypeAdapter<OperationType>() {
     out.value(value.ordinal)
   }
 
-  override fun read(reader: JsonReader): OperationType = OperationType.values()[reader.nextInt()]
+  override fun read(reader: JsonReader): OperationType = OperationType.values().getOrElse(reader.nextInt()) { OperationType.UNKNOWN_OPERATION }
 }
 
 object VoteIdAdapter : TypeAdapter<VoteId>() {

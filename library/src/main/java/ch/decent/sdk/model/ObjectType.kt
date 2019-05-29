@@ -38,7 +38,8 @@ enum class ObjectType {
   SUBSCRIPTION_OBJECT, //15
   SEEDING_STATISTICS_OBJECT,
   TRANSACTION_DETAIL_OBJECT,
-  MESSAGING_OBJECT;
+  MESSAGING_OBJECT,
+  UNKNOWN_OBJECT;
 
   val space: Byte
     get() = if (ordinal < 10) 1 else 2
@@ -58,6 +59,6 @@ enum class ObjectType {
     get() = ChainObject(this)
 
   companion object {
-    fun fromSpaceType(space: Int, type: Int) = ObjectType.values()[max(space - 1, 0) * 10 + type]
+    fun fromSpaceType(space: Int, type: Int) = ObjectType.values().getOrElse(max(space - 1, 0) * 10 + type) { UNKNOWN_OBJECT }
   }
 }
