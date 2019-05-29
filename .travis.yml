@@ -5,6 +5,7 @@ jdk:
   - oraclejdk11
 
 script:
+  - ./gradlew :library:dokkaJavadoc
 deploy:
   - provider: pages
     skip_cleanup: true
