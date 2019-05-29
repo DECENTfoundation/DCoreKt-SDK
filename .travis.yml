@@ -5,16 +5,17 @@ jdk:
   - oraclejdk11
 
 script:
-  - ./gradlew build
+  - ./gradlew test
 deploy:
   - provider: pages
     skip_cleanup: true
-    local_dir: docs/
+    local_dir: library/build/docs/javadoc/
     github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
     keep_history: true
 #    on:
 #      tags: true
 before_deploy:
-  - cd ./library/build
-  - touch ./docs/.nojekyll
-  - sed -i '/docs/d' .gitignore
+  - ./gradlew :library:dokkaJavadoc
+  - cd ./
+  - touch library/build/docs/javadoc/.nojekyll
+  - sed -i '/library/build/docs/javadoc/d' .gitignore
