@@ -42,10 +42,10 @@ enum class ObjectType {
   UNKNOWN_OBJECT;
 
   val space: Byte
-    get() = if (ordinal < 10) 1 else 2
+    get() = if (ordinal < GLOBAL_PROPERTY_OBJECT.ordinal) 1 else 2
 
   val type: Byte
-    get() = (ordinal - (space - 1) * 10).toByte()
+    get() = (ordinal - (space - 1) * GLOBAL_PROPERTY_OBJECT.ordinal).toByte()
 
   /**
    * This method is used to return the generic object type in the form space.type.0.
@@ -59,6 +59,6 @@ enum class ObjectType {
     get() = ChainObject(this)
 
   companion object {
-    fun fromSpaceType(space: Int, type: Int) = ObjectType.values().getOrElse(max(space - 1, 0) * 10 + type) { UNKNOWN_OBJECT }
+    fun fromSpaceType(space: Int, type: Int) = values().getOrElse(max(space - 1, 0) * GLOBAL_PROPERTY_OBJECT.ordinal + type) { UNKNOWN_OBJECT }
   }
 }
