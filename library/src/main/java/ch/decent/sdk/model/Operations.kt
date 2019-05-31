@@ -2,7 +2,11 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.net.serialization.*
+import ch.decent.sdk.net.serialization.ByteSerializable
+import ch.decent.sdk.net.serialization.Varint
+import ch.decent.sdk.net.serialization.VoteId
+import ch.decent.sdk.net.serialization.bytes
+import ch.decent.sdk.net.serialization.optionalBytes
 import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.publicElGamal
 import ch.decent.sdk.utils.unhex
@@ -36,6 +40,15 @@ sealed class BaseOperation(
   }
 
   override fun hashCode(): Int = Arrays.hashCode(bytes)
+}
+
+class UnknownOperation(val id: Int) : BaseOperation(OperationType.UNKNOWN_OPERATION) {
+  override val bytes: ByteArray
+    get() = byteArrayOf()
+
+  override fun toString(): String {
+    return "UnknownOperation(id=$id)"
+  }
 }
 
 class EmptyOperation(type: OperationType) : BaseOperation(type) {
