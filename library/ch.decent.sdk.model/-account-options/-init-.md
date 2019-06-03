@@ -1,0 +1,6 @@
+[library](../../index.md) / [ch.decent.sdk.model](../index.md) / [AccountOptions](index.md) / [&lt;init&gt;](./-init-.md)
+
+# &lt;init&gt;
+
+`AccountOptions(public: `[`Address`](../../ch.decent.sdk.crypto/-address/index.md)`)`
+`AccountOptions(memoKey: `[`Address`](../../ch.decent.sdk.crypto/-address/index.md)`, votingAccount: `[`ChainObject`](../-chain-object/index.md)`, numMiner: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, votes: `[`Set`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)`<`[`VoteId`](../-vote-id/index.md)`>, extensions: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>, allowSubscription: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)`, pricePerSubscribe: `[`AssetAmount`](../-asset-amount/index.md)`, subscriptionPeriod: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`)`
