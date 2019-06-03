@@ -44,8 +44,9 @@ detekt {
 }
 
 val dokka by tasks.getting(DokkaTask::class) {
-  outputFormat = "html"
+  outputFormat = "markdown"
   outputDirectory = "$buildDir/javadoc"
+  includes = listOf("README.md")
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
