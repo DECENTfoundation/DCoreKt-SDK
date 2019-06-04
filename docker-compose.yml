@@ -9,3 +9,4 @@
       - './test-dcore-node/genesis-local.json:/home/dcore/.decent/genesis.json'
     expose:
       - "8090"
+    user: ${CURRENT_UID}
