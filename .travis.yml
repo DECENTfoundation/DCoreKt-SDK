@@ -2,7 +2,7 @@ language: java
 install: true
 
 jdk:
-  - oraclejdk11
+  - oraclejdk9
 
 script:
   - ./gradlew build
