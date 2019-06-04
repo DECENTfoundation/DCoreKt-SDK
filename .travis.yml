@@ -7,7 +7,7 @@ jdk:
   - oraclejdk11
 
 before_script:
-  - docker-compose run --user='root' --entrypoint chown -R myuser:myuser .
+  - docker-compose up
 
 script:
   - ./gradlew test
