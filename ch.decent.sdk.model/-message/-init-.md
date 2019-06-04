@@ -1,5 +1,0 @@
-[library](../../index.md) / [ch.decent.sdk.model](../index.md) / [Message](index.md) / [&lt;init&gt;](./-init-.md)
-
-# &lt;init&gt;
-
-`Message(operationId: `[`ChainObject`](../-chain-object/index.md)`, timestamp: LocalDateTime, sender: `[`ChainObject`](../-chain-object/index.md)`, senderAddress: `[`Address`](../../ch.decent.sdk.crypto/-address/index.md)`?, receiver: `[`ChainObject`](../-chain-object/index.md)`, receiverAddress: `[`Address`](../../ch.decent.sdk.crypto/-address/index.md)`?, message: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, nonce: `[`BigInteger`](http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html)` = BigInteger.ZERO, encrypted: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = senderAddress != null && receiverAddress != null)`

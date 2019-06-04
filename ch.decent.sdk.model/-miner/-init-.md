@@ -1,5 +1,0 @@
-[library](../../index.md) / [ch.decent.sdk.model](../index.md) / [Miner](index.md) / [&lt;init&gt;](./-init-.md)
-
-# &lt;init&gt;
-
-`Miner(id: `[`ChainObject`](../-chain-object/index.md)`, minerAccount: `[`ChainObject`](../-chain-object/index.md)`, lastAslot: `[`BigInteger`](http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html)`, signingKey: `[`Address`](../../ch.decent.sdk.crypto/-address/index.md)`, payVb: `[`ChainObject`](../-chain-object/index.md)`, voteId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, totalVotes: `[`BigInteger`](http://docs.oracle.com/javase/6/docs/api/java/math/BigInteger.html)`, url: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, totalMissed: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, lastConfirmedBlockNum: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, voteRanking: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`)`

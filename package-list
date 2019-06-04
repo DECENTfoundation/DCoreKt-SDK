@@ -1,16 +1,3 @@
-$dokka.format:markdown
-$dokka.linkExtension:md
-$dokka.location:ch.decent.sdk.crypto$address(kotlin.String)ch.decent.sdk.crypto/kotlin.-string/address.md
-$dokka.location:ch.decent.sdk.crypto$address(org.bouncycastle.math.ec.ECPoint)ch.decent.sdk.crypto/org.bouncycastle.math.ec.-e-c-point/address.md
-$dokka.location:ch.decent.sdk.crypto$dpk(kotlin.String)ch.decent.sdk.crypto/kotlin.-string/dpk.md
-$dokka.location:ch.decent.sdk.crypto$ecKey(kotlin.String)ch.decent.sdk.crypto/kotlin.-string/ec-key.md
-$dokka.location:ch.decent.sdk.model$toChainObject(kotlin.String)ch.decent.sdk.model/kotlin.-string/to-chain-object.md
-$dokka.location:ch.decent.sdk.utils$hash256(kotlin.ByteArray)ch.decent.sdk.utils/kotlin.-byte-array/hash256.md
-$dokka.location:ch.decent.sdk.utils$hash512(kotlin.ByteArray)ch.decent.sdk.utils/kotlin.-byte-array/hash512.md
-$dokka.location:ch.decent.sdk.utils$hex(kotlin.ByteArray)ch.decent.sdk.utils/kotlin.-byte-array/hex.md
-$dokka.location:ch.decent.sdk.utils$pubKey(java.math.BigInteger)ch.decent.sdk.utils/java.math.-big-integer/pub-key.md
-$dokka.location:ch.decent.sdk.utils$ripemd160(kotlin.ByteArray)ch.decent.sdk.utils/kotlin.-byte-array/ripemd160.md
-$dokka.location:ch.decent.sdk.utils$unhex(kotlin.String)ch.decent.sdk.utils/kotlin.-string/unhex.md
 ch.decent.sdk
 ch.decent.sdk.api
 ch.decent.sdk.crypto
