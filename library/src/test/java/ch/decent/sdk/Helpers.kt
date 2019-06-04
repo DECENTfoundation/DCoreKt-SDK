@@ -12,8 +12,10 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object Helpers {
-  @JvmStatic val wsUrl = "wss://testnet-api.dcore.io"
-  @JvmStatic val restUrl = "https://testnet-api.dcore.io/"
+//  @JvmStatic val wsUrl = "wss://testnet-api.dcore.io"
+//  @JvmStatic val restUrl = "https://testnet-api.dcore.io/"
+  @JvmStatic val wsUrl = "ws://localhost:8090/"
+  @JvmStatic val restUrl = "http://localhost:8090/"
   @JvmStatic fun client(logger: Logger = LoggerFactory.getLogger("OkHttpClient")): OkHttpClient =
       TrustAllCerts.wrap(OkHttpClient.Builder())
           .addInterceptor(HttpLoggingInterceptor { logger.info(it) }.setLevel(HttpLoggingInterceptor.Level.BODY))
