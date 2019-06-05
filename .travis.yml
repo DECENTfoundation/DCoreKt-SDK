@@ -11,7 +11,7 @@ before_script:
   - docker-compose up -d
   - docker-compose ps
   - docker-compose exec DCore ls -al
-  - docker-compose exec DCore cd ..
+  - docker-compose exec DCore bash -c "cd .."
   - docker-compose exec DCore ls -al
   - docker-compose exec DCore id dcore
   - docker-compose down
