@@ -12,6 +12,7 @@ before_script:
   - docker-compose ps
   - docker-compose exec DCore ls -al
   - docker-compose exec DCore id dcore
+  - docker-compose down
 
 script:
   - ./gradlew build
