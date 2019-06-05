@@ -19,17 +19,17 @@ before_script:
   - ls -al
   - sudo chown -R 1000 test-dcore-node
   - ls -al
-  - cd ./test-dcore-node
-  - ls -al
-  - cd ./datadir
-  - ls -al
-  - id travis
+#  - cd ./test-dcore-node
+#  - ls -al
+#  - cd ./datadir
+#  - ls -al
+#  - id travis
   - docker-compose up -d
-  - docker-compose ps
-  - docker-compose exec DCore ls -al
-  - docker-compose exec DCore bash -c "cd ./.decent"
-  - docker-compose exec DCore ls -al
-  - docker-compose exec DCore id dcore
+#  - docker-compose ps
+#  - docker-compose exec DCore ls -al
+#  - docker-compose exec DCore bash -c "cd ./.decent"
+#  - docker-compose exec DCore ls -al
+#  - docker-compose exec DCore id dcore
 
 script:
   - ./gradlew test
