@@ -22,7 +22,7 @@ before_script:
   - cd ./datadir
   - ls -al
   - id travis
-  - chown -R 1000 test-dcore-node/
+  - sudo chown -R 1000 test-dcore-node
   - docker-compose up
   - docker-compose ps
   - docker-compose exec DCore ls -al
