@@ -17,6 +17,9 @@ jdk:
 
 before_script:
   - ls -al
+  - cd ./test-dcore-node
+  - ls -al
+  - cd ./datadir
   - id travis
   - docker-compose up -d
   - docker-compose ps
