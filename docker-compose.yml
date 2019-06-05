@@ -4,6 +4,7 @@ services:
     container_name: "DCore"
     image: decentnetwork/dcore.ubuntu:dev
     entrypoint: ['/bin/sh', '-c', 'while true; do sleep 2; date; done']
+    user: travis
     ports:
       - "8090:8090"
       - "40000:40000"
