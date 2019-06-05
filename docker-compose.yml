@@ -1,8 +1,7 @@
   DCore:
     container_name: "DCore"
     image: decentnetwork/dcore.ubuntu:dev
-    entrypoint: /bin/bash
-    ports:
+    entrypoint: ['/bin/bash']
       - "8090:8090"
       - "40000:40000"
     volumes:
