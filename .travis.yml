@@ -7,7 +7,7 @@ jdk:
   - oraclejdk11
 
 before_script:
-  - CURRENT_UID=$(id -u):$(id -g) docker-compose up
+  - docker-compose up
 
 script:
   - ./gradlew test
