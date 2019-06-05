@@ -9,6 +9,7 @@ jdk:
 before_script:
   - ls -al
   - docker-compose up -d
+  - docker-compose ps
   - docker-compose exec DCore ls -al
   - docker-compose exec DCore id dcore
 
