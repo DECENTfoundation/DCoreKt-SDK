@@ -17,14 +17,14 @@ jdk:
 
 before_script:
   - ls -al
-  - sudo chown -R 1000 test-dcore-node
+#  - sudo chown -R 1000 test-dcore-node
   - ls -al
 #  - cd ./test-dcore-node
 #  - ls -al
 #  - cd ./datadir
 #  - ls -al
 #  - id travis
-  - docker-compose up -d
+  - docker-compose up
 #  - docker-compose ps
 #  - docker-compose exec DCore ls -al
 #  - docker-compose exec DCore bash -c "cd ./.decent"
