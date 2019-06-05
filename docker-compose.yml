@@ -1,7 +1,8 @@
   DCore:
     container_name: "DCore"
     image: decentnetwork/dcore.ubuntu:dev
-    entrypoint: ['ls -al']
+    entrypoint: ['ls', '-al']
+    ports:
       - "8090:8090"
       - "40000:40000"
     volumes:
