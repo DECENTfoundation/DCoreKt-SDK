@@ -1,10 +1,12 @@
 package ch.decent.sdk.model
 
-import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.types.UInt32
 import com.google.gson.annotations.SerializedName
 
 data class FeeSchedule(
-    @SerializedName("parameters") val parameters: Map<OperationType, FeeParameter>,
+    /**
+     * operation types int keys
+     */
+    @SerializedName("parameters") val parameters: Map<Int, FeeParameter>,
     @SerializedName("scale") @UInt32 val scale: Long
 )

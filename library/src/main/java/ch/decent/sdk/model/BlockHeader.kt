@@ -6,6 +6,6 @@ import org.threeten.bp.LocalDateTime
 data class BlockHeader(
     @SerializedName("previous") val previous: String,
     @SerializedName("timestamp") val timestamp: LocalDateTime,
-    @SerializedName("miner") val miner: ChainObject,
+    @SerializedName("miner") val miner: MinerObjectId,
     @SerializedName("transaction_merkle_root") val transactionMerkleRoot: String
 )

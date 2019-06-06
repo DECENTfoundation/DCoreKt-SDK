@@ -1,7 +1,6 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.ObjectType
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.OperationHistory
 import ch.decent.sdk.net.model.ApiGroup
 import ch.decent.sdk.utils.REQ_LIMIT_MAX
@@ -9,7 +8,7 @@ import com.google.gson.reflect.TypeToken
 import kotlin.math.max
 
 internal class GetRelativeAccountHistory(
-    accountId: ChainObject,
+    accountId: AccountObjectId,
     stop: Int = 0,
     limit: Int = REQ_LIMIT_MAX,
     start: Int = 0
@@ -17,10 +16,5 @@ internal class GetRelativeAccountHistory(
     ApiGroup.HISTORY,
     "get_relative_account_history",
     TypeToken.getParameterized(List::class.java, OperationHistory::class.java).type,
-    listOf(accountId.objectId, stop, max(0, limit), start)
-) {
-
-  init {
-    require(accountId.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-  }
-}
+    listOf(accountId, stop, max(0, limit), start)
+)

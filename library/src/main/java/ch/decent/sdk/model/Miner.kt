@@ -8,11 +8,11 @@ import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 
 data class Miner(
-    @SerializedName("id") val id: ChainObject,
-    @SerializedName("miner_account") val minerAccount: ChainObject,
+    @SerializedName("id") val id: MinerObjectId,
+    @SerializedName("miner_account") val minerAccount: AccountObjectId,
     @SerializedName("last_aslot") @UInt64 val lastAslot: BigInteger,
     @SerializedName("signing_key") val signingKey: Address,
-    @SerializedName("pay_vb") val payVb: ChainObject,
+    @SerializedName("pay_vb") val payVb: VestingBalanceObjectId?,
     @SerializedName("vote_id") val voteId: String,
     @SerializedName("total_votes") @UInt64 val totalVotes: BigInteger,
     @SerializedName("url") val url: String,

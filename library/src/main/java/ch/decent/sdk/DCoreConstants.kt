@@ -1,8 +1,10 @@
 package ch.decent.sdk
 
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetDataObjectId
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.PRECISION_MAX
 import ch.decent.sdk.utils.RATING_MAX
 
@@ -10,15 +12,16 @@ object DCoreConstants {
   private const val DCT_PRECISION: Byte = 8
   private const val DCT_SUPPLY = 7319777577456900
 
-  @JvmField val DCT_ASSET_ID = "1.3.0".toChainObject()
+  @JvmField val PROXY_TO_SELF = AccountObjectId(3)
+  @JvmField val DCT_ASSET_ID = AssetObjectId()
   @JvmField val DCT = Asset(
       DCT_ASSET_ID,
       "DCT",
       DCT_PRECISION,
-      "1.2.1".toChainObject(),
+      AccountObjectId(1),
       "",
       AssetOptions(maxSupply = DCT_SUPPLY),
-      "2.3.0".toChainObject()
+      AssetDataObjectId(0)
   )
 
   const val ALXT_SYMBOL = "ALXT"
@@ -34,5 +37,6 @@ object DCoreConstants {
   val PRECISION_ALLOWED = 0..PRECISION_MAX
   const val UIA_DESCRIPTION_MAX_CHARS = 1000
   const val BASIS_POINTS_TOTAL = 10000
+  const val MAX_INSTANCE_ID = 281474976710655
 
 }

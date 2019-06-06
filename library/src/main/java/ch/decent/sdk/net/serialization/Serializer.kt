@@ -25,13 +25,13 @@ import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.Authority
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
+import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Publishing
 import ch.decent.sdk.model.RegionalPrice
@@ -65,6 +65,7 @@ import java.io.DataOutputStream
 import java.io.IOException
 import java.math.BigInteger
 import kotlin.reflect.KClass
+import kotlin.reflect.full.superclasses
 
 /**
  * <p>Encodes signed and unsigned values using a common variable-length
@@ -210,8 +211,8 @@ internal fun BigInteger.bytes(numBytes: Int): ByteArray {
 typealias Adapter<T> = (BufferedSink, obj: T) -> Unit
 
 object Serializer {
-  private val chainObjectAdapter: Adapter<ChainObject> = { buffer, obj ->
-    buffer.write(Varint.writeUnsignedVarLong(obj.instance.toLong()))
+  private val objectIdAdapter: Adapter<ObjectId> = { buffer, obj ->
+    buffer.write(Varint.writeUnsignedVarLong(obj.instance))
   }
 
   private val byteArrayAdapter: Adapter<ByteArray> = { buffer, obj ->
@@ -502,14 +503,14 @@ object Serializer {
       buffer.write(if (obj.isEmpty()) byteArrayOf(0) else Varint.writeUnsignedVarLong(obj.size.toLong()))
       obj.forEach { append(buffer, it) }
     } else {
-      val adapter = adapters[obj::class] as Adapter<T>?
+      val adapter = (adapters[obj::class] ?: adapters[obj::class.superclasses.first()]) as Adapter<T>?
       requireNotNull(adapter) { "missing adapter for ${obj::class}" }
       adapter(buffer, obj)
     }
   }
 
   private val adapters: Map<KClass<*>, Adapter<*>> = mapOf(
-      ChainObject::class to chainObjectAdapter,
+      ObjectId::class to objectIdAdapter,
       ByteArray::class to byteArrayAdapter,
       String::class to stringAdapter,
       Address::class to addressAdapter,

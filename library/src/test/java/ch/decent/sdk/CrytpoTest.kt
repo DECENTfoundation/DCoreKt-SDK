@@ -8,17 +8,16 @@ import ch.decent.sdk.crypto.Wallet
 import ch.decent.sdk.crypto.dpk
 import ch.decent.sdk.crypto.ecKey
 import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.CipherKeyPairAdapter
 import ch.decent.sdk.model.ExtraKeysAdapter
 import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.utils.ElGamal.publicElGamal
 import ch.decent.sdk.utils.decryptAes
 import ch.decent.sdk.utils.decryptAesWithChecksum
-import ch.decent.sdk.utils.encryptAes
 import ch.decent.sdk.utils.generateNonce
 import ch.decent.sdk.utils.hash512
-import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.secret
 import ch.decent.sdk.utils.unhex
 import okio.Buffer
@@ -26,9 +25,7 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
-import java.nio.charset.Charset
 import java.security.MessageDigest
-import kotlin.test.Ignore
 
 class CrytpoTest : TimeOutTest() {
 
@@ -100,13 +97,13 @@ class CrytpoTest : TimeOutTest() {
     val pass = "quick brown fox jumped over a lazy dog"
     val key = ECKeyPair.fromBase58(private)
 //    encryptAes(MessageDigest.getInstance("SHA-512").digest(pass.toByteArray()), private.toByteArray()).hex().print()
-    val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key), pass)
+    val wallet = Wallet.create(Credentials("1.2.30".toObjectId(), key), pass)
     Wallet.decrypt(wallet, pass).keyPair.private `should equal` key.private
   }
 
   @Test fun `encrypt private key as wallet file with empty password`() {
     val key = ECKeyPair.fromBase58(private)
-    val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key))
+    val wallet = Wallet.create(Credentials("1.2.30".toObjectId(), key))
     Wallet.decrypt(wallet).keyPair.private `should equal` key.private
   }
 
@@ -120,7 +117,7 @@ class CrytpoTest : TimeOutTest() {
   }
 
   @Test fun `import dcore wallet`() {
-    val account = "1.2.30".toChainObject()
+    val account = "1.2.30".toObjectId<AccountObjectId>()
     val json = """
 {
   "version": 1,
@@ -191,7 +188,7 @@ class CrytpoTest : TimeOutTest() {
   }
 
   @Test fun `dcore wallet export`() {
-    val credentials = Credentials("1.2.30".toChainObject(), "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn".dpk().ecKey())
+    val credentials = Credentials("1.2.30".toObjectId(), "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn".dpk().ecKey())
     val json = """
 {
       "id": "1.2.30",

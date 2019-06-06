@@ -5,17 +5,20 @@ package ch.decent.sdk.api
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetData
+import ch.decent.sdk.model.AssetDataObjectId
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.RealSupply
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.isValidId
 import ch.decent.sdk.model.operation.AssetClaimFeesOperation
 import ch.decent.sdk.model.operation.AssetCreateOperation
 import ch.decent.sdk.model.operation.AssetFundPoolsOperation
@@ -23,7 +26,7 @@ import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.AssetReserveOperation
 import ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation
 import ch.decent.sdk.model.operation.AssetUpdateOperation
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.model.request.GetAssets
 import ch.decent.sdk.net.model.request.GetAssetsData
 import ch.decent.sdk.net.model.request.GetRealSupply
@@ -42,7 +45,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return asset or [ObjectNotFoundException]
    */
-  fun get(assetId: ChainObject): Single<Asset> = getAll(listOf(assetId)).map { it.single() }
+  fun get(assetId: AssetObjectId): Single<Asset> = getAll(listOf(assetId)).map { it.single() }
 
   /**
    * Get assets by id.
@@ -51,7 +54,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of assets or [ObjectNotFoundException]
    */
-  fun getAll(assetIds: List<ChainObject>): Single<List<Asset>> = GetAssets(assetIds).toRequest()
+  fun getAll(assetIds: List<AssetObjectId>): Single<List<Asset>> = GetAssets(assetIds).toRequest()
 
   /**
    * Return current core asset supply.
@@ -67,7 +70,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return asset dynamic data or [ObjectNotFoundException]
    */
-  fun getAssetsData(assetId: List<ChainObject>): Single<List<AssetData>> = GetAssetsData(assetId).toRequest()
+  fun getAssetsData(assetId: List<AssetDataObjectId>): Single<List<AssetData>> = GetAssetsData(assetId).toRequest()
 
   /**
    * Get asset dynamic data by id.
@@ -76,7 +79,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return asset dynamic data or [ObjectNotFoundException]
    */
-  fun getAssetData(assetId: ChainObject): Single<AssetData> = getAssetsData(listOf(assetId)).map { it.single() }
+  fun getAssetData(assetId: AssetDataObjectId): Single<AssetData> = getAssetsData(listOf(assetId)).map { it.single() }
 
   /**
    * Get assets alphabetically by symbol name.
@@ -120,7 +123,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param roundingMode rounding mode to use when rounding to target asset precision
    */
   @JvmOverloads
-  fun convertFromDCT(assetId: ChainObject, amount: Long, roundingMode: RoundingMode = RoundingMode.CEILING): Single<AssetAmount> =
+  fun convertFromDCT(assetId: AssetObjectId, amount: Long, roundingMode: RoundingMode = RoundingMode.CEILING): Single<AssetAmount> =
       get(assetId).map { it.convertFromDCT(amount, roundingMode) }
 
   /**
@@ -131,7 +134,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param roundingMode rounding mode to use when rounding to target asset precision
    */
   @JvmOverloads
-  fun convertToDCT(assetId: ChainObject, amount: Long, roundingMode: RoundingMode = RoundingMode.CEILING): Single<AssetAmount> =
+  fun convertToDCT(assetId: AssetObjectId, amount: Long, roundingMode: RoundingMode = RoundingMode.CEILING): Single<AssetAmount> =
       get(assetId).map { it.convertToDCT(amount, roundingMode) }
 
 
@@ -149,7 +152,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun createAssetCreateOperation(
-      issuer: ChainObject,
+      issuer: AccountObjectId,
       symbol: String,
       precision: Byte,
       description: String,
@@ -210,7 +213,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun createAssetUpdateOperation(
       assetIdOrSymbol: String,
-      newIssuer: ChainObject? = null,
+      newIssuer: AccountObjectId? = null,
       fee: Fee = Fee()
   ): Single<AssetUpdateOperation> = get(assetIdOrSymbol).map {
     AssetUpdateOperation(it.issuer, it.id, it.description, newIssuer, it.options.maxSupply, it.options.exchangeRate, it.options.exchangeable, fee)
@@ -237,7 +240,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       description: String? = null,
       exchangeable: Boolean? = null,
       maxSupply: Long? = null,
-      newIssuer: ChainObject? = null,
+      newIssuer: AccountObjectId? = null,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createAssetUpdateOperation(assetIdOrSymbol, newIssuer, fee)
       .map {
@@ -305,7 +308,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createAssetIssueOperation(
       assetIdOrSymbol: String,
       amount: Long,
-      to: ChainObject? = null,
+      to: AccountObjectId? = null,
       memo: Memo? = null,
       fee: Fee = Fee()
   ): Single<AssetIssueOperation> = get(assetIdOrSymbol).map { AssetIssueOperation(it.issuer, AssetAmount(amount, it.id), to ?: it.issuer, memo, fee) }
@@ -326,7 +329,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       credentials: Credentials,
       assetIdOrSymbol: String,
       amount: Long,
-      to: ChainObject? = null,
+      to: AccountObjectId? = null,
       memo: Memo? = null,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createAssetIssueOperation(assetIdOrSymbol, amount, to, memo, fee)
@@ -451,6 +454,6 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
         }
   }
 
-  private fun get(idOrSymbol: String) = if (ChainObject.isValid(idOrSymbol)) get(idOrSymbol.toChainObject()) else getByName(idOrSymbol)
+  private fun get(idOrSymbol: String) = if (idOrSymbol.isValidId<AssetObjectId>()) get(idOrSymbol.toObjectId<AssetObjectId>()) else getByName(idOrSymbol)
 
 }

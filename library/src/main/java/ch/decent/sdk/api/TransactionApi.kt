@@ -3,11 +3,11 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.operation.BaseOperation
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.net.model.request.GetProposedTransactions
 import ch.decent.sdk.net.model.request.GetRecentTransactionById
 import ch.decent.sdk.net.model.request.GetTransaction
@@ -46,7 +46,7 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a set of proposed transactions
    */
   // todo model
-  fun getAllProposed(accountId: ChainObject) = GetProposedTransactions(accountId).toRequest()
+  fun getAllProposed(accountId: AccountObjectId) = GetProposedTransactions(accountId).toRequest()
 
   /**
    * If the transaction has not expired, this method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].

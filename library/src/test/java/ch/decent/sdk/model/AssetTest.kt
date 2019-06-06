@@ -10,14 +10,14 @@ import kotlin.test.assertNull
 
 class AssetTest {
 
-  private val otherCoin = "1.3.1".toChainObject()
+  private val otherCoin = "1.3.1".toObjectId<AssetObjectId>()
 
-  private fun testAsset(assetId: ChainObject, base: AssetAmount, quote: AssetAmount) =
+  private fun testAsset(assetId: AssetObjectId, base: AssetAmount, quote: AssetAmount) =
       Asset(
           assetId,
           "TEST",
           0,
-          ObjectType.ACCOUNT_OBJECT.genericId,
+          AccountObjectId(),
           "",
           AssetOptions(
               exchangeRate = ExchangeRate(
@@ -26,11 +26,11 @@ class AssetTest {
               ),
               exchangeable = true
           ),
-          ObjectType.ASSET_DYNAMIC_DATA.genericId
+          AssetDataObjectId()
       )
 
   private fun testConversionToDct(
-      assetId: ChainObject,
+      assetId: AssetObjectId,
       amountToConvert: Long,
       base: AssetAmount,
       quote: AssetAmount,
@@ -45,7 +45,7 @@ class AssetTest {
   }
 
   private fun testConversionFromDct(
-      assetId: ChainObject,
+      assetId: AssetObjectId,
       amountToConvert: Long,
       base: AssetAmount,
       quote: AssetAmount,

@@ -4,9 +4,9 @@ import ch.decent.sdk.model.types.Int64
 import com.google.gson.annotations.SerializedName
 
 data class AccountStatistics(
-    @SerializedName("id") val id: ChainObject,
-    @SerializedName("owner") val owner: ChainObject,
-    @SerializedName("most_recent_op") val mostRecentOp: ChainObject,
+    @SerializedName("id") val id: AccountStatsObjectId,
+    @SerializedName("owner") val owner: AccountObjectId,
+    @SerializedName("most_recent_op") val mostRecentOp: AccountTransactionObjectId,
     @SerializedName("total_ops") val totalOps: Long,
     @SerializedName("total_core_in_orders") @Int64 val totalCoreInOrders: Long,
     @SerializedName("pending_fees") @Int64 val pendingFees: Long,

@@ -4,8 +4,6 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.model.AddressAdapter
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.AuthMapAdapter
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.ChainObjectAdapter
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CoAuthorsAdapter
 import ch.decent.sdk.model.DateTimeAdapter
@@ -14,6 +12,7 @@ import ch.decent.sdk.model.FeeParamAdapter
 import ch.decent.sdk.model.FeeParameter
 import ch.decent.sdk.model.MinerId
 import ch.decent.sdk.model.MinerIdAdapter
+import ch.decent.sdk.model.ObjectIdFactory
 import ch.decent.sdk.model.OperationTypeAdapter
 import ch.decent.sdk.model.OperationTypeFactory
 import ch.decent.sdk.model.PubKey
@@ -93,7 +92,7 @@ class DCoreSdk private constructor(
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
         .registerTypeAdapterFactory(StaticVariantFactory)
-        .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
+        .registerTypeAdapterFactory(ObjectIdFactory)
         .registerTypeAdapter(Address::class.java, AddressAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
         .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)

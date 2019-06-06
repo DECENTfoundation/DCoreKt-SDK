@@ -3,11 +3,13 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.utils.hash512
 import ch.decent.sdk.utils.hex
 import io.reactivex.Observable
@@ -203,7 +205,6 @@ class Scratchpad {
     )
 //    op.bytes.hash256().print()
 //    key.signature(op.bytes.hash256()).print()
-
   }
 
   @Test fun `retry when`() {
@@ -279,6 +280,10 @@ class Scratchpad {
 //    b.readUint32(4).should.equal(refId);
 //    b.BE().readUint32(0).should.equal(num);
 //    b.BE().readUint16(2).should.equal(refNum);
+  }
+
+  @Test fun `reflection`() {
+    "1.2.3".toObjectId<AccountObjectId>().print()
   }
 
 

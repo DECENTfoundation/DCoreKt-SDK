@@ -8,21 +8,23 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Authority
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.ObjectType
+import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.SearchAccountHistoryOrder
 import ch.decent.sdk.model.SearchAccountsOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.TransactionDetail
+import ch.decent.sdk.model.TransactionDetailObjectId
+import ch.decent.sdk.model.isValidId
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
 import ch.decent.sdk.model.operation.TransferOperation
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.model.request.GetAccountById
 import ch.decent.sdk.net.model.request.GetAccountByName
 import ch.decent.sdk.net.model.request.GetAccountCount
@@ -56,7 +58,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return an account if exist, [ObjectNotFoundException] if not found
    */
-  fun get(id: ChainObject): Single<Account> = getAll(listOf(id)).map { it.first() }
+  fun get(id: AccountObjectId): Single<Account> = getAll(listOf(id)).map { it.first() }
 
   /**
    * Get account object by name.
@@ -75,7 +77,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return an account if exist, [ObjectNotFoundException] if not found, or [IllegalStateException] if the account name or id is not valid
    */
   fun get(nameOrId: String): Single<Account> = when {
-    ChainObject.isValid(nameOrId) -> get(nameOrId.toChainObject())
+    ObjectId.isValid(nameOrId) -> get(nameOrId.toObjectId<AccountObjectId>())
     Account.isValidName(nameOrId) -> getByName(nameOrId)
     else -> Single.error(IllegalArgumentException("not a valid account name or id"))
   }
@@ -92,7 +94,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of account object ids
    */
-  fun findAllReferencesByKeys(keys: List<Address>): Single<List<List<ChainObject>>> = GetKeyReferences(keys).toRequest()
+  fun findAllReferencesByKeys(keys: List<Address>): Single<List<List<AccountObjectId>>> = GetKeyReferences(keys).toRequest()
 
   /**
    * Get all accounts that refer to the account id in their owner or active authorities.
@@ -101,7 +103,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of account object ids
    */
-  fun findAllReferencesByAccount(accountId: ChainObject): Single<List<ChainObject>> =
+  fun findAllReferencesByAccount(accountId: AccountObjectId): Single<List<AccountObjectId>> =
       GetAccountReferences(accountId).toRequest()
 
   /**
@@ -111,7 +113,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return an account list if found, [ObjectNotFoundException] otherwise
    */
-  fun getAll(accountIds: List<ChainObject>): Single<List<Account>> = GetAccountById(accountIds).toRequest()
+  fun getAll(accountIds: List<AccountObjectId>): Single<List<Account>> = GetAccountById(accountIds).toRequest()
 
   /**
    * Fetch all objects relevant to the specified accounts and subscribe to updates.
@@ -144,7 +146,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return map of account names to corresponding IDs
    */
   @JvmOverloads
-  fun listAllRelative(lowerBound: String, limit: Int = 1000): Single<Map<String, ChainObject>> =
+  fun listAllRelative(lowerBound: String, limit: Int = 1000): Single<Map<String, AccountObjectId>> =
       LookupAccounts(lowerBound, limit).toRequest()
 
   /**
@@ -161,7 +163,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun findAll(
       searchTerm: String,
       order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
-      id: ChainObject = ObjectType.NULL_OBJECT.genericId,
+      id: AccountObjectId? = null,
       limit: Int = 1000
   ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
 
@@ -169,7 +171,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * Search account history.
    *
    * @param accountId object id of the account, 1.2.*
-   * @param from object id of the history object to start from, use [ObjectType.NULL_OBJECT.genericId] to ignore
+   * @param from object id of the history object to start from
    * @param order order of items
    * @param limit number of entries, max 100
    *
@@ -178,8 +180,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @Deprecated(message = "Use history API")
   @JvmOverloads
   fun searchAccountHistory(
-      accountId: ChainObject,
-      from: ChainObject = ObjectType.NULL_OBJECT.genericId,
+      accountId: AccountObjectId,
+      from: TransactionDetailObjectId? = null,
       order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
       limit: Int = 100
   ): Single<List<TransactionDetail>> = SearchAccountHistory(accountId, order, from, limit).toRequest()
@@ -217,8 +219,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       encrypted: Boolean = true,
       fee: Fee = Fee()
   ): Single<TransferOperation> =
-      if ((memo.isNullOrBlank() || !encrypted) && ChainObject.isValid(nameOrId)) {
-        Single.just(TransferOperation(credentials.account, nameOrId.toChainObject(), amount, memo?.let { Memo(it) }, fee))
+      if ((memo.isNullOrBlank() || !encrypted) && nameOrId.isValidId<AccountObjectId>()) {
+        Single.just(TransferOperation(credentials.account, nameOrId.toObjectId(), amount, memo?.let { Memo(it) }, fee))
       } else {
         get(nameOrId).map { receiver ->
           val msg = memo?.let { if (encrypted) Memo(memo, credentials, receiver) else Memo(memo) }
@@ -265,7 +267,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun createAccountOperation(
-      registrar: ChainObject,
+      registrar: AccountObjectId,
       name: String,
       address: Address,
       fee: Fee = Fee()
@@ -325,7 +327,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       active: Authority? = null,
       owner: Authority? = null,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> = createUpdateOperation(credentials.account.objectId, fee)
+  ): Single<TransactionConfirmation> = createUpdateOperation(credentials.account.toString(), fee)
       .map {
         it.apply {
           this.options = options

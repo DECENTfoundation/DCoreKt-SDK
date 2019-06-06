@@ -1,13 +1,11 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreConstants.BASIS_POINTS_TOTAL
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.KeyPart
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.types.UInt32
 import ch.decent.sdk.model.types.UInt64
@@ -44,13 +42,13 @@ import java.util.regex.Pattern
  */
 class AddOrUpdateContentOperation @JvmOverloads constructor(
     @SerializedName("size") @UInt64 val size: BigInteger = BigInteger.ONE,
-    @SerializedName("author") val author: ChainObject,
+    @SerializedName("author") val author: AccountObjectId,
     @SerializedName("co_authors") var coAuthors: CoAuthors = CoAuthors(emptyMap()),
     @SerializedName("URI") val uri: String,
     @SerializedName("quorum") @UInt32 val quorum: Int = 0, // seeders count won't overflow Int.max
     @SerializedName("price") var price: List<RegionalPrice>,
     @SerializedName("hash") val hash: String = uri.toByteArray().ripemd160().hex(),
-    @SerializedName("seeders") val seeders: List<ChainObject> = emptyList(),
+    @SerializedName("seeders") val seeders: List<AccountObjectId> = emptyList(),
     @SerializedName("key_parts") val keyParts: List<KeyPart> = emptyList(),
     @SerializedName("expiration") val expiration: LocalDateTime,
     @SerializedName("publishing_fee") val publishingFee: AssetAmount = AssetAmount(0),
@@ -61,10 +59,8 @@ class AddOrUpdateContentOperation @JvmOverloads constructor(
 
   init {
     require(size > BigInteger.ZERO) { "invalid file size" }
-    require(author.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
     require(quorum >= 0) { "invalid seeders count" }
-    require(expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) { "invalid expiration time" }
     require(hash.unhex().size == TRX_ID_SIZE) { "invalid file hash size, should be 40 chars long, hex encoded" }
   }
 

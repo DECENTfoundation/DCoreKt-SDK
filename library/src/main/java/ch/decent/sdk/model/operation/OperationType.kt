@@ -50,5 +50,6 @@ enum class OperationType(val clazz: Class<*>? = null) {
   RETURN_ESCROW_BUYING_OPERATION,                        // VIRTUAL
   PAY_SEEDER_OPERATION,                                  // VIRTUAL
   FINISH_BUYING_OPERATION,                               // VIRTUAL 45
-  RENEWAL_OF_SUBSCRIPTION_OPERATION                      // VIRTUAL
+  RENEWAL_OF_SUBSCRIPTION_OPERATION,                     // VIRTUAL
+  UNKNOWN_OPERATION
 }

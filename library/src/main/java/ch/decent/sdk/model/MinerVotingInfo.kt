@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 
 data class MinerVotingInfo(
-    @SerializedName("id") val id: ChainObject,
+    @SerializedName("id") val id: MinerObjectId,
     @SerializedName("name") val name: String,
     @SerializedName("url") val url: String,
     @SerializedName("total_votes") @UInt64 val votes: BigInteger,

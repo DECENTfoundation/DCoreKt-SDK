@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName
 import java.util.regex.Pattern
 
 data class Account(
-    @SerializedName("id") val id: ChainObject,
-    @SerializedName("registrar") val registrar: ChainObject,
+    @SerializedName("id") val id: AccountObjectId,
+    @SerializedName("registrar") val registrar: AccountObjectId,
     @SerializedName("name") val name: String,
     @SerializedName("owner") val owner: Authority,
     @SerializedName("active") val active: Authority,
     @SerializedName("options") val options: AccountOptions,
     @SerializedName("rights_to_publish") val rightsToPublish: Publishing,
-    @SerializedName("statistics") val statistics: ChainObject,
+    @SerializedName("statistics") val statistics: AccountStatsObjectId,
     @SerializedName("top_n_control_flags") @UInt8 val topControlFlags: Short
 ) {
 

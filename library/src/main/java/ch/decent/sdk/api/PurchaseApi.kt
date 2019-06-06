@@ -4,10 +4,11 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.Purchase
+import ch.decent.sdk.model.PurchaseObjectId
 import ch.decent.sdk.model.SearchPurchasesOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
@@ -29,7 +30,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of history purchases
    */
-  fun getAllHistory(accountId: ChainObject): Single<List<Purchase>> = GetHistoryBuyingsByConsumer(accountId).toRequest()
+  fun getAllHistory(accountId: AccountObjectId): Single<List<Purchase>> = GetHistoryBuyingsByConsumer(accountId).toRequest()
 
   /**
    * Get a list of open purchases.
@@ -54,7 +55,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of open purchases
    */
-  fun getAllOpenByAccount(accountId: ChainObject): Single<List<Purchase>> = GetOpenBuyingsByConsumer(accountId).toRequest()
+  fun getAllOpenByAccount(accountId: AccountObjectId): Single<List<Purchase>> = GetOpenBuyingsByConsumer(accountId).toRequest()
 
   /**
    * Get consumer purchase by content uri.
@@ -65,7 +66,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
   fun get(
-      consumer: ChainObject,
+      consumer: AccountObjectId,
       uri: String
   ): Single<Purchase> = GetBuyingByUri(consumer, uri).toRequest()
 
@@ -82,9 +83,9 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun findAll(
-      consumer: ChainObject,
+      consumer: AccountObjectId,
       term: String = "",
-      from: ChainObject = ObjectType.NULL_OBJECT.genericId,
+      from: PurchaseObjectId? = null,
       order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
       limit: Int = 100
   ): Single<List<Purchase>> = SearchBuyings(consumer, order, from, term, limit).toRequest()
@@ -103,7 +104,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
       uri: String,
       user: String? = null,
       count: Int = 100,
-      startId: ChainObject = ObjectType.NULL_OBJECT.genericId
+      startId: PurchaseObjectId? = null
   ): Single<List<Purchase>> = SearchFeedback(user, uri, startId, count).toRequest()
 
   /**
@@ -120,7 +121,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createRateAndCommentOperation(
       uri: String,
-      consumer: ChainObject,
+      consumer: AccountObjectId,
       rating: Byte,
       comment: String,
       fee: Fee = Fee()

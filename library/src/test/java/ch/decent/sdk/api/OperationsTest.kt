@@ -15,7 +15,7 @@ import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Synopsis
 import ch.decent.sdk.model.operation.AssetClaimFeesOperation
 import ch.decent.sdk.model.operation.AssetFundPoolsOperation
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import org.junit.After
 import org.junit.Before
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory
 import org.threeten.bp.LocalDateTime
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 class OperationsTest {
 
   companion object {
@@ -77,7 +78,7 @@ class OperationsTest {
   //  @Ignore
   @Test fun `accounts-4 should make a vote on a new account`() {
     api.accountApi.createCredentials(accountName, Helpers.private2)
-        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toChainObject())) }
+        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toObjectId())) }
         .testCheck()
   }
 
@@ -95,7 +96,7 @@ class OperationsTest {
 
   //  @Ignore
   @Test fun `content- should make a transfer to content`() {
-    api.contentApi.transfer(Helpers.credentials, "2.13.3".toChainObject(), AssetAmount(1), "transfer to content")
+    api.contentApi.transfer(Helpers.credentials, "2.13.3".toObjectId(), AssetAmount(1), "transfer to content")
         .testCheck()
   }
 
@@ -200,7 +201,7 @@ class OperationsTest {
   }
 
   @Test fun `asset- should fund an asset pool from non-issuer account`() {
-    val op = AssetFundPoolsOperation(Helpers.account2, AssetAmount(0, "1.3.36".toChainObject()), AssetAmount(1))
+    val op = AssetFundPoolsOperation(Helpers.account2, AssetAmount(0, "1.3.36".toObjectId()), AssetAmount(1))
     api.broadcastApi.broadcastWithCallback(Helpers.private2.ecKey(), op)
         .testCheck()
   }
@@ -210,11 +211,11 @@ class OperationsTest {
         Helpers.credentials,
         Helpers.accountName2,
         AssetAmount(1),
-        fee = Fee("1.3.40".toChainObject())
+        fee = Fee("1.3.40".toObjectId())
     ).testCheck {
       assertComplete()
       assertNoErrors()
-      assertValue { it.transaction.operations.single().fee.assetId == "1.3.40".toChainObject() }
+      assertValue { it.transaction.operations.single().fee.assetId == "1.3.40".toObjectId() }
     }
   }
 
@@ -228,7 +229,7 @@ class OperationsTest {
   }
 
   @Test fun `asset- should claim an asset pool from non-issuer account is not allowed`() {
-    val op = AssetClaimFeesOperation(Helpers.account2, AssetAmount(0, "1.3.36"), AssetAmount(1))
+    val op = AssetClaimFeesOperation(Helpers.account2, AssetAmount(0, "1.3.36".toObjectId()), AssetAmount(1))
     api.broadcastApi.broadcastWithCallback(Helpers.private2.ecKey(), op)
         .testCheck {
           assertError(DCoreException::class.java)
