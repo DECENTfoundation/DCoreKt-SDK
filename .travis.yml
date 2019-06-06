@@ -13,8 +13,6 @@ deploy:
     github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
     keep_history: true
     on:
-      branch: feature/docs-publish-travis
-#    on:
-#      tags: true
+      tags: true
 before_deploy:
   - touch library/build/javadoc/.nojekyll
