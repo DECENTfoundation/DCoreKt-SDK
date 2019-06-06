@@ -1,6 +1,3 @@
-## Package ch.decent.sdk
-
-
 DCore SDK for JVM
 ================
 
