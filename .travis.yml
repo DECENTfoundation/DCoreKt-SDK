@@ -35,4 +35,5 @@ script:
   - ./gradlew test
 
 after_script:
+  - docker-compose ps
   - docker-compose down
