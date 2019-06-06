@@ -7,6 +7,7 @@ import ch.decent.sdk.crypto.dpk
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.UnknownOperation
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonNull
@@ -79,9 +80,10 @@ object OperationTypeFactory : TypeAdapterFactory {
           val el = Streams.parse(reader)
           val idx = el.asJsonArray[0].asInt
           val op = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
+          if (op == OperationType.UNKNOWN_OPERATION) return UnknownOperation(idx) as T?
+
           val obj = el.asJsonArray[1].asJsonObject
-          return if (op == OperationType.UNKNOWN_OPERATION) UnknownOperation(idx) as T?
-          else op.clazz?.let {
+          return op.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
             (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = op } as T?
           } ?: EmptyOperation(op) as T?
