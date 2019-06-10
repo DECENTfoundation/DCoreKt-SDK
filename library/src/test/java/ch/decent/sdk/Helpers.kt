@@ -25,10 +25,10 @@ object Helpers {
   @JvmStatic val account2 = "1.2.28".toChainObject()
   @JvmStatic val accountName = "public-account-9"
   @JvmStatic val accountName2 = "public-account-10"
-  @JvmStatic val private = "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"
-  @JvmStatic val private2 = "5JMpT5C75rcAmuUB81mqVBXbmL1BKea4MYwVK6voMQLvigLKfrE"
-  @JvmStatic val public = "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
-  @JvmStatic val public2 = "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp"
+  @JvmStatic val private = "5JuJbrKZgAATcouJnwpaxPbHMAMDXSgUpQSfxTXzkSUufcnpTUa"
+  @JvmStatic val private2 = "5JuJbrKZgAATcouJnwpaxPbHMAMDXSgUpQSfxTXzkSUufcnpTUa"
+  @JvmStatic val public = "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
+  @JvmStatic val public2 = "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
   @JvmStatic val credentials = Credentials(account, private)
 }
 
