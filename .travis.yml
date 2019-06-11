@@ -16,9 +16,9 @@ jdk:
   - oraclejdk9
 
 before_script:
-  - ls -al
-  - sudo chown -R 1000 test-dcore-node
-  - ls -al
+#  - ls -al
+#  - sudo chown -R 1000 test-dcore-node
+#  - ls -al
 #  - cd ./test-dcore-node
 #  - ls -al
 #  - cd ./datadir
