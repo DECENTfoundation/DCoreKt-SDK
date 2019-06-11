@@ -6,6 +6,7 @@ plugins {
   id(GradlePlugins.dokka)
   id(GradlePlugins.mavenPublish)
   id(GradlePlugins.detekt)
+  id(GradlePlugins.dockerCompose)
 }
 
 dependencies {
@@ -41,6 +42,10 @@ detekt {
   toolVersion = Versions.detekt
   input = files("src/main/java")
   config = files("detekt-config.yml")
+}
+
+dockerCompose {
+  isRequiredBy(project.tasks.test.get())
 }
 
 val dokka by tasks.getting(DokkaTask::class) {
