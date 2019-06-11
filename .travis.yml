@@ -24,7 +24,9 @@ before_script:
 #  - cd ./datadir
 #  - ls -al
 #  - id travis
-  - docker-compose up -d
+
+#  - docker-compose up -d
+
 #  - docker-compose ps
 #  - docker-compose exec DCore ls -al
 #  - docker-compose exec DCore bash -c "cd ./.decent"
@@ -35,4 +37,4 @@ script:
   - ./gradlew test
 
 after_script:
-  - docker-compose down
+#  - docker-compose down

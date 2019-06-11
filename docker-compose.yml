@@ -5,7 +5,6 @@ services:
     build: .
     ports:
       - "8090:8090"
-      - "40000:40000"
     expose:
       - "8090"
 # used for debug
