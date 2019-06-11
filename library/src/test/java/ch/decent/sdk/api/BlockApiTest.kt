@@ -1,6 +1,6 @@
 package ch.decent.sdk.api
 
-import io.reactivex.schedulers.Schedulers
+import ch.decent.sdk.testCheck
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -9,32 +9,14 @@ import org.junit.runners.Parameterized
 class BlockApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get block header`() {
-    val test = api.blockApi.getHeader(10)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.blockApi.getHeader(10).testCheck()
   }
 
   @Test fun `should get head block time`() {
-    val test = api.blockApi.getHeadTime()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.blockApi.getHeadTime().testCheck()
   }
 
   @Test fun `should get signed block`() {
-    val test = api.blockApi.get(10)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.blockApi.get(10).testCheck()
   }
 }

@@ -1,4 +1,4 @@
-package ch.decent.sdk
+package ch.decent.sdk.model
 
 import ch.decent.sdk.model.Account
 import org.amshove.kluent.`should be`

@@ -11,7 +11,7 @@ plugins {
 
 dependencies {
   implementation(Libs.kotlin)
-  implementation(Libs.kotlin_reflect)
+  implementation(Libs.kotlinReflect)
 
   api(Libs.rxKotlin)
   api(Libs.rxJava)
@@ -80,5 +80,13 @@ publishing {
       artifact(sourcesJar)
       artifact(dokkaJar)
     }
+  }
+}
+
+tasks.test {
+  exclude("**/api/", "**/Scratchpad.class")
+  testLogging {
+    events("passed", "skipped", "failed")
+    setExceptionFormat("full")
   }
 }

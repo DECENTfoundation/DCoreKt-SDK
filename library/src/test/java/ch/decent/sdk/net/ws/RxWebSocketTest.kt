@@ -22,7 +22,7 @@ class RxWebSocketTest : TimeOutTest() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
         Helpers.client(logger),
-        Helpers.wsUrl,
+        Helpers.testnetWs,
         logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )

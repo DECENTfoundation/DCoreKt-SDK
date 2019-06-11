@@ -2,23 +2,39 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.testCheck
 import io.reactivex.schedulers.Schedulers
 import org.amshove.kluent.`should equal`
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 import org.junit.runners.Parameterized
+import org.junit.runners.Suite
+
+@Suite.SuiteClasses(MessagingOperationsTest::class, MessagingApiTest::class)
+@RunWith(Suite::class)
+class MessagingSuite
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+class MessagingOperationsTest : BaseOperationsTest() {
+
+  @Test fun `message- should send message`() {
+    api.messagingApi.send(Helpers.credentials, listOf(Helpers.account2 to "test message encrypted"))
+        .testCheck()
+  }
+
+  @Test fun `message- should send unencrypted message`() {
+    api.messagingApi.sendUnencrypted(Helpers.credentials, listOf(Helpers.account2 to "test message plain"))
+        .testCheck()
+  }
+}
 
 @RunWith(Parameterized::class)
 class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get message operations for receiver`() {
-    val test = api.messagingApi.getAllOperations(receiver = Helpers.account2)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.messagingApi.getAllOperations(receiver = Helpers.account2).testCheck()
   }
 
   @Test fun `should get messages for account and decrypt for receiver`() {

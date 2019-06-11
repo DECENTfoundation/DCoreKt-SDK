@@ -17,14 +17,14 @@ class CallbackApiTest {
 
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
-    api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+    api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
   }
 
   @After fun finish() {
   }
 
   @Test fun `should fail for HTTP`() {
-    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.restUrl)
+    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.dockerHttp)
 
     val test = api.callbackApi.onBlockApplied()
         .subscribeOn(Schedulers.newThread())
