@@ -46,6 +46,7 @@ detekt {
 
 dockerCompose {
   isRequiredBy(project.tasks.test.get())
+  useComposeFiles = listOf("../test-dcore-node/docker-compose.yml")
 }
 
 val dokka by tasks.getting(DokkaTask::class) {
