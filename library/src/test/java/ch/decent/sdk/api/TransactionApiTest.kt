@@ -6,18 +6,14 @@ import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
-import ch.decent.sdk.print
 import ch.decent.sdk.testCheck
 import org.junit.Ignore
 import org.junit.Test
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 
 class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
   val trx
     get() = api.historyApi.getOperation(Helpers.account, "1.7.1".toChainObject()).map { it.operation.blockNum }
-        .flatMap { api.transactionApi.get(it, 0) }.blockingGet()
+        .flatMap { api.transactionApi.get(it, 0) }
 
   @Test fun `should create a transaction`() {
     api.transactionApi.createTransaction(TransferOperation(Helpers.account, Helpers.account2, AssetAmount(1))).testCheck()
@@ -29,24 +25,21 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Ignore //todo trx is found even after expiration for some time, we would need to wait for a while here  <1min
   @Test fun `should get expired recent transaction by ID`() {
-    Instant.now().print()
-    api.transactionApi.getRecent(trx.id).testCheck {
+    trx.flatMap { api.transactionApi.getRecent(it.id) }.testCheck {
       assertError(ObjectNotFoundException::class.java)
     }
   }
 
   @Test fun `should get a transaction by ID`() {
-    api.transactionApi.get(trx.id).testCheck {
-      assertValue { it.id == trx.id }
-    }
+    trx.flatMap { api.transactionApi.get(it.id) }.testCheck()
   }
 
   @Test fun `should get a transaction by block`() {
-    api.transactionApi.get(trx.refBlockNum.toLong(), 0).testCheck()
+    trx.testCheck()
   }
 
   @Test fun `should get a transaction by confirmation`() {
-    api.transactionApi.get(trx.id)
+    trx.flatMap { api.transactionApi.get(it.id) }
         .flatMap { api.transactionApi.get(TransactionConfirmation(it.id, it.refBlockNum.toLong(), 0, it)) }
         .testCheck()
   }
