@@ -16,6 +16,8 @@ import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.NftIssueOperation
+import ch.decent.sdk.model.operation.NftTransferOperation
+import ch.decent.sdk.model.operation.NftUpdateDataOperation
 import ch.decent.sdk.model.operation.NftUpdateOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.request.GetNftCount
@@ -26,45 +28,80 @@ import ch.decent.sdk.net.model.request.GetNftsBalances
 import ch.decent.sdk.net.model.request.GetNftsBySymbol
 import ch.decent.sdk.net.model.request.ListNftData
 import ch.decent.sdk.net.model.request.ListNfts
+import ch.decent.sdk.net.serialization.Variant
 import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 import java.math.BigInteger
+import kotlin.reflect.KClass
 
 class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
-// ONFE
+
+/*
+  fun <T : NftModel> registerNft(id: ChainObject, clazz: KClass<T>) {
+//    NftTypeFactory.idToModel[id] = clazz
+  }
+
+  fun <T : NftModel> registerNft(id: ChainObject, clazz: Class<T>) {
+//    NftTypeFactory.idToModel[id] = clazz.kotlin
+  }
+*/
+
+  // ONFE
   fun get(idOrSymbol: String) =
       if (ChainObject.isValid(idOrSymbol)) get(idOrSymbol.toChainObject())
       else getBySymbol(idOrSymbol)
 
-// ONFE
+  // ONFE
   fun getAll(ids: List<ChainObject>): Single<List<Nft>> = GetNfts(ids).toRequest()
 
-// ONFE
+  // ONFE
   fun get(id: ChainObject): Single<Nft> = getAll(listOf(id)).map { it.single() }
 
-// ONFE
-  fun getAllBySymbols(symbols: List<String>) = GetNftsBySymbol(symbols).toRequest()
+  // ONFE
+  fun getAllBySymbol(symbols: List<String>) = GetNftsBySymbol(symbols).toRequest()
 
-// ONFE
-  fun getBySymbol(symbol: String) = getAllBySymbols(listOf(symbol)).map { it.single() }
+  // ONFE
+  fun getBySymbol(symbol: String) = getAllBySymbol(listOf(symbol)).map { it.single() }
 
-// ONFE
-  fun <T : NftModel> getAllData(clazz: Class<T>, ids: List<ChainObject>): Single<List<NftData<T>>> = GetNftData<T>(ids).toRequest()
+  // ONFE
+  fun <T : NftModel> getAllData(ids: List<ChainObject>, clazz: KClass<T>): Single<List<NftData<T>>> = GetNftData(ids).toRequest().make(clazz)
 
-// ONFE
-  fun <T : NftModel> getData(clazz: Class<T>, id: ChainObject): Single<NftData<T>> = getAllData(clazz, listOf(id)).map { it.single() }
+  // ONFE
+  fun <T : NftModel> getAllData(ids: List<ChainObject>, clazz: Class<T>): Single<List<NftData<T>>> = getAllData(ids, clazz.kotlin)
+
+  // ONFE
+  fun getAllData(ids: List<ChainObject>): Single<List<NftData<GenericNft>>> = GetNftData(ids).toRequest()
+
+  // ONFE
+  fun <T : NftModel> getData(id: ChainObject, clazz: KClass<T>): Single<NftData<T>> = getAllData(listOf(id), clazz).map { it.single() }
+
+  // ONFE
+  fun <T : NftModel> getData(id: ChainObject, clazz: Class<T>): Single<NftData<T>> = getAllData(listOf(id), clazz).map { it.single() }
+
+  // ONFE
+  fun getData(id: ChainObject): Single<NftData<GenericNft>> = getAllData(listOf(id)).map { it.single() }
 
   fun countAll(): Single<BigInteger> = GetNftCount.toRequest()
 
   fun countAllData(): Single<BigInteger> = GetNftDataCount.toRequest()
 
-  fun <T : NftModel> getNftBalances(account: ChainObject, nftIds: List<ChainObject> = emptyList()): Single<List<NftData<T>>> =
-      GetNftsBalances<T>(account, nftIds).toRequest()
+  fun getNftBalances(account: ChainObject, nftIds: List<ChainObject> = emptyList()): Single<List<NftData<GenericNft>>> =
+      GetNftsBalances(account, nftIds).toRequest()
 
-  fun listAllRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX): Single<List<Nft>> =
+  fun <T : NftModel> getNftBalances(account: ChainObject, nftId: ChainObject, clazz: KClass<T>): Single<List<NftData<T>>> =
+      GetNftsBalances(account, listOf(nftId)).toRequest().make(clazz)
+
+  fun <T : NftModel> getNftBalances(account: ChainObject, nftId: ChainObject, clazz: Class<T>): Single<List<NftData<T>>> =
+      getNftBalances(account, nftId, clazz.kotlin)
+
+  fun listAllRelative(lowerBound: String = "", limit: Int = REQ_LIMIT_MAX): Single<List<Nft>> =
       ListNfts(lowerBound, limit).toRequest()
 
-  fun <T : NftModel> getDataByNft(nftId: ChainObject): Single<List<NftData<T>>> = ListNftData<T>(nftId).toRequest()
+  fun <T : NftModel> getDataByNft(nftId: ChainObject, clazz: KClass<T>): Single<List<NftData<T>>> = ListNftData(nftId).toRequest().make(clazz)
+
+  fun <T : NftModel> getDataByNft(nftId: ChainObject, clazz: Class<T>): Single<List<NftData<T>>> = getDataByNft(nftId, clazz.kotlin)
+
+  fun getDataByNft(nftId: ChainObject): Single<List<NftData<GenericNft>>> = ListNftData(nftId).toRequest()
 
   fun createNftCreateOperation(
       symbol: String,
@@ -121,5 +158,62 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createIssueOperation(credentials.account, idOrSymbol, to, data, memo, fee)
       .broadcast(credentials)
+
+  fun createTransferOperation(
+      from: ChainObject,
+      to: ChainObject,
+      id: ChainObject,
+      memo: Memo?,
+      fee: Fee = Fee()
+  ): Single<NftTransferOperation> = Single.just(NftTransferOperation(from, to, id, memo, fee))
+
+  fun transfer(
+      credentials: Credentials,
+      to: ChainObject,
+      id: ChainObject,
+      memo: Memo? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createTransferOperation(credentials.account, to, id, memo, fee)
+      .broadcast(credentials)
+
+  fun createUpdateDataOperation(
+      modifier: ChainObject,
+      id: ChainObject,
+      fee: Fee = Fee()
+  ): Single<NftUpdateDataOperation> = getData(id).flatMap { data ->
+    get(data.nftId).map {
+      val toUpdate = data.data?.createUpdate(it)
+      requireNotNull(toUpdate) { "no values to update" }
+      NftUpdateDataOperation(modifier, data.id, toUpdate.toMutableMap(), fee)
+    }
+  }
+
+  fun <T : NftModel> createUpdateDataOperation(
+      modifier: ChainObject,
+      id: ChainObject,
+      newData: T,
+      fee: Fee = Fee()
+  ): Single<NftUpdateDataOperation> =
+      Single.just(NftUpdateDataOperation(modifier, id, newData.createUpdate().toMutableMap(), fee))
+
+  fun updateData(
+      credentials: Credentials,
+      id: ChainObject,
+      values: Map<String, Variant>,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createUpdateDataOperation(credentials.account, id, fee)
+      .doOnSuccess { it.data.putAll(values) }
+      .broadcast(credentials)
+
+  fun <T : NftModel> updateData(
+      credentials: Credentials,
+      id: ChainObject,
+      newData: T,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createUpdateDataOperation(credentials.account, id, newData, fee)
+      .broadcast(credentials)
+
+  fun <T : NftModel> Single<List<NftData<GenericNft>>>.make(clazz: KClass<T>) =
+      map { it.map { nft -> NftData(nft.id, nft.nftId, nft.owner, nft.data?.make(clazz)) } }
 
 }

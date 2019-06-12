@@ -37,22 +37,18 @@ class NftTest {
 
   @Before fun init() {
     gson = DCoreSdk.gsonBuilder.create()
-    NftTypeFactory.idToModel.clear()
+//    NftTypeFactory.idToModel.clear()
   }
 
   @Test fun `should parse nft generic`() {
-    val type = GetNftData<NftModel>(emptyList()).returnClass
+    val type = GetNftData(emptyList()).returnClass
     val v = gson.fromJson<List<NftData<GenericNft>>>(json, type)
-    v.all { it.data!!.values.let { it[0] == 5 && (it[1] == "green" || it[1] == "red") && it[3] == false } }
+    v.all { it.data!!.values().let { it[0] == 5 && (it[1] == "green" || it[1] == "red") && it[3] == false } }
   }
 
   @Test fun `should parse nft apple`() {
-    NftTypeFactory.idToModel["1.10.2".toChainObject()] = NftApple::class.java
-
-    val type = GetNftData<NftModel>(emptyList()).returnClass
-
-    val v = gson.fromJson<List<NftData<NftApple>>>(json, type)
-    v.filter { it.data is NftApple }.count() `should be equal to` 2
-//    v.filter { it.data is GenericNft }.count() `should be equal to` 1
+    val type = GetNftData(emptyList()).returnClass
+    val v = gson.fromJson<List<NftData<GenericNft>>>(json, type)
+    v.map { it.data!!.make<NftApple>() }.count() `should be equal to` 2
   }
 }

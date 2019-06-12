@@ -8,24 +8,6 @@ import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
-data class GenericNft(
-    val values: List<Any>
-) : NftModel {
-  override fun values(): List<Any> = values
-
-  companion object {
-    fun create(values: JsonArray) = values.map {
-      when {
-        it.isJsonPrimitive.not() -> IllegalArgumentException("value type not supported: $it")
-        it.asJsonPrimitive.isNumber -> it.asNumber
-        it.asJsonPrimitive.isBoolean -> it.asBoolean
-        it.asJsonPrimitive.isString -> it.asString
-        else -> IllegalArgumentException("value type not supported: ${it::class.createType()}")
-      }
-    }.let { GenericNft(it) }
-  }
-}
-
 data class NftDataType(
     @SerializedName("type") val type: Type = Type.STRING,
     @SerializedName("unique") val unique: Boolean = false,

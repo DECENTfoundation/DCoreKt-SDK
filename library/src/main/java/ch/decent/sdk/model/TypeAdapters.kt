@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonWriter
 import org.threeten.bp.LocalDateTime
 import java.lang.reflect.ParameterizedType
 import java.math.BigInteger
+import kotlin.reflect.KClass
 
 object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
   override fun write(out: JsonWriter, value: LocalDateTime) {
@@ -104,7 +105,7 @@ object MapAdapterFactory : TypeAdapterFactory {
       @SerializedName("data") val data: JsonArray
   )
 
-  val idToModel = mutableMapOf<ChainObject, Class<out NftModel>>()
+//  internal val idToModel = mutableMapOf<ChainObject, KClass<out NftModel>>()
 
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
     if (NftData::class.javaObjectType == type.rawType) {
@@ -114,8 +115,8 @@ object MapAdapterFactory : TypeAdapterFactory {
         override fun read(reader: JsonReader?): T {
           val delegate = gson.getDelegateAdapter(this@NftTypeFactory, TypeToken.get(NftDataRaw::class.java))
           val raw = delegate.read(reader)
-          val model = idToModel[raw.nftId]?.kotlin?.let { NftModel.create(raw.data, it) } ?: GenericNft.create(raw.data)
-          return NftData(raw.id, raw.nftId, raw.owner, model) as T
+//          val model = idToModel[raw.nftId]?.let { NftModel.create(raw.data, it) } ?: GenericNft.create(raw.data)
+          return NftData(raw.id, raw.nftId, raw.owner, GenericNft(raw.data)) as T
         }
 
       }
@@ -159,7 +160,6 @@ object OperationTypeFactory : TypeAdapterFactory {
 
 // typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions;
 // fixed_max_supply_struct has index 1 therefore we write '1'
-
 @Suppress("UNCHECKED_CAST")
 object StaticVariantFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, typeToken: TypeToken<T>): TypeAdapter<T?>? {
@@ -190,8 +190,7 @@ object StaticVariantFactory : TypeAdapterFactory {
             if (Unit::class.javaObjectType == t.rawType) Unit
             else delegates[idx]?.fromJsonTree(vals.getOrDefault(idx, JsonNull.INSTANCE))
           }
-          @Suppress("SpreadOperator")
-          return typeToken.rawType.constructors[0].newInstance(*objs.toTypedArray()) as T?
+          return typeToken.rawType.constructors.first().newInstance(objs) as T?
         }
       }
     } else {

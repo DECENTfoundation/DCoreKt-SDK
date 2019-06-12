@@ -44,6 +44,7 @@ object Helpers {
   @JvmStatic val createContentId2 = "2.13.1".toChainObject()
   @JvmStatic val createPurchaseId = "2.12.0".toChainObject()
   @JvmStatic val createNft = "APPLE"
+  @JvmStatic val createNftNested = "$createNft.NESTED"
 }
 
 fun Any.print() = println(this.toString())
