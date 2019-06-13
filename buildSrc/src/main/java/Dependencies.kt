@@ -27,6 +27,7 @@ object Versions {
   val errorProne = "2.3.3"
   val dokka = "0.9.16"
   val detekt = "1.0.0-RC14"
+  val dockerCompose = "0.9.4"
 }
 
 object GradlePlugins {
@@ -34,6 +35,7 @@ object GradlePlugins {
   val dokka = "org.jetbrains.dokka"
   val mavenPublish = "maven-publish"
   val detekt = "io.gitlab.arturbosch.detekt"
+  val dockerCompose = "com.avast.gradle.docker-compose"
 }
 
 object Libs {
