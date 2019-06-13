@@ -34,8 +34,8 @@ abstract class BaseApiTest(private val channel: Channel) : TimeOutTest() {
 
     val logger = LoggerFactory.getLogger(channel.toString())
     api = when (channel) {
-      Channel.RpcService -> DCoreSdk.createForHttp(Helpers.client(logger), Helpers.dockerHttp, logger)
-      Channel.RxWebSocket -> DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
+      Channel.RpcService -> DCoreSdk.createForHttp(Helpers.client(logger), Helpers.httpUrl, logger)
+      Channel.RxWebSocket -> DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
     }
   }
 
@@ -55,7 +55,7 @@ abstract class BaseOperationsTest {
 
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
-    api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
+    api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
     api.transactionExpiration = Duration.ofSeconds(5)
   }
 

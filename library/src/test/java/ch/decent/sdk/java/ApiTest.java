@@ -29,14 +29,14 @@ import java.util.Collections;
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
-    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getDockerWs(), Helpers.getDockerHttp(), logger);
+    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getHttpUrl(), logger);
 
     @Test
     public void init() {
-        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getDockerHttp());
-        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getDockerHttp(), logger);
-        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getDockerWs());
-        apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getDockerWs(), logger);
+        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl());
+        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl(), logger);
+        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl());
+        apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
         Gson gson = DCoreSdk.getGsonBuilder().create();
 
         apiHttp.setTransactionExpiration(Duration.ofSeconds(100L));

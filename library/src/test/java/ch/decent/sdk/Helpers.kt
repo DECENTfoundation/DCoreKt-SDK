@@ -18,6 +18,8 @@ object Helpers {
   @JvmStatic val stageHttp = "https://stagesocket.decentgo.com"
   @JvmStatic val dockerWs = "ws://localhost:8090/"
   @JvmStatic val dockerHttp = "http://localhost:8090/"
+  @JvmStatic val wsUrl = dockerWs
+  @JvmStatic val httpUrl = dockerHttp
 
   @JvmStatic fun client(logger: Logger = LoggerFactory.getLogger("OkHttpClient")): OkHttpClient =
       TrustAllCerts.wrap(OkHttpClient.Builder())

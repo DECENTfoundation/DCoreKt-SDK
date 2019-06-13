@@ -23,9 +23,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return amount for asset
    */
-  fun get(accountId: ChainObject, asset: ChainObject): Single<AssetAmount> =
-      getAll(accountId, listOf(asset)).map { it.single() }.catchNoElement(asset)
-
+  fun get(accountId: ChainObject, asset: ChainObject): Single<AssetAmount> = getAll(accountId, listOf(asset)).map { it.single() }
   /**
    * Get account balance by id.
    *
@@ -45,8 +43,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return amount for asset
    */
-  fun get(name: String, asset: ChainObject): Single<AssetAmount> =
-      getAll(name, listOf(asset)).map { it.single() }.catchNoElement(asset)
+  fun get(name: String, asset: ChainObject): Single<AssetAmount> = getAll(name, listOf(asset)).map { it.single() }
 
   /**
    * Get account balance by name.
@@ -68,7 +65,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a pair of asset to amount
    */
   fun getWithAsset(accountId: ChainObject, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
-      api.assetApi.getByName(assetSymbol).flatMap { asset -> get(accountId, asset.id).map { AmountWithAsset(asset, it) } }
+      getAllWithAsset(accountId, listOf(assetSymbol)).map { it.single() }
 
   /**
    * Get account balance by id with asset.
@@ -94,8 +91,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a pair of asset to amount
    */
   fun getWithAsset(name: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
-      api.assetApi.getByName(assetSymbol).flatMap { asset -> get(name, asset.id).map { AmountWithAsset(asset, it) } }
-
+      getAllWithAsset(name, listOf(assetSymbol)).map { it.single() }
   /**
    * Get account balance by name.
    *
@@ -119,9 +115,4 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of vesting balances with additional information
    */
   fun getAllVesting(accountId: ChainObject): Single<List<VestingBalance>> = GetVestingBalances(accountId).toRequest()
-
-  private fun Single<AssetAmount>.catchNoElement(id: ChainObject): Single<AssetAmount> = this.onErrorReturn {
-    if (it is NoSuchElementException) AssetAmount(0, id) else throw it
-  }
-
 }
