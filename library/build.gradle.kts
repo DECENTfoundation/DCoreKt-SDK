@@ -44,7 +44,7 @@ detekt {
 }
 
 val dokka by tasks.getting(DokkaTask::class) {
-  outputFormat = "html"
+  outputFormat = "javadoc"
   outputDirectory = "$buildDir/javadoc"
 }
 

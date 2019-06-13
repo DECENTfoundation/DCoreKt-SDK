@@ -1,6 +1,5 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreConstants.BASIS_POINTS_TOTAL
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CoAuthors
@@ -17,7 +16,6 @@ import ch.decent.sdk.utils.ripemd160
 import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
 import java.util.regex.Pattern
 
