@@ -4,14 +4,14 @@ import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.ecKey
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.operation.AssetClaimFeesOperation
 import ch.decent.sdk.model.operation.AssetFundPoolsOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.request.PriceToDct
 import ch.decent.sdk.testCheck
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import org.junit.FixMethodOrder
 import org.junit.Ignore
 import org.junit.Test
@@ -169,17 +169,11 @@ class AssetApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should convert asset to DCT`() {
-    api.core.makeRequest(PriceToDct(AssetAmount(1000, Helpers.createAssetId))).testCheck {
-      assertComplete()
-      assertNoErrors()
-      assertValue { it.amount == 20L }
-    }
-
-    api.assetApi.convertToDCT(Helpers.createAssetId, 1000).testCheck {
-      assertComplete()
-      assertNoErrors()
-      assertValue { it.amount == 20L }
-    }
+    Single.zip(
+        api.core.makeRequest(PriceToDct(AssetAmount(1000, Helpers.createAssetId))),
+        api.assetApi.convertToDCT(Helpers.createAssetId, 1000),
+        BiFunction { t1: AssetAmount, t2: AssetAmount -> t1.amount to t2.amount }
+    ).testCheck { assertValue { it.first == it.second && it.first == 20L } }
   }
 
   @Test fun `should convert asset from DCT`() {
