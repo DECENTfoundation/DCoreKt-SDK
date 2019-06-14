@@ -11,6 +11,7 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  - curl -Ls -o codacy-coverage-reporter-assembly.jar $(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({content_type, browser_download_url} | select(.content_type | contains("java-archive"))) | .[0].browser_download_url')
 
 jdk:
   - oraclejdk9
@@ -35,6 +36,7 @@ before_script:
 
 script:
   - ./gradlew build
+  - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r library/build/reports/jacoco/jacocoTestReport.xml
 deploy:
   - provider: pages
     skip_cleanup: true

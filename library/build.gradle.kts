@@ -7,6 +7,7 @@ plugins {
   id(GradlePlugins.mavenPublish)
   id(GradlePlugins.detekt)
   id(GradlePlugins.dockerCompose)
+  jacoco
 }
 
 dependencies {
@@ -80,5 +81,12 @@ publishing {
       artifact(sourcesJar)
       artifact(dokkaJar)
     }
+  }
+}
+
+tasks.jacocoTestReport {
+  reports {
+    xml.isEnabled = true
+    csv.isEnabled = false
   }
 }
