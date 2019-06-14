@@ -38,6 +38,7 @@ before_script:
 
 script:
   - ./gradlew build
+  - ./gradlew jacocoTestReport
   - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r library/build/reports/jacoco/jacocoTestReport.xml
 deploy:
   - provider: pages
