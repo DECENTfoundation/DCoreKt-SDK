@@ -18,7 +18,11 @@ import ch.decent.sdk.api.SeederApi
 import ch.decent.sdk.api.SubscriptionApi
 import ch.decent.sdk.api.TransactionApi
 import ch.decent.sdk.api.ValidationApi
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.NftModel
 import org.threeten.bp.Duration
+import java.util.concurrent.TimeoutException
+import kotlin.reflect.KClass
 
 class DCoreApi internal constructor(internal val core: DCoreSdk) {
 
@@ -28,9 +32,16 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    */
   var transactionExpiration: Duration = Duration.ofSeconds(EXPIRATION_DEF)
 
-  fun setTimeout(seconds: Long) {
-    core.setTimeout(seconds)
-  }
+  /**
+   * websocket request timeout, if no response is delivered within time window a [TimeoutException] is thrown
+   */
+  var timeout: Duration = Duration.ofMinutes(1)
+    set(value) {
+      field = value
+      core.setTimeout(value.seconds)
+    }
+
+  internal val registeredNfts = mutableMapOf<ChainObject, KClass<out NftModel>>()
 
   val accountApi = AccountApi(this)
   val assetApi = AssetApi(this)
@@ -49,4 +60,14 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val transactionApi = TransactionApi(this)
   val messagingApi = MessagingApi(this)
   val nftApi = NftApi(this)
+
+  @JvmName("registerNftsKt")
+  fun <T : NftModel> registerNfts(vararg idToClass: Pair<ChainObject, KClass<T>>) {
+    registeredNfts.putAll(idToClass)
+  }
+
+  fun <T : NftModel> registerNfts(vararg idToClass: Pair<ChainObject, Class<T>>) {
+    registeredNfts.putAll(idToClass.map { it.first to it.second.kotlin })
+  }
+
 }

@@ -13,7 +13,6 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonNull
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory
-import com.google.gson.annotations.SerializedName
 import com.google.gson.internal.Streams
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
@@ -22,7 +21,6 @@ import com.google.gson.stream.JsonWriter
 import org.threeten.bp.LocalDateTime
 import java.lang.reflect.ParameterizedType
 import java.math.BigInteger
-import kotlin.reflect.KClass
 
 object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
   override fun write(out: JsonWriter, value: LocalDateTime) {
@@ -64,6 +62,13 @@ object AuthMapAdapter : TypeAdapter<AuthMap>() {
   }
 }
 
+object NftModelAdapter : TypeAdapter<RawNft>() {
+  override fun write(out: JsonWriter?, value: RawNft?) {}
+
+  override fun read(reader: JsonReader): RawNft =
+      RawNft(Streams.parse(reader).asJsonArray)
+}
+
 
 object MapAdapterFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
@@ -93,36 +98,6 @@ object MapAdapterFactory : TypeAdapterFactory {
       is String -> out.value(value)
       is Boolean -> out.value(value)
     }
-  }
-}
-
-@Suppress("UNCHECKED_CAST") object NftTypeFactory : TypeAdapterFactory {
-
-  internal data class NftDataRaw(
-      @SerializedName("id") val id: ChainObject,
-      @SerializedName("nft_id") val nftId: ChainObject,
-      @SerializedName("owner") val owner: ChainObject,
-      @SerializedName("data") val data: JsonArray
-  )
-
-//  internal val idToModel = mutableMapOf<ChainObject, KClass<out NftModel>>()
-
-  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
-    if (NftData::class.javaObjectType == type.rawType) {
-      return object : TypeAdapter<T>() {
-        override fun write(out: JsonWriter?, value: T) {}
-
-        override fun read(reader: JsonReader?): T {
-          val delegate = gson.getDelegateAdapter(this@NftTypeFactory, TypeToken.get(NftDataRaw::class.java))
-          val raw = delegate.read(reader)
-//          val model = idToModel[raw.nftId]?.let { NftModel.create(raw.data, it) } ?: GenericNft.create(raw.data)
-          return NftData(raw.id, raw.nftId, raw.owner, GenericNft(raw.data)) as T
-        }
-
-      }
-    }
-
-    return null
   }
 }
 

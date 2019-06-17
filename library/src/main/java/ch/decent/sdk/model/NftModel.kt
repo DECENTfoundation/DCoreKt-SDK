@@ -20,9 +20,7 @@ interface NftModel {
       .associate { it.name to (it as KProperty1<NftModel, Any>).get(this) }
 
   companion object {
-    fun <T : NftModel> createDefinitions(model: Class<T>): List<NftDataType> = createDefinitions(model.kotlin)
-
-    fun <T : NftModel> createDefinitions(model: KClass<T>): List<NftDataType> = ordered(model).map {
+    internal fun <T : NftModel> createDefinitions(model: KClass<T>): List<NftDataType> = ordered(model).map {
       val type = NftDataType.Type[it.returnType]
       val unique = it.findAnnotation<Unique>() != null
       val modifiable = it.findAnnotation<Modifiable>()?.modifiable ?: NftDataType.ModifiableBy.NOBODY
@@ -31,7 +29,7 @@ interface NftModel {
     }
 
     @Suppress("SpreadOperator")
-    fun <T : NftModel> create(values: JsonArray, model: KClass<T>): T = ordered(model).let { ordered ->
+    internal fun <T : NftModel> create(values: JsonArray, model: KClass<T>): T = ordered(model).let { ordered ->
       ordered.mapIndexed { idx, prop ->
         try {
           parseType(values, idx, prop.returnType)
@@ -46,7 +44,7 @@ interface NftModel {
         .let { model.constructors.first().call(*it) }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : NftModel> values(model: T) = ordered(model::class).map { (it as KProperty1<T, Any>).get(model) }
+    internal fun <T : NftModel> values(model: T) = ordered(model::class).map { (it as KProperty1<T, Any>).get(model) }
 
     @Suppress("IMPLICIT_CAST_TO_ANY")
     private fun parseType(values: JsonArray, idx: Int, type: KType) =
@@ -66,7 +64,7 @@ interface NftModel {
   }
 }
 
-data class GenericNft(
+data class RawNft(
     val values: JsonArray
 ) : NftModel {
   override fun values(): List<Variant> = values.map {
@@ -90,5 +88,5 @@ data class GenericNft(
 
   fun <T : NftModel> make(clazz: Class<T>): T = NftModel.create(values, clazz.kotlin)
   fun <T : NftModel> make(clazz: KClass<T>): T = NftModel.create(values, clazz)
-  inline fun <reified T : NftModel> make(): T = NftModel.create(values, T::class)
+  inline fun <reified T : NftModel> make(): T = make(T::class)
 }

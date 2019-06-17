@@ -5,8 +5,8 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.NftApple
-import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.NftNotApple
+import ch.decent.sdk.model.RawNft
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.testCheck
 import org.junit.FixMethodOrder
@@ -15,7 +15,6 @@ import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import org.junit.runners.Parameterized
 import org.junit.runners.Suite
-import java.math.BigInteger
 
 @Suite.SuiteClasses(NftOperationsTest::class, NftApiTest::class)
 @RunWith(Suite::class)
@@ -31,7 +30,7 @@ class NftOperationsTest : BaseOperationsTest() {
         100,
         false,
         "an apple",
-        NftModel.createDefinitions(NftApple::class),
+        NftApple::class,
         true
     ).testCheck()
   }
@@ -43,7 +42,7 @@ class NftOperationsTest : BaseOperationsTest() {
         100,
         false,
         "an apple",
-        NftModel.createDefinitions(NftApple::class),
+        NftApple::class,
         true
     ).testCheck()
   }
@@ -55,7 +54,7 @@ class NftOperationsTest : BaseOperationsTest() {
         100,
         false,
         "not an apple",
-        NftModel.createDefinitions(NftNotApple::class),
+        NftNotApple::class,
         true
     ).testCheck()
   }
@@ -155,68 +154,83 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
     api.nftApi.getAllBySymbol(listOf(Helpers.createNft, Helpers.createNftNested)).testCheck()
   }
 
-  @Test fun `should get NFTs data by id`() {
+  @Test fun `should get NFTs data by id typed`() {
     api.nftApi.getAllData(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject()), NftApple::class).testCheck()
   }
 
-  @Test fun `should get NFTs data by id java`() {
-    api.nftApi.getAllData(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject()), NftApple::class.java).testCheck()
+  @Test fun `should get NFTs data by id registered`() {
+    api.registerNfts(
+        "1.10.0".toChainObject() to NftApple::class,
+        "1.10.1".toChainObject() to NftApple::class
+    )
+    api.nftApi.getAllData(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject())).testCheck {
+      assertValue { it.filter { it.data is NftApple }.count() == 2 }
+    }
   }
 
-  @Test fun `should get NFTs data by id generic`() {
-    api.nftApi.getAllData(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject())).testCheck()
+  @Test fun `should get NFTs data by id not registered`() {
+    api.nftApi.getAllData(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject())).testCheck {
+      assertValue { it.all { it.data is RawNft } }
+    }
   }
 
-  @Test fun `should get NFT data by id`() {
+  @Test fun `should get NFTs data by id raw`() {
+    api.nftApi.getAllDataRaw(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject())).testCheck()
+  }
+
+  @Test fun `should get NFT data by id typed`() {
     api.nftApi.getData("1.11.0".toChainObject(), NftApple::class).testCheck()
   }
 
-  @Test fun `should get NFT data by id java`() {
-    api.nftApi.getData("1.11.0".toChainObject(), NftApple::class.java).testCheck()
+  @Test fun `should get NFT data by id registered`() {
+    api.registerNfts("1.10.0".toChainObject() to NftApple::class)
+    api.nftApi.getData("1.11.0".toChainObject()).testCheck { assertValue { it.data is NftApple } }
   }
 
   @Test fun `should fail get NFT data by id`() {
     api.nftApi.getData("1.11.2".toChainObject(), NftApple::class).testCheck { assertError(IllegalArgumentException::class.java) }
   }
 
-  @Test fun `should get NFT data by id generic`() {
+  @Test fun `should get NFT data by id raw`() {
     api.nftApi.getData("1.11.0".toChainObject()).testCheck()
   }
 
   @Test fun `should get count of NFTs`() {
-    api.nftApi.countAll().testCheck { assertValue(BigInteger.valueOf(3)) }
+    api.nftApi.countAll().testCheck { assertValue(3) }
   }
 
   @Test fun `should get count of NFTs data`() {
-    api.nftApi.countAllData().testCheck { assertValue(BigInteger.valueOf(3)) }
+    api.nftApi.countAllData().testCheck { assertValue(3) }
   }
 
-  @Test fun `should get NFT balances generic`() {
-    api.nftApi.getNftBalances(Helpers.account).testCheck()
+  @Test fun `should get NFT balances raw`() {
+    api.nftApi.getNftBalancesRaw(Helpers.account).testCheck()
   }
 
-  @Test fun `should get NFT balances`() {
+  @Test fun `should get NFT balances typed`() {
     api.nftApi.getNftBalances(Helpers.account, "1.10.0".toChainObject(), NftApple::class).testCheck()
   }
 
-  @Test fun `should get NFT balances java`() {
-    api.nftApi.getNftBalances(Helpers.account2, "1.10.2".toChainObject(), NftNotApple::class.java).testCheck()
+  @Test fun `should get NFT balances registered`() {
+    api.registerNfts("1.10.2".toChainObject() to NftNotApple::class)
+    api.nftApi.getNftBalances(Helpers.account2, listOf("1.10.2".toChainObject())).testCheck { assertValue { it.all { it.data is NftNotApple } } }
   }
 
   @Test fun `should list all NFTs`() {
     api.nftApi.listAllRelative().testCheck()
   }
 
-  @Test fun `should get data for NFT generic`() {
-    api.nftApi.getDataByNft("1.10.0".toChainObject()).testCheck()
+  @Test fun `should get data for NFT raw`() {
+    api.nftApi.listDataByNftRaw("1.10.0".toChainObject()).testCheck()
   }
 
-  @Test fun `should get data for NFT`() {
-    api.nftApi.getDataByNft("1.10.0".toChainObject(), NftApple::class).testCheck()
+  @Test fun `should get data for NFT registered`() {
+    api.registerNfts("1.10.0".toChainObject() to NftApple::class)
+    api.nftApi.listDataByNft("1.10.0".toChainObject()).testCheck { assertValue { it.all { it.data is NftApple } } }
   }
 
-  @Test fun `should get data for NFT java`() {
-    api.nftApi.getDataByNft("1.10.0".toChainObject(), NftApple::class.java).testCheck()
+  @Test fun `should get data for NFT typed`() {
+    api.nftApi.listDataByNft("1.10.0".toChainObject(), NftApple::class).testCheck()
   }
 
 }
