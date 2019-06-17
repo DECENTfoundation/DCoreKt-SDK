@@ -165,7 +165,8 @@ object StaticVariantFactory : TypeAdapterFactory {
             if (Unit::class.javaObjectType == t.rawType) Unit
             else delegates[idx]?.fromJsonTree(vals.getOrDefault(idx, JsonNull.INSTANCE))
           }
-          return typeToken.rawType.constructors.first().newInstance(objs) as T?
+          @Suppress("SpreadOperator")
+          return typeToken.rawType.constructors[0].newInstance(*objs.toTypedArray()) as T?
         }
       }
     } else {

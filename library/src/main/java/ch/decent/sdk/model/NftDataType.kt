@@ -2,7 +2,6 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.model.types.Int64
 import ch.decent.sdk.model.types.UInt64
-import com.google.gson.JsonArray
 import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 import kotlin.reflect.KType

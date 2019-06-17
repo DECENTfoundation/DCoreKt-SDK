@@ -12,8 +12,8 @@ import ch.decent.sdk.model.Message
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
 import ch.decent.sdk.model.MessageResponse
-import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.net.model.request.GetMessageObjects
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction

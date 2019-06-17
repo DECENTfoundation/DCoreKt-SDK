@@ -10,7 +10,6 @@ import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.Nft
 import ch.decent.sdk.model.NftData
-import ch.decent.sdk.model.NftDataType
 import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.RawNft

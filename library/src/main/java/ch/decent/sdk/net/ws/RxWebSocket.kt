@@ -29,7 +29,6 @@ import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicLong
-import kotlin.math.log
 
 internal sealed class MessageEvent
 internal data class Message(val id: Long, val obj: JsonObject) : MessageEvent()
