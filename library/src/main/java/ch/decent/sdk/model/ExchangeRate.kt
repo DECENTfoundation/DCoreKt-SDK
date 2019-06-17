@@ -11,10 +11,10 @@ data class ExchangeRate(
 
     /**
      * quote & base asset ids cannot be the same, for quote any id can be used since it is modified to created asset id upon creation
-     * @param base base value in DCT
-     * @param quote quote value in UIA
+     * @param dct base value in DCT
+     * @param uia quote value in UIA
      */
-    @JvmStatic fun forCreateOp(base: Long, quote: Long): ExchangeRate = ExchangeRate(AssetAmount(base), AssetAmount(quote, "1.3.1".toChainObject()))
+    @JvmStatic fun forCreateOp(dct: Long, uia: Long): ExchangeRate = ExchangeRate(AssetAmount(dct), AssetAmount(uia, "1.3.1".toChainObject()))
 
   }
 }

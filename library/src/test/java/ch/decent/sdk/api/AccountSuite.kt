@@ -1,11 +1,48 @@
 package ch.decent.sdk.api
 
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.address
+import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.testCheck
 import io.reactivex.schedulers.Schedulers
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 import org.junit.runners.Parameterized
+import org.junit.runners.Suite
+
+@Suite.SuiteClasses(AccountOperationsTest::class, AccountApiTest::class)
+@RunWith(Suite::class)
+class AccountSuite
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+class AccountOperationsTest : BaseOperationsTest() {
+
+  @Test fun `accounts-1 should create account`() {
+    api.accountApi.create(Helpers.credentials, Helpers.createAccount, Helpers.public.address())
+        .testCheck()
+  }
+
+  @Test fun `accounts-2 should make a transfer to new account`() {
+    api.accountApi.transfer(Helpers.credentials, Helpers.createAccount, DCoreConstants.DCT.amount(1.0))
+        .testCheck()
+  }
+
+  @Test fun `accounts-3 should update credentials on a new account`() {
+    api.accountApi.createCredentials(Helpers.createAccount, Helpers.private)
+        .flatMap { api.accountApi.update(it, active = Authority(Helpers.public2.address())) }
+        .testCheck()
+  }
+
+  @Test fun `accounts-4 should make a vote on a new account`() {
+    api.accountApi.createCredentials(Helpers.createAccount, Helpers.private2)
+        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toChainObject())) }
+        .testCheck()
+  }
+}
 
 @RunWith(Parameterized::class)
 class AccountApiTest(channel: Channel) : BaseApiTest(channel) {

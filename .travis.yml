@@ -34,7 +34,7 @@ before_script:
 #  - docker-compose exec DCore id dcore
 
 script:
-  - ./gradlew build
+  - ./gradlew build test
 deploy:
   - provider: pages
     skip_cleanup: true

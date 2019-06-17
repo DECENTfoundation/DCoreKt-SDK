@@ -1,4 +1,4 @@
-package ch.decent.sdk.api.java;
+package ch.decent.sdk.java;
 
 import ch.decent.sdk.DCoreApi;
 import ch.decent.sdk.DCoreConstants;
@@ -29,12 +29,12 @@ import java.util.Collections;
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
-    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getRestUrl(), logger);
+    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getHttpUrl(), logger);
 
     @Test
     public void init() {
-        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl());
-        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl(), logger);
+        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl());
+        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl(), logger);
         DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl());
         apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
         Gson gson = DCoreSdk.getGsonBuilder().create();

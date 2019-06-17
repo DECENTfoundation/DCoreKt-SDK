@@ -3,199 +3,293 @@
   "max_core_supply": "7319777577456900",
   "initial_parameters": {
     "current_fees": {
-      "parameters": [[
-          0,{
+      "parameters": [
+        [
+          0,
+          {
             "fee": 100000
           }
-        ],[
-          1,{
+        ],
+        [
+          1,
+          {
             "basic_fee": 100000
           }
-        ],[
-          2,{
+        ],
+        [
+          2,
+          {
             "fee": 100000
           }
-        ],[
-          3,{
+        ],
+        [
+          3,
+          {
             "basic_fee": 100000
           }
-        ],[
-          4,{
+        ],
+        [
+          4,
+          {
             "fee": 500000
           }
-        ],[
-          5,{
+        ],
+        [
+          5,
+          {
             "fee": 10
           }
-        ],[
-          6,{
+        ],
+        [
+          6,
+          {
             "fee": 50000000
           }
-        ],[
-          7,{
+        ],
+        [
+          7,
+          {
             "fee": 100000
           }
-        ],[
-          8,{
+        ],
+        [
+          8,
+          {
             "fee": 10
           }
-        ],[
-          9,{
+        ],
+        [
+          9,
+          {
             "fee": 100000,
             "price_per_kbyte": 10
           }
-        ],[
-          10,{
+        ],
+        [
+          10,
+          {
             "fee": 100000,
             "price_per_kbyte": 10
           }
-        ],[
-          11,{
+        ],
+        [
+          11,
+          {
             "fee": 100000
           }
-        ],[
-          12,{
+        ],
+        [
+          12,
+          {
             "fee": 100000
           }
-        ],[
-          13,{
+        ],
+        [
+          13,
+          {
             "fee": 100000
           }
-        ],[
-          14,{
+        ],
+        [
+          14,
+          {
             "fee": 100000,
             "price_per_kbyte": 10
           }
-        ],[
-          15,{
+        ],
+        [
+          15,
+          {
             "fee": 0
           }
-        ],[
-          16,{
+        ],
+        [
+          16,
+          {
             "fee": 100000
           }
-        ],[
-          17,{
+        ],
+        [
+          17,
+          {
             "fee": 100000
           }
-        ],[
-          18,{
+        ],
+        [
+          18,
+          {
             "fee": 100000,
             "price_per_kbyte": 10
           }
-        ],[
-          19,{
+        ],
+        [
+          19,
+          {
             "fee": 1000000
           }
-        ],[
-          20,{
+        ],
+        [
+          20,
+          {
             "fee": 1000000
           }
-        ],[
-          21,{
+        ],
+        [
+          21,
+          {
             "fee": 0
           }
-        ],[
-          22,{
+        ],
+        [
+          22,
+          {
             "fee": 0
           }
-        ],[
-          23,{
+        ],
+        [
+          23,
+          {
             "fee": 0
           }
-        ],[
-          24,{
+        ],
+        [
+          24,
+          {
             "fee": 0
           }
-        ],[
-          25,{
+        ],
+        [
+          25,
+          {
             "fee": 0
           }
-        ],[
-          26,{
+        ],
+        [
+          26,
+          {
             "fee": 0
           }
-        ],[
-          27,{
+        ],
+        [
+          27,
+          {
             "fee": 0
           }
-        ],[
-          28,{
+        ],
+        [
+          28,
+          {
             "fee": 0
           }
-        ],[
-          29,{
+        ],
+        [
+          29,
+          {
             "fee": 0
           }
-        ],[
-          30,{
+        ],
+        [
+          30,
+          {
             "fee": 0
           }
-        ],[
-          31,{
+        ],
+        [
+          31,
+          {
             "fee": 0
           }
-        ],[
-          32,{
+        ],
+        [
+          32,
+          {
             "fee": 0
           }
-        ],[
-          33,{
+        ],
+        [
+          33,
+          {
             "fee": 500000
           }
-        ],[
-          34,{
+        ],
+        [
+          34,
+          {
             "fee": 500000
           }
-        ],[
-          35,{
+        ],
+        [
+          35,
+          {
             "fee": 500000
           }
-        ],[
-          36,{
+        ],
+        [
+          36,
+          {
             "fee": 500000
           }
-        ],[
-          37,{
+        ],
+        [
+          37,
+          {
             "fee": 500000
           }
-        ],[
-          38,{
+        ],
+        [
+          38,
+          {
             "fee": 0
           }
-        ],[
-          39,{
+        ],
+        [
+          39,
+          {
             "fee": 100000
           }
-        ],[
-          40,{
+        ],
+        [
+          40,
+          {
             "fee": 500000
           }
-        ],[
-          41,{
+        ],
+        [
+          41,
+          {
             "basic_fee": 100000,
             "price_per_kbyte": 10
           }
-        ],[
-          42,{
+        ],
+        [
+          42,
+          {
             "fee": 0
           }
-        ],[
-          43,{
+        ],
+        [
+          43,
+          {
             "fee": 0,
             "price_per_kbyte": 10
           }
-        ],[
-          44,{
+        ],
+        [
+          44,
+          {
             "fee": 0
           }
-        ],[
-          45,{
+        ],
+        [
+          45,
+          {
             "fee": 0,
             "price_per_kbyte": 10
           }
-        ],[
-          46,{
+        ],
+        [
+          46,
+          {
             "fee": 0
           }
         ]
@@ -219,109 +313,135 @@
     "max_authority_depth": 2,
     "extensions": []
   },
-  "initial_accounts": [{
+  "initial_accounts": [
+    {
       "name": "init0",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init1",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init2",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init3",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init4",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init5",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init6",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init7",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init8",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init9",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "init10",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "decent",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "decent-wallet",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "seeder1",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "seeder2",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-1",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-2",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-3",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-4",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-5",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-6",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-7",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-8",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-9",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "owner_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb",
+      "active_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "name": "public-account-10",
-      "owner_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy",
-      "active_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
+      "owner_key": "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp",
+      "active_key": "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp"
     }
   ],
-  "initial_assets": [{
+  "initial_assets": [
+    {
       "symbol": "USD",
       "issuer_name": "decent",
       "description": "US dollar",
@@ -329,7 +449,8 @@
       "max_supply": 0,
       "accumulated_fees": 0,
       "is_monitored_asset": false
-    },{
+    },
+    {
       "symbol": "EUR",
       "issuer_name": "decent",
       "description": "Euro",
@@ -337,338 +458,123 @@
       "max_supply": 0,
       "accumulated_fees": 0,
       "is_monitored_asset": false
-    },{
-      "symbol": "JPY",
-      "issuer_name": "decent",
-      "description": "Japanese yen",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "BGN",
-      "issuer_name": "decent",
-      "description": "Bulgarian lev",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "CZK",
-      "issuer_name": "decent",
-      "description": "Czech koruna",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "DKK",
-      "issuer_name": "decent",
-      "description": "Danish krone",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "GBP",
-      "issuer_name": "decent",
-      "description": "Pound sterling",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "HUF",
-      "issuer_name": "decent",
-      "description": "Hungarian forint",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "PLN",
-      "issuer_name": "decent",
-      "description": "Polish zloty",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "RON",
-      "issuer_name": "decent",
-      "description": "Romanian leu",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "SEK",
-      "issuer_name": "decent",
-      "description": "Swedish krona",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "CHF",
-      "issuer_name": "decent",
-      "description": "Swiss franc",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "NOK",
-      "issuer_name": "decent",
-      "description": "Norwegian krone",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "HRK",
-      "issuer_name": "decent",
-      "description": "Croatian kuna",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "RUB",
-      "issuer_name": "decent",
-      "description": "Russian rouble",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "TRY",
-      "issuer_name": "decent",
-      "description": "Turkish lira",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "AUD",
-      "issuer_name": "decent",
-      "description": "Australian dollar",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "BRL",
-      "issuer_name": "decent",
-      "description": "Brazilian real",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "CAD",
-      "issuer_name": "decent",
-      "description": "Canadian dollar",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "CNY",
-      "issuer_name": "decent",
-      "description": "Chinese yuan renminbi",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "HKD",
-      "issuer_name": "decent",
-      "description": "Hong Kong dollar",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "IDR",
-      "issuer_name": "decent",
-      "description": "Indonesian rupiah",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "ILS",
-      "issuer_name": "decent",
-      "description": "Israeli shekel",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "INR",
-      "issuer_name": "decent",
-      "description": "Indian rupee",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "KRW",
-      "issuer_name": "decent",
-      "description": "South Korean won",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "MXN",
-      "issuer_name": "decent",
-      "description": "Mexican peso",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "MYR",
-      "issuer_name": "decent",
-      "description": "Malaysian ringgit",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "NZD",
-      "issuer_name": "decent",
-      "description": "New Zealand dollar",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "PHP",
-      "issuer_name": "decent",
-      "description": "Philippine peso",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "SGD",
-      "issuer_name": "decent",
-      "description": "Singapore dollar",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "THB",
-      "issuer_name": "decent",
-      "description": "Thai baht",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
-    },{
-      "symbol": "ZAR",
-      "issuer_name": "decent",
-      "description": "South African rand",
-      "precision": 4,
-      "max_supply": 0,
-      "accumulated_fees": 0,
-      "is_monitored_asset": false
     }
   ],
   "initial_active_miners": 11,
-  "initial_miner_candidates": [{
+  "initial_miner_candidates": [
+    {
       "owner_name": "init0",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init1",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init2",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init3",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init4",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init5",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init6",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init7",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init8",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init9",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
-    },{
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
+    },
+    {
       "owner_name": "init10",
-      "block_signing_key": "DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy"
+      "block_signing_key": "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
     }
   ],
   "initial_chain_id": "9a5e5be357cdfa2c48dbe260f983a0109b52b9afdada705521cddad9243522f7",
-  "initial_balances": [{
+  "initial_balances": [
+    {
       "owner": "decent",
       "asset_symbol": "DCT",
       "amount": "5020588937456900"
-    },{
+    },
+    {
       "owner": "decent-wallet",
       "asset_symbol": "DCT",
       "amount": "100000000000000"
-    },{
+    },
+    {
       "owner": "seeder1",
       "asset_symbol": "DCT",
       "amount": "10000000000"
-    },{
+    },
+    {
       "owner": "seeder2",
       "asset_symbol": "DCT",
       "amount": "10000000000"
-    },{
+    },
+    {
       "owner": "public-account-1",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-2",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-3",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-4",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-5",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-6",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-7",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-8",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-9",
       "asset_symbol": "DCT",
       "amount": "1000000000000"
-    },{
+    },
+    {
       "owner": "public-account-10",
       "asset_symbol": "DCT",
       "amount": "1000000000000"

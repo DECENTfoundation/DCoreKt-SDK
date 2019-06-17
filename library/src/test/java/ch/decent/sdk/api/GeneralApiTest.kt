@@ -1,6 +1,6 @@
 package ch.decent.sdk.api
 
-import io.reactivex.schedulers.Schedulers
+import ch.decent.sdk.testCheck
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -10,63 +10,27 @@ import org.threeten.bp.LocalDateTime
 class GeneralApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `get chain props`() {
-    val test = api.generalApi.getChainProperties()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.generalApi.getChainProperties().testCheck()
   }
 
   @Test fun `get general props`() {
-    val test = api.generalApi.getGlobalProperties()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.generalApi.getGlobalProperties().testCheck()
   }
 
   @Test fun `get config`() {
-    val test = api.generalApi.getConfig()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.generalApi.getConfig().testCheck()
   }
 
   @Test fun `get chain id`() {
-    val test = api.generalApi.getChainId()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.generalApi.getChainId().testCheck()
   }
 
   @Test fun `get dynamic props`() {
-    val test = api.generalApi.getDynamicGlobalProperties()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.generalApi.getDynamicGlobalProperties().testCheck()
   }
 
   @Test fun `get time to maintenance`() {
-    val test = api.generalApi.getTimeToMaintenance(LocalDateTime.parse("2018-10-13T22:26:02.825"))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.generalApi.getTimeToMaintenance(LocalDateTime.parse("2018-10-13T22:26:02.825")).testCheck()
   }
 
 }
