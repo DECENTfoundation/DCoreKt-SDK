@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package ch.decent.sdk.net.serialization
 
 import java.io.ByteArrayOutputStream

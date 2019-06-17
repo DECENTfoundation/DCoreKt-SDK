@@ -1,4 +1,4 @@
-@file:Suppress("TooManyFunctions", "MatchingDeclarationName", "MagicNumber")
+@file:Suppress("TooManyFunctions", "MatchingDeclarationName")
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
