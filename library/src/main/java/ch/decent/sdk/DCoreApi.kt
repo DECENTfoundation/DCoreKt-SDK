@@ -20,6 +20,7 @@ import ch.decent.sdk.api.TransactionApi
 import ch.decent.sdk.api.ValidationApi
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.NftModel
+import ch.decent.sdk.model.RawNft
 import org.threeten.bp.Duration
 import java.util.concurrent.TimeoutException
 import kotlin.reflect.KClass
@@ -61,11 +62,21 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val messagingApi = MessagingApi(this)
   val nftApi = NftApi(this)
 
+  /**
+   * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+   *
+   * @param idToClass id to class pairs
+   */
   @JvmName("registerNftsKt")
   fun <T : NftModel> registerNfts(vararg idToClass: Pair<ChainObject, KClass<T>>) {
     registeredNfts.putAll(idToClass)
   }
 
+  /**
+   * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+   *
+   * @param idToClass id to class pairs
+   */
   fun <T : NftModel> registerNfts(vararg idToClass: Pair<ChainObject, Class<T>>) {
     registeredNfts.putAll(idToClass.map { it.first to it.second.kotlin })
   }

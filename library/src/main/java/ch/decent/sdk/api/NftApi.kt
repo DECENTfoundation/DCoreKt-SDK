@@ -42,7 +42,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT object, or [ObjectNotFoundException] if none found
    */
-  fun get(idOrSymbol: String) =
+  fun get(idOrSymbol: String): Single<Nft> =
       if (ChainObject.isValid(idOrSymbol)) get(idOrSymbol.toChainObject())
       else getBySymbol(idOrSymbol)
 
@@ -71,7 +71,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT objects, or [ObjectNotFoundException] if none found
    */
-  fun getAllBySymbol(symbols: List<String>) = GetNftsBySymbol(symbols).toRequest()
+  fun getAllBySymbol(symbols: List<String>): Single<List<Nft>> = GetNftsBySymbol(symbols).toRequest()
 
   /**
    * Get NFT by symbol
@@ -80,7 +80,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT object, or [ObjectNotFoundException] if none found
    */
-  fun getBySymbol(symbol: String) = getAllBySymbol(listOf(symbol)).map { it.single() }
+  fun getBySymbol(symbol: String): Single<Nft> = getAllBySymbol(listOf(symbol)).map { it.single() }
 
   /**
    * Get NFT data instances with parsed model
@@ -142,7 +142,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun <T : NftModel> getData(id: ChainObject, clazz: Class<T>): Single<NftData<T>> = getAllData(listOf(id), clazz).map { it.single() }
 
   /**
-   * Get NFT data instances with registered model, use [DCoreApi.registerNft] to register nft model by object id,
+   * Get NFT data instances with registered model, use [DCoreApi.registerNfts] to register nft model by object id,
    * if the model is not registered, [RawNft] will be used
    *
    * @param id NFT data object id
@@ -186,7 +186,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       GetNftsBalances(account, nftIds).toRequest()
 
   /**
-   * Get NFT balances per account with registered model, use [DCoreApi.registerNft] to register nft model by object id,
+   * Get NFT balances per account with registered model, use [DCoreApi.registerNfts] to register nft model by object id,
    * if the model is not registered, [RawNft] will be used
    *
    * @param account account object id
@@ -253,7 +253,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun <T : NftModel> listDataByNft(nftId: ChainObject, clazz: Class<T>): Single<List<NftData<T>>> = listDataByNft(nftId, clazz.kotlin)
 
   /**
-   * Get NFT data instances with registered model, use [DCoreApi.registerNft] to register nft model by object id,
+   * Get NFT data instances with registered model, use [DCoreApi.registerNfts] to register nft model by object id,
    * if the model is not registered, [RawNft] will be used
    *
    * @param nftId NFT data object id
