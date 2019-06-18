@@ -8,6 +8,7 @@ import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import org.amshove.kluent.`should be equal to`
 import org.junit.After
 import org.junit.Before
@@ -17,21 +18,26 @@ import org.slf4j.LoggerFactory
 class RxWebSocketTest : TimeOutTest() {
 
   private lateinit var socket: RxWebSocket
+  private lateinit var mock: CustomWebSocketService
 
   @Before fun init() {
+    mock = CustomWebSocketService()
     val logger = LoggerFactory.getLogger("RxWebSocket")
     socket = RxWebSocket(
         Helpers.client(logger),
-        Helpers.wsUrl,
+        mock.getUrl(),
         logger = logger,
         gson = DCoreSdk.gsonBuilder.create()
     )
   }
 
   @After fun close() {
+    mock.shutdown()
   }
 
   @Test fun `should connect, disconnect and connect`() {
+    mock.enqueue("keep alive", "")
+
     var websocket = socket.webSocket().test()
 
     websocket.awaitTerminalEvent()
@@ -52,14 +58,17 @@ class RxWebSocketTest : TimeOutTest() {
   }
 
   @Test fun `should connect, disconnect, fail request and reconnect with success`() {
+    mock.enqueue("keep alive", "")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
+
     val websocket = socket.webSocket().test()
 
     websocket.awaitTerminalEvent()
     websocket.assertComplete()
         .assertValueCount(1)
 
-    socket.disconnect()
     val fail = socket.request(GetChainId).test()
+    socket.disconnect()
 
     fail.awaitTerminalEvent()
     fail.assertError(WebSocketClosedException::class.java)
@@ -73,14 +82,17 @@ class RxWebSocketTest : TimeOutTest() {
   }
 
   @Test fun `should connect, disconnect, fail request and retry with success`() {
+    mock.enqueue("keep alive", "")
+        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
+
     val websocket = socket.webSocket().test()
 
     websocket.awaitTerminalEvent()
     websocket.assertComplete()
         .assertValueCount(1)
 
+    val test = socket.request(Login).retry(1).test()
     socket.disconnect()
-    val test = socket.request(GetChainId).retry(1).test()
 
     test.awaitTerminalEvent()
     test.assertComplete()

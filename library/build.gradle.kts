@@ -12,7 +12,7 @@ plugins {
 
 dependencies {
   implementation(Libs.kotlin)
-  implementation(Libs.kotlin_reflect)
+  implementation(Libs.kotlinReflect)
 
   api(Libs.rxKotlin)
   api(Libs.rxJava)
@@ -88,5 +88,13 @@ tasks.jacocoTestReport {
   reports {
     xml.isEnabled = true
     csv.isEnabled = false
+  }
+}
+
+tasks.test {
+  exclude("**/api/", "**/Scratchpad.class")
+  testLogging {
+    events("passed", "skipped", "failed")
+    setExceptionFormat("full")
   }
 }

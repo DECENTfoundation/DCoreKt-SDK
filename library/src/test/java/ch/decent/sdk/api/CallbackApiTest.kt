@@ -24,7 +24,7 @@ class CallbackApiTest {
   }
 
   @Test fun `should fail for HTTP`() {
-    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.restUrl)
+    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.httpUrl)
 
     val test = api.callbackApi.onBlockApplied()
         .subscribeOn(Schedulers.newThread())

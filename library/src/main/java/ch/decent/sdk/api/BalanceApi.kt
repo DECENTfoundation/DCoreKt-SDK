@@ -24,7 +24,6 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return amount for asset
    */
   fun get(accountId: ChainObject, asset: ChainObject): Single<AssetAmount> = getAll(accountId, listOf(asset)).map { it.single() }
-
   /**
    * Get account balance by id.
    *
@@ -44,8 +43,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return amount for asset
    */
-  fun get(name: String, asset: ChainObject): Single<AssetAmount> =
-      getAll(name, listOf(asset)).map { it.single() }
+  fun get(name: String, asset: ChainObject): Single<AssetAmount> = getAll(name, listOf(asset)).map { it.single() }
 
   /**
    * Get account balance by name.
@@ -94,7 +92,6 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun getWithAsset(name: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(name, listOf(assetSymbol)).map { it.single() }
-
   /**
    * Get account balance by name.
    *
@@ -118,5 +115,4 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of vesting balances with additional information
    */
   fun getAllVesting(accountId: ChainObject): Single<List<VestingBalance>> = GetVestingBalances(accountId).toRequest()
-
 }
