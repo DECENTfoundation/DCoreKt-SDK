@@ -11,6 +11,9 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  - sudo apt-get install jq
+  - LATEST_VERSION="$(curl -Ls https://api.bintray.com/packages/codacy/Binaries/codacy-coverage-reporter/versions/_latest | jq -r .name)"
+  - curl -Ls -o codacy-coverage-reporter-assembly.jar "https://dl.bintray.com/codacy/Binaries/${LATEST_VERSION}/codacy-coverage-reporter-assembly.jar"
 
 jdk:
   - oraclejdk9
@@ -35,6 +38,8 @@ before_script:
 
 script:
   - ./gradlew build test
+  - ./gradlew jacocoTestReport
+  - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r library/build/reports/jacoco/test/jacocoTestReport.xml
 deploy:
   - provider: pages
     skip_cleanup: true
