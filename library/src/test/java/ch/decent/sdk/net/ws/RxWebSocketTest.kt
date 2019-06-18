@@ -59,7 +59,7 @@ class RxWebSocketTest : TimeOutTest() {
 
   @Test fun `should connect, disconnect, fail request and reconnect with success`() {
     mock.enqueue("keep alive", "")
-        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
+        .enqueue("""{"method":"call","params":["login_api","login",["",""]],"id":0}""", """{"id":0,"result":true}""")
 
     val websocket = socket.webSocket().test()
 
@@ -83,7 +83,7 @@ class RxWebSocketTest : TimeOutTest() {
 
   @Test fun `should connect, disconnect, fail request and retry with success`() {
     mock.enqueue("keep alive", "")
-        .enqueue("""{"method":"call","params":[1,"login",["",""]],"id":0}""", """{"id":0,"result":true}""")
+        .enqueue("""{"method":"call","params":["login_api","login",["",""]],"id":0}""", """{"id":0,"result":true}""")
 
     val websocket = socket.webSocket().test()
 

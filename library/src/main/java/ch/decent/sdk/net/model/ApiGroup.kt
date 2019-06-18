@@ -7,13 +7,13 @@ package ch.decent.sdk.net.model
 // 4 - crypto
 // 5 - messaging
 internal enum class ApiGroup(val apiName: String = "") {
-  DATABASE("database"),
-  LOGIN,
-  BROADCAST("network_broadcast"),
-  HISTORY("history"),
-  CRYPTO("crypto"),
-  MESSAGING("messaging");
+  DATABASE("database_api"),
+  LOGIN("login_api"),
+  BROADCAST("network_broadcast_api"),
+  HISTORY("history_api"),
+  CRYPTO("crypto_api"),
+  MESSAGING("messaging_api");
 
-  val id: Int
-    get() = ordinal
+  val id: String
+    get() = apiName
 }
