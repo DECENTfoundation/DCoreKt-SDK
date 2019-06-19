@@ -6,7 +6,6 @@ import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.testCheck
-import io.reactivex.schedulers.Schedulers
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,145 +47,59 @@ class AccountOperationsTest : BaseOperationsTest() {
 class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `account should not exist`() {
-    val test = api.accountApi.exist("invalid-account")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-        .assertValue(false)
+    api.accountApi.exist("invalid-account").testCheck { assertValue(false) }
   }
 
   @Test fun `should get account by id`() {
-    val test = api.accountApi.get(Helpers.account)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.get(Helpers.account).testCheck()
   }
 
   @Test fun `should get account by name`() {
-    val test = api.accountApi.getByName(Helpers.accountName)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.getByName(Helpers.accountName).testCheck()
   }
 
   @Test fun `should get account by name or id`() {
-    val test = api.accountApi.get("1.2.12")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.get("1.2.12").testCheck()
   }
 
   @Test fun `should get account count`() {
-    val test = api.accountApi.countAll()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.countAll().testCheck()
   }
 
   @Test fun `should get account references by address`() {
-    val test = api.accountApi.findAllReferencesByKeys(listOf(Helpers.public.address())).map { it.single().first() }
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.findAllReferencesByKeys(listOf(Helpers.public.address())).map { it.single().first() }.testCheck()
   }
 
   @Test fun `should get account references`() {
-    val test = api.accountApi.findAllReferencesByAccount(Helpers.account)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.findAllReferencesByAccount(Helpers.account).testCheck()
   }
 
   @Test fun `should get accounts by ids`() {
-    val test = api.accountApi.getAll(listOf(Helpers.account, Helpers.account2))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.getAll(listOf(Helpers.account, Helpers.account2)).testCheck()
   }
 
   @Test fun `should get full accounts`() {
-    val test = api.accountApi.getFullAccounts(listOf("u961279ec8b7ae7bd62f304f7c1c3d345", "1.2.34"))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.getFullAccounts(listOf("u961279ec8b7ae7bd62f304f7c1c3d345", "1.2.34")).testCheck()
   }
 
   @Test fun `should get accounts by names`() {
-    val test = api.accountApi.getAllByNames(listOf(Helpers.accountName, Helpers.accountName2))
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.getAllByNames(listOf(Helpers.accountName, Helpers.accountName2)).testCheck()
   }
 
   @Test fun `should lookup accounts by lower bound`() {
-    val test = api.accountApi.listAllRelative("alax", 10)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.listAllRelative("alax", 10).testCheck()
   }
 
   @Test fun `search accounts by term`() {
-    val test = api.accountApi.findAll("decent")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.findAll("decent").testCheck()
   }
 
   @Suppress("DEPRECATION")
   @Test fun `search account history`() {
-    val test = api.accountApi.searchAccountHistory(Helpers.account)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-        .assertValue { it.isNotEmpty() }
+    api.accountApi.searchAccountHistory(Helpers.account).testCheck { assertValue { it.isNotEmpty() } }
   }
 
   @Test fun `should create credentials`() {
-    val test = api.accountApi.createCredentials(Helpers.accountName, Helpers.private)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.accountApi.createCredentials(Helpers.accountName, Helpers.private).testCheck()
   }
 }
