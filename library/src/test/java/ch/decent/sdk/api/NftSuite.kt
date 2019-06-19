@@ -8,6 +8,7 @@ import ch.decent.sdk.model.NftApple
 import ch.decent.sdk.model.NftNotApple
 import ch.decent.sdk.model.RawNft
 import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.net.model.request.SearchNftHistory
 import ch.decent.sdk.testCheck
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -231,6 +232,10 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get data for NFT typed`() {
     api.nftApi.listDataByNft("1.10.0".toChainObject(), NftApple::class).testCheck()
+  }
+
+  @Test fun `should search data for NFT, check issue and transfer count`() {
+    api.nftApi.searchNftHistory("1.11.2".toChainObject()).testCheck { assertValue { it.count() == 2 } }
   }
 
 }

@@ -14,6 +14,7 @@ import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.RawNft
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.TransactionDetail
 import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.NftIssueOperation
 import ch.decent.sdk.model.operation.NftTransferOperation
@@ -28,6 +29,7 @@ import ch.decent.sdk.net.model.request.GetNftsBalances
 import ch.decent.sdk.net.model.request.GetNftsBySymbol
 import ch.decent.sdk.net.model.request.ListNftData
 import ch.decent.sdk.net.model.request.ListNfts
+import ch.decent.sdk.net.model.request.SearchNftHistory
 import ch.decent.sdk.net.serialization.Variant
 import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
@@ -178,7 +180,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * Get NFT balances per account with raw model
    *
    * @param account account object id
-   * @param nftIds nft object ids to filter, or empty list to fetch all
+   * @param nftIds NFT object ids to filter, or empty list to fetch all
    *
    * @return NFT data instances with raw model
    */
@@ -190,7 +192,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * if the model is not registered, [RawNft] will be used
    *
    * @param account account object id
-   * @param nftIds nft object ids to filter, or empty list to fetch all
+   * @param nftIds NFT object ids to filter, or empty list to fetch all
    *
    * @return NFT data instances
    */
@@ -235,7 +237,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   /**
    * Get NFT data instances with parsed model
    *
-   * @param nftId NFT data object id
+   * @param nftId NFT object id
    * @param clazz NFT data model class reference
    *
    * @return NFT data objects
@@ -245,7 +247,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   /**
    * Get NFT data instances with parsed model
    *
-   * @param nftId NFT data object id
+   * @param nftId NFT object id
    * @param clazz NFT data model class reference
    *
    * @return NFT data objects
@@ -256,7 +258,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * Get NFT data instances with registered model, use [DCoreApi.registerNfts] to register nft model by object id,
    * if the model is not registered, [RawNft] will be used
    *
-   * @param nftId NFT data object id
+   * @param nftId NFT object id
    *
    * @return NFT data objects
    */
@@ -265,11 +267,20 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   /**
    * Get NFT data instances with raw model
    *
-   * @param nftId NFT data object id
+   * @param nftId NFT object id
    *
    * @return NFT data objects
    */
   fun listDataByNftRaw(nftId: ChainObject): Single<List<NftData<RawNft>>> = ListNftData(nftId).toRequest()
+
+  /**
+   * Search nft history, lists transfer and issue operations for nft data instance object id
+   *
+   * @param nftDataId NFT data object id
+   *
+   * @return transaction detail list
+   */
+  fun searchNftHistory(nftDataId: ChainObject): Single<List<TransactionDetail>> = SearchNftHistory(nftDataId).toRequest()
 
   /**
    * Create NFT create operation
