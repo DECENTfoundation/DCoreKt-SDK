@@ -62,6 +62,45 @@ object AuthMapAdapter : TypeAdapter<AuthMap>() {
   }
 }
 
+object NftModelAdapter : TypeAdapter<RawNft>() {
+  override fun write(out: JsonWriter?, value: RawNft?) {}
+
+  override fun read(reader: JsonReader): RawNft =
+      RawNft(Streams.parse(reader).asJsonArray)
+}
+
+
+object MapAdapterFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (Map::class.javaObjectType == type.rawType) {
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T) {
+          out.beginArray()
+          (value as Map<*, *>).entries.forEach {
+            out.beginArray()
+            writeAny(out, it.key)
+            writeAny(out, it.value)
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(`in`: JsonReader?): T =
+            gson.getDelegateAdapter(this@MapAdapterFactory, type).read(`in`)
+      }
+    }
+    return null
+  }
+
+  fun writeAny(out: JsonWriter, value: Any?) {
+    when (value) {
+      is Number -> out.value(value)
+      is String -> out.value(value)
+      is Boolean -> out.value(value)
+    }
+  }
+}
+
 @Suppress("UNCHECKED_CAST")
 object OperationTypeFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
@@ -96,7 +135,6 @@ object OperationTypeFactory : TypeAdapterFactory {
 
 // typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions;
 // fixed_max_supply_struct has index 1 therefore we write '1'
-
 @Suppress("UNCHECKED_CAST")
 object StaticVariantFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, typeToken: TypeToken<T>): TypeAdapter<T?>? {

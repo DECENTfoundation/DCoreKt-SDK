@@ -2,7 +2,6 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.model.types.UInt8
 import com.google.gson.annotations.SerializedName
-import java.util.regex.Pattern
 
 data class Account(
     @SerializedName("id") val id: ChainObject,
@@ -15,6 +14,9 @@ data class Account(
     @SerializedName("statistics") val statistics: ChainObject,
     @SerializedName("top_n_control_flags") @UInt8 val topControlFlags: Short
 ) {
+
+  val primaryAddress
+    get() = active.keyAuths.first().value
 
   companion object {
     private val pattern = Regex("^(?=.{5,63}$)([a-z][a-z0-9-]+[a-z0-9])(\\.[a-z][a-z0-9-]+[a-z0-9])*$")

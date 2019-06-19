@@ -18,6 +18,8 @@ enum class ObjectType {
   OPERATION_HISTORY_OBJECT,
   WITHDRAW_PERMISSION_OBJECT,
   VESTING_BALANCE_OBJECT,
+  NFT_OBJECT, //10
+  NFT_DATA_OBJECT,
 
   //  enum impl_object_type, space = 2
   GLOBAL_PROPERTY_OBJECT, // ordinal = 10, type 0

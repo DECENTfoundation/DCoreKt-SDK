@@ -8,11 +8,11 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.EmptyOperation
+import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.net.model.request.GetPotentialSignatures
 import ch.decent.sdk.net.model.request.GetRequiredFees
 import ch.decent.sdk.net.model.request.GetRequiredSignatures

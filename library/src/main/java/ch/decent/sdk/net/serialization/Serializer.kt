@@ -1,4 +1,4 @@
-@file:Suppress("TooManyFunctions", "MatchingDeclarationName", "MagicNumber")
+@file:Suppress("TooManyFunctions", "MatchingDeclarationName")
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -32,6 +32,8 @@ import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
+import ch.decent.sdk.model.NftDataType
+import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Publishing
 import ch.decent.sdk.model.RegionalPrice
@@ -49,6 +51,11 @@ import ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation
 import ch.decent.sdk.model.operation.AssetUpdateOperation
 import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.NftCreateOperation
+import ch.decent.sdk.model.operation.NftIssueOperation
+import ch.decent.sdk.model.operation.NftTransferOperation
+import ch.decent.sdk.model.operation.NftUpdateDataOperation
+import ch.decent.sdk.model.operation.NftUpdateOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
@@ -59,121 +66,8 @@ import okio.Buffer
 import okio.BufferedSink
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
-import java.io.ByteArrayOutputStream
-import java.io.DataOutput
-import java.io.DataOutputStream
-import java.io.IOException
 import java.math.BigInteger
 import kotlin.reflect.KClass
-
-/**
- * <p>Encodes signed and unsigned values using a common variable-length
- * scheme, found for example in
- * <a href="http://code.google.com/apis/protocolbuffers/docs/encoding.html">
- * Google's Protocol Buffers</a>. It uses fewer bytes to encode smaller values,
- * but will use slightly more bytes to encode large values.</p>
- * <p/>
- * <p>Signed values are further encoded using so-called zig-zag encoding
- * in order to make them "compatible" with variable-length encoding.</p>
- */
-internal object Varint {
-
-  /**
-   * Encodes a value using the variable-length encoding from
-   * <a href="http://code.google.com/apis/protocolbuffers/docs/encoding.html">
-   * Google Protocol Buffers</a>. It uses zig-zag encoding to efficiently
-   * encode signed values. If values are known to be nonnegative,
-   * {@link #writeUnsignedVarLong(long, DataOutput)} should be used.
-   *
-   * @param value value to encode
-   * @param out   to write bytes to
-   * @throws IOException if {@link DataOutput} throws {@link IOException}
-   */
-  @Throws(IOException::class)
-  fun writeSignedVarLong(value: Long, out: DataOutput) {
-    // Great trick from http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
-    writeUnsignedVarLong(value shl 1 xor (value shr 63), out)
-  }
-
-  /**
-   * Encodes a value using the variable-length encoding from
-   * <a href="http://code.google.com/apis/protocolbuffers/docs/encoding.html">
-   * Google Protocol Buffers</a>. Zig-zag is not used, so input must not be negative.
-   * If values can be negative, use {@link #writeSignedVarLong(long, DataOutput)}
-   * instead. This method treats negative input as like a large unsigned value.
-   *
-   * @param value value to encode
-   * @param out   to write bytes to
-   * @throws IOException if {@link DataOutput} throws {@link IOException}
-   */
-  @Throws(IOException::class)
-  fun writeUnsignedVarLong(value: Long, out: DataOutput) {
-    var v = value
-    while (v and -0x80L != 0L) {
-      out.writeByte(v.toInt() and 0x7F or 0x80)
-      v = v ushr 7
-    }
-    out.writeByte(v.toInt() and 0x7F)
-  }
-
-  fun writeUnsignedVarLong(value: Long): ByteArray =
-      ByteArrayOutputStream().use { baos ->
-        DataOutputStream(baos).use { dos ->
-          writeUnsignedVarLong(value, dos)
-          baos.toByteArray()
-        }
-      }
-
-  /**
-   * @see .writeSignedVarLong
-   */
-  @Throws(IOException::class)
-  fun writeSignedVarInt(value: Int, out: DataOutput) {
-    // Great trick from http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
-    writeUnsignedVarInt(value shl 1 xor (value shr 31), out)
-  }
-
-  /**
-   * @see .writeUnsignedVarLong
-   */
-  @Throws(IOException::class)
-  fun writeUnsignedVarInt(value: Int, out: DataOutput) {
-    var v = value
-    while ((v and -0x80).toLong() != 0L) {
-      out.writeByte(v and 0x7F or 0x80)
-      v = v ushr 7
-    }
-    out.writeByte(v and 0x7F)
-  }
-
-  fun writeSignedVarInt(value: Int): ByteArray {
-    // Great trick from http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
-    return writeUnsignedVarInt(value shl 1 xor (value shr 31))
-  }
-
-  /**
-   * @see #writeUnsignedVarLong(long, DataOutput)
-   * <p/>
-   * This one does not use streams and is much faster.
-   * Makes a single object each time, and that object is a primitive array.
-   */
-  fun writeUnsignedVarInt(value: Int): ByteArray {
-    var v = value
-    val byteArrayList = ByteArray(10)
-    var i = 0
-    while ((v and -0x80).toLong() != 0L) {
-      byteArrayList[i++] = (v and 0x7F or 0x80).toByte()
-      v = v ushr 7
-    }
-    byteArrayList[i] = (v and 0x7F).toByte()
-    val out = ByteArray(i + 1)
-    while (i >= 0) {
-      out[i] = byteArrayList[i]
-      i--
-    }
-    return out
-  }
-}
 
 
 // Serialization utils methods
@@ -487,6 +381,91 @@ object Serializer {
     buffer.writeByte(0)
   }
 
+  private val nftOptionsAdapter: Adapter<NftOptions> = { buffer, obj ->
+    append(buffer, obj.issuer)
+    buffer.writeIntLe(obj.maxSupply.toInt())
+    append(buffer, obj.fixedMaxSupply)
+    append(buffer, obj.description)
+  }
+
+  private val nftDataAdapter: Adapter<NftDataType> = { buffer, obj ->
+    append(buffer, obj.unique)
+    buffer.writeLongLe(obj.modifiable.ordinal.toLong())
+    buffer.writeLongLe(obj.type.ordinal.toLong())
+    append(buffer, obj.name, true)
+  }
+
+  private val nftCreateAdapter: Adapter<NftCreateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.symbol)
+    append(buffer, obj.options)
+    append(buffer, obj.definitions)
+    append(buffer, obj.transferable)
+    buffer.writeByte(0)
+  }
+
+  private val nftUpdateAdapter: Adapter<NftUpdateOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.id)
+    append(buffer, obj.options)
+    buffer.writeByte(0)
+  }
+
+  private val variantAdapter: Adapter<Variant> = { buffer, obj ->
+    when (obj) {
+      is Number -> {
+        val type = if (obj.toLong() < 0) VariantTypeId.INT64_TYPE else VariantTypeId.UINT64_TYPE
+        buffer.writeByte(type.ordinal)
+        buffer.writeLongLe(obj.toLong())
+      }
+      is Boolean -> {
+        buffer.writeByte(VariantTypeId.BOOL_TYPE.ordinal)
+        append(buffer, obj)
+      }
+      is String -> {
+        buffer.writeByte(VariantTypeId.STRING_TYPE.ordinal)
+        append(buffer, obj)
+      }
+    }
+  }
+
+  private val nftIssueAdapter: Adapter<NftIssueOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.issuer)
+    append(buffer, obj.to)
+    append(buffer, obj.id)
+    buffer.write(Varint.writeUnsignedVarLong(obj.data.size.toLong()))
+    obj.data.forEach { variantAdapter(buffer, it) }
+    append(buffer, obj.memo, true)
+    buffer.writeByte(0)
+  }
+
+  private val nftTransferAdapter: Adapter<NftTransferOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.from)
+    append(buffer, obj.to)
+    append(buffer, obj.id)
+    append(buffer, obj.memo, true)
+    buffer.writeByte(0)
+  }
+
+  private val nftUpdateDataAdapter: Adapter<NftUpdateDataOperation> = { buffer, obj ->
+    buffer.writeByte(obj.type.ordinal)
+    append(buffer, obj.fee)
+    append(buffer, obj.modifier)
+    append(buffer, obj.id)
+    buffer.write(Varint.writeUnsignedVarLong(obj.data.size.toLong()))
+    obj.data.entries.reversed().forEach {
+      append(buffer, it.key)
+      variantAdapter(buffer, it.value)
+    }
+    buffer.writeByte(0)
+  }
 
   @Suppress("UNCHECKED_CAST")
   private fun <T : Any> append(buffer: BufferedSink, obj: T?, optional: Boolean = false) {
@@ -544,7 +523,14 @@ object Serializer {
       AssetIssueOperation::class to assetIssueAdapter,
       AssetFundPoolsOperation::class to assetFundAdapter,
       AssetReserveOperation::class to assetReserveAdapter,
-      AssetClaimFeesOperation::class to assetClaimAdapter
+      AssetClaimFeesOperation::class to assetClaimAdapter,
+      NftOptions::class to nftOptionsAdapter,
+      NftDataType::class to nftDataAdapter,
+      NftCreateOperation::class to nftCreateAdapter,
+      NftUpdateOperation::class to nftUpdateAdapter,
+      NftIssueOperation::class to nftIssueAdapter,
+      NftTransferOperation::class to nftTransferAdapter,
+      NftUpdateDataOperation::class to nftUpdateDataAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()

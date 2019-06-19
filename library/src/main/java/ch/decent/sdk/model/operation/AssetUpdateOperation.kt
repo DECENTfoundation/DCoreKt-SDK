@@ -1,6 +1,5 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreConstants.UIA_DESCRIPTION_MAX_CHARS
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ExchangeRate

@@ -21,6 +21,9 @@ import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.TransactionDetail
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
+import ch.decent.sdk.model.operation.AssetIssueOperation
+import ch.decent.sdk.model.operation.NftIssueOperation
+import ch.decent.sdk.model.operation.NftTransferOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.request.GetAccountById
@@ -194,6 +197,21 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
       getByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
+
+
+  /**
+   * Create a memo. Can be used in [TransferOperation], [AssetIssueOperation], [NftIssueOperation], [NftTransferOperation]
+   *
+   * @param message text message to send
+   * @param recipient account name or id, mandatory for encrypted message
+   * @param keyPair sender's key pair, mandatory for encrypted message
+   */
+  fun createMemo(message: String, recipient: String? = null, keyPair: ECKeyPair? = null) =
+      if (keyPair != null && recipient != null) {
+        get(recipient).map { Memo(message, keyPair, it.primaryAddress) }
+      } else {
+        Single.just(Memo(message))
+      }
 
   /**
    * Create a transfer operation.

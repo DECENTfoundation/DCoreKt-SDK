@@ -12,12 +12,15 @@ import ch.decent.sdk.model.DateTimeAdapter
 import ch.decent.sdk.model.DynamicGlobalProps
 import ch.decent.sdk.model.FeeParamAdapter
 import ch.decent.sdk.model.FeeParameter
+import ch.decent.sdk.model.MapAdapterFactory
 import ch.decent.sdk.model.MinerId
 import ch.decent.sdk.model.MinerIdAdapter
+import ch.decent.sdk.model.NftModelAdapter
 import ch.decent.sdk.model.OperationTypeAdapter
 import ch.decent.sdk.model.OperationTypeFactory
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.PubKeyAdapter
+import ch.decent.sdk.model.RawNft
 import ch.decent.sdk.model.StaticVariantFactory
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.VoteId
@@ -93,6 +96,7 @@ class DCoreSdk private constructor(
         .disableHtmlEscaping()
         .registerTypeAdapterFactory(OperationTypeFactory)
         .registerTypeAdapterFactory(StaticVariantFactory)
+        .registerTypeAdapterFactory(MapAdapterFactory)
         .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
         .registerTypeAdapter(Address::class.java, AddressAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
@@ -103,6 +107,7 @@ class DCoreSdk private constructor(
         .registerTypeAdapter(OperationType::class.java, OperationTypeAdapter)
         .registerTypeAdapter(VoteId::class.java, VoteIdAdapter)
         .registerTypeAdapter(CoAuthors::class.java, CoAuthorsAdapter)
+        .registerTypeAdapter(RawNft::class.java, NftModelAdapter)
 
     @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =

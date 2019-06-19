@@ -3,7 +3,6 @@ package ch.decent.sdk.crypto
 import ch.decent.sdk.utils.Base58
 import ch.decent.sdk.utils.SIZE_32
 import ch.decent.sdk.utils.ripemd160
-import org.bouncycastle.crypto.digests.RIPEMD160Digest
 import org.bouncycastle.math.ec.ECPoint
 
 /**

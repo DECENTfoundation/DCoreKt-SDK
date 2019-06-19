@@ -3,11 +3,11 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.net.model.request.GetProposedTransactions
 import ch.decent.sdk.net.model.request.GetRecentTransactionById
 import ch.decent.sdk.net.model.request.GetTransaction

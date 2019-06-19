@@ -33,6 +33,7 @@ object DCoreConstants {
   val RATING_ALLOWED = 1..RATING_MAX
   val PRECISION_ALLOWED = 0..PRECISION_MAX
   const val UIA_DESCRIPTION_MAX_CHARS = 1000
+  const val NFT_NAME_MAX_CHARS = 32
   const val BASIS_POINTS_TOTAL = 10000
 
 }
