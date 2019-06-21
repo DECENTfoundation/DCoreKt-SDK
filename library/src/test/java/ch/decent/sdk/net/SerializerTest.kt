@@ -227,8 +227,8 @@ class SerializerTest : TimeOutTest() {
     val memo = Memo("hello messaging api", keyPair, public2, 4764221389359926272.toBigInteger())
     val payloadReceiver = MessagePayloadReceiver("1.2.28".toChainObject(), memo.message, public2, memo.nonce)
     val payload = MessagePayload("1.2.27".toChainObject(), listOf(payloadReceiver), public)
-    val json = DCoreSdk.gsonBuilder.create().toJson(payload)
-    val op = SendMessageOperation(json, "1.2.27".toChainObject(), fee = Fee(amount = 500002))
+    val gson = DCoreSdk.gsonBuilder.create()
+    val op = SendMessageOperation(gson, payload, "1.2.27".toChainObject(), Fee(amount = 500002))
 
     Serializer.serialize(op).hex() `should be equal to` bytes
   }

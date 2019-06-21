@@ -12,7 +12,7 @@ import org.junit.Test
 
 class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
   val trx
-    get() = api.historyApi.getOperation(Helpers.account, "1.7.1".toChainObject()).map { it.operation.blockNum }
+    get() = api.historyApi.getOperation(Helpers.account, "1.7.0".toChainObject()).map { it.operation.blockNum }
         .flatMap { api.transactionApi.get(it, 0) }
 
   @Test fun `should create a transaction`() {

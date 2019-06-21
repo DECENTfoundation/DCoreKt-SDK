@@ -7,9 +7,11 @@ import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.utils.hash512
 import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.unhex
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -19,6 +21,7 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
 import org.junit.Ignore
 import org.junit.Test
+import org.slf4j.LoggerFactory
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.text.DecimalFormat
@@ -279,6 +282,19 @@ class Scratchpad {
 //    b.readUint32(4).should.equal(refId);
 //    b.BE().readUint32(0).should.equal(num);
 //    b.BE().readUint16(2).should.equal(refNum);
+  }
+
+  @Test fun `custom operation`() {
+    val logger = LoggerFactory.getLogger("LOG")
+    val api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+
+    val op = CustomOperation(4, Helpers.account, listOf(Helpers.account), "hello data".toByteArray().hex())
+    api.broadcastApi.broadcastWithCallback(Helpers.private, op)
+        .testCheck()
+  }
+
+  @Test fun `check hex`() {
+    "hello hex".unhex()
   }
 
 
