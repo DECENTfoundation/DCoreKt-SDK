@@ -512,6 +512,7 @@ object Serializer {
       CustodyData::class to custodyDataAdapter,
       AddOrUpdateContentOperation::class to addOrUpdateContentOperationAdapter,
       RemoveContentOperation::class to removeContentOperationAdapter,
+      CustomOperation::class to customOperationAdapter,
       SendMessageOperation::class to customOperationAdapter,
       LeaveRatingAndCommentOperation::class to rateAndCommentOperationAdapter,
       ExchangeRate::class to exchangeRateAdapter,

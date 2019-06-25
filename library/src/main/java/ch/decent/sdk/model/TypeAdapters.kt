@@ -5,8 +5,11 @@ import ch.decent.sdk.crypto.Wallet
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.crypto.dpk
 import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.operation.CustomOperation
+import ch.decent.sdk.model.operation.CustomOperationType
 import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.UnknownOperation
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -101,7 +104,7 @@ object MapAdapterFactory : TypeAdapterFactory {
   }
 }
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "NestedBlockDepth")
 object OperationTypeFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
     if (type.rawType == BaseOperation::class.javaObjectType) {
@@ -118,15 +121,25 @@ object OperationTypeFactory : TypeAdapterFactory {
         override fun read(reader: JsonReader): T? {
           val el = Streams.parse(reader)
           val idx = el.asJsonArray[0].asInt
-          val op = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
-          if (op == OperationType.UNKNOWN_OPERATION) return UnknownOperation(idx) as T?
-
+          val opType = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
           val obj = el.asJsonArray[1].asJsonObject
-          return op.clazz?.let {
+
+          val op = if (opType == OperationType.UNKNOWN_OPERATION) UnknownOperation(idx)
+          else opType.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
-            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = op } as T?
-          } ?: EmptyOperation(op) as T?
+            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = opType }
+          } ?: EmptyOperation(opType)
+
+          return op.parseCustomOp(gson) as T?
         }
+
+        private fun BaseOperation.parseCustomOp(gson: Gson): BaseOperation =
+            if (this !is CustomOperation) this
+            else when (id) {
+              CustomOperationType.MESSAGING.ordinal -> SendMessageOperation(gson, this)
+              else -> this
+            }
+
       }
     }
     return null

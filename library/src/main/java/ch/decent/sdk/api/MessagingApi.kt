@@ -113,7 +113,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
       MessagePayloadReceiver(recipient.id, msg.message, recipient.options.memoKey, msg.nonce)
     }
     val data = MessagePayload(sender.id, payloadReceivers, sender.options.memoKey)
-    SendMessageOperation(api.core.gson.toJson(data), credentials.account, fee = fee)
+    SendMessageOperation(api.gson, data, credentials.account, fee)
   }
 
   /**
@@ -129,7 +129,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
       messages: List<Pair<ChainObject, String>>,
       fee: Fee = Fee()
   ): Single<SendMessageOperation> = Single.just(
-      SendMessageOperation(api.core.gson.toJson(MessagePayload(credentials.account, messages)), credentials.account, fee = fee)
+      SendMessageOperation(api.gson, MessagePayload(credentials.account, messages), credentials.account, fee)
   )
 
   /**

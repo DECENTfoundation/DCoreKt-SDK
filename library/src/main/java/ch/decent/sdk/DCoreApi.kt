@@ -21,6 +21,7 @@ import ch.decent.sdk.api.ValidationApi
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.RawNft
+import com.google.gson.Gson
 import org.threeten.bp.Duration
 import java.util.concurrent.TimeoutException
 import kotlin.reflect.KClass
@@ -41,6 +42,9 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
       field = value
       core.setTimeout(value.seconds)
     }
+
+  val gson: Gson
+    get() = core.gson
 
   internal val registeredNfts = mutableMapOf<ChainObject, KClass<out NftModel>>()
 
