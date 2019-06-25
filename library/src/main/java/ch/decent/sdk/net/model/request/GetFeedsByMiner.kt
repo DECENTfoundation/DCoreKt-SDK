@@ -3,12 +3,13 @@ package ch.decent.sdk.net.model.request
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.net.model.ApiGroup
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import com.google.gson.reflect.TypeToken
 
 // todo what is this ?
 internal class GetFeedsByMiner(
     account: ChainObject,
-    count: Int = 100
+    count: Int = REQ_LIMIT_MAX
 ) : BaseRequest<List<Any>>(
     ApiGroup.DATABASE,
     "get_feeds_by_miner",

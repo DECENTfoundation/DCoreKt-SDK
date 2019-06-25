@@ -46,7 +46,7 @@ internal class RxWebSocket(
   private val messages = PublishProcessor.create<MessageEvent>()
   internal val events = Flowable.create<WebSocketEvent>({ emitter ->
     val webSocket = client.newWebSocket(request, WebSocketEmitter(emitter))
-    emitter.setCancellable { webSocket.close(1000, null) }
+    emitter.setCancellable { webSocket.close(CLOSE, null) }
   }, BackpressureStrategy.BUFFER)
       .publish()
 
@@ -60,54 +60,10 @@ internal class RxWebSocket(
   val connected: Boolean
     get() = disposable.size() != 0
 
-  private fun <T> Flowable<T>.info(tag: String): Flowable<T> = if (logger == null) this else
-    this.compose {
-      it.doOnSubscribe { logger.info("$tag #onSubscribe on ${Thread.currentThread()}") }
-          .doOnNext { value -> logger.info("$tag #onNext:$value on ${Thread.currentThread()}") }
-          .doOnComplete { logger.info("$tag #onComplete on ${Thread.currentThread()}") }
-          .doOnError { error -> logger.info("$tag #onError:$error on ${Thread.currentThread()}") }
-          .doOnCancel { logger.info("$tag #onCancel on ${Thread.currentThread()}") }
-          .doOnRequest { value -> logger.info("$tag #onRequest:$value on ${Thread.currentThread()}") }
-    }
-
-  private fun BaseRequest<*>.send(ws: WebSocket, callId: Long, callback: Long?) =
-      json(gson, callId, callback).let { logger?.info(it); ws.send(it) }
-
-  /**
-   * check for callback notice or simple result
-   */
-  private fun parseIdAndElement(message: String): Message =
-      JsonParser().parse(message).asJsonObject.let {
-        if (it.has("method") && it.get("method").asString == "notice") {
-          it.get("params").asJsonArray.let {
-            val id = it[0].asLong
-            val result = it[1].asJsonArray[0]
-            Message(id, JsonObject().apply { add("result", result) })
-          }
-        } else {
-          Message(it.get("id").asLong, it)
-        }
-      }
-
-  private fun checkForError(callId: Long, resultId: Long, obj: JsonObject) =
-      if (resultId == callId && obj.has("error")) throw DCoreException(gson.fromJson(obj["error"], Error::class.java)) else Unit
-
-  private fun checkObjectNotFound(obj: JsonObject, request: BaseRequest<*>) =
-      if (obj["result"].isJsonNull && request.returnClass != Unit::class.java) throw ObjectNotFoundException(request.description())
-      else if (obj["result"].isJsonArray && obj.getAsJsonArray("result").contains(JsonNull.INSTANCE)) throw ObjectNotFoundException(request.description())
-      else Unit
-
-  private fun parseResultElement(type: Type, obj: JsonObject) =
-      when {
-        type is ParameterizedType -> obj.getAsJsonArray("result")
-        obj.get("result").isJsonPrimitive -> obj.get("result")
-        type == Unit::class.java -> JsonObject()
-        else -> obj.getAsJsonObject("result")
-      }
 
   private fun connect() {
     disposable.addAll(
-        events.info("RxWebSocket")
+        events.infoLog("RxWebSocket", logger)
             .doOnTerminate { clearConnection() }
             .doOnComplete { messages.onNext(WsError(WebSocketClosedException())) }
             .doOnError { messages.onNext(WsError(it)) }
@@ -125,6 +81,7 @@ internal class RxWebSocket(
   }
 
   private fun clearConnection() {
+    logger?.info("clearing connection state")
     webSocketAsync = null
     disposable.clear()
     backingId.set(0)
@@ -140,30 +97,79 @@ internal class RxWebSocket(
 
   private fun <T> BaseRequest<T>.makeStream(callId: Long, callback: Long? = null): Flowable<T> =
       Flowable.merge(listOf(
-          Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback) }.ignoreElement().toFlowable(),
+          Single.defer { webSocket() }.doOnSuccess { ws -> send(ws, callId, callback, gson, logger) }.ignoreElement().toFlowable(),
           messages
       ))
           .flatMap { if (it is WsError) Flowable.error(it.t) else Flowable.just(it) }
           .ofType(Message::class.java)
-          .doOnNext { (id, obj) -> checkForError(callId, id, obj) }
+          .doOnNext { (id, obj) -> checkForError(callId, id, obj, gson) }
           .filter { (id, _) -> id == callback ?: callId }
           .doOnNext { (_, obj) -> checkObjectNotFound(obj, this) }
           .map { (_, obj) -> parseResultElement(returnClass, obj) }
           .map { gson.fromJson<T>(it, returnClass) }
-          .doOnError { if (it is TimeoutException) clearConnection() }
 
-  private fun <T> BaseRequest<T>.make(callId: Long): Single<T> =
-      makeStream(callId)
+  private fun <T> BaseRequest<T>.make(callId: Long, callback: Long? = null): Single<T> =
+      makeStream(callId, callback)
           .firstOrError()
           .timeout(timeout, TimeUnit.SECONDS)
+          .doOnError { if (it is TimeoutException) clearConnection() }
 
   internal fun <T, R> requestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback = request.makeStream(callId, callId)
 
-  internal fun <T> request(request: BaseRequest<T>): Single<T> = request.make(callId)
+  internal fun <T> request(request: BaseRequest<T>): Single<T> = request.make(callId, if (request is WithCallback) callId else null)
 
   fun disconnect() {
     disposable.add(
-        webSocket().subscribe { ws -> ws.close(1000, "disconnect") }
+        webSocket().subscribe { ws -> ws.close(CLOSE, "disconnect") }
     )
+  }
+
+  companion object {
+    private const val CLOSE = 1000
+
+    private fun <T> Flowable<T>.infoLog(tag: String, logger: Logger?): Flowable<T> = if (logger == null) this else
+      this.compose {
+        it.doOnSubscribe { logger.info("$tag #onSubscribe on ${Thread.currentThread()}") }
+            .doOnNext { value -> logger.info("$tag #onNext:$value on ${Thread.currentThread()}") }
+            .doOnComplete { logger.info("$tag #onComplete on ${Thread.currentThread()}") }
+            .doOnError { error -> logger.info("$tag #onError:$error on ${Thread.currentThread()}") }
+            .doOnCancel { logger.info("$tag #onCancel on ${Thread.currentThread()}") }
+            .doOnRequest { value -> logger.info("$tag #onRequest:$value on ${Thread.currentThread()}") }
+      }
+
+    private fun BaseRequest<*>.send(ws: WebSocket, callId: Long, callback: Long?, gson: Gson, logger: Logger?) =
+        json(gson, callId, callback).let { logger?.info(it); ws.send(it) }
+
+    /**
+     * check for callback notice or simple result
+     */
+    private fun parseIdAndElement(message: String): Message =
+        JsonParser().parse(message).asJsonObject.let {
+          if (it.has("method") && it.get("method").asString == "notice") {
+            it.get("params").asJsonArray.let {
+              val id = it[0].asLong
+              val result = it[1].asJsonArray[0]
+              Message(id, JsonObject().apply { add("result", result) })
+            }
+          } else {
+            Message(it.get("id").asLong, it)
+          }
+        }
+
+    private fun checkForError(callId: Long, resultId: Long, obj: JsonObject, gson: Gson) =
+        if (resultId == callId && obj.has("error")) throw DCoreException(gson.fromJson(obj["error"], Error::class.java)) else Unit
+
+    private fun checkObjectNotFound(obj: JsonObject, request: BaseRequest<*>) =
+        if (obj["result"].isJsonNull && request.returnClass != Unit::class.java) throw ObjectNotFoundException(request.description())
+        else if (obj["result"].isJsonArray && obj.getAsJsonArray("result").contains(JsonNull.INSTANCE)) throw ObjectNotFoundException(request.description())
+        else Unit
+
+    private fun parseResultElement(type: Type, obj: JsonObject) =
+        when {
+          type is ParameterizedType -> obj.getAsJsonArray("result")
+          obj.get("result").isJsonPrimitive -> obj.get("result")
+          type == Unit::class.java -> JsonObject()
+          else -> obj.getAsJsonObject("result")
+        }
   }
 }

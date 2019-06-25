@@ -10,4 +10,5 @@ internal class LookupAccountNames(
     ApiGroup.DATABASE,
     "lookup_account_names",
     TypeToken.getParameterized(List::class.java, Account::class.java).type,
-    listOf(names))
+    listOf(names)
+)

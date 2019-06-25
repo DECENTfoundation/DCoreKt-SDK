@@ -1,18 +1,34 @@
 package ch.decent.sdk
 
-import ch.decent.sdk.crypto.*
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.utils.*
+import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.crypto.DumpedPrivateKey
+import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.crypto.Wallet
+import ch.decent.sdk.crypto.dpk
+import ch.decent.sdk.crypto.ecKey
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.CipherKeyPairAdapter
+import ch.decent.sdk.model.ExtraKeysAdapter
+import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.ElGamal.publicElGamal
+import ch.decent.sdk.utils.decryptAes
+import ch.decent.sdk.utils.decryptAesWithChecksum
+import ch.decent.sdk.utils.encryptAes
+import ch.decent.sdk.utils.generateNonce
+import ch.decent.sdk.utils.hash512
+import ch.decent.sdk.utils.hex
+import ch.decent.sdk.utils.secret
+import ch.decent.sdk.utils.unhex
+import okio.Buffer
 import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should contain all`
-import org.amshove.kluent.`should contain none`
 import org.amshove.kluent.`should equal`
 import org.junit.Test
 import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
+import kotlin.test.Ignore
 
 class CrytpoTest : TimeOutTest() {
 
@@ -21,14 +37,6 @@ class CrytpoTest : TimeOutTest() {
   @Test fun `priv key dump`() {
     val key = private.ecKey()
     val dump = DumpedPrivateKey.toBase58(key)
-
-    private.print()
-    ECKeyPair.fromBase58(private).privateBytes.hex().print()
-    Helpers.public2.print()
-    Helpers.public2.address().publicKey.getEncoded(true).hex().print()
-    Helpers.public2.address().publicKey.multiply(key.private).normalize().xCoord.encoded.hex().print()
-
-    key.secret(Helpers.public2.address(), BigInteger("1234567890")).hex().print()
     dump `should be equal to` private
   }
 
@@ -37,7 +45,7 @@ class CrytpoTest : TimeOutTest() {
     for (i in 0..100) {
 //      println("$nonce  ${nonce.toByteArray().size} ${nonce.toLong().bytes().joinToString()}")
       nonce = generateNonce()
-      nonce.toLong().bytes().size `should be equal to` 8
+      Buffer().writeLongLe(nonce.toLong()).readByteArray().size `should be equal to` 8
     }
   }
 
@@ -47,7 +55,7 @@ class CrytpoTest : TimeOutTest() {
 
     val key = ECKeyPair.fromBase58(private)
 
-    val hash = hash512(key.privateBytes)
+    val hash = key.privateBytes.hash512()
 
     val k = BigInteger(1, hash)
 
@@ -64,10 +72,10 @@ class CrytpoTest : TimeOutTest() {
 
     val memo = Memo(plain, key, to, nonce)
 
-    val secret = key.secret(to, nonce).also { it.hex().print() }
-    val ivBytes = secret.copyOfRange(32, 32 + 16).also { it.hex().print() }
-    val sks = secret.copyOfRange(0, 32).also { it.hex().print() }
-    decryptAes(ivBytes, sks, encrypted.unhex()).hex().print()
+//    val secret = key.secret(to, nonce).also { it.hex().print() }
+//    val ivBytes = secret.copyOfRange(32, 32 + 16).also { it.hex().print() }
+//    val sks = secret.copyOfRange(0, 32).also { it.hex().print() }
+//    decryptAes(ivBytes, sks, encrypted.unhex()).hex().print()
 
     memo.message `should be equal to` encrypted
     memo.decrypt(key) `should be equal to` plain
@@ -75,8 +83,8 @@ class CrytpoTest : TimeOutTest() {
     val msg = decryptAesWithChecksum(key.secret(to, nonce), encrypted.unhex())
     msg `should be equal to` plain
 
-    "995ea94b18bd2fa351719ceab961c67daac5379d82be1f8bd5006eed419a3e8718facad5a65fd3557d6c0ee3e3c0166087593b96fad136b46c7c2aa4d3ed0978".unhex()
-        .toString(Charset.forName("utf8")).print()
+//    "995ea94b18bd2fa351719ceab961c67daac5379d82be1f8bd5006eed419a3e8718facad5a65fd3557d6c0ee3e3c0166087593b96fad136b46c7c2aa4d3ed0978".unhex()
+//        .toString(Charset.forName("utf8")).print()
   }
 
   @Test fun `decrypt public memo`() {
@@ -91,7 +99,7 @@ class CrytpoTest : TimeOutTest() {
   @Test fun `encrypt private key as wallet file`() {
     val pass = "quick brown fox jumped over a lazy dog"
     val key = ECKeyPair.fromBase58(private)
-    encryptAes(MessageDigest.getInstance("SHA-512").digest(pass.toByteArray()), private.toByteArray()).hex().print()
+//    encryptAes(MessageDigest.getInstance("SHA-512").digest(pass.toByteArray()), private.toByteArray()).hex().print()
     val wallet = Wallet.create(Credentials("1.2.30".toChainObject(), key), pass)
     Wallet.decrypt(wallet, pass).keyPair.private `should equal` key.private
   }

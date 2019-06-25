@@ -1,7 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
-import io.reactivex.schedulers.Schedulers
+import ch.decent.sdk.testCheck
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -10,72 +10,30 @@ import org.junit.runners.Parameterized
 class PurchaseApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get list of history purchases`() {
-    val test = api.purchaseApi.getAllHistory(Helpers.account)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.getAllHistory(Helpers.account).testCheck()
   }
 
   @Test fun `should get list of open purchases`() {
-    val test = api.purchaseApi.getAllOpen()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.getAllOpen().testCheck()
   }
 
   @Test fun `should get list of open purchases for uri`() {
-    val test = api.purchaseApi.getAllOpenByUri("ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.getAllOpenByUri(Helpers.createUri).testCheck()
   }
 
   @Test fun `should get list of open purchases for account`() {
-    val test = api.purchaseApi.getAllOpenByAccount(Helpers.account)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.getAllOpenByAccount(Helpers.account).testCheck()
   }
 
   @Test fun `should get purchase for account and uri`() {
-    val test = api.purchaseApi.get(Helpers.account, "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.get(Helpers.account, Helpers.createUri).testCheck()
   }
 
   @Test fun `should search purchases`() {
-    val test = api.purchaseApi.findAll(Helpers.account, "")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.findAll(Helpers.account, "").testCheck()
   }
 
   @Test fun `should search feedback`() {
-    val test = api.purchaseApi.findAllForFeedback("ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.purchaseApi.findAllForFeedback(Helpers.createUri).testCheck()
   }
 }

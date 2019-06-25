@@ -1,9 +1,10 @@
 package ch.decent.sdk.crypto
 
 import ch.decent.sdk.net.serialization.bytes
-import ch.decent.sdk.utils.Hex
+import ch.decent.sdk.utils.SIZE_256
 import ch.decent.sdk.utils.hash256
 import ch.decent.sdk.utils.hash512
+import ch.decent.sdk.utils.hex
 import org.bouncycastle.asn1.x9.X9IntegerConverter
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.ec.CustomNamedCurves
@@ -21,6 +22,7 @@ import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve
 import java.math.BigInteger
 import java.security.SecureRandom
 
+@Suppress("MagicNumber")
 class ECKeyPair {
 
   val private: BigInteger?
@@ -28,7 +30,7 @@ class ECKeyPair {
   val public
     get() = lazyPublic.value
   val privateBytes
-    get() = private!!.bytes(32)
+    get() = private!!.bytes(SIZE_256)
 
   private val lazyPublic: Lazy<ECPoint>
 
@@ -48,11 +50,11 @@ class ECKeyPair {
     compressed = true
   }
 
-  fun sign(input: Sha256Hash): ECDSASignature {
+  fun sign(input: ByteArray): ECDSASignature {
     checkNotNull(private)
     val key = ECPrivateKeyParameters(private, curve)
     val signer = ECDSASigner(HMacDSAKCalculator(SHA256Digest())).apply { init(true, key) }
-    val components = signer.generateSignature(input.bytes)
+    val components = signer.generateSignature(input)
     return ECDSASignature(components[0], components[1]).toCanonicalised()
   }
 
@@ -60,32 +62,33 @@ class ECKeyPair {
    * should be called in a loop until a 'canonical' signature is returned, slightly changing input data on every call
    * @see <a href="https://github.com/steemit/steem/issues/1944">https://github.com/steemit/steem/issues/1944</a>
    */
-  fun signature(data: Sha256Hash): String {
-    val signature = sign(data)
+  fun signature(data: ByteArray): String {
+    val hashed = data.hash256()
+    val signature = sign(hashed)
     var recId = -1
 
     for (i in 0..3) {
-      val k = ECKeyPair.recoverFromSignature(i, signature, data)
+      val k = recoverFromSignature(i, signature, hashed)
       if (k != null && k.public.equals(public)) {
         recId = i
         break
       }
     }
 
-    if (recId == -1) throw RuntimeException("Could not construct a recoverable keyPair. This should never happen.")
+    if (recId == -1) throw IllegalStateException("Could not construct a recoverable keyPair. This should never happen.")
 
 //    the public keyPair is always in a compressed format in DCore
     val headerByte = (recId + headerCompressed).toByte()
-    val sigData = ByteArray(65)  // 1 header + 32 bytes for R + 32 bytes for S
+    val sigData = ByteArray(1 + SIZE_256 * 2)  // 1 header + 32 bytes for R + 32 bytes for S
     sigData[0] = headerByte
-    System.arraycopy(signature.r.bytes(32), 0, sigData, 1, 32)
-    System.arraycopy(signature.s.bytes(32), 0, sigData, 33, 32)
+    System.arraycopy(signature.r.bytes(SIZE_256), 0, sigData, 1, SIZE_256)
+    System.arraycopy(signature.s.bytes(SIZE_256), 0, sigData, SIZE_256 + 1, SIZE_256)
 
 //    canonical tests
     return if (!checkCanonicalSignature(sigData)) {
       ""
     } else {
-      Hex.encode(sigData)
+      sigData.hex()
     }
   }
 
@@ -163,12 +166,12 @@ class ECKeyPair {
      * @param message Hash of the data that was signed.
      * @return An ECKeyPair containing only the public part, or null if recovery wasn't possible.
      */
+    @Suppress("ReturnCount")
     @JvmStatic
-    fun recoverFromSignature(recId: Int, sig: ECDSASignature, message: Sha256Hash): ECKeyPair? {
-      require(recId >= 0, { "recId must be positive" })
-      require(sig.r.signum() >= 0, { "r must be positive" })
-      require(sig.s.signum() >= 0, { "s must be positive" })
-      requireNotNull(message)
+    fun recoverFromSignature(recId: Int, sig: ECDSASignature, message: ByteArray): ECKeyPair? {
+      require(recId >= 0) { "recId must be positive" }
+      require(sig.r.signum() >= 0) { "r must be positive" }
+      require(sig.s.signum() >= 0) { "s must be positive" }
       // 1.0 For j from 0 to h   (h == recId here and the loop is outside this function)
       //   1.1 Let x = r + jn
       val n = curve.n  // Curve order.
@@ -193,7 +196,7 @@ class ECKeyPair {
       if (!R.multiply(n).isInfinity)
         return null
       //   1.5. Compute e from M using Steps 2 and 3 of ECDSA signature verification.
-      val e = message.toBigInteger()
+      val e = BigInteger(1, message)
       //   1.6. For k from 1 to 2 do the following.   (loop is outside this function via iterating recId)
       //   1.6.1. Compute a candidate public keyPair as:
       //               Q = mi(r) * (sR - eG)
@@ -286,7 +289,7 @@ fun String.ecKey() = this.dpk().ecKey()
  */
 @JvmOverloads
 fun generatePrivateFromStringPhrase(phrase: String, sequence: Int = 0, normalized: Boolean = true) =
-    ECKeyPair.fromPrivate(hash256(hash512("${phrase.let { if (normalized) it.toUpperCase() else it }} $sequence".toByteArray())), false)
+    ECKeyPair.fromPrivate("${phrase.let { if (normalized) it.toUpperCase() else it }} $sequence".toByteArray().hash512().hash256(), false)
 
 /**
  * Method generates private key from pass phrase provided by parameter of type [Passphrase]. If parameter [normalize] is true, provided pass phrase will be

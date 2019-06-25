@@ -1,11 +1,30 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
-import ch.decent.sdk.net.serialization.VoteId
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.Miner
+import ch.decent.sdk.model.MinerId
+import ch.decent.sdk.model.MinerVotes
+import ch.decent.sdk.model.MinerVotingInfo
+import ch.decent.sdk.model.SearchMinerVotingOrder
+import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.VoteId
+import ch.decent.sdk.model.operation.AccountUpdateOperation
+import ch.decent.sdk.net.model.request.GetActualVotes
+import ch.decent.sdk.net.model.request.GetAssetPerBlock
+import ch.decent.sdk.net.model.request.GetFeedsByMiner
+import ch.decent.sdk.net.model.request.GetMinerByAccount
+import ch.decent.sdk.net.model.request.GetMinerCount
+import ch.decent.sdk.net.model.request.GetMiners
+import ch.decent.sdk.net.model.request.GetNewAssetPerBlock
+import ch.decent.sdk.net.model.request.LookupMinerAccounts
+import ch.decent.sdk.net.model.request.LookupVoteIds
+import ch.decent.sdk.net.model.request.SearchMinerVoting
 import io.reactivex.Single
 import java.math.BigInteger
 
@@ -126,15 +145,18 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param accountId account object id, 1.2.*
    * @param minerIds list of miner account ids
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
   fun createVoteOperation(
       accountId: ChainObject,
-      minerIds: List<ChainObject>
+      minerIds: List<ChainObject>,
+      fee: Fee = Fee()
   ): Single<AccountUpdateOperation> =
       getMiners(minerIds).flatMap { miners ->
-        api.accountApi.get(accountId).map { AccountUpdateOperation(it, miners.asSequence().map { it.voteId }.toSet()) }
+        api.accountApi.get(accountId).map { AccountUpdateOperation(it, miners.asSequence().map { VoteId.parse(it.voteId) }.toSet(), fee) }
       }
 
   /**
@@ -142,14 +164,17 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param credentials account credentials
    * @param minerIds list of miner account ids
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
   fun vote(
-          credentials: Credentials,
-          minerIds: List<ChainObject>
+      credentials: Credentials,
+      minerIds: List<ChainObject>,
+      fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
-          createVoteOperation(credentials.account, minerIds).flatMap {
-            api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
-          }
+      createVoteOperation(credentials.account, minerIds, fee).flatMap {
+        api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
+      }
 }

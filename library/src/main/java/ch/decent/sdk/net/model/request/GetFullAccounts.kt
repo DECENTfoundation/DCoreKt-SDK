@@ -1,6 +1,10 @@
 package ch.decent.sdk.net.model.request
 
-import ch.decent.sdk.model.*
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.FullAccount
+import ch.decent.sdk.model.ObjectType
+import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.ApiGroup
 import com.google.gson.reflect.TypeToken
 

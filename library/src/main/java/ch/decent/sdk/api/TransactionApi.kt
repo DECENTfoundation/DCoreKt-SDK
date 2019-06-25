@@ -1,9 +1,20 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.ProcessedTransaction
+import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.net.model.request.GetProposedTransactions
+import ch.decent.sdk.net.model.request.GetRecentTransactionById
+import ch.decent.sdk.net.model.request.GetTransaction
+import ch.decent.sdk.net.model.request.GetTransactionById
+import ch.decent.sdk.net.model.request.GetTransactionHex
 import io.reactivex.Single
+import org.threeten.bp.Duration
 
 class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
@@ -14,7 +25,7 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   @JvmOverloads
-  fun createTransaction(operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<Transaction> =
+  fun createTransaction(operations: List<BaseOperation>, expiration: Duration = api.transactionExpiration): Single<Transaction> =
       api.core.prepareTransaction(operations, expiration)
 
   /**
@@ -24,7 +35,7 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   @JvmOverloads
-  fun createTransaction(operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<Transaction> =
+  fun createTransaction(operation: BaseOperation, expiration: Duration = api.transactionExpiration): Single<Transaction> =
       api.core.prepareTransaction(listOf(operation), expiration)
 
   /**

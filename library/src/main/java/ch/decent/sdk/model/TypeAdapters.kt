@@ -4,7 +4,16 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Wallet
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.crypto.dpk
+import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.operation.CustomOperation
+import ch.decent.sdk.model.operation.CustomOperationType
+import ch.decent.sdk.model.operation.EmptyOperation
+import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.SendMessageOperation
+import ch.decent.sdk.model.operation.UnknownOperation
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonNull
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory
 import com.google.gson.internal.Streams
@@ -13,6 +22,7 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import org.threeten.bp.LocalDateTime
+import java.lang.reflect.ParameterizedType
 import java.math.BigInteger
 
 object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
@@ -55,7 +65,46 @@ object AuthMapAdapter : TypeAdapter<AuthMap>() {
   }
 }
 
-@Suppress("UNCHECKED_CAST")
+object NftModelAdapter : TypeAdapter<RawNft>() {
+  override fun write(out: JsonWriter?, value: RawNft?) {}
+
+  override fun read(reader: JsonReader): RawNft =
+      RawNft(Streams.parse(reader).asJsonArray)
+}
+
+
+object MapAdapterFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (Map::class.javaObjectType == type.rawType) {
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T) {
+          out.beginArray()
+          (value as Map<*, *>).entries.forEach {
+            out.beginArray()
+            writeAny(out, it.key)
+            writeAny(out, it.value)
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(`in`: JsonReader?): T =
+            gson.getDelegateAdapter(this@MapAdapterFactory, type).read(`in`)
+      }
+    }
+    return null
+  }
+
+  fun writeAny(out: JsonWriter, value: Any?) {
+    when (value) {
+      is Number -> out.value(value)
+      is String -> out.value(value)
+      is Boolean -> out.value(value)
+    }
+  }
+}
+
+@Suppress("UNCHECKED_CAST", "NestedBlockDepth")
 object OperationTypeFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
     if (type.rawType == BaseOperation::class.javaObjectType) {
@@ -72,17 +121,87 @@ object OperationTypeFactory : TypeAdapterFactory {
         override fun read(reader: JsonReader): T? {
           val el = Streams.parse(reader)
           val idx = el.asJsonArray[0].asInt
-          val op = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
+          val opType = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
           val obj = el.asJsonArray[1].asJsonObject
-          return if (op == OperationType.UNKNOWN_OPERATION) UnknownOperation(idx) as T?
-          else op.clazz?.let {
+
+          val op = if (opType == OperationType.UNKNOWN_OPERATION) UnknownOperation(idx)
+          else opType.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
-            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = op } as T?
-          } ?: EmptyOperation(op) as T?
+            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = opType }
+          } ?: EmptyOperation(opType)
+
+          return op.parseCustomOp(gson) as T?
         }
+
+        private fun BaseOperation.parseCustomOp(gson: Gson): BaseOperation =
+            if (this !is CustomOperation) this
+            else when (id) {
+              CustomOperationType.MESSAGING.ordinal -> SendMessageOperation(gson, this)
+              else -> this
+            }
+
       }
     }
     return null
+  }
+}
+
+// typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions;
+// fixed_max_supply_struct has index 1 therefore we write '1'
+@Suppress("UNCHECKED_CAST")
+object StaticVariantFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, typeToken: TypeToken<T>): TypeAdapter<T?>? {
+    if (!StaticVariant::class.javaObjectType.isAssignableFrom(typeToken.rawType)) return null
+    return if (StaticVariantParametrized::class.javaObjectType.isAssignableFrom(typeToken.rawType)) {
+      val types = (typeToken.type as ParameterizedType).actualTypeArguments.mapIndexed { idx, t -> idx to TypeToken.get(t) }
+      val delegates = types
+          .filter { (_, t) -> t.rawType != Unit::class.javaObjectType }
+          .map { (idx, t) -> idx to gson.getDelegateAdapter(this, t) }
+          .toMap()
+
+      object : TypeAdapter<T?>() {
+        override fun write(out: JsonWriter, value: T?) {
+          out.beginArray()
+          delegates.map { (idx, adapter) ->
+            out.beginArray()
+            out.value(idx)
+            (adapter as TypeAdapter<Any>).write(out, (value as StaticVariantParametrized).objects[idx])
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(reader: JsonReader): T? {
+          val arr = Streams.parse(reader) as JsonArray
+          val vals = arr.map { it.asJsonArray[0].asInt to it.asJsonArray[1] }.toMap()
+          val objs = types.map { (idx, t) ->
+            if (Unit::class.javaObjectType == t.rawType) Unit
+            else delegates[idx]?.fromJsonTree(vals.getOrDefault(idx, JsonNull.INSTANCE))
+          }
+          @Suppress("SpreadOperator")
+          return typeToken.rawType.constructors[0].newInstance(*objs.toTypedArray()) as T?
+        }
+      }
+    } else {
+      val delegate = gson.getDelegateAdapter(this, typeToken) as TypeAdapter<T>
+      object : TypeAdapter<T?>() {
+        override fun write(out: JsonWriter, value: T?) {
+          out.beginArray()
+          (value as StaticVariantSingle<T>?)?.get?.let { (idx, obj) ->
+            out.beginArray()
+            out.value(idx)
+            delegate.write(out, obj)
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(reader: JsonReader): T? {
+          val arr = Streams.parse(reader) as JsonArray
+          return if (arr.size() != 0) delegate.fromJsonTree(arr[0].asJsonArray[1]) else null
+        }
+      }
+    }
   }
 }
 
@@ -168,8 +287,8 @@ object FeeParamAdapter : TypeAdapter<FeeParameter>() {
   override fun read(reader: JsonReader): FeeParameter {
     reader.beginObject()
     reader.nextName()
-    val fee = AssetAmount(BigInteger(reader.nextString()))
-    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); AssetAmount(BigInteger(reader.nextString())) }
+    val fee = AssetAmount(reader.nextString().toLong())
+    val perKb = reader.takeIf { reader.hasNext() }?.run { nextName(); AssetAmount(reader.nextString().toLong()) }
     reader.endObject()
     return FeeParameter(fee, perKb)
   }
@@ -181,4 +300,37 @@ object OperationTypeAdapter : TypeAdapter<OperationType>() {
   }
 
   override fun read(reader: JsonReader): OperationType = OperationType.values().getOrElse(reader.nextInt()) { OperationType.UNKNOWN_OPERATION }
+}
+
+object VoteIdAdapter : TypeAdapter<VoteId>() {
+  override fun write(out: JsonWriter, value: VoteId) {
+    out.value(value.toString())
+  }
+
+  override fun read(reader: JsonReader): VoteId = VoteId.parse(reader.nextString())
+}
+
+object CoAuthorsAdapter : TypeAdapter<CoAuthors>() {
+  override fun write(out: JsonWriter, value: CoAuthors) {
+    out.beginArray()
+    value.authors.forEach { (id, bp) ->
+      out.beginArray()
+      out.value(id.objectId)
+      out.value(bp)
+      out.endArray()
+    }
+    out.endArray()
+  }
+
+  override fun read(reader: JsonReader): CoAuthors {
+    val map = mutableMapOf<ChainObject, Int>()
+    reader.beginArray()
+    while (reader.hasNext()) {
+      reader.beginArray()
+      map[reader.nextString().toChainObject()] = reader.nextInt()
+      reader.endArray()
+    }
+    reader.endArray()
+    return CoAuthors(map)
+  }
 }

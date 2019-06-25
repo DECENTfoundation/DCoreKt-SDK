@@ -1,6 +1,8 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.*
+import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.Helpers
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
@@ -22,7 +24,7 @@ class CallbackApiTest {
   }
 
   @Test fun `should fail for HTTP`() {
-    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.restUrl)
+    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.httpUrl)
 
     val test = api.callbackApi.onBlockApplied()
         .subscribeOn(Schedulers.newThread())

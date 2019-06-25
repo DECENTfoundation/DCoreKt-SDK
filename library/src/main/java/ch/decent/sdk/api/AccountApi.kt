@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
@@ -5,8 +7,35 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.*
-import ch.decent.sdk.net.model.request.*
+import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountOptions
+import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.ObjectType
+import ch.decent.sdk.model.SearchAccountHistoryOrder
+import ch.decent.sdk.model.SearchAccountsOrder
+import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.TransactionDetail
+import ch.decent.sdk.model.operation.AccountCreateOperation
+import ch.decent.sdk.model.operation.AccountUpdateOperation
+import ch.decent.sdk.model.operation.AssetIssueOperation
+import ch.decent.sdk.model.operation.NftIssueOperation
+import ch.decent.sdk.model.operation.NftTransferOperation
+import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.net.model.request.GetAccountById
+import ch.decent.sdk.net.model.request.GetAccountByName
+import ch.decent.sdk.net.model.request.GetAccountCount
+import ch.decent.sdk.net.model.request.GetAccountReferences
+import ch.decent.sdk.net.model.request.GetFullAccounts
+import ch.decent.sdk.net.model.request.GetKeyReferences
+import ch.decent.sdk.net.model.request.LookupAccountNames
+import ch.decent.sdk.net.model.request.LookupAccounts
+import ch.decent.sdk.net.model.request.SearchAccountHistory
+import ch.decent.sdk.net.model.request.SearchAccounts
 import io.reactivex.Single
 
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -169,6 +198,21 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
       getByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
 
+
+  /**
+   * Create a memo. Can be used in [TransferOperation], [AssetIssueOperation], [NftIssueOperation], [NftTransferOperation]
+   *
+   * @param message text message to send
+   * @param recipient account name or id, mandatory for encrypted message
+   * @param keyPair sender's key pair, mandatory for encrypted message
+   */
+  fun createMemo(message: String, recipient: String? = null, keyPair: ECKeyPair? = null) =
+      if (keyPair != null && recipient != null) {
+        get(recipient).map { Memo(message, keyPair, it.primaryAddress) }
+      } else {
+        Single.just(Memo(message))
+      }
+
   /**
    * Create a transfer operation.
    *
@@ -177,7 +221,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param amount amount to send with asset type
    * @param memo optional message
    * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
+   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
@@ -188,7 +233,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       amount: AssetAmount,
       memo: String? = null,
       encrypted: Boolean = true,
-      fee: AssetAmount = BaseOperation.FEE_UNSET
+      fee: Fee = Fee()
   ): Single<TransferOperation> =
       if ((memo.isNullOrBlank() || !encrypted) && ChainObject.isValid(nameOrId)) {
         Single.just(TransferOperation(credentials.account, nameOrId.toChainObject(), amount, memo?.let { Memo(it) }, fee))
@@ -207,7 +252,8 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param amount amount to send with asset type
    * @param memo optional message
    * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
+   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
@@ -218,11 +264,30 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       amount: AssetAmount,
       memo: String? = null,
       encrypted: Boolean = true,
-      fee: AssetAmount = BaseOperation.FEE_UNSET
+      fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       createTransfer(credentials, nameOrId, amount, memo, encrypted, fee).flatMap {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
       }
+
+  /**
+   * Create a register new account operation.
+   *
+   * @param registrar account id used to register the new account
+   * @param name new account name
+   * @param address new account public key address
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun createAccountOperation(
+      registrar: ChainObject,
+      name: String,
+      address: Address,
+      fee: Fee = Fee()
+  ): Single<AccountCreateOperation> = Single.just(AccountCreateOperation(registrar, name, address, fee))
 
   /**
    * Create a new account.
@@ -230,16 +295,62 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param registrar credentials used to register the new account
    * @param name new account name
    * @param address new account public key address
-   * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+   * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
+   * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun create(
       registrar: Credentials,
       name: String,
       address: Address,
-      fee: AssetAmount = BaseOperation.FEE_UNSET
-  ): Single<TransactionConfirmation> =
-      api.broadcastApi.broadcastWithCallback(registrar.keyPair, AccountCreateOperation(registrar.account, name, address, fee))
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createAccountOperation(registrar.account, name, address, fee)
+      .broadcast(registrar)
+
+  /**
+   * Create update account operation. Fills model with actual account values.
+   *
+   * @param nameOrId account id or name
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return modifiable account update operation
+   */
+  @JvmOverloads
+  fun createUpdateOperation(
+      nameOrId: String,
+      fee: Fee = Fee()
+  ): Single<AccountUpdateOperation> = get(nameOrId).map { AccountUpdateOperation(it, fee) }
+
+  /**
+   * Update account
+   *
+   * @param credentials account credentials
+   * @param options new account options
+   * @param active new active authority
+   * @param owner new owner authority
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun update(
+      credentials: Credentials,
+      options: AccountOptions? = null,
+      active: Authority? = null,
+      owner: Authority? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createUpdateOperation(credentials.account.objectId, fee)
+      .map {
+        it.apply {
+          this.options = options
+          this.active = active
+          this.owner = owner
+        }
+      }
+      .broadcast(credentials)
 
 }

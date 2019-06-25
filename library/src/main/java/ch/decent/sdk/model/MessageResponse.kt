@@ -3,6 +3,8 @@ package ch.decent.sdk.model
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.model.types.UInt64
+import ch.decent.sdk.utils.SIZE_32
 import ch.decent.sdk.utils.decryptAesWithChecksum
 import ch.decent.sdk.utils.secret
 import ch.decent.sdk.utils.unhex
@@ -23,6 +25,7 @@ data class Message(
     val encrypted: Boolean = senderAddress != null && receiverAddress != null
 ) {
 
+  @Suppress("TooGenericExceptionCaught")
   private fun decryptOrNull(keyPair: ECKeyPair, address: Address) = try {
     decryptAesWithChecksum(keyPair.secret(address, nonce), message.unhex())
   } catch (ex: Exception) {
@@ -49,7 +52,7 @@ data class Message(
     fun create(response: MessageResponse) =
         response.receiversData.map {
           Message(response.id, response.created, response.sender, response.senderAddress, it.receiver, it.receiverAddress, it.data, it.nonce).run {
-            if (encrypted.not()) copy(message = message.drop(8).unhex().toString(Charset.forName("UTF-8")))
+            if (encrypted.not()) copy(message = message.drop(SIZE_32 * 2).unhex().toString(Charset.forName("UTF-8")))
             else this
           }
         }
@@ -68,7 +71,7 @@ data class MessageResponse(
 data class MessageReceiver(
     @SerializedName("receiver") val receiver: ChainObject,
     @SerializedName("receiver_pubkey") val receiverAddress: Address?,
-    @SerializedName("nonce") val nonce: BigInteger,
+    @SerializedName("nonce") @UInt64 val nonce: BigInteger,
     @SerializedName("data") val data: String
 )
 
@@ -91,5 +94,5 @@ data class MessagePayloadReceiver(
     @SerializedName("to") val to: ChainObject,
     @SerializedName("data") val data: String,
     @SerializedName("pub_to") val toAddress: Address? = null,
-    @SerializedName("nonce") val nonce: BigInteger? = null
+    @SerializedName("nonce") @UInt64 val nonce: BigInteger? = null
 )

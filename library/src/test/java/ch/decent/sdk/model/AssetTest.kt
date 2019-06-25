@@ -4,7 +4,6 @@ import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreSdk
 import org.junit.Assert
 import org.junit.Test
-import java.math.BigInteger
 import java.math.RoundingMode
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -15,22 +14,27 @@ class AssetTest {
 
   private fun testAsset(assetId: ChainObject, base: AssetAmount, quote: AssetAmount) =
       Asset(
-          id = assetId,
-          options = Asset.Options(
-              exchangeRate = Asset.ExchangeRate(
+          assetId,
+          "TEST",
+          0,
+          ObjectType.ACCOUNT_OBJECT.genericId,
+          "",
+          AssetOptions(
+              exchangeRate = ExchangeRate(
                   base = base,
                   quote = quote
               ),
               exchangeable = true
-          )
+          ),
+          ObjectType.ASSET_DYNAMIC_DATA.genericId
       )
 
   private fun testConversionToDct(
       assetId: ChainObject,
-      amountToConvert: BigInteger,
+      amountToConvert: Long,
       base: AssetAmount,
       quote: AssetAmount,
-      expectedAmount: BigInteger,
+      expectedAmount: Long,
       roundingMode: RoundingMode
   ) {
     val testAsset = testAsset(assetId, base, quote)
@@ -42,10 +46,10 @@ class AssetTest {
 
   private fun testConversionFromDct(
       assetId: ChainObject,
-      amountToConvert: BigInteger,
+      amountToConvert: Long,
       base: AssetAmount,
       quote: AssetAmount,
-      expectedAmount: BigInteger,
+      expectedAmount: Long,
       roundingMode: RoundingMode
   ) {
     val testAsset = testAsset(assetId, base, quote)
@@ -60,10 +64,10 @@ class AssetTest {
   fun `should successfully convert to DCT with rounding UP`() {
     testConversionToDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(10.toBigInteger()),
-        quote = AssetAmount(3.toBigInteger(), otherCoin),
-        expectedAmount = 17.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(10),
+        quote = AssetAmount(3, otherCoin),
+        expectedAmount = 17,
         roundingMode = RoundingMode.UP
     )
   }
@@ -72,10 +76,10 @@ class AssetTest {
   fun `should successfully convert to DCT with rounding UP and switched base and quote`() {
     testConversionToDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(3.toBigInteger(), otherCoin),
-        quote = AssetAmount(10.toBigInteger()),
-        expectedAmount = 17.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(3, otherCoin),
+        quote = AssetAmount(10),
+        expectedAmount = 17,
         roundingMode = RoundingMode.UP
     )
   }
@@ -84,10 +88,10 @@ class AssetTest {
   fun `should successfully convert from DCT with rounding UP`() {
     testConversionFromDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(10.toBigInteger()),
-        quote = AssetAmount(3.toBigInteger(), otherCoin),
-        expectedAmount = 2.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(10),
+        quote = AssetAmount(3, otherCoin),
+        expectedAmount = 2,
         roundingMode = RoundingMode.UP
     )
   }
@@ -96,10 +100,10 @@ class AssetTest {
   fun `should successfully convert from DCT with rounding UP and switched base and quote`() {
     testConversionFromDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(3.toBigInteger(), otherCoin),
-        quote = AssetAmount(10.toBigInteger()),
-        expectedAmount = 2.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(3, otherCoin),
+        quote = AssetAmount(10),
+        expectedAmount = 2,
         roundingMode = RoundingMode.UP
     )
   }
@@ -108,10 +112,10 @@ class AssetTest {
   fun `should successfully convert to DCT with rounding DOWN`() {
     testConversionToDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(10.toBigInteger()),
-        quote = AssetAmount(3.toBigInteger(), otherCoin),
-        expectedAmount = 16.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(10),
+        quote = AssetAmount(3, otherCoin),
+        expectedAmount = 16,
         roundingMode = RoundingMode.DOWN
     )
   }
@@ -120,10 +124,10 @@ class AssetTest {
   fun `should successfully convert to DCT with rounding DOWN and switched base and quote`() {
     testConversionToDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(3.toBigInteger(), otherCoin),
-        quote = AssetAmount(10.toBigInteger()),
-        expectedAmount = 16.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(3, otherCoin),
+        quote = AssetAmount(10),
+        expectedAmount = 16,
         roundingMode = RoundingMode.DOWN
     )
   }
@@ -132,10 +136,10 @@ class AssetTest {
   fun `should successfully convert from DCT with rounding DOWN`() {
     testConversionFromDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(10.toBigInteger()),
-        quote = AssetAmount(3.toBigInteger(), otherCoin),
-        expectedAmount = 1.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(10),
+        quote = AssetAmount(3, otherCoin),
+        expectedAmount = 1,
         roundingMode = RoundingMode.DOWN
     )
   }
@@ -144,10 +148,10 @@ class AssetTest {
   fun `should successfully convert from DCT with rounding DOWN and switched base and quote`() {
     testConversionFromDct(
         assetId = otherCoin,
-        amountToConvert = 5.toBigInteger(),
-        base = AssetAmount(3.toBigInteger(), otherCoin),
-        quote = AssetAmount(10.toBigInteger()),
-        expectedAmount = 1.toBigInteger(),
+        amountToConvert = 5,
+        base = AssetAmount(3, otherCoin),
+        quote = AssetAmount(10),
+        expectedAmount = 1,
         roundingMode = RoundingMode.DOWN
     )
   }
@@ -163,11 +167,11 @@ class AssetTest {
 
   @Test(expected = IllegalArgumentException::class)
   fun `should throw IllegalArgumentException for quote amount not greater than zero`() {
-    testAsset(otherCoin, AssetAmount(3.toBigInteger(), otherCoin), AssetAmount((-1).toBigInteger())).convertFromDCT(1.toBigInteger(), RoundingMode.DOWN)
+    testAsset(otherCoin, AssetAmount(3, otherCoin), AssetAmount((-1))).convertFromDCT(1, RoundingMode.DOWN)
   }
 
   @Test(expected = IllegalArgumentException::class)
   fun `should throw IllegalArgumentException for base amount not greater than zero`() {
-    testAsset(otherCoin, AssetAmount((-1).toBigInteger(), otherCoin), AssetAmount(3.toBigInteger())).convertFromDCT(1.toBigInteger(), RoundingMode.DOWN)
+    testAsset(otherCoin, AssetAmount((-1), otherCoin), AssetAmount(3)).convertFromDCT(1, RoundingMode.DOWN)
   }
 }

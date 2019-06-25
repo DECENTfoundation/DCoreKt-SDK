@@ -10,7 +10,7 @@ data class Config(
     @SerializedName("GRAPHENE_MAX_ACCOUNT_NAME_LENGTH") val grapheneMaxAccountNameLength: Int,
     @SerializedName("GRAPHENE_MIN_ASSET_SYMBOL_LENGTH") val grapheneMinAssetSymbolLength: Int,
     @SerializedName("GRAPHENE_MAX_ASSET_SYMBOL_LENGTH") val grapheneMaxAssetSymbolLength: Int,
-    @SerializedName("GRAPHENE_MAX_SHARE_SUPPLY") val grapheneMaxShareSupply: BigInteger,
+    @SerializedName("GRAPHENE_MAX_SHARE_SUPPLY") val grapheneMaxShareSupply: Long,
     @SerializedName("GRAPHENE_MAX_PAY_RATE") val grapheneMaxPayRate: Int,
     @SerializedName("GRAPHENE_MAX_SIG_CHECK_DEPTH") val grapheneMaxSigCheckDepth: Int,
     @SerializedName("GRAPHENE_MIN_TRANSACTION_SIZE_LIMIT") val grapheneMinTransactionSizeLimit: Int,
@@ -60,7 +60,7 @@ data class Config(
     @SerializedName("GRAPHENE_DEFAULT_BURN_PERCENT_OF_FEE") val grapheneDefaultBurnPercentOfFee: Int,
     @SerializedName("GRAPHENE_MINER_PAY_PERCENT_PRECISION") val grapheneMinerPayPercentPrecision: Int,
     @SerializedName("GRAPHENE_DEFAULT_MAX_ASSERT_OPCODE") val grapheneDefaultMaxAssertOpcode: Int,
-    @SerializedName("GRAPHENE_DEFAULT_FEE_LIQUIDATION_THRESHOLD") val grapheneDefaultFeeLiquidationThreshold: Int,
+    @SerializedName("GRAPHENE_DEFAULT_FEE_LIQUIDATION_THRESHOLD") val grapheneDefaultFeeLiquidationThreshold: BigInteger,
     @SerializedName("GRAPHENE_DEFAULT_ACCOUNTS_PER_FEE_SCALE") val grapheneDefaultAccountsPerFeeScale: Int,
     @SerializedName("GRAPHENE_DEFAULT_ACCOUNT_FEE_SCALE_BITSHIFTS") val grapheneDefaultAccountFeeScaleBitshifts: Int,
     @SerializedName("GRAPHENE_MAX_WORKER_NAME_LENGTH") val grapheneMaxWorkerNameLength: Int,
@@ -69,11 +69,10 @@ data class Config(
     @SerializedName("GRAPHENE_FAR_SCHEDULE_CTR_IV") val grapheneFarScheduleCtrIv: BigInteger,
     @SerializedName("GRAPHENE_CORE_ASSET_CYCLE_RATE") val grapheneCoreAssetCycleRate: Int,
     @SerializedName("GRAPHENE_CORE_ASSET_CYCLE_RATE_BITS") val grapheneCoreAssetCycleRateBits: Int,
-    @SerializedName("GRAPHENE_DEFAULT_MINER_PAY_PER_BLOCK") val grapheneDefaultMinerPayPerBlock: Int,
+    @SerializedName("GRAPHENE_DEFAULT_MINER_PAY_PER_BLOCK") val grapheneDefaultMinerPayPerBlock: BigInteger,
     @SerializedName("GRAPHENE_DEFAULT_MINER_PAY_VESTING_SECONDS") val grapheneDefaultMinerPayVestingSeconds: Int,
     @SerializedName("GRAPHENE_MAX_INTEREST_APR") val grapheneMaxInterestApr: Int,
     @SerializedName("GRAPHENE_MINER_ACCOUNT") val grapheneMinerAccount: ChainObject,
     @SerializedName("GRAPHENE_NULL_ACCOUNT") val grapheneNullAccount: ChainObject,
     @SerializedName("GRAPHENE_TEMP_ACCOUNT") val grapheneTempAccount: ChainObject
-
 )

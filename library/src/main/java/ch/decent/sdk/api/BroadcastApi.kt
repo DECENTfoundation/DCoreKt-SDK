@@ -1,17 +1,19 @@
+@file:Suppress("TooManyFunctions", "LongParameterList")
+
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.model.BaseOperation
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.net.model.request.BroadcastTransaction
 import ch.decent.sdk.net.model.request.BroadcastTransactionSynchronous
 import ch.decent.sdk.net.model.request.BroadcastTransactionWithCallback
 import io.reactivex.Single
+import org.threeten.bp.Duration
 
 class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
-
 
   /**
    * broadcast transaction to DCore
@@ -26,7 +28,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   @JvmOverloads
-  fun broadcast(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<Unit> =
+  fun broadcast(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Duration = api.transactionExpiration): Single<Unit> =
       api.transactionApi.createTransaction(operations, expiration)
           .map { it.withSignature(privateKey) }
           .flatMap { broadcast(it) }
@@ -38,7 +40,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   @JvmOverloads
-  fun broadcast(privateKey: ECKeyPair, operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<Unit> =
+  fun broadcast(privateKey: ECKeyPair, operation: BaseOperation, expiration: Duration = api.transactionExpiration): Single<Unit> =
       broadcast(privateKey, listOf(operation), expiration)
 
   /**
@@ -48,7 +50,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   @JvmOverloads
-  fun broadcast(privateKey: String, operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<Unit> =
+  fun broadcast(privateKey: String, operations: List<BaseOperation>, expiration: Duration = api.transactionExpiration): Single<Unit> =
       broadcast(ECKeyPair.fromBase58(privateKey), operations, expiration)
 
   /**
@@ -58,7 +60,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
   @JvmOverloads
-  fun broadcast(privateKey: String, operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<Unit> =
+  fun broadcast(privateKey: String, operation: BaseOperation, expiration: Duration = api.transactionExpiration): Single<Unit> =
       broadcast(privateKey, listOf(operation), expiration)
 
   /**
@@ -68,7 +70,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   fun broadcastWithCallback(transaction: Transaction): Single<TransactionConfirmation> =
-      BroadcastTransactionWithCallback(transaction).toRequest().firstOrError()
+      BroadcastTransactionWithCallback(transaction).toRequest()
 
   /**
    * broadcast operations to DCore with callback when applied
@@ -79,7 +81,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   @JvmOverloads
-  fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<TransactionConfirmation> =
+  fun broadcastWithCallback(privateKey: ECKeyPair, operations: List<BaseOperation>, expiration: Duration = api.transactionExpiration): Single<TransactionConfirmation> =
       api.transactionApi.createTransaction(operations, expiration)
           .map { it.withSignature(privateKey) }
           .flatMap { broadcastWithCallback(it) }
@@ -94,7 +96,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   @JvmOverloads
-  fun broadcastWithCallback(privateKey: ECKeyPair, operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<TransactionConfirmation> =
+  fun broadcastWithCallback(privateKey: ECKeyPair, operation: BaseOperation, expiration: Duration = api.transactionExpiration): Single<TransactionConfirmation> =
       broadcastWithCallback(privateKey, listOf(operation), expiration)
 
   /**
@@ -106,7 +108,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   @JvmOverloads
-  fun broadcastWithCallback(privateKey: String, operations: List<BaseOperation>, expiration: Int = api.transactionExpiration): Single<TransactionConfirmation> =
+  fun broadcastWithCallback(privateKey: String, operations: List<BaseOperation>, expiration: Duration = api.transactionExpiration): Single<TransactionConfirmation> =
       broadcastWithCallback(ECKeyPair.fromBase58(privateKey), operations, expiration)
 
   /**
@@ -118,7 +120,7 @@ class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a transaction confirmation
    */
   @JvmOverloads
-  fun broadcastWithCallback(privateKey: String, operation: BaseOperation, expiration: Int = api.transactionExpiration): Single<TransactionConfirmation> =
+  fun broadcastWithCallback(privateKey: String, operation: BaseOperation, expiration: Duration = api.transactionExpiration): Single<TransactionConfirmation> =
       broadcastWithCallback(ECKeyPair.fromBase58(privateKey), listOf(operation), expiration)
 
   // todo

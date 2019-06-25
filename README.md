@@ -43,6 +43,8 @@ Usage
 
 You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-java-android).
 
+You can find developer documentation for latest release [here](https://decentfoundation.github.io/DCoreKt-SDK/).
+
 Use `DCoreSdk` to initialize the API.
 The `DCoreApi` provides different groups of APIs for accessing the blockchain and default configuration values.
 
@@ -51,7 +53,7 @@ Use the `BroadcastApi` to apply the operations to DCore or use appropriate metho
 
 Access api using rest
 ```kotlin
-import ch.decent.sdk.model.toChainObject
+import toChainObject
 import okhttp3.OkHttpClient
 
 // create API for HTTP
@@ -64,9 +66,9 @@ val disposable = api.accountApi.get("public-account-10").subscribe { account ->
 
 Access api using websocket
 ```kotlin
-import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.toChainObject
+import Credentials
+import AssetAmount
+import toChainObject
 import okhttp3.OkHttpClient
 
 // create API for websocket

@@ -1,5 +1,6 @@
 package ch.decent.sdk.model
 
+import ch.decent.sdk.model.types.UInt32
 import com.google.gson.annotations.SerializedName
 
 data class FeeSchedule(
@@ -7,5 +8,5 @@ data class FeeSchedule(
      * operation types int keys
      */
     @SerializedName("parameters") val parameters: Map<Int, FeeParameter>,
-    @SerializedName("scale") val scale: Long
+    @SerializedName("scale") @UInt32 val scale: Long
 )
