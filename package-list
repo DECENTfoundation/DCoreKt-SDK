@@ -4,6 +4,7 @@ ch.decent.sdk.crypto
 ch.decent.sdk.crypto.dictonaries
 ch.decent.sdk.exception
 ch.decent.sdk.model
+ch.decent.sdk.model.annotations
 ch.decent.sdk.model.operation
 ch.decent.sdk.model.types
 ch.decent.sdk.net
