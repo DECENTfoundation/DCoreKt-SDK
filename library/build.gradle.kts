@@ -37,6 +37,7 @@ dependencies {
   testImplementation(TestLibs.mockServer)
 
   errorprone(Libs.errorProne)
+  errorproneJavac(Libs.errorProneJavac)
 }
 
 detekt {

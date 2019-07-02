@@ -460,7 +460,7 @@ object Serializer {
     append(buffer, obj.modifier)
     append(buffer, obj.id)
     buffer.write(Varint.writeUnsignedVarLong(obj.data.size.toLong()))
-    obj.data.entries.reversed().forEach {
+    obj.data.entries.forEach {
       append(buffer, it.key)
       variantAdapter(buffer, it.value)
     }

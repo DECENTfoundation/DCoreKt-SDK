@@ -16,7 +16,7 @@ before_install:
   - curl -Ls -o codacy-coverage-reporter-assembly.jar "https://dl.bintray.com/codacy/Binaries/${LATEST_VERSION}/codacy-coverage-reporter-assembly.jar"
 
 jdk:
-  - oraclejdk9
+  - oraclejdk8
 
 before_script:
 #  - ls -al

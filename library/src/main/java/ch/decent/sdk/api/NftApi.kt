@@ -420,7 +420,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       data: T? = null,
       memo: Memo? = null,
       fee: Fee = Fee()
-  ): Single<NftIssueOperation> = get(idOrSymbol).map { NftIssueOperation(issuer, it.id, to, data?.values() ?: emptyList(), memo, fee) }
+  ): Single<NftIssueOperation> = getId(idOrSymbol).map { NftIssueOperation(issuer, it, to, data?.values() ?: emptyList(), memo, fee) }
 
   /**
    * Issue NFT. Creates a NFT data instance.
@@ -551,6 +551,10 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createUpdateDataOperation(credentials.account, id, newData, fee)
       .broadcast(credentials)
+
+  private fun getId(idOrString: String): Single<ChainObject> =
+      if (ChainObject.isValid(idOrString)) Single.just(idOrString.toChainObject())
+      else getBySymbol(idOrString).map { it.id }
 
   private fun <T : NftModel> Single<List<NftData<RawNft>>>.make(clazz: KClass<T>) =
       map { it.map { nft -> NftData(nft, clazz) } }

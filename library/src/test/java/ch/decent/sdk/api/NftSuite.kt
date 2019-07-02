@@ -193,7 +193,7 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get NFT data by id raw`() {
-    api.nftApi.getData("1.11.0".toChainObject()).testCheck()
+    api.nftApi.getDataRaw("1.11.0".toChainObject()).testCheck()
   }
 
   @Test fun `should get count of NFTs`() {
