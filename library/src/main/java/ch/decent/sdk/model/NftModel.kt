@@ -16,7 +16,7 @@ interface NftModel {
 
   @Suppress("UNCHECKED_CAST")
   fun createUpdate(): Map<String, Variant> = this::class.declaredMemberProperties
-      .filter { it.findAnnotation<Modifiable>() != null }
+      .filter { it.findAnnotation<Modifiable>()?.modifiable ?: NftDataType.ModifiableBy.NOBODY != NftDataType.ModifiableBy.NOBODY }
       .associate { it.name to (it as KProperty1<NftModel, Any>).get(this) }
 
   companion object {

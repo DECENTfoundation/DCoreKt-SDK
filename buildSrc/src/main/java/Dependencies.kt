@@ -25,6 +25,7 @@ object Versions {
 
   val errorPronePlugin = "0.8"
   val errorProne = "2.3.3"
+  val errorProneJavac = "9+181-r4173-1"
   val dokka = "0.9.16"
   val detekt = "1.0.0-RC14"
   val dockerCompose = "0.9.4"
@@ -59,6 +60,7 @@ object Libs {
   val bouncyProv = "org.bouncycastle:bcprov-jdk15on:${Versions.bouncyProv}"
 
   val errorProne = "com.google.errorprone:error_prone_core:${Versions.errorProne}"
+  val errorProneJavac = "com.google.errorprone:javac:${Versions.errorProneJavac}"
 }
 
 object TestLibs {
