@@ -345,7 +345,7 @@ class SerializerTest : TimeOutTest() {
   }
 
   @Test fun `should serialize nft update data operation`() {
-    val expected = "2d20a1070000000000001b010305656174656e040005636f6c6f7205037265640473697a6502010000000000000000"
+    val expected = "2d20a1070000000000001b01030473697a6502010000000000000005636f6c6f72050372656405656174656e040000"
     val op = NftUpdateDataOperation(
         "1.2.27".toChainObject(),
         "1.11.1".toChainObject(),

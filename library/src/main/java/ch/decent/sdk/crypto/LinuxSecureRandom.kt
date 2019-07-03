@@ -42,7 +42,7 @@ class LinuxSecureRandom : SecureRandomSpi() {
 
   private val dis: DataInputStream
 
-  private class LinuxSecureRandomProvider : Provider("LinuxSecureRandom", "1.0", "A Linux specific random number provider that uses /dev/urandom") {
+  private class LinuxSecureRandomProvider : Provider("LinuxSecureRandom", 1.0, "A Linux specific random number provider that uses /dev/urandom") {
     init {
       put("SecureRandom.LinuxSecureRandom", LinuxSecureRandom::class.java.name)
     }
