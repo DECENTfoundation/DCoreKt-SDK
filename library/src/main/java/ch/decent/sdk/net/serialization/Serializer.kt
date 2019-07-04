@@ -296,7 +296,7 @@ object Serializer {
     append(buffer, obj.exchangeable)
     append(buffer, obj.extensions != null) // size of extensions flat_set
     obj.extensions?.let {
-      buffer.writeByte(it.get.first)
+      buffer.writeByte(it.index)
       append(buffer, it.isFixedMaxSupply)
     }
   }

@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName
 interface StaticVariant
 
 interface StaticVariantSingle<T> : StaticVariant {
-  val get: Pair<Int, T>
+  val index: Int
+  val value: T
 }
 
 abstract class StaticVariantParametrized(val objects: List<Any?>) : StaticVariant
@@ -20,6 +21,9 @@ data class FixedMaxSupply(
 
   // typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions
   // fixed_max_supply_struct has index 1 therefore we write '1''
-  override val get: Pair<Int, FixedMaxSupply>
-    get() = 1 to this
+  override val index: Int
+    get() = 1
+
+  override val value: FixedMaxSupply
+    get() = this
 }

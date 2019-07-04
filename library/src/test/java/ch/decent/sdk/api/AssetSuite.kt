@@ -4,6 +4,7 @@ import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.ecKey
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.ExchangeRateValues
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.operation.AssetClaimFeesOperation
 import ch.decent.sdk.model.operation.AssetFundPoolsOperation
@@ -51,7 +52,7 @@ class AssetOperationsTest : BaseOperationsTest() {
     api.assetApi.update(
         Helpers.credentials,
         Helpers.createAsset,
-        1 to 50,
+        ExchangeRateValues(1, 50),
         "some nested asset",
         true,
         System.currentTimeMillis() / 1000

@@ -187,10 +187,10 @@ object StaticVariantFactory : TypeAdapterFactory {
       object : TypeAdapter<T?>() {
         override fun write(out: JsonWriter, value: T?) {
           out.beginArray()
-          (value as StaticVariantSingle<T>?)?.get?.let { (idx, obj) ->
+          (value as StaticVariantSingle<T>?)?.let {
             out.beginArray()
-            out.value(idx)
-            delegate.write(out, obj)
+            out.value(it.index)
+            delegate.write(out, it.value)
             out.endArray()
           }
           out.endArray()
