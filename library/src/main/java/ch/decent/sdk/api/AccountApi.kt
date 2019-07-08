@@ -206,6 +206,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param recipient account name or id, mandatory for encrypted message
    * @param keyPair sender's key pair, mandatory for encrypted message
    */
+  @JvmOverloads
   fun createMemo(message: String, recipient: String? = null, keyPair: ECKeyPair? = null) =
       if (keyPair != null && recipient != null) {
         get(recipient).map { Memo(message, keyPair, it.primaryAddress) }

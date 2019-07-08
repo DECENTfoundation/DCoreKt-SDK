@@ -82,6 +82,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of publishing managers
    */
+  @JvmOverloads
   fun listAllPublishersRelative(lowerBound: String, limit: Int = 100): Single<List<ChainObject>> = ListPublishingManagers(lowerBound, limit).toRequest()
 
   /**
@@ -107,6 +108,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return the contents found
    */
+  @JvmOverloads
   fun findAll(
       term: String,
       order: SearchContentOrder = SearchContentOrder.CREATED_DESC,
