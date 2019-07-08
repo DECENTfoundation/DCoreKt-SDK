@@ -72,17 +72,47 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    * @param idToClass id to class pairs
    */
   @JvmName("registerNftsKt")
-  fun <T : NftModel> registerNfts(vararg idToClass: Pair<ChainObject, KClass<T>>) {
+  fun <T : NftModel> registerNfts(idToClass: List<Pair<ChainObject, KClass<T>>>) {
     registeredNfts.putAll(idToClass)
   }
 
   /**
    * Register NFT data model with object id, if no model is provided the [RawNft] will be used
    *
-   * @param idToClass id to class pairs
+   * @param id NFT object id
+   * @param clazz NFT data model class reference
    */
-  fun <T : NftModel> registerNfts(vararg idToClass: Pair<ChainObject, Class<T>>) {
-    registeredNfts.putAll(idToClass.map { it.first to it.second.kotlin })
+  fun <T : NftModel> registerNft(id: ChainObject, clazz: KClass<T>) {
+    registeredNfts[id] = clazz
+  }
+
+  /**
+   * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+   *
+   * @param id NFT object id
+   * @param clazz NFT data model class reference
+   */
+  @JvmName("registerNftsKt")
+  fun <T : NftModel> registerNft(id: ChainObject, clazz: Class<T>) {
+    registerNft(id, clazz.kotlin)
+  }
+
+  /**
+   * remove registered NFT model
+   *
+   * @param id NFT object id
+   */
+  fun unregisterNft(id: ChainObject) {
+    registeredNfts.remove(id)
+  }
+
+  /**
+   * remove registered NFT model
+   *
+   * @param ids NFT object ids
+   */
+  fun unregisterNfts(ids: List<ChainObject>) {
+    ids.forEach { unregisterNft(it) }
   }
 
 }

@@ -8,7 +8,6 @@ import ch.decent.sdk.model.NftApple
 import ch.decent.sdk.model.NftNotApple
 import ch.decent.sdk.model.RawNft
 import ch.decent.sdk.model.toChainObject
-import ch.decent.sdk.net.model.request.SearchNftHistory
 import ch.decent.sdk.testCheck
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -160,10 +159,10 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get NFTs data by id registered`() {
-    api.registerNfts(
+    api.registerNfts(listOf(
         "1.10.0".toChainObject() to NftApple::class,
         "1.10.1".toChainObject() to NftApple::class
-    )
+    ))
     api.nftApi.getAllData(listOf("1.11.0".toChainObject(), "1.11.1".toChainObject())).testCheck {
       assertValue { it.filter { it.data is NftApple }.count() == 2 }
     }
@@ -184,7 +183,7 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get NFT data by id registered`() {
-    api.registerNfts("1.10.0".toChainObject() to NftApple::class)
+    api.registerNft("1.10.0".toChainObject(), NftApple::class)
     api.nftApi.getData("1.11.0".toChainObject()).testCheck { assertValue { it.data is NftApple } }
   }
 
@@ -213,7 +212,7 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get NFT balances registered`() {
-    api.registerNfts("1.10.2".toChainObject() to NftNotApple::class)
+    api.registerNft("1.10.2".toChainObject(), NftNotApple::class)
     api.nftApi.getNftBalances(Helpers.account2, listOf("1.10.2".toChainObject())).testCheck { assertValue { it.all { it.data is NftNotApple } } }
   }
 
@@ -226,7 +225,7 @@ class NftApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get data for NFT registered`() {
-    api.registerNfts("1.10.0".toChainObject() to NftApple::class)
+    api.registerNft("1.10.0".toChainObject(), NftApple::class)
     api.nftApi.listDataByNft("1.10.0".toChainObject()).testCheck { assertValue { it.all { it.data is NftApple } } }
   }
 

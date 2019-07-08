@@ -18,3 +18,8 @@ data class ExchangeRate(
 
   }
 }
+
+data class ExchangeRateValues(
+    val base: Long,
+    val quote: Long
+)

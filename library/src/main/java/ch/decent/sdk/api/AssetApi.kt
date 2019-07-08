@@ -11,6 +11,7 @@ import ch.decent.sdk.model.AssetData
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ExchangeRate
+import ch.decent.sdk.model.ExchangeRateValues
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
@@ -233,7 +234,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun update(
       credentials: Credentials,
       assetIdOrSymbol: String,
-      exchangeRate: Pair<Int, Int>? = null,
+      exchangeRate: ExchangeRateValues? = null,
       description: String? = null,
       exchangeable: Boolean? = null,
       maxSupply: Long? = null,
@@ -243,7 +244,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .map {
         it.apply {
           if (exchangeRate != null) this.coreExchangeRate =
-              ExchangeRate(AssetAmount(exchangeRate.first.toLong()), AssetAmount(exchangeRate.second.toLong(), it.assetToUpdate))
+              ExchangeRate(AssetAmount(exchangeRate.base), AssetAmount(exchangeRate.quote, it.assetToUpdate))
           if (description != null) this.newDescription = description
           if (exchangeable != null) this.exchangeable = exchangeable
           if (maxSupply != null) this.maxSupply = maxSupply

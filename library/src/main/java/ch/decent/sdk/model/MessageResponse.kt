@@ -86,8 +86,8 @@ data class MessagePayload(
    */
   constructor(
       from: ChainObject,
-      messages: List<Pair<ChainObject, String>>
-  ) : this(from, messages.map { MessagePayloadReceiver(it.first, Memo(it.second).message) })
+      messages: List<MessageRequest>
+  ) : this(from, messages.map { MessagePayloadReceiver(it.recipient, Memo(it.message).message) })
 }
 
 data class MessagePayloadReceiver(
@@ -95,4 +95,9 @@ data class MessagePayloadReceiver(
     @SerializedName("data") val data: String,
     @SerializedName("pub_to") val toAddress: Address? = null,
     @SerializedName("nonce") @UInt64 val nonce: BigInteger? = null
+)
+
+data class MessageRequest(
+    val recipient: ChainObject,
+    val message: String
 )

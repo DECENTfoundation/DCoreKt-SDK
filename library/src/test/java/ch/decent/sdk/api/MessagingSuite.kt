@@ -2,6 +2,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.model.MessageRequest
 import ch.decent.sdk.testCheck
 import org.amshove.kluent.`should equal`
 import org.junit.FixMethodOrder
@@ -19,12 +20,12 @@ class MessagingSuite
 class MessagingOperationsTest : BaseOperationsTest() {
 
   @Test fun `message- should send message`() {
-    api.messagingApi.send(Helpers.credentials, listOf(Helpers.account2 to "test message encrypted"))
+    api.messagingApi.send(Helpers.credentials, listOf(MessageRequest(Helpers.account2, "test message encrypted")))
         .testCheck()
   }
 
   @Test fun `message- should send unencrypted message`() {
-    api.messagingApi.sendUnencrypted(Helpers.credentials, listOf(Helpers.account2 to "test message plain"))
+    api.messagingApi.sendUnencrypted(Helpers.credentials, listOf(MessageRequest(Helpers.account2, "test message plain")))
         .testCheck()
   }
 }
