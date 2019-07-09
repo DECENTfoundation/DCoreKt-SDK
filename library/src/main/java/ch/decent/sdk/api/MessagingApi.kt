@@ -11,6 +11,7 @@ import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.Message
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
+import ch.decent.sdk.model.MessageRequest
 import ch.decent.sdk.model.MessageResponse
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.SendMessageOperation
@@ -29,6 +30,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of message operation responses
    */
+  @JvmOverloads
   fun getAllOperations(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<MessageResponse>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
 
@@ -41,6 +43,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<Message>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
           .map { it.map { Message.create(it) }.flatten() }
@@ -55,6 +58,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAllDecrypted(
       credentials: Credentials,
       sender: ChainObject? = null,
@@ -76,6 +80,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAllDecryptedForSender(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
       getAllDecrypted(credentials, sender = credentials.account, maxCount = maxCount)
 
@@ -87,6 +92,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
       getAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
 
@@ -101,15 +107,15 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun createMessageOperation(
       credentials: Credentials,
-      messages: List<Pair<ChainObject, String>>,
+      messages: List<MessageRequest>,
       fee: Fee = Fee()
   ): Single<SendMessageOperation> = Single.zip(
       api.accountApi.get(credentials.account),
-      Single.merge(messages.map { api.accountApi.get(it.first) }).toList(),
+      Single.merge(messages.map { api.accountApi.get(it.recipient) }).toList(),
       BiFunction { sender: Account, recipients: List<Account> -> sender to recipients }
   ).map { (sender, recipients) ->
     val payloadReceivers = recipients.mapIndexed { idx, recipient ->
-      val msg = Memo(messages[idx].second, credentials, recipient)
+      val msg = Memo(messages[idx].message, credentials, recipient)
       MessagePayloadReceiver(recipient.id, msg.message, recipient.options.memoKey, msg.nonce)
     }
     val data = MessagePayload(sender.id, payloadReceivers, sender.options.memoKey)
@@ -124,9 +130,10 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return send message operation
    */
+  @JvmOverloads
   fun createMessageOperationUnencrypted(
       credentials: Credentials,
-      messages: List<Pair<ChainObject, String>>,
+      messages: List<MessageRequest>,
       fee: Fee = Fee()
   ): Single<SendMessageOperation> = Single.just(
       SendMessageOperation(api.gson, MessagePayload(credentials.account, messages), credentials.account, fee)
@@ -140,9 +147,10 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun send(
       credentials: Credentials,
-      messages: List<Pair<ChainObject, String>>,
+      messages: List<MessageRequest>,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createMessageOperation(credentials, messages, fee).flatMap {
     api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
@@ -156,9 +164,10 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun sendUnencrypted(
       credentials: Credentials,
-      messages: List<Pair<ChainObject, String>>,
+      messages: List<MessageRequest>,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createMessageOperationUnencrypted(credentials, messages, fee).flatMap {
     api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)

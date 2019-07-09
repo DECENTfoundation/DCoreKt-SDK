@@ -13,6 +13,7 @@ import ch.decent.sdk.model.operation.OperationType;
 import ch.decent.sdk.model.operation.TransferOperation;
 import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;
+import kotlin.Pair;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.threeten.bp.LocalDateTime;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * this test checks calling Kotlin from Java
@@ -217,5 +219,9 @@ public class ApiTest {
         api.getValidationApi().getFeeForType(OperationType.TRANSFER2_OPERATION, DCoreConstants.DCT_ASSET_ID);
         api.getValidationApi().getFeesForType(Collections.singletonList(OperationType.TRANSFER2_OPERATION));
         api.getValidationApi().getFeesForType(Collections.singletonList(OperationType.TRANSFER2_OPERATION), DCoreConstants.DCT_ASSET_ID);
+    }
+
+    @Test
+    public void NftApiTest() {
     }
 }

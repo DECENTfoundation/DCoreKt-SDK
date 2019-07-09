@@ -1,7 +1,9 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
+import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.PRECISION_MAX
 import ch.decent.sdk.utils.RATING_MAX
@@ -17,7 +19,7 @@ object DCoreConstants {
       DCT_PRECISION,
       "1.2.1".toChainObject(),
       "",
-      AssetOptions(maxSupply = DCT_SUPPLY),
+      AssetOptions(ExchangeRate(AssetAmount(1), AssetAmount(1)), maxSupply = DCT_SUPPLY),
       "2.3.0".toChainObject()
   )
 

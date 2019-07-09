@@ -99,6 +99,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of purchase objects
    */
+  @JvmOverloads
   fun findAllForFeedback(
       uri: String,
       user: String? = null,
@@ -118,6 +119,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a rate and comment content operation
    */
+  @JvmOverloads
   fun createRateAndCommentOperation(
       uri: String,
       consumer: ChainObject,
@@ -138,6 +140,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a rate and comment content operation
    */
+  @JvmOverloads
   fun rateAndComment(
       credentials: Credentials,
       uri: String,
