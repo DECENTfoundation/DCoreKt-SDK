@@ -55,6 +55,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of operations performed by account, ordered from most recent to oldest
    */
+  @JvmOverloads
   fun listOperationsRelative(
       accountId: ChainObject,
       start: Int = 0,
@@ -75,6 +76,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of balance changes
    */
+  @JvmOverloads
   fun findAllOperations(
       accountId: ChainObject,
       assets: List<ChainObject> = emptyList(),

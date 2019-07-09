@@ -30,6 +30,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of message operation responses
    */
+  @JvmOverloads
   fun getAllOperations(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<MessageResponse>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
 
@@ -42,6 +43,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<Message>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
           .map { it.map { Message.create(it) }.flatten() }
@@ -56,6 +58,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAllDecrypted(
       credentials: Credentials,
       sender: ChainObject? = null,
@@ -77,6 +80,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAllDecryptedForSender(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
       getAllDecrypted(credentials, sender = credentials.account, maxCount = maxCount)
 
@@ -88,6 +92,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return list of messages
    */
+  @JvmOverloads
   fun getAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
       getAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
 
@@ -125,6 +130,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return send message operation
    */
+  @JvmOverloads
   fun createMessageOperationUnencrypted(
       credentials: Credentials,
       messages: List<MessageRequest>,
@@ -141,6 +147,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun send(
       credentials: Credentials,
       messages: List<MessageRequest>,
@@ -157,6 +164,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun sendUnencrypted(
       credentials: Credentials,
       messages: List<MessageRequest>,

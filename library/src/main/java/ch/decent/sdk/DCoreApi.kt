@@ -82,6 +82,7 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    * @param id NFT object id
    * @param clazz NFT data model class reference
    */
+  @JvmName("registerNftKt")
   fun <T : NftModel> registerNft(id: ChainObject, clazz: KClass<T>) {
     registeredNfts[id] = clazz
   }
@@ -92,7 +93,6 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    * @param id NFT object id
    * @param clazz NFT data model class reference
    */
-  @JvmName("registerNftsKt")
   fun <T : NftModel> registerNft(id: ChainObject, clazz: Class<T>) {
     registerNft(id, clazz.kotlin)
   }

@@ -184,6 +184,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data instances with raw model
    */
+  @JvmOverloads
   fun getNftBalancesRaw(account: ChainObject, nftIds: List<ChainObject> = emptyList()): Single<List<NftData<RawNft>>> =
       GetNftsBalances(account, nftIds).toRequest()
 
@@ -196,6 +197,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data instances
    */
+  @JvmOverloads
   fun getNftBalances(account: ChainObject, nftIds: List<ChainObject> = emptyList()): Single<List<NftData<out NftModel>>> =
       getNftBalancesRaw(account, nftIds).make()
 
@@ -231,6 +233,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return the NFTs found
    */
+  @JvmOverloads
   fun listAllRelative(lowerBound: String = "", limit: Int = REQ_LIMIT_MAX): Single<List<Nft>> =
       ListNfts(lowerBound, limit).toRequest()
 
@@ -292,6 +295,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> createNftCreateOperation(
       symbol: String,
       options: NftOptions,
@@ -310,6 +314,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> createNftCreateOperation(
       symbol: String,
       options: NftOptions,
@@ -331,6 +336,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> create(
       credentials: Credentials,
       symbol: String,
@@ -357,6 +363,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> create(
       credentials: Credentials,
       symbol: String,
@@ -375,6 +382,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun createUpdateOperation(
       idOrSymbol: String,
       fee: Fee = Fee()
@@ -391,6 +399,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun update(
       credentials: Credentials,
       idOrSymbol: String,
@@ -413,6 +422,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> createIssueOperation(
       issuer: ChainObject,
       idOrSymbol: String,
@@ -433,6 +443,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> issue(
       credentials: Credentials,
       idOrSymbol: String,
@@ -453,6 +464,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun createTransferOperation(
       from: ChainObject,
       to: ChainObject,
@@ -471,6 +483,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun transfer(
       credentials: Credentials,
       to: ChainObject,
@@ -488,6 +501,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun createUpdateDataOperation(
       modifier: ChainObject,
       id: ChainObject,
@@ -509,6 +523,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> createUpdateDataOperation(
       modifier: ChainObject,
       id: ChainObject,
@@ -526,6 +541,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun updateData(
       credentials: Credentials,
       id: ChainObject,
@@ -544,6 +560,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
+  @JvmOverloads
   fun <T : NftModel> updateData(
       credentials: Credentials,
       id: ChainObject,
