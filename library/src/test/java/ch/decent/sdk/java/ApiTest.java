@@ -5,6 +5,7 @@ import ch.decent.sdk.DCoreConstants;
 import ch.decent.sdk.DCoreSdk;
 import ch.decent.sdk.Helpers;
 import ch.decent.sdk.crypto.Address;
+import ch.decent.sdk.crypto.Credentials;
 import ch.decent.sdk.crypto.ECKeyPair;
 import ch.decent.sdk.model.*;
 import ch.decent.sdk.model.operation.BaseOperation;
@@ -14,6 +15,7 @@ import ch.decent.sdk.model.operation.TransferOperation;
 import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;
 import kotlin.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import org.threeten.bp.LocalDateTime;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -223,5 +226,32 @@ public class ApiTest {
 
     @Test
     public void NftApiTest() {
+        Credentials credentials = new Credentials(ObjectType.ACCOUNT_OBJECT.getGenericId(), Helpers.getPrivate());
+        api.getNftApi().countAll();
+        api.getNftApi().countAllData();
+        api.getNftApi().create(credentials, "NFT", 10, true, "description", NftJava.class, true);
+
+    }
+
+    class NftJava implements NftModel {
+
+        public String string;
+        public boolean aBoolean;
+        public short aShort;
+        public byte aByte;
+        public int anInt;
+        public long aLong;
+
+        @NotNull
+        @Override
+        public List<Object> values() {
+            return null;
+        }
+
+        @NotNull
+        @Override
+        public Map<String, Object> createUpdate() {
+            return null;
+        }
     }
 }
