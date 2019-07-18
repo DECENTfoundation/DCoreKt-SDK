@@ -57,6 +57,8 @@ open class ObjectId(
         ObjectType.OPERATION_HISTORY_OBJECT to OperationHistoryObjectId::class,
         ObjectType.WITHDRAW_PERMISSION_OBJECT to WithdrawPermissionObjectId::class,
         ObjectType.VESTING_BALANCE_OBJECT to VestingBalanceObjectId::class,
+        ObjectType.NFT_OBJECT to NftObjectId::class,
+        ObjectType.NFT_DATA_OBJECT to NftDataObjectId::class,
         ObjectType.GLOBAL_PROPERTY_OBJECT to GlobalPropertyObjectId::class,
         ObjectType.DYNAMIC_GLOBAL_PROPERTY_OBJECT to DynamicGlobalPropertyObjectId::class,
         ObjectType.RESERVED_OBJECT to ReservedObjectId::class,
@@ -114,6 +116,8 @@ class ProposalObjectId(instance: Long = 0) : ObjectId(ObjectType.PROPOSAL_OBJECT
 class OperationHistoryObjectId(instance: Long = 0) : ObjectId(ObjectType.OPERATION_HISTORY_OBJECT, instance)
 class WithdrawPermissionObjectId(instance: Long = 0) : ObjectId(ObjectType.WITHDRAW_PERMISSION_OBJECT, instance)
 class VestingBalanceObjectId(instance: Long = 0) : ObjectId(ObjectType.VESTING_BALANCE_OBJECT, instance)
+class NftObjectId(instance: Long = 0) : ObjectId(ObjectType.NFT_OBJECT, instance)
+class NftDataObjectId(instance: Long = 0) : ObjectId(ObjectType.NFT_DATA_OBJECT, instance)
 class GlobalPropertyObjectId(instance: Long = 0) : ObjectId(ObjectType.GLOBAL_PROPERTY_OBJECT, instance)
 class DynamicGlobalPropertyObjectId(instance: Long = 0) : ObjectId(ObjectType.DYNAMIC_GLOBAL_PROPERTY_OBJECT, instance)
 class ReservedObjectId(instance: Long = 0) : ObjectId(ObjectType.RESERVED_OBJECT, instance)

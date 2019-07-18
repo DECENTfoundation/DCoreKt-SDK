@@ -2,9 +2,11 @@ package ch.decent.sdk
 
 import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Asset
+import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetDataObjectId
 import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.AssetOptions
+import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.utils.PRECISION_MAX
 import ch.decent.sdk.utils.RATING_MAX
 
@@ -20,7 +22,7 @@ object DCoreConstants {
       DCT_PRECISION,
       AccountObjectId(1),
       "",
-      AssetOptions(maxSupply = DCT_SUPPLY),
+      AssetOptions(ExchangeRate(AssetAmount(1), AssetAmount(1)), maxSupply = DCT_SUPPLY),
       AssetDataObjectId(0)
   )
 
@@ -36,6 +38,7 @@ object DCoreConstants {
   val RATING_ALLOWED = 1..RATING_MAX
   val PRECISION_ALLOWED = 0..PRECISION_MAX
   const val UIA_DESCRIPTION_MAX_CHARS = 1000
+  const val NFT_NAME_MAX_CHARS = 32
   const val BASIS_POINTS_TOTAL = 10000
   const val MAX_INSTANCE_ID = 281474976710655
 

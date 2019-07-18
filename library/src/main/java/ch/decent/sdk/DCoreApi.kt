@@ -12,12 +12,19 @@ import ch.decent.sdk.api.GeneralApi
 import ch.decent.sdk.api.HistoryApi
 import ch.decent.sdk.api.MessagingApi
 import ch.decent.sdk.api.MiningApi
+import ch.decent.sdk.api.NftApi
 import ch.decent.sdk.api.PurchaseApi
 import ch.decent.sdk.api.SeederApi
 import ch.decent.sdk.api.SubscriptionApi
 import ch.decent.sdk.api.TransactionApi
 import ch.decent.sdk.api.ValidationApi
+import ch.decent.sdk.model.NftModel
+import ch.decent.sdk.model.NftObjectId
+import ch.decent.sdk.model.RawNft
+import com.google.gson.Gson
 import org.threeten.bp.Duration
+import java.util.concurrent.TimeoutException
+import kotlin.reflect.KClass
 
 class DCoreApi internal constructor(internal val core: DCoreSdk) {
 
@@ -27,9 +34,19 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
    */
   var transactionExpiration: Duration = Duration.ofSeconds(EXPIRATION_DEF)
 
-  fun setTimeout(seconds: Long) {
-    core.setTimeout(seconds)
-  }
+  /**
+   * websocket request timeout, if no response is delivered within time window a [TimeoutException] is thrown
+   */
+  var timeout: Duration = Duration.ofMinutes(1)
+    set(value) {
+      field = value
+      core.setTimeout(value.seconds)
+    }
+
+  val gson: Gson
+    get() = core.gson
+
+  internal val registeredNfts = mutableMapOf<NftObjectId, KClass<out NftModel>>()
 
   val accountApi = AccountApi(this)
   val assetApi = AssetApi(this)
@@ -47,4 +64,55 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val subscriptionApi = SubscriptionApi(this)
   val transactionApi = TransactionApi(this)
   val messagingApi = MessagingApi(this)
+  val nftApi = NftApi(this)
+
+  /**
+   * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+   *
+   * @param idToClass id to class pairs
+   */
+  @JvmName("registerNftsKt")
+  fun <T : NftModel> registerNfts(idToClass: List<Pair<NftObjectId, KClass<T>>>) {
+    registeredNfts.putAll(idToClass)
+  }
+
+  /**
+   * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+   *
+   * @param id NFT object id
+   * @param clazz NFT data model class reference
+   */
+  @JvmName("registerNftKt")
+  fun <T : NftModel> registerNft(id: NftObjectId, clazz: KClass<T>) {
+    registeredNfts[id] = clazz
+  }
+
+  /**
+   * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+   *
+   * @param id NFT object id
+   * @param clazz NFT data model class reference
+   */
+  fun <T : NftModel> registerNft(id: NftObjectId, clazz: Class<T>) {
+    registerNft(id, clazz.kotlin)
+  }
+
+  /**
+   * remove registered NFT model
+   *
+   * @param id NFT object id
+   */
+  fun unregisterNft(id: NftObjectId) {
+    registeredNfts.remove(id)
+  }
+
+  /**
+   * remove registered NFT model
+   *
+   * @param ids NFT object ids
+   */
+  fun unregisterNfts(ids: List<NftObjectId>) {
+    ids.forEach { unregisterNft(it) }
+  }
+
 }

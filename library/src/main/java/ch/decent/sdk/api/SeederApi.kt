@@ -31,6 +31,7 @@ class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
+  @JvmOverloads
   fun listByPrice(count: Int = 100): Single<List<Seeder>> = ListSeedersByPrice(count).toRequest()
 
   /**
@@ -40,6 +41,7 @@ class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
+  @JvmOverloads
   fun listByUpload(count: Int = 100): Single<List<Seeder>> = ListSeedersByUpload(count).toRequest()
 
   /**
@@ -49,6 +51,7 @@ class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
+  @JvmOverloads
   fun listByRegion(region: String = Regions.ALL.code): Single<List<Seeder>> = ListSeedersByRegion(region).toRequest()
 
   /**
@@ -58,6 +61,7 @@ class SeederApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of seeders
    */
+  @JvmOverloads
   fun listByRating(count: Int = 100): Single<List<Seeder>> = ListSeedersByRating(count).toRequest()
 
 }

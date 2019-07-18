@@ -57,6 +57,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    */
   // todo model
+  @JvmOverloads
   fun getFeedsByMiner(account: AccountObjectId, count: Int = 100) = GetFeedsByMiner(account, count).toRequest()
 
   /**
@@ -132,6 +133,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of miner voting info
    */
+  @JvmOverloads
   fun findAllVotingInfo(
       searchTerm: String,
       order: SearchMinerVotingOrder = SearchMinerVotingOrder.NAME_DESC,
@@ -151,6 +153,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun createVoteOperation(
       accountId: AccountObjectId,
       minerIds: List<MinerObjectId>,
@@ -170,6 +173,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a transaction confirmation
    */
+  @JvmOverloads
   fun vote(
       credentials: Credentials,
       minerIds: List<MinerObjectId>,

@@ -2,50 +2,24 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.model.toObjectId
-import io.reactivex.schedulers.Schedulers
+import ch.decent.sdk.testCheck
 import org.junit.Test
 
 class HistoryApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get account balance for op`() {
-    val test = api.historyApi.getOperation(Helpers.account, "1.7.980424".toObjectId())
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.historyApi.getOperation(Helpers.account, "1.7.1".toObjectId()).testCheck()
   }
 
   @Test fun `should list account history`() {
-    val test = api.historyApi.listOperations("1.2.27".toObjectId())
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.historyApi.listOperations(Helpers.account).testCheck()
   }
 
   @Test fun `should list relative account history`() {
-    val test = api.historyApi.listOperationsRelative(Helpers.account, limit = 100)
-        .map { it.joinToString("\n") { it.operation.toString() } }
-        .doOnSuccess { System.out.println(it) }
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.historyApi.listOperationsRelative(Helpers.account, limit = 100).testCheck()
   }
 
   @Test fun `should search account history balances`() {
-    val test = api.historyApi.findAllOperations(Helpers.account, startOffset = 2, limit = 3)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
+    api.historyApi.findAllOperations(Helpers.account, startOffset = 2, limit = 3).testCheck()
   }
 }

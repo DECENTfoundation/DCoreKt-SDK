@@ -44,12 +44,17 @@ enum class OperationType(val clazz: Class<*>? = null) {
   UPDATE_MONITORED_ASSET_OPERATION(AssetUpdateMonitoredOperation::class.java),
   READY_TO_PUBLISH2_OPERATION,
   TRANSFER2_OPERATION(TransferOperation::class.java),
-  UPDATE_USER_ISSUED_ASSET_ADVANCED(AssetUpdateAdvancedOperation::class.java),
-  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL 41
+  UPDATE_USER_ISSUED_ASSET_ADVANCED(AssetUpdateAdvancedOperation::class.java), //40
+  NFT_CREATE_DEFINITION(NftCreateOperation::class.java),
+  NFT_UPDATE_DEFINITION(NftUpdateOperation::class.java),
+  NFT_ISSUE(NftIssueOperation::class.java),
+  NFT_TRANSFER(NftTransferOperation::class.java),
+  NFT_UPDATE_DATA(NftUpdateDataOperation::class.java), // 45
+  DISALLOW_AUTOMATIC_RENEWAL_OF_SUBSCRIPTION_OPERATION,  // VIRTUAL
   RETURN_ESCROW_SUBMISSION_OPERATION,                    // VIRTUAL
   RETURN_ESCROW_BUYING_OPERATION,                        // VIRTUAL
   PAY_SEEDER_OPERATION,                                  // VIRTUAL
-  FINISH_BUYING_OPERATION,                               // VIRTUAL 45
+  FINISH_BUYING_OPERATION,                               // VIRTUAL 50
   RENEWAL_OF_SUBSCRIPTION_OPERATION,                     // VIRTUAL
   UNKNOWN_OPERATION
 }

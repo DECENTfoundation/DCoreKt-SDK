@@ -14,6 +14,8 @@ enum class ObjectType(val space: Int, val type: Int) {
   OPERATION_HISTORY_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.OPERATION_HISTORY_OBJECT.ordinal),
   WITHDRAW_PERMISSION_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.WITHDRAW_PERMISSION_OBJECT.ordinal),
   VESTING_BALANCE_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.VESTING_BALANCE_OBJECT.ordinal),
+  NFT_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.NFT_OBJECT.ordinal),
+  NFT_DATA_OBJECT(Space.PROTOCOL.ordinal, ProtocolId.NFT_DATA_OBJECT.ordinal),
   GLOBAL_PROPERTY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.GLOBAL_PROPERTY_OBJECT.ordinal),
   DYNAMIC_GLOBAL_PROPERTY_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.DYNAMIC_GLOBAL_PROPERTY_OBJECT.ordinal),
   RESERVED_OBJECT(Space.IMPLEMENTATION.ordinal, ImplementationId.RESERVED_OBJECT.ordinal),
@@ -51,7 +53,9 @@ enum class ObjectType(val space: Int, val type: Int) {
     PROPOSAL_OBJECT,
     OPERATION_HISTORY_OBJECT,
     WITHDRAW_PERMISSION_OBJECT,
-    VESTING_BALANCE_OBJECT
+    VESTING_BALANCE_OBJECT,
+    NFT_OBJECT, //10
+    NFT_DATA_OBJECT,
   }
 
   internal enum class ImplementationId {
@@ -75,4 +79,5 @@ enum class ObjectType(val space: Int, val type: Int) {
     TRANSACTION_DETAIL_OBJECT,
     MESSAGING_OBJECT
   }
+
 }

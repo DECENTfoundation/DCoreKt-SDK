@@ -1,4 +1,4 @@
-package ch.decent.sdk.api.java;
+package ch.decent.sdk.java;
 
 import ch.decent.sdk.DCoreApi;
 import ch.decent.sdk.DCoreConstants;
@@ -13,6 +13,7 @@ import ch.decent.sdk.model.operation.OperationType;
 import ch.decent.sdk.model.operation.TransferOperation;
 import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;
+import kotlin.Pair;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.threeten.bp.LocalDateTime;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * this test checks calling Kotlin from Java
@@ -29,12 +31,12 @@ import java.util.Collections;
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
-    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getRestUrl(), logger);
+    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getHttpUrl(), logger);
 
     @Test
     public void init() {
-        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl());
-        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getRestUrl(), logger);
+        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl());
+        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl(), logger);
         DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl());
         apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
         Gson gson = DCoreSdk.getGsonBuilder().create();
@@ -217,5 +219,9 @@ public class ApiTest {
         api.getValidationApi().getFeeForType(OperationType.TRANSFER2_OPERATION, DCoreConstants.DCT_ASSET_ID);
         api.getValidationApi().getFeesForType(Collections.singletonList(OperationType.TRANSFER2_OPERATION));
         api.getValidationApi().getFeesForType(Collections.singletonList(OperationType.TRANSFER2_OPERATION), DCoreConstants.DCT_ASSET_ID);
+    }
+
+    @Test
+    public void NftApiTest() {
     }
 }

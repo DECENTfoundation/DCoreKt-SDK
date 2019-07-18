@@ -25,8 +25,10 @@ object Versions {
 
   val errorPronePlugin = "0.8"
   val errorProne = "2.3.3"
+  val errorProneJavac = "9+181-r4173-1"
   val dokka = "0.9.16"
   val detekt = "1.0.0-RC14"
+  val dockerCompose = "0.9.4"
 }
 
 object GradlePlugins {
@@ -34,11 +36,12 @@ object GradlePlugins {
   val dokka = "org.jetbrains.dokka"
   val mavenPublish = "maven-publish"
   val detekt = "io.gitlab.arturbosch.detekt"
+  val dockerCompose = "com.avast.gradle.docker-compose"
 }
 
 object Libs {
   val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
-  val kotlin_reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
+  val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
 
   val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retorfit}"
   val retrofitGson = "com.squareup.retrofit2:converter-gson:${Versions.retorfit}"
@@ -57,6 +60,7 @@ object Libs {
   val bouncyProv = "org.bouncycastle:bcprov-jdk15on:${Versions.bouncyProv}"
 
   val errorProne = "com.google.errorprone:error_prone_core:${Versions.errorProne}"
+  val errorProneJavac = "com.google.errorprone:javac:${Versions.errorProneJavac}"
 }
 
 object TestLibs {

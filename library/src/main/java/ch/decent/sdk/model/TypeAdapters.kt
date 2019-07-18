@@ -5,8 +5,11 @@ import ch.decent.sdk.crypto.Wallet
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.crypto.dpk
 import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.operation.CustomOperation
+import ch.decent.sdk.model.operation.CustomOperationType
 import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.UnknownOperation
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -29,16 +32,6 @@ object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
 
   override fun read(reader: JsonReader): LocalDateTime = LocalDateTime.parse(reader.nextString())
 }
-
-/*
-object ChainObjectAdapter : TypeAdapter<ChainObject>() {
-  override fun read(reader: JsonReader): ChainObject = ChainObject.parse(reader.nextString())
-
-  override fun write(out: JsonWriter, value: ChainObject?) {
-    value?.let { out.value(it.objectId) } ?: out.nullValue()
-  }
-}
-*/
 
 object AddressAdapter : TypeAdapter<Address>() {
   override fun read(reader: JsonReader): Address? = Address.decodeCheckNull(reader.nextString())
@@ -69,8 +62,8 @@ object ObjectIdFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
     if (ObjectId::class.javaObjectType.isAssignableFrom(type.rawType)) {
       return object : TypeAdapter<T>() {
-        override fun write(out: JsonWriter, value: T) {
-          out.value(value.toString())
+        override fun write(out: JsonWriter, value: T?) {
+          value?.let { out.value(it.toString()) } ?: out.nullValue()
         }
 
         override fun read(reader: JsonReader): T {
@@ -85,7 +78,45 @@ object ObjectIdFactory : TypeAdapterFactory {
   }
 }
 
+object NftModelAdapter : TypeAdapter<RawNft>() {
+  override fun write(out: JsonWriter?, value: RawNft?) {}
+
+  override fun read(reader: JsonReader): RawNft =
+      RawNft(Streams.parse(reader).asJsonArray)
+}
+
+object MapAdapterFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (Map::class.javaObjectType == type.rawType) {
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T) {
+          out.beginArray()
+          (value as Map<*, *>).entries.forEach {
+            out.beginArray()
+            writeAny(out, it.key)
+            writeAny(out, it.value)
+            out.endArray()
+          }
+          out.endArray()
+        }
+
+        override fun read(`in`: JsonReader?): T = gson.getDelegateAdapter(this@MapAdapterFactory, type).read(`in`)
+      }
+    }
+    return null
+  }
+}
+
 @Suppress("UNCHECKED_CAST")
+fun writeAny(out: JsonWriter, value: Any?) {
+  when (value) {
+    is Number -> out.value(value)
+    is String -> out.value(value)
+    is Boolean -> out.value(value)
+  }
+}
+
+@Suppress("UNCHECKED_CAST", "NestedBlockDepth")
 object OperationTypeFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
     if (type.rawType == BaseOperation::class.javaObjectType) {
@@ -102,16 +133,25 @@ object OperationTypeFactory : TypeAdapterFactory {
         override fun read(reader: JsonReader): T? {
           val el = Streams.parse(reader)
           val idx = el.asJsonArray[0].asInt
-          val op = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
-
-          if (op == OperationType.UNKNOWN_OPERATION) return UnknownOperation(idx) as T?
-
+          val opType = OperationType.values().getOrElse(idx) { OperationType.UNKNOWN_OPERATION }
           val obj = el.asJsonArray[1].asJsonObject
-          return op.clazz?.let {
+
+          val op = if (opType == OperationType.UNKNOWN_OPERATION) UnknownOperation(idx)
+          else opType.clazz?.let {
             val delegate = gson.getDelegateAdapter(this@OperationTypeFactory, TypeToken.get(it))
-            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = op } as T?
-          } ?: EmptyOperation(op) as T?
+            (delegate.fromJsonTree(obj) as BaseOperation).apply { this.type = opType }
+          } ?: EmptyOperation(opType)
+
+          return op.parseCustomOp(gson) as T?
         }
+
+        private fun BaseOperation.parseCustomOp(gson: Gson): BaseOperation =
+            if (this !is CustomOperation) this
+            else when (id) {
+              CustomOperationType.MESSAGING.ordinal -> SendMessageOperation(gson, this)
+              else -> this
+            }
+
       }
     }
     return null
@@ -120,7 +160,6 @@ object OperationTypeFactory : TypeAdapterFactory {
 
 // typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions;
 // fixed_max_supply_struct has index 1 therefore we write '1'
-
 @Suppress("UNCHECKED_CAST")
 object StaticVariantFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, typeToken: TypeToken<T>): TypeAdapter<T?>? {
@@ -160,10 +199,10 @@ object StaticVariantFactory : TypeAdapterFactory {
       object : TypeAdapter<T?>() {
         override fun write(out: JsonWriter, value: T?) {
           out.beginArray()
-          (value as StaticVariantSingle<T>?)?.get?.let { (idx, obj) ->
+          (value as StaticVariantSingle<T>?)?.let {
             out.beginArray()
-            out.value(idx)
-            delegate.write(out, obj)
+            out.value(it.index)
+            delegate.write(out, it.value)
             out.endArray()
           }
           out.endArray()

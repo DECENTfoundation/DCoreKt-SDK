@@ -6,11 +6,13 @@ plugins {
   id(GradlePlugins.dokka)
   id(GradlePlugins.mavenPublish)
   id(GradlePlugins.detekt)
+  id(GradlePlugins.dockerCompose)
+  jacoco
 }
 
 dependencies {
   implementation(Libs.kotlin)
-  implementation(Libs.kotlin_reflect)
+  implementation(Libs.kotlinReflect)
 
   api(Libs.rxKotlin)
   api(Libs.rxJava)
@@ -35,6 +37,7 @@ dependencies {
   testImplementation(TestLibs.mockServer)
 
   errorprone(Libs.errorProne)
+  errorproneJavac(Libs.errorProneJavac)
 }
 
 detekt {
@@ -43,8 +46,13 @@ detekt {
   config = files("detekt-config.yml")
 }
 
+dockerCompose {
+  isRequiredBy(project.tasks.test.get())
+  useComposeFiles = listOf("../test-dcore-node/docker-compose.yml")
+}
+
 val dokka by tasks.getting(DokkaTask::class) {
-  outputFormat = "html"
+  outputFormat = "javadoc"
   outputDirectory = "$buildDir/javadoc"
 }
 
@@ -74,5 +82,20 @@ publishing {
       artifact(sourcesJar)
       artifact(dokkaJar)
     }
+  }
+}
+
+tasks.jacocoTestReport {
+  reports {
+    xml.isEnabled = true
+    csv.isEnabled = false
+  }
+}
+
+tasks.test {
+  exclude("**/api/", "**/Scratchpad.class")
+  testLogging {
+    events("passed", "skipped", "failed")
+    setExceptionFormat("full")
   }
 }

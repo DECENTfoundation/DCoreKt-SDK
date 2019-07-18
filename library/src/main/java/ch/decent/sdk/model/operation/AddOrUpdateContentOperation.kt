@@ -15,7 +15,6 @@ import ch.decent.sdk.utils.ripemd160
 import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
 import java.util.regex.Pattern
 

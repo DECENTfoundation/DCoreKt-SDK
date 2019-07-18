@@ -45,8 +45,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return amount for asset
    */
-  fun get(name: String, asset: AssetObjectId): Single<AssetAmount> =
-      getAll(name, listOf(asset)).map { it.single() }
+  fun get(name: String, asset: AssetObjectId): Single<AssetAmount> = getAll(name, listOf(asset)).map { it.single() }
 
   /**
    * Get account balance by name.
@@ -67,6 +66,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a pair of asset to amount
    */
+  @JvmOverloads
   fun getWithAsset(accountId: AccountObjectId, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(accountId, listOf(assetSymbol)).map { it.single() }
 
@@ -93,6 +93,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a pair of asset to amount
    */
+  @JvmOverloads
   fun getWithAsset(name: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(name, listOf(assetSymbol)).map { it.single() }
 
