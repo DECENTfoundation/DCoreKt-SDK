@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 
 data class NftDataType(
     @SerializedName("type") val type: Type = Type.STRING,
@@ -33,10 +34,10 @@ data class NftDataType(
     @SerializedName("boolean") BOOLEAN(Boolean::class.createType());
 
     companion object {
-      operator fun get(type: KType): Type = when (type) {
-        in Type.STRING.types -> STRING
-        in Type.BOOLEAN.types -> BOOLEAN
-        in Type.INTEGER.types -> INTEGER
+      operator fun get(type: KType): Type = when {
+        Type.STRING.types.any { type.isSubtypeOf(it) } -> STRING
+        Type.BOOLEAN.types.any { type.isSubtypeOf(it) } -> BOOLEAN
+        Type.INTEGER.types.any { type.isSubtypeOf(it) } -> INTEGER
         else -> throw IllegalArgumentException("type '$type' not supported")
       }
     }
