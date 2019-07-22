@@ -12,10 +12,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object Helpers {
-  @JvmStatic val testnetWs = "wss://testnet-api.dcore.io"
-  @JvmStatic val testnetHttp = "https://testnet-api.dcore.io/"
+  @JvmStatic val testnetWs = "wss://testnet-socket.dcore.io/"
+  @JvmStatic val testnetHttp = "https://testnet.dcore.io/"
   @JvmStatic val stageWs = "wss://stagesocket.decentgo.com:8090"
   @JvmStatic val stageHttp = "https://stagesocket.decentgo.com"
+  @JvmStatic val mainWs = "wss://api.decent.ch"
+  @JvmStatic val mainHttp = "https://api.decent.ch"
   @JvmStatic val dockerWs = "ws://localhost:8090/"
   @JvmStatic val dockerHttp = "http://localhost:8090/"
   @JvmStatic val wsUrl = dockerWs

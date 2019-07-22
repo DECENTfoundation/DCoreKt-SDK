@@ -22,7 +22,7 @@ import retrofit2.http.POST
 internal class RpcService(url: String, client: OkHttpClient, private val gson: Gson) {
 
   private interface RpcEndpoint {
-    @POST("rpc")
+    @POST(".")
     fun request(@Body request: RequestBody): Single<ResponseBody>
   }
 
