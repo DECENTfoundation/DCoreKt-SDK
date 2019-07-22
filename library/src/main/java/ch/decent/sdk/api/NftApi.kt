@@ -92,6 +92,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data objects, or [ObjectNotFoundException] if none found
    */
+  @JvmName("getAllDataKt")
   fun <T : NftModel> getAllData(ids: List<ChainObject>, clazz: KClass<T>): Single<List<NftData<T>>> = getAllDataRaw(ids).make(clazz)
 
   /**
@@ -131,6 +132,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data object, or [ObjectNotFoundException] if none found
    */
+  @JvmName("getDataKt")
   fun <T : NftModel> getData(id: ChainObject, clazz: KClass<T>): Single<NftData<T>> = getAllData(listOf(id), clazz).map { it.single() }
 
   /**
@@ -210,6 +212,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data instances
    */
+  @JvmName("getNftBalancesKt")
   fun <T : NftModel> getNftBalances(account: ChainObject, nftId: ChainObject, clazz: KClass<T>): Single<List<NftData<T>>> =
       getNftBalancesRaw(account, listOf(nftId)).make(clazz)
 
@@ -245,6 +248,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data objects
    */
+  @JvmName("listDataByNftKt")
   fun <T : NftModel> listDataByNft(nftId: ChainObject, clazz: KClass<T>): Single<List<NftData<T>>> = listDataByNftRaw(nftId).make(clazz)
 
   /**
@@ -296,6 +300,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
   @JvmOverloads
+  @JvmName("createNftCreateOperationKt")
   fun <T : NftModel> createNftCreateOperation(
       symbol: String,
       options: NftOptions,
@@ -337,6 +342,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
   @JvmOverloads
+  @JvmName("createKt")
   fun <T : NftModel> create(
       credentials: Credentials,
       symbol: String,

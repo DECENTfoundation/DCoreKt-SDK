@@ -57,7 +57,7 @@ import toChainObject
 import okhttp3.OkHttpClient
 
 // create API for HTTP
-val api = DCoreSdk.createForHttp(OkHttpClient(), "https://testnet-api.dcore.io/")
+val api = DCoreSdk.createForHttp(OkHttpClient(), "https://testnet.dcore.io/")
 // get account by name, resolves to account id '1.2.28'
 val disposable = api.accountApi.get("public-account-10").subscribe { account ->
   account.id == "1.2.28".toChainObject()
@@ -72,7 +72,7 @@ import toChainObject
 import okhttp3.OkHttpClient
 
 // create API for websocket
-val api = DCoreSdk.createForWebSocket(OkHttpClient(), "wss://testnet-api.dcore.io/")
+val api = DCoreSdk.createForWebSocket(OkHttpClient(), "wss://testnet-socket.dcore.io/")
 // create account credentials form account id and corresponding private key
 val credentials = Credentials("1.2.28".toChainObject(), "5JMpT5C75rcAmuUB81mqVBXbmL1BKea4MYwVK6voMQLvigLKfrE")
 // 1 DCT
