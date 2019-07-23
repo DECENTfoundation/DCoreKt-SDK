@@ -41,7 +41,7 @@ If not using `gradle`, check [jitpack] site for instructions.
 Usage
 -----
 
-You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-java-android).
+You can find example Android project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-java-android). And example Java server project using the same SDK [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-java-server).
 
 You can find developer documentation for latest release [here](https://decentfoundation.github.io/DCoreKt-SDK/).
 
