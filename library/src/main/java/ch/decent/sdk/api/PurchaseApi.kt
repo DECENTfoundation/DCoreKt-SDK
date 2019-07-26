@@ -19,6 +19,7 @@ import ch.decent.sdk.net.model.request.GetOpenBuyingsByConsumer
 import ch.decent.sdk.net.model.request.GetOpenBuyingsByUri
 import ch.decent.sdk.net.model.request.SearchBuyings
 import ch.decent.sdk.net.model.request.SearchFeedback
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 
 class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -87,7 +88,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
       term: String = "",
       from: PurchaseObjectId? = null,
       order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<Purchase>> = SearchBuyings(consumer, order, from, term, limit).toRequest()
 
   /**
@@ -104,7 +105,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun findAllForFeedback(
       uri: String,
       user: String? = null,
-      count: Int = 100,
+      count: Int = REQ_LIMIT_MAX,
       startId: PurchaseObjectId? = null
   ): Single<List<Purchase>> = SearchFeedback(user, uri, startId, count).toRequest()
 

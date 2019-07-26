@@ -1,7 +1,7 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
 import org.junit.After
@@ -33,8 +33,8 @@ abstract class BaseApiTest(private val channel: Channel) : TimeOutTest() {
 
     val logger = LoggerFactory.getLogger(channel.toString())
     api = when (channel) {
-      Channel.RpcService -> DCoreSdk.createForHttp(Helpers.client(logger), Helpers.httpUrl, logger)
-      Channel.RxWebSocket -> DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+      Channel.RpcService -> DCoreClient.createForHttp(Helpers.client(logger), Helpers.httpUrl, logger)
+      Channel.RxWebSocket -> DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
     }
   }
 
@@ -54,7 +54,7 @@ abstract class BaseOperationsTest {
 
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
-    api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+    api = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
     api.transactionExpiration = Duration.ofSeconds(5)
   }
 

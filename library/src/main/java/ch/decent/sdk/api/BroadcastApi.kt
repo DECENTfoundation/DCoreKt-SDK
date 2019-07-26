@@ -15,6 +15,9 @@ import org.threeten.bp.Duration
 
 class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
+  internal val transactionExpiration: Duration
+    get() = api.transactionExpiration
+
   /**
    * broadcast transaction to DCore
    * @param transaction transaction to broadcast

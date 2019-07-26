@@ -12,6 +12,7 @@ import ch.decent.sdk.net.model.request.GetAccountBalanceForTransaction
 import ch.decent.sdk.net.model.request.GetAccountHistory
 import ch.decent.sdk.net.model.request.GetRelativeAccountHistory
 import ch.decent.sdk.net.model.request.SearchAccountBalanceHistory
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 
 class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -44,7 +45,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
       accountId: AccountObjectId,
       startId: OperationHistoryObjectId? = null,
       stopId: OperationHistoryObjectId? = null,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<OperationHistory>> =
       GetAccountHistory(accountId, stopId ?: OperationHistoryObjectId(), limit, startId ?: OperationHistoryObjectId()).toRequest()
 
@@ -61,7 +62,7 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun listOperationsRelative(
       accountId: AccountObjectId,
       start: Int = 0,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<OperationHistory>> = GetRelativeAccountHistory(accountId, 0, limit, start).toRequest()
 
   /**
@@ -86,6 +87,6 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
       fromBlock: Long = 0,
       toBlock: Long = 0,
       startOffset: Long = 0,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<BalanceChange>> = SearchAccountBalanceHistory(accountId, assets, recipientAccount, fromBlock, toBlock, startOffset, limit).toRequest()
 }

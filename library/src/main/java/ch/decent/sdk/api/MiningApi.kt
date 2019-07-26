@@ -26,6 +26,8 @@ import ch.decent.sdk.net.model.request.GetNewAssetPerBlock
 import ch.decent.sdk.net.model.request.LookupMinerAccounts
 import ch.decent.sdk.net.model.request.LookupVoteIds
 import ch.decent.sdk.net.model.request.SearchMinerVoting
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
 import java.math.BigInteger
 
@@ -58,7 +60,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   // todo model
   @JvmOverloads
-  fun getFeedsByMiner(account: AccountObjectId, count: Int = 100) = GetFeedsByMiner(account, count).toRequest()
+  fun getFeedsByMiner(account: AccountObjectId, count: Int = REQ_LIMIT_MAX) = GetFeedsByMiner(account, count).toRequest()
 
   /**
    * Get the miner owned by a given account.
@@ -109,7 +111,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of found miner ids
    */
   @JvmOverloads
-  fun listMinersRelative(lowerBound: String = "", limit: Int = 1000): Single<List<MinerId>> = LookupMinerAccounts(lowerBound, limit).toRequest()
+  fun listMinersRelative(lowerBound: String = "", limit: Int = REQ_LIMIT_MAX_1K): Single<List<MinerId>> = LookupMinerAccounts(lowerBound, limit).toRequest()
 
   /**
    * Given a set of votes, return the objects they are voting for.
@@ -140,7 +142,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
       id: MinerObjectId? = null,
       accountName: String? = null,
       onlyMyVotes: Boolean = false,
-      limit: Int = 1000
+      limit: Int = REQ_LIMIT_MAX_1K
   ): Single<List<MinerVotingInfo>> = SearchMinerVoting(accountName, searchTerm, onlyMyVotes, order, id, limit).toRequest()
 
   /**
