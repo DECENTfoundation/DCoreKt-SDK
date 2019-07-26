@@ -26,7 +26,7 @@ import org.threeten.bp.Duration
 import java.util.concurrent.TimeoutException
 import kotlin.reflect.KClass
 
-class DCoreApi internal constructor(internal val core: DCoreSdk) {
+class DCoreApi internal constructor(internal val core: DCoreClient) {
 
   /**
    * default transaction expiration in seconds used when broadcasting transactions,
@@ -59,7 +59,7 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   val historyApi = HistoryApi(this)
   val miningApi = MiningApi(this)
   val purchaseApi = PurchaseApi(this)
-  val seedersApi = SeederApi(this)
+  val seederApi = SeederApi(this)
   val callbackApi = CallbackApi(this)
   val subscriptionApi = SubscriptionApi(this)
   val transactionApi = TransactionApi(this)

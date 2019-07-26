@@ -43,7 +43,7 @@ import org.slf4j.Logger
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 
-class DCoreSdk private constructor(
+class DCoreClient internal constructor(
     private val client: OkHttpClient,
     webSocketUrl: String? = null,
     restUrl: String? = null,
@@ -111,14 +111,14 @@ class DCoreSdk private constructor(
 
     @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
-        DCoreApi(DCoreSdk(client, restUrl = url, logger = logger))
+        DCoreApi(DCoreClient(client, restUrl = url, logger = logger))
 
     @JvmStatic @JvmOverloads
     fun createForWebSocket(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
-        DCoreApi(DCoreSdk(client, webSocketUrl = url, logger = logger))
+        DCoreApi(DCoreClient(client, webSocketUrl = url, logger = logger))
 
     @JvmStatic @JvmOverloads
-    fun create(client: OkHttpClient, webSocketUrl: String, httpUrl: String, logger: Logger? = null): DCoreApi =
-        DCoreApi(DCoreSdk(client, webSocketUrl, httpUrl, logger))
+    fun create(client: OkHttpClient, webSocketUrl: String?, httpUrl: String?, logger: Logger? = null): DCoreApi =
+        DCoreApi(DCoreClient(client, webSocketUrl, httpUrl, logger))
   }
 }

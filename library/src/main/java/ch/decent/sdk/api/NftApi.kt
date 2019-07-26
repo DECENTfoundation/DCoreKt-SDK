@@ -475,7 +475,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       from: ChainObject,
       to: ChainObject,
       id: ChainObject,
-      memo: Memo?,
+      memo: Memo? = null,
       fee: Fee = Fee()
   ): Single<NftTransferOperation> = Single.just(NftTransferOperation(from, to, id, memo, fee))
 

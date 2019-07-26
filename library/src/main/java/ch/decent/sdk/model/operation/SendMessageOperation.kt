@@ -1,7 +1,7 @@
 package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.MessagePayload
@@ -18,7 +18,7 @@ class SendMessageOperation : CustomOperation {
   /**
    * Send message operation.
    *
-   * @param gson GSON object to serialize message payload, [DCoreApi.gson] or [DCoreSdk.gsonBuilder] can be used
+   * @param gson GSON object to serialize message payload, [DCoreApi.gson] or [DCoreClient.gsonBuilder] can be used
    * @param message message payload
    * @param payer account id to pay for the operation
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.

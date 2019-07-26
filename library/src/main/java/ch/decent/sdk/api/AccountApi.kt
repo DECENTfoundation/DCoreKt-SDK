@@ -36,6 +36,8 @@ import ch.decent.sdk.net.model.request.LookupAccountNames
 import ch.decent.sdk.net.model.request.LookupAccounts
 import ch.decent.sdk.net.model.request.SearchAccountHistory
 import ch.decent.sdk.net.model.request.SearchAccounts
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
 
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -147,7 +149,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return map of account names to corresponding IDs
    */
   @JvmOverloads
-  fun listAllRelative(lowerBound: String, limit: Int = 1000): Single<Map<String, ChainObject>> =
+  fun listAllRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX_1K): Single<Map<String, ChainObject>> =
       LookupAccounts(lowerBound, limit).toRequest()
 
   /**
@@ -165,7 +167,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       searchTerm: String,
       order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
       id: ChainObject = ObjectType.NULL_OBJECT.genericId,
-      limit: Int = 1000
+      limit: Int = REQ_LIMIT_MAX_1K
   ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
 
   /**
@@ -184,7 +186,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       accountId: ChainObject,
       from: ChainObject = ObjectType.NULL_OBJECT.genericId,
       order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<TransactionDetail>> = SearchAccountHistory(accountId, order, from, limit).toRequest()
 
   /**

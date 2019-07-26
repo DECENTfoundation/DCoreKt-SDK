@@ -18,6 +18,9 @@ import org.threeten.bp.Duration
 
 class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
+  internal val transactionExpiration: Duration
+    get() = api.transactionExpiration
+
   /**
    * create unsigned transaction
    *

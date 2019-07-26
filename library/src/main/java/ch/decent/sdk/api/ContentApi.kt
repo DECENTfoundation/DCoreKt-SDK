@@ -32,6 +32,7 @@ import ch.decent.sdk.net.model.request.GetContentByUri
 import ch.decent.sdk.net.model.request.ListPublishingManagers
 import ch.decent.sdk.net.model.request.RestoreEncryptionKey
 import ch.decent.sdk.net.model.request.SearchContent
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 
@@ -83,7 +84,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of publishing managers
    */
   @JvmOverloads
-  fun listAllPublishersRelative(lowerBound: String, limit: Int = 100): Single<List<ChainObject>> = ListPublishingManagers(lowerBound, limit).toRequest()
+  fun listAllPublishersRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX): Single<List<ChainObject>> = ListPublishingManagers(lowerBound, limit).toRequest()
 
   /**
    * Restores encryption key from key parts stored in buying object.
@@ -116,7 +117,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       regionCode: String = Regions.ALL.code,
       type: String = contentType(ApplicationType.DECENT_CORE, CategoryType.NONE),
       startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<Content>> = SearchContent(term, order, user, regionCode, type, startId, limit).toRequest()
 
   /**

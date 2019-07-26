@@ -1,8 +1,8 @@
 package ch.decent.sdk.java;
 
 import ch.decent.sdk.DCoreApi;
+import ch.decent.sdk.DCoreClient;
 import ch.decent.sdk.DCoreConstants;
-import ch.decent.sdk.DCoreSdk;
 import ch.decent.sdk.Helpers;
 import ch.decent.sdk.crypto.Address;
 import ch.decent.sdk.crypto.Credentials;
@@ -14,7 +14,6 @@ import ch.decent.sdk.model.operation.OperationType;
 import ch.decent.sdk.model.operation.TransferOperation;
 import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;
-import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -34,15 +33,15 @@ import java.util.Map;
 public class ApiTest {
 
     private Logger logger = LoggerFactory.getLogger("API");
-    private DCoreApi api = DCoreSdk.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getHttpUrl(), logger);
+    private DCoreApi api = DCoreClient.create(Helpers.client(logger), Helpers.getWsUrl(), Helpers.getHttpUrl(), logger);
 
     @Test
     public void init() {
-        DCoreApi apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl());
-        apiHttp = DCoreSdk.createForHttp(Helpers.client(logger), Helpers.getHttpUrl(), logger);
-        DCoreApi apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl());
-        apiWs = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
-        Gson gson = DCoreSdk.getGsonBuilder().create();
+        DCoreApi apiHttp = DCoreClient.createForHttp(Helpers.client(logger), Helpers.getHttpUrl());
+        apiHttp = DCoreClient.createForHttp(Helpers.client(logger), Helpers.getHttpUrl(), logger);
+        DCoreApi apiWs = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl());
+        apiWs = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.getWsUrl(), logger);
+        Gson gson = DCoreClient.getGsonBuilder().create();
 
         apiHttp.setTransactionExpiration(Duration.ofSeconds(100L));
     }

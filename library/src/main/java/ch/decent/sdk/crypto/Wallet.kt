@@ -1,6 +1,6 @@
 package ch.decent.sdk.crypto
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.model.Account
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CipherKeyPairAdapter
@@ -79,7 +79,7 @@ object Wallet {
   fun exportDCoreWallet(credentials: Credentials, account: Account, password: String, chainId: String): DCoreWallet {
     require(credentials.account == account.id)
     val pass = MessageDigest.getInstance("SHA-512").digest(password.toByteArray())
-    val gson = DCoreSdk.gsonBuilder
+    val gson = DCoreClient.gsonBuilder
         .registerTypeAdapter(Wallet.ExtraKeys::class.java, ExtraKeysAdapter)
         .registerTypeAdapter(Wallet.CipherKeyPair::class.java, CipherKeyPairAdapter)
         .create()
@@ -90,7 +90,7 @@ object Wallet {
 
   fun importDCoreWallet(walletJson: String, password: String): Credentials {
     val pass = MessageDigest.getInstance("SHA-512").digest(password.toByteArray())
-    val gson = DCoreSdk.gsonBuilder
+    val gson = DCoreClient.gsonBuilder
         .registerTypeAdapter(Wallet.ExtraKeys::class.java, ExtraKeysAdapter)
         .registerTypeAdapter(Wallet.CipherKeyPair::class.java, CipherKeyPairAdapter)
         .create()

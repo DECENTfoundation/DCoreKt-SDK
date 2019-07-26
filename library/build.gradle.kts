@@ -1,4 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
   kotlin("jvm")
@@ -13,6 +14,9 @@ plugins {
 dependencies {
   implementation(Libs.kotlin)
   implementation(Libs.kotlinReflect)
+
+  implementation(Libs.kpoet)
+  implementation("com.github.cretz.kastree:kastree-ast-psi:0.4.0")
 
   api(Libs.rxKotlin)
   api(Libs.rxJava)
@@ -39,6 +43,23 @@ dependencies {
   errorprone(Libs.errorProne)
   errorproneJavac(Libs.errorProneJavac)
 }
+sourceSets.main {
+  withConvention(KotlinSourceSet::class) {
+    kotlin.srcDirs("src/main/java", "src-gen/main/java")
+  }
+}
+
+tasks.create<Delete>("cleanGen") {
+  delete("src-gen")
+}
+
+tasks.create<JavaExec>("generate") {
+  classpath = sourceSets["main"].runtimeClasspath
+  main = "ch.decent.sdk.poet.BlockingKt"
+  dependsOn("cleanGen")
+}
+
+tasks.get("compileKotlin").dependsOn("cleanGen")
 
 detekt {
   toolVersion = Versions.detekt
