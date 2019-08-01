@@ -1,5 +1,6 @@
 object Modules {
   val sdk = "library"
+  val apiGen = "apiGen"
 }
 
 object Repos {
