@@ -55,6 +55,11 @@ object Builders {
               if (f.typeParams.isNotEmpty()) b.addTypeVariable(f.typeParams.single().typeName(i))
               DocReader.applyDocs(b, apiDoc, f, i)
               api.methodBuilder(b, f.type!!.returnType(i))
+              f.mods.filterIsInstance<Node.Modifier.AnnotationSet>().singleOrNull()?.run {
+                anns.map { it.names }.flatten()
+                    .map { AnnotationSpec.builder(it.className(i)).build() }
+                    .let { b.addAnnotations(it) }
+              }
 
               b.build()
             }
