@@ -1,9 +1,9 @@
 package ch.decent.sdk.java;
 
-import ch.decent.sdk.DCoreApi;
 import ch.decent.sdk.DCoreClient;
 import ch.decent.sdk.DCoreConstants;
 import ch.decent.sdk.Helpers;
+import ch.decent.sdk.api.rx.DCoreApi;
 import ch.decent.sdk.crypto.Address;
 import ch.decent.sdk.crypto.Credentials;
 import ch.decent.sdk.crypto.ECKeyPair;

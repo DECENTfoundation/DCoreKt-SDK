@@ -1,5 +1,6 @@
 package ch.decent.sdk
 
+import ch.decent.sdk.api.rx.DCoreApi
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.model.AddressAdapter
 import ch.decent.sdk.model.AuthMap

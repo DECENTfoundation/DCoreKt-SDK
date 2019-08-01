@@ -1,1 +1,1 @@
-include(Modules.sdk)
+include(Modules.sdk, Modules.apiGen)

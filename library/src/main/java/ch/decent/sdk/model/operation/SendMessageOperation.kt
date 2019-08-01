@@ -1,6 +1,6 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.api.rx.DCoreApi
 import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee

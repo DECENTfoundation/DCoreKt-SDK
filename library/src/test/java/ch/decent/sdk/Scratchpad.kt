@@ -15,6 +15,7 @@ import ch.decent.sdk.utils.unhex
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import okhttp3.OkHttpClient
 import okio.Buffer
 import okio.ByteString.Companion.decodeHex
 import org.amshove.kluent.`should be equal to`
@@ -297,5 +298,7 @@ class Scratchpad {
     "hello hex".unhex()
   }
 
-
+  @Test fun `check generated`() {
+    DCoreSdk.createApiBlocking(OkHttpClient())
+  }
 }

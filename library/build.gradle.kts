@@ -15,9 +15,6 @@ dependencies {
   implementation(Libs.kotlin)
   implementation(Libs.kotlinReflect)
 
-  implementation(Libs.kpoet)
-  implementation("com.github.cretz.kastree:kastree-ast-psi:0.4.0")
-
   api(Libs.rxKotlin)
   api(Libs.rxJava)
 
@@ -45,21 +42,15 @@ dependencies {
 }
 sourceSets.main {
   withConvention(KotlinSourceSet::class) {
-    kotlin.srcDirs("src/main/java", "src-gen/main/java")
+    kotlin.srcDirs("src/main/java", "gen/main/java")
   }
 }
 
-tasks.create<Delete>("cleanGen") {
-  delete("src-gen")
+tasks {
+  getByName<Delete>("clean") {
+    delete.add("gen")
+  }
 }
-
-tasks.create<JavaExec>("generate") {
-  classpath = sourceSets["main"].runtimeClasspath
-  main = "ch.decent.sdk.poet.BlockingKt"
-  dependsOn("cleanGen")
-}
-
-tasks.get("compileKotlin").dependsOn("cleanGen")
 
 detekt {
   toolVersion = Versions.detekt
