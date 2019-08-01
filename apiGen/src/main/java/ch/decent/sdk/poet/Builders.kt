@@ -47,16 +47,14 @@ object Builders {
             .filterNot { it.hasKeyword(Node.Modifier.Keyword.PRIVATE) }
             .map { f ->
               val i = it.imports.map { it.names.joinToString(".") }
-              val returnType = f.type!!.returnType(i)
 
               val b = FunSpec.builder(f.name!!)
                   .addCode("return $apiNameRef.%L(${f.paramNames()}).%L", f.name, api.returnCodeBlock)
                   .addParameters(f.paramSpecs(i))
-                  .returns(api.returnType(returnType))
 
               if (f.typeParams.isNotEmpty()) b.addTypeVariable(f.typeParams.single().typeName(i))
               DocReader.applyDocs(b, apiDoc, f, i)
-              api.methodBuilder(b)
+              api.methodBuilder(b, f.type!!.returnType(i))
 
               b.build()
             }
