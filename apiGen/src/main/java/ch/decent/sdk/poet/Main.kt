@@ -22,11 +22,13 @@ val apiClasses = File(srcApi).listFiles()!!.map { Parser.parseFile(it.readText()
 
 val apis = listOf(
     ApiDescriptor("blocking", "createApiBlocking", "blockingGet()"),
-    ApiDescriptor("futures", "createApiFutures", "toFuture()",
-        { Future::class.asClassName().parameterizedBy(it) }),
-    ApiDescriptor("callback", "createApi", "subscribeWith(callback)",
-        { ClassName.bestGuess("$packageNameApi.Callback").parameterizedBy(it) },
-        { it.addParameter("callback", it.build().returnType!!) })
+    ApiDescriptor("futures", "createApiFutures", "toFuture()")
+    { returns(Future::class.asClassName().parameterizedBy(it)) },
+    ApiDescriptor("callback", "createApi", "subscribeWith(callback)")
+    {
+      returns(ClassName.bestGuess("$packageNameApi.Cancelable"))
+      addParameter("callback", ClassName.bestGuess("$packageNameApi.Callback").parameterizedBy(it))
+    }
 )
 
 fun main() {

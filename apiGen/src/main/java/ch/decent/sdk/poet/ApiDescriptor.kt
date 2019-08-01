@@ -7,8 +7,7 @@ data class ApiDescriptor(
     val packageSuffix: String,
     val createMethodName: String,
     val returnCodeBlock: String,
-    val returnType: (TypeName) -> TypeName = { it },
-    val methodBuilder: (FunSpec.Builder) -> Any = { }
+    val methodBuilder: FunSpec.Builder.(TypeName) -> Any = { returns(it) }
 ) {
   val packageName = "$packageNameApi.$packageSuffix"
 }
