@@ -215,7 +215,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * Create a transfer operation.
+   * Create a transfer operation. For more options see [TransferOperation] constructor.
    *
    * @param credentials account credentials
    * @param nameOrId account id or account name
@@ -272,7 +272,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * Create a register new account operation.
+   * Create a register new account operation. For more options see [AccountCreateOperation] constructor.
    *
    * @param registrar account id used to register the new account
    * @param name new account name
@@ -311,7 +311,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(registrar)
 
   /**
-   * Create update account operation. Fills model with actual account values.
+   * Create update account operation. Fills model with actual account values. For more options see [AccountUpdateOperation] constructor.
    *
    * @param nameOrId account id or name
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.

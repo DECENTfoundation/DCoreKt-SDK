@@ -108,7 +108,7 @@ class PurchaseApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<List<Purchase>> = SearchFeedback(user, uri, startId, count).toRequest()
 
   /**
-   * Create a rate and comment content operation.
+   * Create a rate and comment content operation. For more options see [LeaveRatingAndCommentOperation] constructor.
    *
    * @param uri a uri of the content
    * @param consumer object id of the account, 1.2.*

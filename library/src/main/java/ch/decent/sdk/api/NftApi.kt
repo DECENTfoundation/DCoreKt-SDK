@@ -290,7 +290,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun searchNftHistory(nftDataId: ChainObject): Single<List<TransactionDetail>> = SearchNftHistory(nftDataId).toRequest()
 
   /**
-   * Create NFT create operation
+   * Create NFT create operation. For more options see [NftCreateOperation] constructor.
    *
    * @param symbol NFT symbol
    * @param options NFT options
@@ -310,7 +310,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<NftCreateOperation> = Single.just(NftCreateOperation(symbol, options, NftModel.createDefinitions(clazz), transferable, fee))
 
   /**
-   * Create NFT create operation
+   * Create NFT create operation. For more options see [NftCreateOperation] constructor.
    *
    * @param symbol NFT symbol
    * @param options NFT options
@@ -382,7 +382,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<TransactionConfirmation> = create(credentials, symbol, maxSupply, fixedMaxSupply, description, clazz.kotlin, transferable, fee)
 
   /**
-   * Create NFT update operation. Fills model with actual values.
+   * Create NFT update operation. Fills model with actual values. For more options see [NftUpdateOperation] constructor.
    *
    * @param idOrSymbol NFT object id or symbol
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
@@ -418,7 +418,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create NFT issue operation. Creates a NFT data instance.
+   * Create NFT issue operation. Creates a NFT data instance. For more options see [NftIssueOperation] constructor.
    *
    * @param issuer NFT issuer
    * @param idOrSymbol NFT object id or symbol
@@ -461,7 +461,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create NFT data instance transfer operation
+   * Create NFT data instance transfer operation. For more options see [NftTransferOperation] constructor.
    *
    * @param from NFT data instance owner account object id
    * @param to receiver account object id
@@ -500,7 +500,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create NFT data instance update operation
+   * Create NFT data instance update operation. For more options see [NftUpdateDataOperation] constructor.
    *
    * @param modifier NFT data instance owner account object id, updatable values are set in [NftUpdateDataOperation.data] map
    * @param id NFT data instance object id
@@ -521,7 +521,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   }
 
   /**
-   * Create NFT data instance update operation
+   * Create NFT data instance update operation. For more options see [NftUpdateDataOperation] constructor.
    *
    * @param modifier NFT data instance owner account object id
    * @param id NFT data instance object id

@@ -143,7 +143,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<List<MinerVotingInfo>> = SearchMinerVoting(accountName, searchTerm, onlyMyVotes, order, id, limit).toRequest()
 
   /**
-   * Create vote for miner operation.
+   * Create vote for miner operation. For more options see [AccountUpdateOperation] constructor.
    *
    * @param accountId account object id, 1.2.*
    * @param minerIds list of miner account ids
