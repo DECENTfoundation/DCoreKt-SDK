@@ -34,7 +34,6 @@ val apis = listOf(
 )
 
 fun main() {
-  File("").absolutePath.print()
 //  val path = System.out
   val path = out
   apis.forEach {

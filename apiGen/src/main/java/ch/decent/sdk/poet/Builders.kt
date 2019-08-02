@@ -28,7 +28,7 @@ object Builders {
   fun apiFile(api: ApiDescriptor) = apiClassSpec(api).let { FileSpec.builder(api.packageName, it.name!!).addType(it).build() }
 
   private fun apiServiceClasses(api: ApiDescriptor): List<TypeSpec> = apiClasses
-      .filter { it.structured().name == "AccountApi" }
+//      .filter { it.structured().name == "AccountApi" }
       .map {
         val klass = ClassName(it.pkg!!.names.joinToString("."), it.structured().name)
 
