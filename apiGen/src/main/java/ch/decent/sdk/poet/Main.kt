@@ -1,6 +1,7 @@
 package ch.decent.sdk.poet
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.asClassName
 import kastree.ast.Node
@@ -24,11 +25,12 @@ val apis = listOf(
     ApiDescriptor("blocking", "createApiBlocking", "blockingGet()"),
     ApiDescriptor("futures", "createApiFutures", "toFuture()")
     { returns(Future::class.asClassName().parameterizedBy(it)) },
-    ApiDescriptor("callback", "createApi", "subscribeWith(callback)")
-    {
-      returns(ClassName.bestGuess("$packageNameApi.Cancelable"))
-      addParameter("callback", ClassName.bestGuess("$packageNameApi.Callback").parameterizedBy(it))
-    }
+    ApiDescriptor("callback", "createApi", "subscribeWith(callback)",
+        { it.substringBefore("@return").trimEnd() + "\n@param callback a callback object that asynchronously receives the result value or error " },
+        {
+          returns(ClassName.bestGuess("$packageNameApi.Cancelable"), CodeBlock.of("a request handler object which can be used to cancel the request"))
+          addParameter("callback", ClassName.bestGuess("$packageNameApi.Callback").parameterizedBy(it))
+        })
 )
 
 fun main() {

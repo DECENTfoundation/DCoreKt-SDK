@@ -1,6 +1,6 @@
 package ch.decent.sdk.poet
 
-import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.CodeBlock
 import kastree.ast.Node
 import java.io.File
 
@@ -36,24 +36,22 @@ object DocReader {
     get() = File(srcApi).listFiles()!!
         .associate { it.nameWithoutExtension to it.docs() }
 
-  fun applyDocs(b: FunSpec.Builder, docs: MutableList<FunDoc>, f: Node.Decl.Func, i: List<String>) {
-    val doc = docs.find { it.name == f.name }
-    doc?.let {
-      val args = mutableListOf<Any>()
-      val withImports = it.docs.replace(REGEX_DOC_LINK) {
-        it.value.drop(1).dropLast(1).let {
-          if (it.first().isLowerCase()) {
-            args.add(it.member(i))
-            "[%M]"
-          } else {
-            args.add(it.className(i))
-            "[%T]"
+  @Suppress("SpreadOperator")
+  fun applyDocs(docs: MutableList<FunDoc>, f: Node.Decl.Func, i: List<String>) =
+      docs.find { it.name == f.name }?.let {
+        val args = mutableListOf<Any>()
+        val withImports = it.docs.replace(REGEX_DOC_LINK) {
+          it.value.drop(1).dropLast(1).let {
+            if (it.first().isLowerCase()) {
+              args.add(it.member(i))
+              "[%M]"
+            } else {
+              args.add(it.className(i))
+              "[%T]"
+            }
           }
         }
+        docs.remove(it)
+        CodeBlock.of(withImports, *args.toTypedArray()).toString()
       }
-      b.addKdoc(withImports, *args.toTypedArray())
-      docs.remove(it)
-    }
-
-  }
 }
