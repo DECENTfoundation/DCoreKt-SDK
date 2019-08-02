@@ -180,8 +180,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return account history list
    */
-/*
-  @Deprecated(message = "Use history API")
+  @Deprecated("Use history API")
   @JvmOverloads
   fun searchAccountHistory(
       accountId: ChainObject,
@@ -189,7 +188,6 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
       limit: Int = REQ_LIMIT_MAX
   ): Single<List<TransactionDetail>> = SearchAccountHistory(accountId, order, from, limit).toRequest()
-*/
 
   /**
    * Create API credentials.

@@ -28,7 +28,7 @@ object Builders {
   fun apiFile(api: ApiDescriptor) = apiClassSpec(api).let { FileSpec.builder(api.packageName, it.name!!).addType(it).build() }
 
   private fun apiServiceClasses(api: ApiDescriptor): List<TypeSpec> = apiClasses
-//      .filter { it.structured().name == "NftApi" }
+      .filter { it.structured().name == "AccountApi" }
       .map {
         val klass = ClassName(it.pkg!!.names.joinToString("."), it.structured().name)
 
@@ -56,11 +56,16 @@ object Builders {
               val docs = DocReader.applyDocs(apiDoc, f, i)
               docs?.let { b.addKdoc(api.docBuilder(it)) }
               api.methodBuilder(b, f.type!!.returnType(i))
-              f.mods.filterIsInstance<Node.Modifier.AnnotationSet>().singleOrNull()?.run {
-                anns.map { it.names }.flatten()
-                    .map { AnnotationSpec.builder(it.className(i)).build() }
-                    .let { b.addAnnotations(it) }
-              }
+              f.mods.filterIsInstance<Node.Modifier.AnnotationSet>().map {
+                it.anns.single().let {
+                  val ba = AnnotationSpec.builder(it.names.single().className(i))
+                  it.args.singleOrNull()?.let {
+                    val str = ((it.expr as Node.Expr.StringTmpl).elems.single() as Node.Expr.StringTmpl.Elem.Regular).str
+                    ba.addMember("%S", str)
+                  }
+                  ba.build()
+                }
+              }.also { b.addAnnotations(it) }
 
               b.build()
             }
