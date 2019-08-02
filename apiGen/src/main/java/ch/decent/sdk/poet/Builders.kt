@@ -53,7 +53,8 @@ object Builders {
                   .addParameters(f.paramSpecs(i))
 
               if (f.typeParams.isNotEmpty()) b.addTypeVariable(f.typeParams.single().typeName(i))
-              DocReader.applyDocs(b, apiDoc, f, i)
+              val docs = DocReader.applyDocs(apiDoc, f, i)
+              docs?.let { b.addKdoc(api.docBuilder(it)) }
               api.methodBuilder(b, f.type!!.returnType(i))
               f.mods.filterIsInstance<Node.Modifier.AnnotationSet>().singleOrNull()?.run {
                 anns.map { it.names }.flatten()
