@@ -37,7 +37,7 @@ before_script:
 #  - docker-compose exec DCore id dcore
 
 script:
-  - ./gradlew build test
+  - ./gradlew run build test
   - ./gradlew jacocoTestReport
   - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r library/build/reports/jacoco/test/jacocoTestReport.xml
 deploy:
