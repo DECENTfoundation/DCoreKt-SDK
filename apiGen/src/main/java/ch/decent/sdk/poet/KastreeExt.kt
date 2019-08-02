@@ -61,7 +61,7 @@ fun String.member(imports: List<String>) = MemberName(fullName(imports).substrin
 fun String.fullName(imports: List<String>) = when (this) {
   "Class" -> "java.lang.$this"
   "List", "Map", "emptyList" -> "kotlin.collections.$this"
-  "Long", "Int", "Short", "Byte", "String", "Boolean", "Unit", "Any" -> "kotlin.$this"
+  "Long", "Int", "Short", "Byte", "String", "Boolean", "Unit", "Any", "Deprecated" -> "kotlin.$this"
   "JvmOverloads" -> "kotlin.jvm.$this"
   else -> imports.find { it.substringAfterLast(".") == this }?.substringAfter("import ")
 } ?: this
