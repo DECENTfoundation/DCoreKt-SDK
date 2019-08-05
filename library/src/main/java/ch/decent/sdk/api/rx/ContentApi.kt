@@ -114,7 +114,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       order: SearchContentOrder = SearchContentOrder.CREATED_DESC,
       user: String = "",
       regionCode: String = Regions.ALL.code,
-      type: String = contentType(ApplicationType.DECENT_CORE, CategoryType.NONE),
+      type: String = contentType(),
       startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
       limit: Int = REQ_LIMIT_MAX
   ): Single<List<Content>> = SearchContent(term, order, user, regionCode, type, startId, limit).toRequest()

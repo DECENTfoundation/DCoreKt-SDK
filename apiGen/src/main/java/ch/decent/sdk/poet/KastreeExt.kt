@@ -43,7 +43,7 @@ fun Node.Decl.Func.paramSpecs(imports: List<String>) = this.params.map { p ->
       when {
         this.args.isEmpty() && this.expr.name().first().isLowerCase() -> CodeBlock.of("%M()", this.expr.name().member(imports))
         this.args.isEmpty() -> CodeBlock.of("%T()", this.expr.name().className(imports))
-        else -> throw IllegalStateException()
+        else -> throw IllegalStateException(this.toString())
       }
     }
     else -> throw IllegalStateException()
@@ -63,7 +63,7 @@ fun String.fullName(imports: List<String>) = when (this) {
   "Class" -> "java.lang.$this"
   "List", "Map", "emptyList" -> "kotlin.collections.$this"
   "Long", "Int", "Short", "Byte", "String", "Boolean", "Unit", "Any", "Deprecated" -> "kotlin.$this"
-  "JvmOverloads" -> "kotlin.jvm.$this"
+  "JvmOverloads", "JvmName" -> "kotlin.jvm.$this"
   else -> imports.find { it.substringAfterLast(".") == this }?.substringAfter("import ")
 } ?: this
 
