@@ -45,29 +45,19 @@ object Builders {
         val methods = it.structured().members
             .filterIsInstance<Node.Decl.Func>()
             .filterNot { it.hasKeyword(Node.Modifier.Keyword.PRIVATE) }
-            .map { f ->
-              val i = it.imports.map { it.names.joinToString(".") }
+            .map { func ->
+              val imports = it.imports.map { it.names.joinToString(".") }
 
-              val b = FunSpec.builder(f.name!!)
-                  .addCode("return $apiNameRef.%L(${f.paramNames()}).%L", f.name, api.returnCodeBlock)
-                  .addParameters(f.paramSpecs(i))
+              val builder = FunSpec.builder(func.name!!)
+                  .addCode("return $apiNameRef.%L(${func.paramNames()}).%L", func.name, api.returnCodeBlock)
+                  .addParameters(func.paramSpecs(imports))
 
-              if (f.typeParams.isNotEmpty()) b.addTypeVariable(f.typeParams.single().typeName(i))
-              val docs = DocReader.applyDocs(apiDoc, f, i)
-              docs?.let { b.addKdoc(api.docBuilder(it)) }
-              api.methodBuilder(b, f.type!!.returnType(i))
-              f.mods.filterIsInstance<Node.Modifier.AnnotationSet>().map {
-                it.anns.single().let {
-                  val ba = AnnotationSpec.builder(it.names.single().className(i))
-                  it.args.singleOrNull()?.let {
-                    val str = ((it.expr as Node.Expr.StringTmpl).elems.single() as Node.Expr.StringTmpl.Elem.Regular).str
-                    ba.addMember("%S", str)
-                  }
-                  ba.build()
-                }
-              }.also { b.addAnnotations(it) }
-
-              b.build()
+              if (func.typeParams.isNotEmpty()) builder.addTypeVariable(func.typeParams.single().typeName(imports))
+              val docs = DocReader.applyDocs(apiDoc, func, imports)
+              docs?.let { builder.addKdoc(api.docBuilder(it)) }
+              api.methodBuilder(builder, func.type!!.returnType(imports))
+              builder.addAnnotations(func.mods.filterIsInstance<Node.Modifier.AnnotationSet>().buildAnnotations(imports))
+              builder.build()
             }
 
         TypeSpec.classBuilder(klass)
