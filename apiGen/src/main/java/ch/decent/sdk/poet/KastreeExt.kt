@@ -8,6 +8,7 @@
 
 package ch.decent.sdk.poet
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.MemberName
@@ -88,3 +89,15 @@ fun Node.Type.returnType(imports: List<String>): TypeName =
 
 fun Node.TypeParam.typeName(imports: List<String>): TypeVariableName =
     TypeVariableName(name, ClassName.bestGuess((type!! as Node.TypeRef.Simple).fullName(imports)))
+
+fun List<Node.Modifier.AnnotationSet>.buildAnnotations(imports: List<String>) =
+    map {
+      it.anns.single().let {
+        val builder = AnnotationSpec.builder(it.names.single().className(imports))
+        it.args.singleOrNull()?.let {
+          val str = ((it.expr as Node.Expr.StringTmpl).elems.single() as Node.Expr.StringTmpl.Elem.Regular).str
+          builder.addMember("%S", str)
+        }
+        builder.build()
+      }
+    }
