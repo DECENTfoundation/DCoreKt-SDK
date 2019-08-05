@@ -3,10 +3,8 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
-import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.exception.DCoreException
+import ch.decent.sdk.model.*
 import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.utils.hash512
@@ -182,6 +180,16 @@ class Scratchpad {
     val trx = DCoreSdk.gsonBuilder.create().fromJson(str, TransactionConfirmation::class.java)
     println(trx)
   }
+
+  @Test fun `new error codes`() {
+    val logger = LoggerFactory.getLogger("LOG")
+    val api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+//    non existing account
+    val test = api.historyApi.findAllOperations("1.2.33333".toChainObject(), startOffset = 2, limit = 3).test()
+    test.awaitTerminalEvent()
+    test.assertError(DCoreException::class.java)
+  }
+
 
 /*  @Test fun `transfers to various receivers`() {
     val api = DCoreSdk.createApiRx(client, url, logger = LoggerFactory.getLogger("DCoreApi"))
