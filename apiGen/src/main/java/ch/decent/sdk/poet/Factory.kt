@@ -25,7 +25,7 @@ object Factory {
 
   val params = listOf(
       ParameterSpec.builder("client", ClassName.bestGuess("okhttp3.OkHttpClient")).build(),
-      nullable("websocketUrl", String::class.asClassName()),
+      nullable("webSocketUrl", String::class.asClassName()),
       nullable("httpUrl", String::class.asClassName()),
       nullable("logger", ClassName.bestGuess("org.slf4j.Logger"))
   )
