@@ -52,7 +52,7 @@ class DCoreClient internal constructor(
   internal val gson = gsonBuilder.create()
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gson, logger) }
   private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gson) }
-  private val chainId = makeRequest(GetChainId).cache()
+  private val chainId by lazy { makeRequest(GetChainId).cache() }
 
   init {
     require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
