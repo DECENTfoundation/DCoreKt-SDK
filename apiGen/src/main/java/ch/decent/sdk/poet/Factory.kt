@@ -9,6 +9,17 @@ import com.squareup.kotlinpoet.asClassName
 
 object Factory {
 
+  private val docs = """
+   Create Api. At least one of HTTP or WebSocket URLs must be set.
+   
+   @param client OkHttp client handling the requests
+   @param webSocketUrl URL for the webSocket requests, eg: wss://testnet-socket.dcore.io/
+   @param httpUrl URL for the HTTP requests, eg: https://testnet.dcore.io/
+   @param logger optional logger for requests
+   
+   @return DCore API for making requests
+  """.trimIndent()
+
   private fun nullable(name: String, klass: ClassName) =
       ParameterSpec.builder(name, klass.copy(nullable = true)).defaultValue("null").build()
 
@@ -21,12 +32,16 @@ object Factory {
 
   fun builder(methodName: String, pckg: String) = FunSpec.builder(methodName)
       .addParameters(params)
-      .addStatement("return %T(%T(%T(client, websocketUrl, httpUrl, logger)))", ClassName(pckg, apiRef.simpleName), apiRef, clientRef)
+      .addStatement("return %T(%T(%T(client, webSocketUrl, httpUrl, logger)))", ClassName(pckg, apiRef.simpleName), apiRef, clientRef)
+      .addAnnotation(JvmStatic::class)
+      .addKdoc(docs)
       .build()
 
   val rx = FunSpec.builder("createApiRx")
       .addParameters(params)
-      .addStatement("return %T(%T(client, websocketUrl, httpUrl, logger))", apiRef, clientRef)
+      .addStatement("return %T(%T(client, webSocketUrl, httpUrl, logger))", apiRef, clientRef)
+      .addAnnotation(JvmStatic::class)
+      .addKdoc(docs)
       .build()
 
   val file: FileSpec

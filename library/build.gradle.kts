@@ -66,6 +66,7 @@ dockerCompose {
 val dokka by tasks.getting(DokkaTask::class) {
   outputFormat = "javadoc"
   outputDirectory = "$buildDir/javadoc"
+  reportUndocumented = false
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
