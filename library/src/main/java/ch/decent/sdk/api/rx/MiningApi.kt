@@ -1,14 +1,14 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Miner
 import ch.decent.sdk.model.MinerId
+import ch.decent.sdk.model.MinerObjectId
 import ch.decent.sdk.model.MinerVotes
 import ch.decent.sdk.model.MinerVotingInfo
 import ch.decent.sdk.model.SearchMinerVotingOrder
@@ -25,6 +25,8 @@ import ch.decent.sdk.net.model.request.GetNewAssetPerBlock
 import ch.decent.sdk.net.model.request.LookupMinerAccounts
 import ch.decent.sdk.net.model.request.LookupVoteIds
 import ch.decent.sdk.net.model.request.SearchMinerVoting
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
 import java.math.BigInteger
 
@@ -57,7 +59,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   // todo model
   @JvmOverloads
-  fun getFeedsByMiner(account: ChainObject, count: Int = 100) = GetFeedsByMiner(account, count).toRequest()
+  fun getFeedsByMiner(account: AccountObjectId, count: Int = REQ_LIMIT_MAX): Single<List<Any>> = GetFeedsByMiner(account, count).toRequest()
 
   /**
    * Get the miner owned by a given account.
@@ -66,7 +68,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return the miner object, or [ObjectNotFoundException] if the account does not have a miner
    */
-  fun getMinerByAccount(account: ChainObject): Single<Miner> = GetMinerByAccount(account).toRequest()
+  fun getMinerByAccount(account: AccountObjectId): Single<Miner> = GetMinerByAccount(account).toRequest()
 
   /**
    * Get the total number of miners registered in DCore.
@@ -82,7 +84,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of miners
    */
-  fun getMiners(minerIds: List<ChainObject>): Single<List<Miner>> = GetMiners(minerIds).toRequest()
+  fun getMiners(minerIds: List<MinerObjectId>): Single<List<Miner>> = GetMiners(minerIds).toRequest()
 
   /**
    * Returns map of the first 1000 miners by their name to miner account
@@ -108,7 +110,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of found miner ids
    */
   @JvmOverloads
-  fun listMinersRelative(lowerBound: String = "", limit: Int = 1000): Single<List<MinerId>> = LookupMinerAccounts(lowerBound, limit).toRequest()
+  fun listMinersRelative(lowerBound: String = "", limit: Int = REQ_LIMIT_MAX_1K): Single<List<MinerId>> = LookupMinerAccounts(lowerBound, limit).toRequest()
 
   /**
    * Given a set of votes, return the objects they are voting for.
@@ -136,10 +138,10 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun findAllVotingInfo(
       searchTerm: String,
       order: SearchMinerVotingOrder = SearchMinerVotingOrder.NAME_DESC,
-      id: ChainObject? = null,
+      id: MinerObjectId? = null,
       accountName: String? = null,
       onlyMyVotes: Boolean = false,
-      limit: Int = 1000
+      limit: Int = REQ_LIMIT_MAX_1K
   ): Single<List<MinerVotingInfo>> = SearchMinerVoting(accountName, searchTerm, onlyMyVotes, order, id, limit).toRequest()
 
   /**
@@ -154,8 +156,8 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun createVoteOperation(
-      accountId: ChainObject,
-      minerIds: List<ChainObject>,
+      accountId: AccountObjectId,
+      minerIds: List<MinerObjectId>,
       fee: Fee = Fee()
   ): Single<AccountUpdateOperation> =
       getMiners(minerIds).flatMap { miners ->
@@ -175,7 +177,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun vote(
       credentials: Credentials,
-      minerIds: List<ChainObject>,
+      minerIds: List<MinerObjectId>,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       createVoteOperation(credentials.account, minerIds, fee).flatMap {

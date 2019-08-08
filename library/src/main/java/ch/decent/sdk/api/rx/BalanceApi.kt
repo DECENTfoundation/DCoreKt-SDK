@@ -1,12 +1,12 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AmountWithAsset
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.VestingBalance
 import ch.decent.sdk.net.model.request.GetAccountBalances
 import ch.decent.sdk.net.model.request.GetNamedAccountBalances
@@ -23,7 +23,8 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return amount for asset
    */
-  fun get(accountId: ChainObject, asset: ChainObject): Single<AssetAmount> = getAll(accountId, listOf(asset)).map { it.single() }
+  fun get(accountId: AccountObjectId, asset: AssetObjectId): Single<AssetAmount> = getAll(accountId, listOf(asset)).map { it.single() }
+
   /**
    * Get account balance by id.
    *
@@ -33,7 +34,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of amounts for different assets
    */
   @JvmOverloads
-  fun getAll(accountId: ChainObject, assets: List<ChainObject> = emptyList()): Single<List<AssetAmount>> = GetAccountBalances(accountId, assets).toRequest()
+  fun getAll(accountId: AccountObjectId, assets: List<AssetObjectId> = emptyList()): Single<List<AssetAmount>> = GetAccountBalances(accountId, assets).toRequest()
 
   /**
    * get account balance by name.
@@ -43,7 +44,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return amount for asset
    */
-  fun get(name: String, asset: ChainObject): Single<AssetAmount> = getAll(name, listOf(asset)).map { it.single() }
+  fun get(name: String, asset: AssetObjectId): Single<AssetAmount> = getAll(name, listOf(asset)).map { it.single() }
 
   /**
    * Get account balance by name.
@@ -54,7 +55,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of amounts for different assets
    */
   @JvmOverloads
-  fun getAll(name: String, assets: List<ChainObject> = emptyList()): Single<List<AssetAmount>> = GetNamedAccountBalances(name, assets).toRequest()
+  fun getAll(name: String, assets: List<AssetObjectId> = emptyList()): Single<List<AssetAmount>> = GetNamedAccountBalances(name, assets).toRequest()
 
   /**
    * Get account balance by name.
@@ -65,7 +66,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a pair of asset to amount
    */
   @JvmOverloads
-  fun getWithAsset(accountId: ChainObject, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
+  fun getWithAsset(accountId: AccountObjectId, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(accountId, listOf(assetSymbol)).map { it.single() }
 
   /**
@@ -76,7 +77,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of pairs of assets to amounts
    */
-  fun getAllWithAsset(accountId: ChainObject, assetSymbols: List<String>): Single<List<AmountWithAsset>> =
+  fun getAllWithAsset(accountId: AccountObjectId, assetSymbols: List<String>): Single<List<AmountWithAsset>> =
       api.assetApi.getAllByName(assetSymbols).flatMap { assets ->
         getAll(accountId, assets.map { it.id }).map {
           it.map { balance -> AmountWithAsset(assets.single { it.id == balance.assetId }, balance) }
@@ -94,6 +95,7 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun getWithAsset(name: String, assetSymbol: String = DCoreConstants.DCT_SYMBOL): Single<AmountWithAsset> =
       getAllWithAsset(name, listOf(assetSymbol)).map { it.single() }
+
   /**
    * Get account balance by name.
    *
@@ -116,5 +118,6 @@ class BalanceApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a list of vesting balances with additional information
    */
-  fun getAllVesting(accountId: ChainObject): Single<List<VestingBalance>> = GetVestingBalances(accountId).toRequest()
+  fun getAllVesting(accountId: AccountObjectId): Single<List<VestingBalance>> = GetVestingBalances(accountId).toRequest()
+
 }

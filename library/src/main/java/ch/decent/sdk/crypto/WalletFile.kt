@@ -1,11 +1,11 @@
 package ch.decent.sdk.crypto
 
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import java.util.*
 
 data class WalletFile(
     val version: Int,
-    val accountId: ChainObject,
+    val accountId: AccountObjectId,
     val cipherText: String,
     val salt: String,
     val iv: String,

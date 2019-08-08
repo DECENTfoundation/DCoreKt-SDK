@@ -1,7 +1,11 @@
 package ch.decent.sdk
 
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.AccountObjectId
+import ch.decent.sdk.model.AssetObjectId
+import ch.decent.sdk.model.ContentObjectId
+import ch.decent.sdk.model.PurchaseObjectId
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.TrustAllCerts
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -28,8 +32,8 @@ object Helpers {
           .addInterceptor(HttpLoggingInterceptor { logger.info(it) }.setLevel(HttpLoggingInterceptor.Level.BODY))
           .build()
 
-  @JvmStatic val account = "1.2.27".toChainObject()
-  @JvmStatic val account2 = "1.2.28".toChainObject()
+  @JvmStatic val account = "1.2.27".toObjectId<AccountObjectId>()
+  @JvmStatic val account2 = "1.2.28".toObjectId<AccountObjectId>()
   @JvmStatic val accountName = "public-account-9"
   @JvmStatic val accountName2 = "public-account-10"
   @JvmStatic val private = "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"
@@ -40,11 +44,11 @@ object Helpers {
 
   @JvmStatic val createAccount = "account-test"
   @JvmStatic val createAsset = "TEST"
-  @JvmStatic val createAssetId = "1.3.3".toChainObject()
+  @JvmStatic val createAssetId = "1.3.3".toObjectId<AssetObjectId>()
   @JvmStatic val createUri = "http://hello.world.io"
-  @JvmStatic val createContentId = "2.13.0".toChainObject()
-  @JvmStatic val createContentId2 = "2.13.1".toChainObject()
-  @JvmStatic val createPurchaseId = "2.12.0".toChainObject()
+  @JvmStatic val createContentId = "2.13.0".toObjectId<ContentObjectId>()
+  @JvmStatic val createContentId2 = "2.13.1".toObjectId<ContentObjectId>()
+  @JvmStatic val createPurchaseId = "2.12.0".toObjectId<PurchaseObjectId>()
   @JvmStatic val createNft = "APPLE"
   @JvmStatic val createNftNested = "$createNft.NESTED"
 }

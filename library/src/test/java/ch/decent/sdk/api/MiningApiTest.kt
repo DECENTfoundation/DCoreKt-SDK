@@ -2,7 +2,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.model.VoteId
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import org.junit.Test
 
@@ -17,11 +17,11 @@ class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `get feeds by miner`() {
-    api.miningApi.getFeedsByMiner("1.2.4".toChainObject()).testCheck()
+    api.miningApi.getFeedsByMiner("1.2.4".toObjectId()).testCheck()
   }
 
   @Test fun `get miner by account`() {
-    api.miningApi.getMinerByAccount("1.2.4".toChainObject()).testCheck()
+    api.miningApi.getMinerByAccount("1.2.4".toObjectId()).testCheck()
   }
 
   @Test fun `get miner count`() {
@@ -29,7 +29,7 @@ class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `get miners by ids`() {
-    api.miningApi.getMiners(listOf("1.4.2".toChainObject(), "1.4.3".toChainObject())).testCheck()
+    api.miningApi.getMiners(listOf("1.4.2".toObjectId(), "1.4.3".toObjectId())).testCheck()
   }
 
   @Test fun `get miners, load their accounts and put it into map with miner names`() {

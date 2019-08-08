@@ -72,7 +72,7 @@ data class Config(
     @SerializedName("GRAPHENE_DEFAULT_MINER_PAY_PER_BLOCK") val grapheneDefaultMinerPayPerBlock: BigInteger,
     @SerializedName("GRAPHENE_DEFAULT_MINER_PAY_VESTING_SECONDS") val grapheneDefaultMinerPayVestingSeconds: Int,
     @SerializedName("GRAPHENE_MAX_INTEREST_APR") val grapheneMaxInterestApr: Int,
-    @SerializedName("GRAPHENE_MINER_ACCOUNT") val grapheneMinerAccount: ChainObject,
-    @SerializedName("GRAPHENE_NULL_ACCOUNT") val grapheneNullAccount: ChainObject,
-    @SerializedName("GRAPHENE_TEMP_ACCOUNT") val grapheneTempAccount: ChainObject
+    @SerializedName("GRAPHENE_MINER_ACCOUNT") val grapheneMinerAccount: AccountObjectId,
+    @SerializedName("GRAPHENE_NULL_ACCOUNT") val grapheneNullAccount: AccountObjectId,
+    @SerializedName("GRAPHENE_TEMP_ACCOUNT") val grapheneTempAccount: AccountObjectId
 )

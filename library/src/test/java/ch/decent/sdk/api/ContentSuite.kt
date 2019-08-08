@@ -2,11 +2,10 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Synopsis
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import ch.decent.sdk.utils.privateElGamal
 import org.junit.FixMethodOrder
@@ -85,7 +84,7 @@ class ContentApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Ignore //todo
   @Test fun `should generate content keys`() {
-    api.contentApi.generateKeys(listOf(ChainObject.parse("1.2.17"), ChainObject.parse("1.2.18"))).testCheck()
+    api.contentApi.generateKeys(listOf("1.2.17".toObjectId(), "1.2.18".toObjectId())).testCheck()
   }
 
   @Test fun `should get content by id`() {

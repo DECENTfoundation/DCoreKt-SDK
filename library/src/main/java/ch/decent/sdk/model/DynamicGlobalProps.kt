@@ -9,11 +9,11 @@ import org.threeten.bp.LocalDateTime
 import java.math.BigInteger
 
 data class DynamicGlobalProps(
-    @SerializedName("id") val id: ChainObject,
+    @SerializedName("id") val id: DynamicGlobalPropertyObjectId,
     @SerializedName("head_block_number") @UInt32 val headBlockNumber: Long,
     @SerializedName("head_block_id") val headBlockId: String,
     @SerializedName("time") val time: LocalDateTime,
-    @SerializedName("current_miner") val currentMiner: ChainObject,
+    @SerializedName("current_miner") val currentMiner: MinerObjectId,
     @SerializedName("next_maintenance_time") val nextMaintenanceTime: LocalDateTime,
     @SerializedName("last_budget_time") val lastBudgetTime: LocalDateTime,
     @SerializedName("miner_budget_from_fees") @Int64 val minerBudgetFromFees: Long,

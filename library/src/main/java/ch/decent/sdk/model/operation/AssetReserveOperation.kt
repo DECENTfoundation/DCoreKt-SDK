@@ -1,9 +1,8 @@
 package ch.decent.sdk.model.operation
 
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.ObjectType
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -15,14 +14,10 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class AssetReserveOperation @JvmOverloads constructor(
-    @SerializedName("payer") val payer: ChainObject,
+    @SerializedName("payer") val payer: AccountObjectId,
     @SerializedName("amount_to_reserve") val amount: AssetAmount,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.ASSET_RESERVE_OPERATION, fee) {
-
-  init {
-    require(payer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-  }
 
   override fun toString(): String {
     return "AssetReserveOperation(payer=$payer, amount=$amount)"

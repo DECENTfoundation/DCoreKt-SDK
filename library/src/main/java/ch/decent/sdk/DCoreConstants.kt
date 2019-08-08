@@ -1,10 +1,12 @@
 package ch.decent.sdk
 
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.AssetDataObjectId
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.ExchangeRate
-import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.utils.PRECISION_MAX
 import ch.decent.sdk.utils.RATING_MAX
 
@@ -12,15 +14,17 @@ object DCoreConstants {
   private const val DCT_PRECISION: Byte = 8
   private const val DCT_SUPPLY = 7319777577456900
 
-  @JvmField val DCT_ASSET_ID = "1.3.0".toChainObject()
+  @Suppress("MagicNumber")
+  @JvmField val PROXY_TO_SELF = AccountObjectId(3)
+  @JvmField val DCT_ASSET_ID = AssetObjectId()
   @JvmField val DCT = Asset(
       DCT_ASSET_ID,
       "DCT",
       DCT_PRECISION,
-      "1.2.1".toChainObject(),
+      AccountObjectId(1),
       "",
       AssetOptions(ExchangeRate(AssetAmount(1), AssetAmount(1)), maxSupply = DCT_SUPPLY),
-      "2.3.0".toChainObject()
+      AssetDataObjectId(0)
   )
 
   const val ALXT_SYMBOL = "ALXT"
@@ -37,5 +41,6 @@ object DCoreConstants {
   const val UIA_DESCRIPTION_MAX_CHARS = 1000
   const val NFT_NAME_MAX_CHARS = 32
   const val BASIS_POINTS_TOTAL = 10000
+  const val MAX_INSTANCE_ID = 281474976710655
 
 }

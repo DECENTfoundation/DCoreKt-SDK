@@ -3,18 +3,21 @@ package ch.decent.sdk
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.DumpedPrivateKey
 import ch.decent.sdk.crypto.ECKeyPair
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.utils.hash512
 import ch.decent.sdk.utils.hex
 import ch.decent.sdk.utils.unhex
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import okhttp3.OkHttpClient
 import okio.Buffer
 import okio.ByteString.Companion.decodeHex
 import org.amshove.kluent.`should be equal to`
@@ -179,12 +182,12 @@ class Scratchpad {
 
   @Test fun `processed transaction result`() {
     val str = "{\"id\":\"3d91dae75b55e34cddf43ebc56aeec8488db8012\",\"block_num\":454977,\"trx_num\":0,\"trx\":{\"ref_block_num\":61760,\"ref_block_prefix\":1485276657,\"expiration\":\"2018-03-22T12:56:29\",\"operations\":[[0,{\"fee\":{\"amount\":500000,\"asset_id\":\"1.3.0\"},\"from\":\"1.2.30\",\"to\":\"1.2.31\",\"amount\":{\"amount\":150000000,\"asset_id\":\"1.3.0\"},\"memo\":{\"from\":\"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz\",\"to\":\"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP\",\"nonce\":\"1029839728655420928\",\"message\":\"4acb403a35d4b73ec88a1cd287d93ccebd07809941b182b54c54ddb718ff98be\"},\"extensions\":[]}]],\"extensions\":[],\"signatures\":[\"1f75e472a20d5a8cdddccb26957a20b87c7fb8e6788d3c7cccd0abf48bd94455517c609bb4186821480655eb57a7956785e3c611ed61d2d9ef07c173969ddfffc0\"],\"operation_results\":[[0,{}]]}}"
-    val trx = DCoreSdk.gsonBuilder.create().fromJson(str, TransactionConfirmation::class.java)
+    val trx = DCoreClient.gsonBuilder.create().fromJson(str, TransactionConfirmation::class.java)
     println(trx)
   }
 
 /*  @Test fun `transfers to various receivers`() {
-    val api = DCoreSdk.createApiRx(client, url, logger = LoggerFactory.getLogger("DCoreApi"))
+    val api = DCoreClient.createApiRx(client, url, logger = LoggerFactory.getLogger("DCoreApi"))
     val dpk = DumpedPrivateKey.fromBase58(private)
     val key = ECKeyPair.fromPrivate(dpk.bytes, dpk.compressed)
     val credentials = Credentials(account, key)
@@ -206,7 +209,6 @@ class Scratchpad {
     )
 //    op.bytes.hash256().print()
 //    key.signature(op.bytes.hash256()).print()
-
   }
 
   @Test fun `retry when`() {
@@ -284,9 +286,13 @@ class Scratchpad {
 //    b.BE().readUint16(2).should.equal(refNum);
   }
 
+  @Test fun `reflection`() {
+    "1.2.3".toObjectId<AccountObjectId>().print()
+  }
+
   @Test fun `custom operation`() {
     val logger = LoggerFactory.getLogger("LOG")
-    val api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+    val api = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
 
     val op = CustomOperation(4, Helpers.account, listOf(Helpers.account), "hello data".toByteArray().hex())
     api.broadcastApi.broadcastWithCallback(Helpers.private, op)
@@ -297,5 +303,8 @@ class Scratchpad {
     "hello hex".unhex()
   }
 
+  @Test fun `check generated`() {
+    DCoreSdk.createApiBlocking(OkHttpClient())
+  }
 
 }

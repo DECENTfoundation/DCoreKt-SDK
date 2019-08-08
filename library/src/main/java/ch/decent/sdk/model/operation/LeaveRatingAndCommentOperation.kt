@@ -1,7 +1,7 @@
 package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.DCoreConstants
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.types.UInt64
 import com.google.gson.annotations.SerializedName
@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName
  */
 class LeaveRatingAndCommentOperation @JvmOverloads constructor(
     @SerializedName("URI") val uri: String,
-    @SerializedName("consumer") val consumer: ChainObject,
+    @SerializedName("consumer") val consumer: AccountObjectId,
     @SerializedName("rating") @UInt64 val rating: Byte, // 1-5 stars
     @SerializedName("comment") val comment: String,
     fee: Fee = Fee()

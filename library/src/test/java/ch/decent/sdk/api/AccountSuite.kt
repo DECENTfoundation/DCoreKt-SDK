@@ -4,7 +4,7 @@ import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.Authority
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -38,7 +38,7 @@ class AccountOperationsTest : BaseOperationsTest() {
 
   @Test fun `accounts-4 should make a vote on a new account`() {
     api.accountApi.createCredentials(Helpers.createAccount, Helpers.private2)
-        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toChainObject())) }
+        .flatMap { api.miningApi.vote(it, listOf("1.4.4".toObjectId())) }
         .testCheck()
   }
 }

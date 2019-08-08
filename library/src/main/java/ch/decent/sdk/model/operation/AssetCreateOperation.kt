@@ -3,12 +3,11 @@ package ch.decent.sdk.model.operation
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.DCoreConstants.PRECISION_ALLOWED
 import ch.decent.sdk.DCoreConstants.UIA_DESCRIPTION_MAX_CHARS
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Asset
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.MonitoredAssetOptions
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.types.UInt8
 import com.google.gson.annotations.SerializedName
 
@@ -25,7 +24,7 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class AssetCreateOperation @JvmOverloads constructor(
-    @SerializedName("issuer") val issuer: ChainObject,
+    @SerializedName("issuer") val issuer: AccountObjectId,
     @SerializedName("symbol") val symbol: String,
     @SerializedName("precision") @UInt8 val precision: Byte,
     @SerializedName("description") val description: String,
@@ -35,7 +34,6 @@ class AssetCreateOperation @JvmOverloads constructor(
 ) : BaseOperation(OperationType.ASSET_CREATE_OPERATION, fee) {
 
   init {
-    require(issuer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
     require(Asset.isValidSymbol(symbol)) { "invalid asset symbol: $symbol" }
     require(precision in PRECISION_ALLOWED) { "precision must be in range of 0-12" }
     require(description.length <= UIA_DESCRIPTION_MAX_CHARS) { "description cannot be longer then $UIA_DESCRIPTION_MAX_CHARS chars" }

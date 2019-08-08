@@ -1,22 +1,5 @@
 @file:Suppress("TooManyFunctions", "MatchingDeclarationName")
 
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License") you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package ch.decent.sdk.net.serialization
 
 import ch.decent.sdk.crypto.Address
@@ -25,13 +8,13 @@ import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.Authority
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
+import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.NftDataType
 import ch.decent.sdk.model.NftOptions
 import ch.decent.sdk.model.PubKey
@@ -68,6 +51,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import java.math.BigInteger
 import kotlin.reflect.KClass
+import kotlin.reflect.full.superclasses
 
 
 // Serialization utils methods
@@ -104,8 +88,8 @@ internal fun BigInteger.bytes(numBytes: Int): ByteArray {
 typealias Adapter<T> = (BufferedSink, obj: T) -> Unit
 
 object Serializer {
-  private val chainObjectAdapter: Adapter<ChainObject> = { buffer, obj ->
-    buffer.write(Varint.writeUnsignedVarLong(obj.instance.toLong()))
+  private val objectIdAdapter: Adapter<ObjectId> = { buffer, obj ->
+    buffer.write(Varint.writeUnsignedVarLong(obj.instance))
   }
 
   private val byteArrayAdapter: Adapter<ByteArray> = { buffer, obj ->
@@ -481,14 +465,14 @@ object Serializer {
       buffer.write(if (obj.isEmpty()) byteArrayOf(0) else Varint.writeUnsignedVarLong(obj.size.toLong()))
       obj.forEach { append(buffer, it) }
     } else {
-      val adapter = adapters[obj::class] as Adapter<T>?
+      val adapter = (adapters[obj::class] ?: adapters[obj::class.superclasses.first()]) as Adapter<T>?
       requireNotNull(adapter) { "missing adapter for ${obj::class}" }
       adapter(buffer, obj)
     }
   }
 
   private val adapters: Map<KClass<*>, Adapter<*>> = mapOf(
-      ChainObject::class to chainObjectAdapter,
+      ObjectId::class to objectIdAdapter,
       ByteArray::class to byteArrayAdapter,
       String::class to stringAdapter,
       Address::class to addressAdapter,

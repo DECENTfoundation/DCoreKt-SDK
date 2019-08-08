@@ -1,9 +1,10 @@
 package ch.decent.sdk.model.operation
 
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
+import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.ObjectType
 import com.google.gson.annotations.SerializedName
 
@@ -18,15 +19,14 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class TransferOperation @JvmOverloads constructor(
-    @SerializedName("from") val from: ChainObject,
-    @SerializedName("to") val to: ChainObject,
+    @SerializedName("from") val from: AccountObjectId,
+    @SerializedName("to") val to: ObjectId,
     @SerializedName("amount") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.TRANSFER2_OPERATION, fee) {
 
   init {
-    require(from.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(to.objectType == ObjectType.ACCOUNT_OBJECT || to.objectType == ObjectType.CONTENT_OBJECT) { "not an account or content object id" }
   }
 

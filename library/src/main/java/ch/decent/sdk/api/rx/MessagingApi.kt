@@ -1,11 +1,10 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.Message
@@ -16,6 +15,7 @@ import ch.decent.sdk.model.MessageResponse
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.net.model.request.GetMessageObjects
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
@@ -31,7 +31,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of message operation responses
    */
   @JvmOverloads
-  fun getAllOperations(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<MessageResponse>> =
+  fun getAllOperations(sender: AccountObjectId? = null, receiver: AccountObjectId? = null, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<MessageResponse>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
 
   /**
@@ -44,7 +44,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<Message>> =
+  fun getAll(sender: AccountObjectId? = null, receiver: AccountObjectId? = null, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<Message>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
           .map { it.map { Message.create(it) }.flatten() }
 
@@ -61,9 +61,9 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun getAllDecrypted(
       credentials: Credentials,
-      sender: ChainObject? = null,
-      receiver: ChainObject? = null,
-      maxCount: Int = 1000
+      sender: AccountObjectId? = null,
+      receiver: AccountObjectId? = null,
+      maxCount: Int = REQ_LIMIT_MAX_1K
   ): Single<List<Message>> =
       require(sender == credentials.account || receiver == credentials.account)
       { "credentials account id must match either sender id or receiver id " }.let {
@@ -81,7 +81,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAllDecryptedForSender(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
+  fun getAllDecryptedForSender(credentials: Credentials, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<Message>> =
       getAllDecrypted(credentials, sender = credentials.account, maxCount = maxCount)
 
   /**
@@ -93,7 +93,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
+  fun getAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<Message>> =
       getAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
 
   /**

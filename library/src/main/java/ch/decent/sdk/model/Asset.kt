@@ -7,23 +7,19 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 data class Asset(
-    @SerializedName("id") override val id: ChainObject,
+    @SerializedName("id") override val id: AssetObjectId,
     @SerializedName("symbol") override val symbol: String,
     @SerializedName("precision") @UInt8 override val precision: Byte,
-    @SerializedName("issuer") val issuer: ChainObject,
+    @SerializedName("issuer") val issuer: AccountObjectId,
     @SerializedName("description") val description: String,
     @SerializedName("options") val options: AssetOptions,
-    @SerializedName("dynamic_asset_data_id") val dataId: ChainObject,
+    @SerializedName("dynamic_asset_data_id") val dataId: AssetDataObjectId,
     @SerializedName("monitored_asset_opts") val monitoredAssetOpts: MonitoredAssetOptions? = null
 ) : AssetFormatter {
 
   companion object {
     private val regex = Regex("(?=.{3,16}$)^[A-Z][A-Z0-9]+(\\.[A-Z0-9]*)?[A-Z]$")
     @JvmStatic fun isValidSymbol(symbol: String) = regex.matches(symbol)
-  }
-
-  init {
-    check(id.objectType == ObjectType.ASSET_OBJECT)
   }
 
   /**
@@ -48,7 +44,7 @@ data class Asset(
    *
    * @return [AssetAmount] for converted amount
    */
-  private fun convert(amount: Long, toAssetId: ChainObject, roundingMode: RoundingMode): AssetAmount {
+  private fun convert(amount: Long, toAssetId: AssetObjectId, roundingMode: RoundingMode): AssetAmount {
     val quoteAmount: BigDecimal = options.exchangeRate.quote.amount.toBigDecimal()
     val baseAmount: BigDecimal = options.exchangeRate.base.amount.toBigDecimal()
     require(quoteAmount > BigDecimal.ZERO) { "Quote amount ($quoteAmount) must be greater then zero" }
