@@ -14,6 +14,7 @@ object DCoreConstants {
   private const val DCT_PRECISION: Byte = 8
   private const val DCT_SUPPLY = 7319777577456900
 
+  @Suppress("MagicNumber")
   @JvmField val PROXY_TO_SELF = AccountObjectId(3)
   @JvmField val DCT_ASSET_ID = AssetObjectId()
   @JvmField val DCT = Asset(
