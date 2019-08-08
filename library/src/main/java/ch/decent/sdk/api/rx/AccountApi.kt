@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.ECKeyPair
@@ -13,6 +12,7 @@ import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.FullAccount
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.SearchAccountHistoryOrder
@@ -38,6 +38,8 @@ import ch.decent.sdk.net.model.request.LookupAccountNames
 import ch.decent.sdk.net.model.request.LookupAccounts
 import ch.decent.sdk.net.model.request.SearchAccountHistory
 import ch.decent.sdk.net.model.request.SearchAccounts
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
 
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -127,7 +129,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return map of names or ids to account, or empty map if not present
    */
   @JvmOverloads
-  fun getFullAccounts(namesOrIds: List<String>, subscribe: Boolean = false) =
+  fun getFullAccounts(namesOrIds: List<String>, subscribe: Boolean = false): Single<Map<String, FullAccount>> =
       GetFullAccounts(namesOrIds, subscribe).toRequest()
 
   /**
@@ -149,7 +151,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return map of account names to corresponding IDs
    */
   @JvmOverloads
-  fun listAllRelative(lowerBound: String, limit: Int = 1000): Single<Map<String, AccountObjectId>> =
+  fun listAllRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX_1K): Single<Map<String, AccountObjectId>> =
       LookupAccounts(lowerBound, limit).toRequest()
 
   /**
@@ -167,7 +169,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       searchTerm: String,
       order: SearchAccountsOrder = SearchAccountsOrder.NAME_DESC,
       id: AccountObjectId? = null,
-      limit: Int = 1000
+      limit: Int = REQ_LIMIT_MAX_1K
   ): Single<List<Account>> = SearchAccounts(searchTerm, order, id, limit).toRequest()
 
   /**
@@ -180,13 +182,13 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return account history list
    */
-  @Deprecated(message = "Use history API")
+  @Deprecated("Use history API")
   @JvmOverloads
   fun searchAccountHistory(
       accountId: AccountObjectId,
       from: TransactionDetailObjectId? = null,
       order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<TransactionDetail>> = SearchAccountHistory(accountId, order, from, limit).toRequest()
 
   /**
@@ -209,7 +211,7 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param keyPair sender's key pair, mandatory for encrypted message
    */
   @JvmOverloads
-  fun createMemo(message: String, recipient: String? = null, keyPair: ECKeyPair? = null) =
+  fun createMemo(message: String, recipient: String? = null, keyPair: ECKeyPair? = null): Single<Memo> =
       if (keyPair != null && recipient != null) {
         get(recipient).map { Memo(message, keyPair, it.primaryAddress) }
       } else {

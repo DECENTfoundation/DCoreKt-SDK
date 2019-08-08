@@ -1,7 +1,7 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.api.rx.DCoreApi
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.Helpers
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
@@ -17,14 +17,14 @@ class CallbackApiTest {
 
   @Before fun init() {
     val logger = LoggerFactory.getLogger("RxWebSocket")
-    api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
+    api = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.wsUrl, logger)
   }
 
   @After fun finish() {
   }
 
   @Test fun `should fail for HTTP`() {
-    api = DCoreSdk.createForHttp(Helpers.client(), Helpers.httpUrl)
+    api = DCoreClient.createForHttp(Helpers.client(), Helpers.httpUrl)
 
     val test = api.callbackApi.onBlockApplied()
         .subscribeOn(Schedulers.newThread())

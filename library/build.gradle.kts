@@ -1,4 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
   kotlin("jvm")
@@ -39,6 +40,21 @@ dependencies {
   errorprone(Libs.errorProne)
   errorproneJavac(Libs.errorProneJavac)
 }
+sourceSets.main {
+  withConvention(KotlinSourceSet::class) {
+    kotlin.srcDirs("src/main/java", "gen/main/java")
+  }
+}
+
+tasks {
+  getByName<Delete>("clean") {
+    delete.add("gen")
+  }
+
+  getByName("compileKotlin") {
+    dependsOn.add(":apiGen:run")
+  }
+}
 
 detekt {
   toolVersion = Versions.detekt
@@ -54,6 +70,7 @@ dockerCompose {
 val dokka by tasks.getting(DokkaTask::class) {
   outputFormat = "javadoc"
   outputDirectory = "$buildDir/javadoc"
+  reportUndocumented = false
 }
 
 val dokkaJar by tasks.creating(Jar::class) {

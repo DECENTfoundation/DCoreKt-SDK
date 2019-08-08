@@ -1,5 +1,6 @@
 package ch.decent.sdk
 
+import ch.decent.sdk.api.rx.DCoreApi
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.model.AddressAdapter
 import ch.decent.sdk.model.AuthMap
@@ -42,7 +43,7 @@ import org.slf4j.Logger
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 
-class DCoreSdk private constructor(
+class DCoreClient internal constructor(
     private val client: OkHttpClient,
     webSocketUrl: String? = null,
     restUrl: String? = null,
@@ -51,7 +52,7 @@ class DCoreSdk private constructor(
   internal val gson = gsonBuilder.create()
   private val rxWebSocket: RxWebSocket? = webSocketUrl?.let { RxWebSocket(client, it, gson, logger) }
   private val rpc: RpcService? = restUrl?.let { RpcService(it, client, gson) }
-  private val chainId = makeRequest(GetChainId).cache()
+  private val chainId by lazy { makeRequest(GetChainId).cache() }
 
   init {
     require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
@@ -110,14 +111,14 @@ class DCoreSdk private constructor(
 
     @JvmStatic @JvmOverloads
     fun createForHttp(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
-        DCoreApi(DCoreSdk(client, restUrl = url, logger = logger))
+        DCoreApi(DCoreClient(client, restUrl = url, logger = logger))
 
     @JvmStatic @JvmOverloads
     fun createForWebSocket(client: OkHttpClient, url: String, logger: Logger? = null): DCoreApi =
-        DCoreApi(DCoreSdk(client, webSocketUrl = url, logger = logger))
+        DCoreApi(DCoreClient(client, webSocketUrl = url, logger = logger))
 
     @JvmStatic @JvmOverloads
-    fun create(client: OkHttpClient, webSocketUrl: String, httpUrl: String, logger: Logger? = null): DCoreApi =
-        DCoreApi(DCoreSdk(client, webSocketUrl, httpUrl, logger))
+    fun create(client: OkHttpClient, webSocketUrl: String?, httpUrl: String?, logger: Logger? = null): DCoreApi =
+        DCoreApi(DCoreClient(client, webSocketUrl, httpUrl, logger))
   }
 }

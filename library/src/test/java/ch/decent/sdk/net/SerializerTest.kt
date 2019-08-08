@@ -1,6 +1,6 @@
 package ch.decent.sdk.net
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.crypto.Address
@@ -150,7 +150,7 @@ class SerializerTest : TimeOutTest() {
   "top_n_control_flags": 0
 }
       """
-    val account = DCoreSdk.gsonBuilder.create().fromJson(json, Account::class.java)
+    val account = DCoreClient.gsonBuilder.create().fromJson(json, Account::class.java)
 
     val op = AccountUpdateOperation(
         account.id,
@@ -199,7 +199,7 @@ class SerializerTest : TimeOutTest() {
 
   @Test fun `should serialize transfer op transaction`() {
     val expected = "3e322ef4e4170c88615b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000"
-    val gson = DCoreSdk.gsonBuilder.create()
+    val gson = DCoreClient.gsonBuilder.create()
     val rawOp = """{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7","nonce":735604672334802432},"fee":{"amount":500000,"asset_id":"1.3.0"}}"""
     val op = gson.fromJson(rawOp, TransferOperation::class.java)
     op.type = OperationType.TRANSFER2_OPERATION
@@ -226,7 +226,7 @@ class SerializerTest : TimeOutTest() {
     val memo = Memo("hello messaging api", keyPair, public2, 4764221389359926272.toBigInteger())
     val payloadReceiver = MessagePayloadReceiver("1.2.28".toObjectId(), memo.message, public2, memo.nonce)
     val payload = MessagePayload("1.2.27".toObjectId(), listOf(payloadReceiver), public)
-    val gson = DCoreSdk.gsonBuilder.create()
+    val gson = DCoreClient.gsonBuilder.create()
     val op = SendMessageOperation(gson, payload, "1.2.27".toObjectId(), Fee(amount = 500002))
 
     Serializer.serialize(op).hex() `should be equal to` bytes
@@ -357,7 +357,7 @@ class SerializerTest : TimeOutTest() {
 
   private fun BaseOperation.expected() {
     val logger = LoggerFactory.getLogger("serializer")
-    val api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
+    val api = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
     api.transactionApi.createTransaction(this)
         .flatMap { api.transactionApi.getHexDump(it) }
         .blockingGet()

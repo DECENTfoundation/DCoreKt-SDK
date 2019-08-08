@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.AccountObjectId
@@ -91,7 +90,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return the assets found
    */
   @JvmOverloads
-  fun listAllRelative(lowerBound: String, limit: Int = 100): Single<List<Asset>> = ListAssets(lowerBound, limit).toRequest()
+  fun listAllRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX): Single<List<Asset>> = ListAssets(lowerBound, limit).toRequest()
 
   @JvmOverloads
   fun listAll(includeMonitored: Boolean = false): Single<List<Asset>> =
@@ -180,7 +179,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       symbol: String,
       precision: Byte,
       description: String,
-      options: AssetOptions = AssetOptions(ExchangeRate.forCreateOp(1, 1)),
+      options: AssetOptions = AssetOptions(),
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       createAssetCreateOperation(credentials.account, symbol, precision, description, options, fee = fee)

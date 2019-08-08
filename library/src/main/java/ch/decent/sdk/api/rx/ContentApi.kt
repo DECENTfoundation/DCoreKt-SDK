@@ -1,14 +1,11 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.AccountObjectId
-import ch.decent.sdk.model.ApplicationType
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.CategoryType
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.Content
 import ch.decent.sdk.model.ContentKeys
@@ -34,6 +31,7 @@ import ch.decent.sdk.net.model.request.GetContentByUri
 import ch.decent.sdk.net.model.request.ListPublishingManagers
 import ch.decent.sdk.net.model.request.RestoreEncryptionKey
 import ch.decent.sdk.net.model.request.SearchContent
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 
@@ -85,7 +83,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of publishing managers
    */
   @JvmOverloads
-  fun listAllPublishersRelative(lowerBound: String, limit: Int = 100): Single<List<AccountObjectId>> = ListPublishingManagers(lowerBound, limit).toRequest()
+  fun listAllPublishersRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX): Single<List<AccountObjectId>> = ListPublishingManagers(lowerBound, limit).toRequest()
 
   /**
    * Restores encryption key from key parts stored in buying object.
@@ -116,9 +114,9 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       order: SearchContentOrder = SearchContentOrder.CREATED_DESC,
       user: String = "",
       regionCode: String = Regions.ALL.code,
-      type: String = contentType(ApplicationType.DECENT_CORE, CategoryType.NONE),
+      type: String = contentType(),
       startId: ContentObjectId? = null,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<ContentSummary>> = SearchContent(term, order, user, regionCode, type, startId, limit).toRequest()
 
   /**

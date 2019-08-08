@@ -1,23 +1,7 @@
-package ch.decent.sdk
+package ch.decent.sdk.api
 
-import ch.decent.sdk.DCoreConstants.EXPIRATION_DEF
-import ch.decent.sdk.api.AccountApi
-import ch.decent.sdk.api.AssetApi
-import ch.decent.sdk.api.BalanceApi
-import ch.decent.sdk.api.BlockApi
-import ch.decent.sdk.api.BroadcastApi
-import ch.decent.sdk.api.CallbackApi
-import ch.decent.sdk.api.ContentApi
-import ch.decent.sdk.api.GeneralApi
-import ch.decent.sdk.api.HistoryApi
-import ch.decent.sdk.api.MessagingApi
-import ch.decent.sdk.api.MiningApi
-import ch.decent.sdk.api.NftApi
-import ch.decent.sdk.api.PurchaseApi
-import ch.decent.sdk.api.SeederApi
-import ch.decent.sdk.api.SubscriptionApi
-import ch.decent.sdk.api.TransactionApi
-import ch.decent.sdk.api.ValidationApi
+import ch.decent.sdk.DCoreClient
+import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.NftObjectId
 import ch.decent.sdk.model.RawNft
@@ -26,13 +10,12 @@ import org.threeten.bp.Duration
 import java.util.concurrent.TimeoutException
 import kotlin.reflect.KClass
 
-class DCoreApi internal constructor(internal val core: DCoreSdk) {
-
+abstract class BaseCoreApi(internal val core: DCoreClient) {
   /**
    * default transaction expiration in seconds used when broadcasting transactions,
    * after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
    */
-  var transactionExpiration: Duration = Duration.ofSeconds(EXPIRATION_DEF)
+  var transactionExpiration: Duration = Duration.ofSeconds(DCoreConstants.EXPIRATION_DEF)
 
   /**
    * websocket request timeout, if no response is delivered within time window a [TimeoutException] is thrown
@@ -47,24 +30,6 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
     get() = core.gson
 
   internal val registeredNfts = mutableMapOf<NftObjectId, KClass<out NftModel>>()
-
-  val accountApi = AccountApi(this)
-  val assetApi = AssetApi(this)
-  val validationApi = ValidationApi(this)
-  val balanceApi = BalanceApi(this)
-  val blockApi = BlockApi(this)
-  val broadcastApi = BroadcastApi(this)
-  val contentApi = ContentApi(this)
-  val generalApi = GeneralApi(this)
-  val historyApi = HistoryApi(this)
-  val miningApi = MiningApi(this)
-  val purchaseApi = PurchaseApi(this)
-  val seedersApi = SeederApi(this)
-  val callbackApi = CallbackApi(this)
-  val subscriptionApi = SubscriptionApi(this)
-  val transactionApi = TransactionApi(this)
-  val messagingApi = MessagingApi(this)
-  val nftApi = NftApi(this)
 
   /**
    * Register NFT data model with object id, if no model is provided the [RawNft] will be used
@@ -114,5 +79,4 @@ class DCoreApi internal constructor(internal val core: DCoreSdk) {
   fun unregisterNfts(ids: List<NftObjectId>) {
     ids.forEach { unregisterNft(it) }
   }
-
 }

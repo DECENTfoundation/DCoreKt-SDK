@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException

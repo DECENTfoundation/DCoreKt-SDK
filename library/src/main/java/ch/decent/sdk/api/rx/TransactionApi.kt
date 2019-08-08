@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
@@ -17,6 +16,9 @@ import io.reactivex.Single
 import org.threeten.bp.Duration
 
 class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
+
+  internal val transactionExpiration: Duration
+    get() = api.transactionExpiration
 
   /**
    * create unsigned transaction
@@ -46,7 +48,7 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a set of proposed transactions
    */
   // todo model
-  fun getAllProposed(accountId: AccountObjectId) = GetProposedTransactions(accountId).toRequest()
+  fun getAllProposed(accountId: AccountObjectId): Single<List<Any>> = GetProposedTransactions(accountId).toRequest()
 
   /**
    * If the transaction has not expired, this method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].

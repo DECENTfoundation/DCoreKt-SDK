@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.AccountObjectId
@@ -115,7 +114,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data objects, or [ObjectNotFoundException] if none found
    */
-  fun getAllData(ids: List<NftDataObjectId>): Single<List<NftData<out NftModel>>> = getAllDataRaw(ids).make()
+  fun getAllData(ids: List<NftDataObjectId>): Single<List<NftData<NftModel>>> = getAllDataRaw(ids).make()
 
   /**
    * Get NFT data instances with raw model
@@ -154,7 +153,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data object, or [ObjectNotFoundException] if none found
    */
-  fun getData(id: NftDataObjectId): Single<NftData<out NftModel>> = getAllData(listOf(id)).map { it.single() }
+  fun getData(id: NftDataObjectId): Single<NftData<NftModel>> = getAllData(listOf(id)).map { it.single() }
 
   /**
    * Get NFT data instance with raw model
@@ -201,7 +200,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return NFT data instances
    */
   @JvmOverloads
-  fun getNftBalances(account: AccountObjectId, nftIds: List<NftObjectId> = emptyList()): Single<List<NftData<out NftModel>>> =
+  fun getNftBalances(account: AccountObjectId, nftIds: List<NftObjectId> = emptyList()): Single<List<NftData<NftModel>>> =
       getNftBalancesRaw(account, nftIds).make()
 
   /**
@@ -268,7 +267,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return NFT data objects
    */
-  fun listDataByNft(nftId: NftObjectId): Single<List<NftData<out NftModel>>> = listDataByNftRaw(nftId).make()
+  fun listDataByNft(nftId: NftObjectId): Single<List<NftData<NftModel>>> = listDataByNftRaw(nftId).make()
 
   /**
    * Get NFT data instances with raw model
@@ -472,7 +471,7 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
       from: AccountObjectId,
       to: AccountObjectId,
       id: NftDataObjectId,
-      memo: Memo?,
+      memo: Memo? = null,
       fee: Fee = Fee()
   ): Single<NftTransferOperation> = Single.just(NftTransferOperation(from, to, id, memo, fee))
 
@@ -579,12 +578,13 @@ class NftApi internal constructor(api: DCoreApi) : BaseApi(api) {
   private fun <T : NftModel> Single<List<NftData<RawNft>>>.make(clazz: KClass<T>) =
       map { it.map { nft -> NftData(nft, clazz) } }
 
+  @Suppress("UNCHECKED_CAST")
   private fun Single<List<NftData<RawNft>>>.make() =
       map {
         it.map { nft ->
           val clazz = api.registeredNfts[nft.nftId]
           if (clazz != null) NftData(nft, clazz) else nft
-        }
+        } as List<NftData<NftModel>>
       }
 
 }

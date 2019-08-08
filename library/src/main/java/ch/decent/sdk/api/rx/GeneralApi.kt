@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.model.ChainProperties
 import ch.decent.sdk.model.Config
 import ch.decent.sdk.model.DynamicGlobalProps

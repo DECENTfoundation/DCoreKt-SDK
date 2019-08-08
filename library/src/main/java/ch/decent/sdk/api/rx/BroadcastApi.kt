@@ -1,8 +1,7 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
@@ -14,6 +13,9 @@ import io.reactivex.Single
 import org.threeten.bp.Duration
 
 class BroadcastApi internal constructor(api: DCoreApi) : BaseApi(api) {
+
+  internal val transactionExpiration: Duration
+    get() = api.transactionExpiration
 
   /**
    * broadcast transaction to DCore
