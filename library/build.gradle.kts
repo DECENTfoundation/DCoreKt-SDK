@@ -50,6 +50,10 @@ tasks {
   getByName<Delete>("clean") {
     delete.add("gen")
   }
+
+  getByName("compileKotlin") {
+    dependsOn.add(":apiGen:run")
+  }
 }
 
 detekt {
