@@ -24,6 +24,7 @@ import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.AssetReserveOperation
 import ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation
 import ch.decent.sdk.model.operation.AssetUpdateOperation
+import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.net.model.request.GetAssets
 import ch.decent.sdk.net.model.request.GetAssetsData
@@ -137,7 +138,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
 
   /**
-   * Create asset create operation.
+   * Create asset create operation. For more options see [AssetCreateOperation] constructor.
    *
    * @param issuer account id issuing the asset
    * @param symbol the string symbol, 3-16 uppercase chars
@@ -201,7 +202,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
           .broadcast(credentials)
 
   /**
-   * Create update asset operation. Fills model with actual asset values.
+   * Create update asset operation. Fills model with actual asset values. For more options see [AssetUpdateOperation] constructor.
    *
    * @param assetIdOrSymbol asset to update
    * @param newIssuer a new issuer account id
@@ -253,7 +254,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create update advanced options operation for the asset.
+   * Create update advanced options operation for the asset. For more options see [AssetUpdateAdvancedOperation] constructor.
    *
    * @param assetIdOrSymbol asset to update
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
@@ -294,6 +295,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create issue asset operation. Only the issuer of the asset can issue some funds until maxSupply is reached.
+   * For more options see [AssetIssueOperation] constructor.
    *
    * @param assetIdOrSymbol asset to issue
    * @param amount raw amount to issue
@@ -334,7 +336,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create fund asset pool operation. Any account can fund a pool.
+   * Create fund asset pool operation. Any account can fund a pool. For more options see [AssetFundPoolsOperation] constructor.
    *
    * @param assetIdOrSymbol which asset to fund
    * @param uia UIA raw amount
@@ -371,7 +373,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create claim fees operation. Claim funds from asset pool, only the asset issuer can claim.
+   * Create claim fees operation. Claim funds from asset pool, only the asset issuer can claim. For more options see [AssetClaimFeesOperation] constructor.
    *
    * @param assetIdOrSymbol which asset to claim from
    * @param uia UIA raw amount
@@ -408,7 +410,7 @@ class AssetApi internal constructor(api: DCoreApi) : BaseApi(api) {
       .broadcast(credentials)
 
   /**
-   * Create reserve funds operation. Return issued funds to the issuer of the asset.
+   * Create reserve funds operation. Return issued funds to the issuer of the asset. For more options see [AssetReserveOperation] constructor.
    *
    * @param assetIdOrSymbol which asset to reserve from
    * @param amount raw amount to remove from current supply

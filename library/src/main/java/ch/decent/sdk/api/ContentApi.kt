@@ -120,7 +120,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<List<Content>> = SearchContent(term, order, user, regionCode, type, startId, limit).toRequest()
 
   /**
-   * Create a purchase content operation.
+   * Create a purchase content operation. For more options see [PurchaseContentOperation] constructor.
    *
    * @param credentials account credentials
    * @param contentId object id of the content, 2.13.*
@@ -139,7 +139,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
 
   /**
-   * Create a purchase content operation.
+   * Create a purchase content operation. For more options see [PurchaseContentOperation] constructor.
    *
    * @param credentials account credentials
    * @param uri uri of the content
@@ -197,7 +197,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create amount transfer operation of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
-   * Fees are paid by the "from" account.
+   * Fees are paid by the "from" account. For more options see [TransferOperation] constructor.
    *
    * @param credentials account credentials
    * @param id content id
@@ -244,6 +244,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+   * For more options see [RemoveContentOperation] constructor.
    *
    * @param content content id
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -255,6 +256,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+   * For more options see [RemoveContentOperation] constructor.
    *
    * @param content content uri
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -293,7 +295,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * Create request to submit content operation.
+   * Create request to submit content operation. For more options see [AddOrUpdateContentOperation] constructor.
    *
    * @param author author of the content. If co-authors is not filled, this account will receive full payout
    * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
@@ -374,6 +376,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create request to update content operation. Fills the model with actual content values.
+   * For more options see [AddOrUpdateContentOperation] constructor.
    *
    * @param content content id
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -387,6 +390,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create request to update content operation. Fills the model with actual content values.
+   * For more options see [AddOrUpdateContentOperation] constructor.
    *
    * @param content content uri
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
