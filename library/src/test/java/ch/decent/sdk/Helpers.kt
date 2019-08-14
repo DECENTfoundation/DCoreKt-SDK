@@ -4,6 +4,7 @@ import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.ContentObjectId
+import ch.decent.sdk.model.MessagingObjectId
 import ch.decent.sdk.model.PurchaseObjectId
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.TrustAllCerts
@@ -49,6 +50,8 @@ object Helpers {
   @JvmStatic val createContentId = "2.13.0".toObjectId<ContentObjectId>()
   @JvmStatic val createContentId2 = "2.13.1".toObjectId<ContentObjectId>()
   @JvmStatic val createPurchaseId = "2.12.0".toObjectId<PurchaseObjectId>()
+  @JvmStatic val messageId1 = "2.18.0".toObjectId<MessagingObjectId>()
+  @JvmStatic val messageId2 = "2.18.1".toObjectId<MessagingObjectId>()
   @JvmStatic val createNft = "APPLE"
   @JvmStatic val createNftNested = "$createNft.NESTED"
 }
