@@ -1,5 +1,9 @@
 ch.decent.sdk
 ch.decent.sdk.api
+ch.decent.sdk.api.blocking
+ch.decent.sdk.api.callback
+ch.decent.sdk.api.futures
+ch.decent.sdk.api.rx
 ch.decent.sdk.crypto
 ch.decent.sdk.crypto.dictonaries
 ch.decent.sdk.exception
