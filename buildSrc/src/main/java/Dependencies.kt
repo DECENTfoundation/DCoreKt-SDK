@@ -19,7 +19,7 @@ object Versions {
   val threeTen = "1.3.6"
   val slf4j = "1.7.25"
   val guava = "25.0-android" //jdk7 support
-  val kluent = "1.41"
+  val kluent = "1.49"
   val okio = "2.2.2"
 
   val bouncyProv = "1.59"
