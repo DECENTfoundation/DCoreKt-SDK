@@ -1,21 +1,20 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.ApplicationType
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.CategoryType
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.Content
 import ch.decent.sdk.model.ContentKeys
+import ch.decent.sdk.model.ContentObjectId
+import ch.decent.sdk.model.ContentSummary
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.PubKey
+import ch.decent.sdk.model.PurchaseObjectId
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.SearchContentOrder
@@ -32,6 +31,7 @@ import ch.decent.sdk.net.model.request.GetContentByUri
 import ch.decent.sdk.net.model.request.ListPublishingManagers
 import ch.decent.sdk.net.model.request.RestoreEncryptionKey
 import ch.decent.sdk.net.model.request.SearchContent
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 import org.threeten.bp.LocalDateTime
 
@@ -44,7 +44,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return generated key and key parts
    */
-  fun generateKeys(seeders: List<ChainObject>): Single<ContentKeys> = GenerateContentKeys(seeders).toRequest()
+  fun generateKeys(seeders: List<AccountObjectId>): Single<ContentKeys> = GenerateContentKeys(seeders).toRequest()
 
   /**
    * Get content by id.
@@ -53,7 +53,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a content if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
    */
-  fun get(contentId: ChainObject): Single<Content> = GetContentById(listOf(contentId)).toRequest().map { it.single() }
+  fun get(contentId: ContentObjectId): Single<Content> = GetContentById(listOf(contentId)).toRequest().map { it.single() }
 
   /**
    * Get contents by ids.
@@ -62,7 +62,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a content if found, empty list otherwise
    */
-  fun getAll(contentId: List<ChainObject>): Single<List<Content>> = GetContentById(contentId).toRequest()
+  fun getAll(contentId: List<ContentObjectId>): Single<List<Content>> = GetContentById(contentId).toRequest()
       .onErrorResumeNext { if (it is ObjectNotFoundException) Single.just(emptyList()) else Single.error(it) }
 
   /**
@@ -83,7 +83,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of publishing managers
    */
   @JvmOverloads
-  fun listAllPublishersRelative(lowerBound: String, limit: Int = 100): Single<List<ChainObject>> = ListPublishingManagers(lowerBound, limit).toRequest()
+  fun listAllPublishersRelative(lowerBound: String, limit: Int = REQ_LIMIT_MAX): Single<List<AccountObjectId>> = ListPublishingManagers(lowerBound, limit).toRequest()
 
   /**
    * Restores encryption key from key parts stored in buying object.
@@ -93,7 +93,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return AES encryption key
    */
-  fun restoreEncryptionKey(elGamalPrivate: PubKey, purchaseId: ChainObject): Single<String> = RestoreEncryptionKey(elGamalPrivate, purchaseId).toRequest()
+  fun restoreEncryptionKey(elGamalPrivate: PubKey, purchaseId: PurchaseObjectId): Single<String> = RestoreEncryptionKey(elGamalPrivate, purchaseId).toRequest()
 
   /**
    * Search for term in contents (author, title and description).
@@ -114,13 +114,13 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       order: SearchContentOrder = SearchContentOrder.CREATED_DESC,
       user: String = "",
       regionCode: String = Regions.ALL.code,
-      type: String = contentType(ApplicationType.DECENT_CORE, CategoryType.NONE),
-      startId: ChainObject = ObjectType.NULL_OBJECT.genericId,
-      limit: Int = 100
-  ): Single<List<Content>> = SearchContent(term, order, user, regionCode, type, startId, limit).toRequest()
+      type: String = contentType(),
+      startId: ContentObjectId? = null,
+      limit: Int = REQ_LIMIT_MAX
+  ): Single<List<ContentSummary>> = SearchContent(term, order, user, regionCode, type, startId, limit).toRequest()
 
   /**
-   * Create a purchase content operation.
+   * Create a purchase content operation. For more options see [PurchaseContentOperation] constructor.
    *
    * @param credentials account credentials
    * @param contentId object id of the content, 2.13.*
@@ -132,14 +132,14 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun createPurchaseOperation(
       credentials: Credentials,
-      contentId: ChainObject,
+      contentId: ContentObjectId,
       fee: Fee = Fee()
   ): Single<PurchaseContentOperation> =
       get(contentId).map { PurchaseContentOperation(credentials, it, fee) }
 
 
   /**
-   * Create a purchase content operation.
+   * Create a purchase content operation. For more options see [PurchaseContentOperation] constructor.
    *
    * @param credentials account credentials
    * @param uri uri of the content
@@ -170,7 +170,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun purchase(
       credentials: Credentials,
-      contentId: ChainObject,
+      contentId: ContentObjectId,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> = createPurchaseOperation(credentials, contentId, fee).flatMap {
     api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
@@ -197,7 +197,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create amount transfer operation of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
-   * Fees are paid by the "from" account.
+   * Fees are paid by the "from" account. For more options see [TransferOperation] constructor.
    *
    * @param credentials account credentials
    * @param id content id
@@ -211,7 +211,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun createTransfer(
       credentials: Credentials,
-      id: ChainObject,
+      id: ContentObjectId,
       amount: AssetAmount,
       memo: String? = null,
       fee: Fee = Fee()
@@ -233,7 +233,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun transfer(
       credentials: Credentials,
-      id: ChainObject,
+      id: ContentObjectId,
       amount: AssetAmount,
       memo: String? = null,
       fee: Fee = Fee()
@@ -244,17 +244,19 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+   * For more options see [RemoveContentOperation] constructor.
    *
    * @param content content id
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
   @JvmOverloads
-  fun createRemoveContentOperation(content: ChainObject, fee: Fee = Fee()): Single<RemoveContentOperation> =
+  fun createRemoveContentOperation(content: ContentObjectId, fee: Fee = Fee()): Single<RemoveContentOperation> =
       get(content).map { RemoveContentOperation(it.author, it.uri, fee) }
 
   /**
    * Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+   * For more options see [RemoveContentOperation] constructor.
    *
    * @param content content uri
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -273,7 +275,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    */
   @JvmOverloads
-  fun remove(credentials: Credentials, content: ChainObject, fee: Fee = Fee()): Single<TransactionConfirmation> =
+  fun remove(credentials: Credentials, content: ContentObjectId, fee: Fee = Fee()): Single<TransactionConfirmation> =
       createRemoveContentOperation(content, fee).flatMap {
         api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
       }
@@ -293,7 +295,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * Create request to submit content operation.
+   * Create request to submit content operation. For more options see [AddOrUpdateContentOperation] constructor.
    *
    * @param author author of the content. If co-authors is not filled, this account will receive full payout
    * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
@@ -308,7 +310,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun createAddContentOperation(
-      author: ChainObject,
+      author: AccountObjectId,
       coAuthors: CoAuthors,
       uri: String,
       price: List<RegionalPrice>,
@@ -374,6 +376,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
    * Create request to update content operation. Fills the model with actual content values.
+   * For more options see [AddOrUpdateContentOperation] constructor.
    *
    * @param content content id
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -381,12 +384,13 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun createUpdateContentOperation(
-      content: ChainObject,
+      content: ContentObjectId,
       fee: Fee = Fee()
   ): Single<AddOrUpdateContentOperation> = get(content).map { createUpdateContentOperation(it, fee) }
 
   /**
    * Create request to update content operation. Fills the model with actual content values.
+   * For more options see [AddOrUpdateContentOperation] constructor.
    *
    * @param content content uri
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -427,7 +431,7 @@ class ContentApi internal constructor(api: DCoreApi) : BaseApi(api) {
   @JvmOverloads
   fun update(
       credentials: Credentials,
-      content: ChainObject,
+      content: ContentObjectId,
       synopsis: Synopsis? = null,
       price: List<RegionalPrice>? = null,
       coAuthors: CoAuthors? = null,

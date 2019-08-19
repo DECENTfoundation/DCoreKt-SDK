@@ -1,13 +1,12 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.ProcessedTransaction
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.operation.BaseOperation
@@ -81,7 +80,8 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of fee asset amounts
    */
   @JvmOverloads
-  fun getFees(op: List<BaseOperation>, assetId: ChainObject = DCoreConstants.DCT.id): Single<List<AssetAmount>> = GetRequiredFees(op, assetId).toRequest()
+  fun getFees(op: List<BaseOperation>, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<List<AssetAmount>> =
+      GetRequiredFees(op, assetId).toRequest()
 
   /**
    * Returns fee for operation.
@@ -92,7 +92,8 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFee(op: BaseOperation, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> = getFees(listOf(op), assetId).map { it.single() }
+  fun getFee(op: BaseOperation, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<AssetAmount> =
+      getFees(listOf(op), assetId).map { it.single() }
 
   /**
    * Returns fees for operation type, not valid for operation per size fees:
@@ -110,7 +111,7 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFeesForType(types: List<OperationType>, assetId: ChainObject = DCoreConstants.DCT.id): Single<List<AssetAmount>> =
+  fun getFeesForType(types: List<OperationType>, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<List<AssetAmount>> =
       require(listOf(
           OperationType.ASSET_CREATE_OPERATION,
           OperationType.ASSET_ISSUE_OPERATION,
@@ -139,6 +140,6 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFeeForType(type: OperationType, assetId: ChainObject = DCoreConstants.DCT.id): Single<AssetAmount> =
+  fun getFeeForType(type: OperationType, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<AssetAmount> =
       getFeesForType(listOf(type), assetId).map { it.single() }
 }

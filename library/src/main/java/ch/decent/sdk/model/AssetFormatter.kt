@@ -6,7 +6,7 @@ import java.text.NumberFormat
 
 interface AssetFormatter {
 
-  val id: ChainObject
+  val id: AssetObjectId
   val symbol: String
   val precision: Byte
 

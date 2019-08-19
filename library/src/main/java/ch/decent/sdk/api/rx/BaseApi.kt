@@ -1,12 +1,10 @@
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.net.model.request.BaseRequest
 import ch.decent.sdk.net.model.request.WithCallback
-import com.google.gson.Gson
 import io.reactivex.Flowable
 import io.reactivex.Single
 

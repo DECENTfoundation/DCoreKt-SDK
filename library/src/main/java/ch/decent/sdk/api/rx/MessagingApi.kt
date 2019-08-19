@@ -1,28 +1,30 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.Account
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.Message
 import ch.decent.sdk.model.MessagePayload
+import ch.decent.sdk.model.MessagingObjectId
 import ch.decent.sdk.model.MessagePayloadReceiver
 import ch.decent.sdk.model.MessageRequest
 import ch.decent.sdk.model.MessageResponse
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.net.model.request.GetMessageObjects
+import ch.decent.sdk.net.model.request.GetMessages
+import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
 class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
   /**
-   * Get all message operations
+   * Find all message operations
    *
    * @param sender filter by sender account id
    * @param receiver filter by receiver account id
@@ -31,11 +33,11 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of message operation responses
    */
   @JvmOverloads
-  fun getAllOperations(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<MessageResponse>> =
+  fun findAllOperations(sender: AccountObjectId? = null, receiver: AccountObjectId? = null, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<MessageResponse>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
 
   /**
-   * Get all messages
+   * Find all messages
    *
    * @param sender filter by sender account id
    * @param receiver filter by receiver account id
@@ -44,12 +46,12 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAll(sender: ChainObject? = null, receiver: ChainObject? = null, maxCount: Int = 1000): Single<List<Message>> =
+  fun findAll(sender: AccountObjectId? = null, receiver: AccountObjectId? = null, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<Message>> =
       GetMessageObjects(sender, receiver, maxCount).toRequest()
           .map { it.map { Message.create(it) }.flatten() }
 
   /**
-   * Get all messages and decrypt
+   * Find all messages and decrypt
    *
    * @param credentials account credentials used for decryption, must be either sender's or receiver's
    * @param sender filter by sender account id
@@ -59,11 +61,11 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAllDecrypted(
+  fun findAllDecrypted(
       credentials: Credentials,
-      sender: ChainObject? = null,
-      receiver: ChainObject? = null,
-      maxCount: Int = 1000
+      sender: AccountObjectId? = null,
+      receiver: AccountObjectId? = null,
+      maxCount: Int = REQ_LIMIT_MAX_1K
   ): Single<List<Message>> =
       require(sender == credentials.account || receiver == credentials.account)
       { "credentials account id must match either sender id or receiver id " }.let {
@@ -73,7 +75,7 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
       }
 
   /**
-   * Get all messages for sender and decrypt
+   * Find all messages for sender and decrypt
    *
    * @param credentials sender account credentials with decryption keys
    * @param maxCount max items to return
@@ -81,11 +83,11 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAllDecryptedForSender(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
-      getAllDecrypted(credentials, sender = credentials.account, maxCount = maxCount)
+  fun findAllDecryptedForSender(credentials: Credentials, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<Message>> =
+      findAllDecrypted(credentials, sender = credentials.account, maxCount = maxCount)
 
   /**
-   * Get all messages for receiver and decrypt
+   * Find all messages for receiver and decrypt
    *
    * @param credentials receiver account credentials with decryption keys
    * @param maxCount max items to return
@@ -93,8 +95,8 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return list of messages
    */
   @JvmOverloads
-  fun getAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = 1000): Single<List<Message>> =
-      getAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
+  fun findAllDecryptedForReceiver(credentials: Credentials, maxCount: Int = REQ_LIMIT_MAX_1K): Single<List<Message>> =
+      findAllDecrypted(credentials, receiver = credentials.account, maxCount = maxCount)
 
   /**
    * Create message operation, send messages to multiple receivers
@@ -172,4 +174,24 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
   ): Single<TransactionConfirmation> = createMessageOperationUnencrypted(credentials, messages, fee).flatMap {
     api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
   }
+
+  /**
+   * Get messages by ids
+   *
+   * @param ids a list of messages ids
+   *
+   * @return list of messages
+   */
+  fun getAll(ids: List<MessagingObjectId>): Single<List<Message>> =
+      GetMessages(ids).toRequest()
+          .map { it.map { Message.create(it) }.flatten() }
+
+  /**
+   * Get message by id
+   *
+   * @param id message id
+   *
+   * @return message
+   */
+  fun get(id: MessagingObjectId): Single<Message> = getAll(listOf(id)).map { it.first() }
 }

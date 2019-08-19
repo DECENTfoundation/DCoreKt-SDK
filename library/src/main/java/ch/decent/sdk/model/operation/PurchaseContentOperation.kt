@@ -1,11 +1,10 @@
 package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.crypto.Credentials
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Content
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.types.UInt32
@@ -27,7 +26,7 @@ import java.util.regex.Pattern
  */
 class PurchaseContentOperation @JvmOverloads constructor(
     @SerializedName("URI") val uri: String,
-    @SerializedName("consumer") val consumer: ChainObject,
+    @SerializedName("consumer") val consumer: AccountObjectId,
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("pubKey") val publicElGamal: PubKey,
     @SerializedName("region_code_from") @UInt32 val regionCode: Long = Regions.ALL.id,
@@ -43,7 +42,6 @@ class PurchaseContentOperation @JvmOverloads constructor(
       )
 
   init {
-    require(consumer.objectType == ObjectType.ACCOUNT_OBJECT) { "not an account object id" }
     require(Pattern.compile("^(https?|ipfs|magnet):.*").matcher(uri).matches()) { "unsupported uri scheme" }
     require(price.amount >= 0) { "amount must be >= 0" }
   }

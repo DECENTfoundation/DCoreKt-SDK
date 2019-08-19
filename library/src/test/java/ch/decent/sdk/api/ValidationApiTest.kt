@@ -5,7 +5,6 @@ import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.operation.OperationType
 import ch.decent.sdk.model.operation.TransferOperation
-import ch.decent.sdk.model.toChainObject
 import ch.decent.sdk.testCheck
 import org.junit.Test
 

@@ -14,7 +14,7 @@ data class ExchangeRate(
      * @param dct base value in DCT
      * @param uia quote value in UIA
      */
-    @JvmStatic fun forCreateOp(dct: Long, uia: Long): ExchangeRate = ExchangeRate(AssetAmount(dct), AssetAmount(uia, "1.3.1".toChainObject()))
+    @JvmStatic fun forCreateOp(dct: Long, uia: Long): ExchangeRate = ExchangeRate(AssetAmount(dct), AssetAmount(uia, AssetObjectId(1)))
 
   }
 }

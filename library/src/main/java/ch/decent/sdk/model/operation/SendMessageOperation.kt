@@ -1,8 +1,8 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.DCoreApi
-import ch.decent.sdk.DCoreSdk
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.api.rx.DCoreApi
+import ch.decent.sdk.DCoreClient
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.OperationTypeFactory
@@ -18,7 +18,7 @@ class SendMessageOperation : CustomOperation {
   /**
    * Send message operation.
    *
-   * @param gson GSON object to serialize message payload, [DCoreApi.gson] or [DCoreSdk.gsonBuilder] can be used
+   * @param gson GSON object to serialize message payload, [DCoreApi.gson] or [DCoreClient.gsonBuilder] can be used
    * @param message message payload
    * @param payer account id to pay for the operation
    * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
@@ -27,7 +27,7 @@ class SendMessageOperation : CustomOperation {
   @JvmOverloads constructor(
       gson: Gson,
       message: MessagePayload,
-      payer: ChainObject,
+      payer: AccountObjectId,
       fee: Fee = Fee()
   ) : super(CustomOperationType.MESSAGING.ordinal, payer, listOf(payer), gson.toJson(message).toByteArray().hex(), fee) {
     this.message = message
@@ -41,6 +41,5 @@ class SendMessageOperation : CustomOperation {
   override fun toString(): String {
     return "SendMessageOperation(payer=$payer, requiredAuths=$requiredAuths, data=$data, id=$id, message=$message)"
   }
-
 
 }

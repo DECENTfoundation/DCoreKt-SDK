@@ -5,14 +5,14 @@ import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.TransferOperation
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import org.junit.Ignore
 import org.junit.Test
 
 class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
   val trx
-    get() = api.historyApi.getOperation(Helpers.account, "1.7.0".toChainObject()).map { it.operation.blockNum }
+    get() = api.historyApi.getOperation(Helpers.account, "1.7.0".toObjectId()).map { it.operation.blockNum }
         .flatMap { api.transactionApi.get(it, 0) }
 
   @Test fun `should create a transaction`() {

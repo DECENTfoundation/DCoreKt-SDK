@@ -1,10 +1,10 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.BlockHeader
+import ch.decent.sdk.model.SignedBlock
 import ch.decent.sdk.net.model.request.GetBlock
 import ch.decent.sdk.net.model.request.GetBlockHeader
 import ch.decent.sdk.net.model.request.HeadBlockTime
@@ -20,7 +20,7 @@ class BlockApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return the referenced block, or [ObjectNotFoundException] if no matching block was found
    */
-  fun get(blockNum: Long) = GetBlock(blockNum).toRequest()
+  fun get(blockNum: Long): Single<SignedBlock> = GetBlock(blockNum).toRequest()
 
   /**
    * Retrieve a block header.

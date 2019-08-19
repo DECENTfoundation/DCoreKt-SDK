@@ -33,14 +33,6 @@ object DateTimeAdapter : TypeAdapter<LocalDateTime>() {
   override fun read(reader: JsonReader): LocalDateTime = LocalDateTime.parse(reader.nextString())
 }
 
-object ChainObjectAdapter : TypeAdapter<ChainObject>() {
-  override fun read(reader: JsonReader): ChainObject = ChainObject.parse(reader.nextString())
-
-  override fun write(out: JsonWriter, value: ChainObject?) {
-    value?.let { out.value(it.objectId) } ?: out.nullValue()
-  }
-}
-
 object AddressAdapter : TypeAdapter<Address>() {
   override fun read(reader: JsonReader): Address? = Address.decodeCheckNull(reader.nextString())
 
@@ -65,13 +57,33 @@ object AuthMapAdapter : TypeAdapter<AuthMap>() {
   }
 }
 
+@Suppress("UNCHECKED_CAST")
+object ObjectIdFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (ObjectId::class.javaObjectType.isAssignableFrom(type.rawType)) {
+      return object : TypeAdapter<T>() {
+        override fun write(out: JsonWriter, value: T?) {
+          value?.let { out.value(it.toString()) } ?: out.nullValue()
+        }
+
+        override fun read(reader: JsonReader): T {
+          val id = reader.nextString()
+          val oid = if (type.rawType == ObjectId::class.javaObjectType) ObjectId.parse(id) else ObjectId.parseToType(id)
+          return oid as T
+        }
+
+      }
+    }
+    return null
+  }
+}
+
 object NftModelAdapter : TypeAdapter<RawNft>() {
   override fun write(out: JsonWriter?, value: RawNft?) {}
 
   override fun read(reader: JsonReader): RawNft =
       RawNft(Streams.parse(reader).asJsonArray)
 }
-
 
 object MapAdapterFactory : TypeAdapterFactory {
   override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
@@ -88,19 +100,19 @@ object MapAdapterFactory : TypeAdapterFactory {
           out.endArray()
         }
 
-        override fun read(`in`: JsonReader?): T =
-            gson.getDelegateAdapter(this@MapAdapterFactory, type).read(`in`)
+        override fun read(`in`: JsonReader?): T = gson.getDelegateAdapter(this@MapAdapterFactory, type).read(`in`)
       }
     }
     return null
   }
+}
 
-  fun writeAny(out: JsonWriter, value: Any?) {
-    when (value) {
-      is Number -> out.value(value)
-      is String -> out.value(value)
-      is Boolean -> out.value(value)
-    }
+@Suppress("UNCHECKED_CAST")
+fun writeAny(out: JsonWriter, value: Any?) {
+  when (value) {
+    is Number -> out.value(value)
+    is String -> out.value(value)
+    is Boolean -> out.value(value)
   }
 }
 
@@ -226,7 +238,7 @@ object PubKeyAdapter : TypeAdapter<PubKey>() {
 object ExtraKeysAdapter : TypeAdapter<Wallet.ExtraKeys>() {
   override fun read(reader: JsonReader): Wallet.ExtraKeys {
     reader.beginArray()
-    val account = reader.nextString().toChainObject()
+    val account = reader.nextString().toObjectId<AccountObjectId>()
     reader.beginArray()
     val keys = mutableListOf<Address>()
     while (reader.peek() != JsonToken.END_ARRAY) {
@@ -239,7 +251,7 @@ object ExtraKeysAdapter : TypeAdapter<Wallet.ExtraKeys>() {
 
   override fun write(out: JsonWriter, value: Wallet.ExtraKeys) {
     out.beginArray()
-    out.value(value.account.objectId)
+    out.value(value.account.toString())
     out.beginArray()
     value.keys.forEach { out.value(it.encode()) }
     out.endArray()
@@ -267,13 +279,13 @@ object MinerIdAdapter : TypeAdapter<MinerId>() {
   override fun write(out: JsonWriter, value: MinerId) {
     out.beginArray()
     out.value(value.name)
-    out.value(value.id.objectId)
+    out.value(value.id.toString())
     out.endArray()
   }
 
   override fun read(reader: JsonReader): MinerId {
     reader.beginArray()
-    val minerId = MinerId(reader.nextString(), reader.nextString().toChainObject())
+    val minerId = MinerId(reader.nextString(), reader.nextString().toObjectId())
     reader.endArray()
     return minerId
   }
@@ -315,7 +327,7 @@ object CoAuthorsAdapter : TypeAdapter<CoAuthors>() {
     out.beginArray()
     value.authors.forEach { (id, bp) ->
       out.beginArray()
-      out.value(id.objectId)
+      out.value(id.toString())
       out.value(bp)
       out.endArray()
     }
@@ -323,11 +335,11 @@ object CoAuthorsAdapter : TypeAdapter<CoAuthors>() {
   }
 
   override fun read(reader: JsonReader): CoAuthors {
-    val map = mutableMapOf<ChainObject, Int>()
+    val map = mutableMapOf<AccountObjectId, Int>()
     reader.beginArray()
     while (reader.hasNext()) {
       reader.beginArray()
-      map[reader.nextString().toChainObject()] = reader.nextInt()
+      map[reader.nextString().toObjectId()] = reader.nextInt()
       reader.endArray()
     }
     reader.endArray()

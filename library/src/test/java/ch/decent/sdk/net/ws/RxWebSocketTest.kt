@@ -1,6 +1,6 @@
 package ch.decent.sdk.net.ws
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.net.model.request.GetChainId
@@ -8,7 +8,6 @@ import ch.decent.sdk.net.model.request.Login
 import ch.decent.sdk.net.ws.model.WebSocketClosedException
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.TestScheduler
 import org.amshove.kluent.`should be equal to`
 import org.junit.After
 import org.junit.Before
@@ -27,7 +26,7 @@ class RxWebSocketTest : TimeOutTest() {
         Helpers.client(logger),
         mock.getUrl(),
         logger = logger,
-        gson = DCoreSdk.gsonBuilder.create()
+        gson = DCoreClient.gsonBuilder.create()
     )
   }
 

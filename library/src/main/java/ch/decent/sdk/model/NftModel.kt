@@ -10,6 +10,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.jvm.isAccessible
 
 interface NftModel {
   fun values(): List<Variant> = values(this)
@@ -44,7 +45,11 @@ interface NftModel {
         .let { model.constructors.first().call(*it) }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun <T : NftModel> values(model: T) = ordered(model::class).map { (it as KProperty1<T, Any>).get(model) }
+    internal fun <T : NftModel> values(model: T) = ordered(model::class).map {
+      val prop = (it as KProperty1<T, Any>)
+      prop.isAccessible = true
+      prop.get(model)
+    }
 
     @Suppress("IMPLICIT_CAST_TO_ANY")
     private fun parseType(values: JsonArray, idx: Int, type: KType) =

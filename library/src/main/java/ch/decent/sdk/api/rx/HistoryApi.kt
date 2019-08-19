@@ -1,16 +1,17 @@
 @file:Suppress("TooManyFunctions", "LongParameterList")
 
-package ch.decent.sdk.api
+package ch.decent.sdk.api.rx
 
-import ch.decent.sdk.DCoreApi
+import ch.decent.sdk.model.AccountObjectId
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.BalanceChange
-import ch.decent.sdk.model.ChainObject
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.OperationHistory
+import ch.decent.sdk.model.OperationHistoryObjectId
 import ch.decent.sdk.net.model.request.GetAccountBalanceForTransaction
 import ch.decent.sdk.net.model.request.GetAccountHistory
 import ch.decent.sdk.net.model.request.GetRelativeAccountHistory
 import ch.decent.sdk.net.model.request.SearchAccountBalanceHistory
+import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import io.reactivex.Single
 
 class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -24,8 +25,8 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return an balance operation change
    */
   fun getOperation(
-      accountId: ChainObject,
-      operationId: ChainObject
+      accountId: AccountObjectId,
+      operationId: OperationHistoryObjectId
   ): Single<BalanceChange> = GetAccountBalanceForTransaction(accountId, operationId).toRequest()
 
   /**
@@ -33,18 +34,19 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @param accountId object id of the account whose history should be queried, 1.2.*
    * @param limit number of entries, max 100
-   * @param startId id of the history object to start from, use [ObjectType.OPERATION_HISTORY_OBJECT.genericId] to ignore
-   * @param stopId id of the history object to stop at, use [ObjectType.OPERATION_HISTORY_OBJECT.genericId] to ignore
+   * @param startId id of the history object to start from
+   * @param stopId id of the history object to stop at
    *
    * @return a list of operations performed by account, ordered from most recent to oldest
    */
   @JvmOverloads
   fun listOperations(
-      accountId: ChainObject,
-      startId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
-      stopId: ChainObject = ObjectType.OPERATION_HISTORY_OBJECT.genericId,
-      limit: Int = 100
-  ): Single<List<OperationHistory>> = GetAccountHistory(accountId, stopId, limit, startId).toRequest()
+      accountId: AccountObjectId,
+      startId: OperationHistoryObjectId? = null,
+      stopId: OperationHistoryObjectId? = null,
+      limit: Int = REQ_LIMIT_MAX
+  ): Single<List<OperationHistory>> =
+      GetAccountHistory(accountId, stopId ?: OperationHistoryObjectId(), limit, startId ?: OperationHistoryObjectId()).toRequest()
 
   /**
    * Get account history of operations.
@@ -57,9 +59,9 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun listOperationsRelative(
-      accountId: ChainObject,
+      accountId: AccountObjectId,
       start: Int = 0,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<OperationHistory>> = GetRelativeAccountHistory(accountId, 0, limit, start).toRequest()
 
   /**
@@ -78,12 +80,12 @@ class HistoryApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   @JvmOverloads
   fun findAllOperations(
-      accountId: ChainObject,
-      assets: List<ChainObject> = emptyList(),
-      recipientAccount: ChainObject? = null,
+      accountId: AccountObjectId,
+      assets: List<AssetObjectId> = emptyList(),
+      recipientAccount: AccountObjectId? = null,
       fromBlock: Long = 0,
       toBlock: Long = 0,
       startOffset: Long = 0,
-      limit: Int = 100
+      limit: Int = REQ_LIMIT_MAX
   ): Single<List<BalanceChange>> = SearchAccountBalanceHistory(accountId, assets, recipientAccount, fromBlock, toBlock, startOffset, limit).toRequest()
 }

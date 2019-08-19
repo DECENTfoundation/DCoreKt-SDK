@@ -7,7 +7,7 @@ import com.google.gson.JsonArray
 import com.google.gson.annotations.SerializedName
 
 data class OperationHistory(
-    @SerializedName("id") val id: ChainObject,
+    @SerializedName("id") val id: OperationHistoryObjectId,
     @SerializedName("op") val operation: BaseOperation,
     @SerializedName("result") val result: JsonArray,
     @SerializedName("block_num") @UInt32 val blockNum: Long,

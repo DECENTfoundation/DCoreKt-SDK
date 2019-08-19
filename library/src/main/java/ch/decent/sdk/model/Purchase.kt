@@ -2,20 +2,21 @@ package ch.decent.sdk.model
 
 import ch.decent.sdk.model.types.UInt32
 import ch.decent.sdk.model.types.UInt64
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDateTime
 import java.math.BigInteger
 
 data class Purchase(
-    @SerializedName("id") val id: ChainObject,
+    @SerializedName("id") val id: PurchaseObjectId,
     @SerializedName("consumer") val author: String,
     @SerializedName("URI") val uri: String,
     @SerializedName("synopsis") val synopsisJson: String,
     @SerializedName("price") val price: AssetAmount,
     @SerializedName("paid_price_before_exchange") val priceBefore: AssetAmount,
     @SerializedName("paid_price_after_exchange") val priceAfter: AssetAmount,
-    @SerializedName("seeders_answered") val seedersAnswered: List<ChainObject>,
+    @SerializedName("seeders_answered") val seedersAnswered: List<AccountObjectId>,
     @SerializedName("size") @UInt64 val size: BigInteger,
     @SerializedName("rating") @UInt64 val rating: BigInteger,
     @SerializedName("comment") val comment: String,
@@ -30,10 +31,6 @@ data class Purchase(
     @SerializedName("region_code_from") @UInt32 val regionFrom: Long
 ) {
 
-  fun synopsis(): Synopsis =
-      GsonBuilder()
-          .registerTypeAdapter(ChainObject::class.java, ChainObjectAdapter)
-          .create()
-          .fromJson(synopsisJson, Synopsis::class.java)
+  fun synopsis(): Synopsis = Gson().fromJson(synopsisJson, Synopsis::class.java)
 
 }

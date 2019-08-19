@@ -1,6 +1,6 @@
 package ch.decent.sdk.net
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.TimeOutTest
 import ch.decent.sdk.crypto.Address
@@ -9,7 +9,6 @@ import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.Account
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
@@ -44,7 +43,7 @@ import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
-import ch.decent.sdk.model.toChainObject
+import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.serialization.Serializer
 import ch.decent.sdk.print
 import ch.decent.sdk.utils.hex
@@ -62,8 +61,8 @@ class SerializerTest : TimeOutTest() {
     val address = Address.decode("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP")
 
     val op = TransferOperation(
-        "1.2.30".toChainObject(),
-        "1.2.31".toChainObject(),
+        "1.2.30".toObjectId(),
+        "1.2.31".toObjectId(),
         AssetAmount(10000000),
         Memo("hello memo", priv, address, BigInteger("132456789")),
         Fee(amount = 5000)
@@ -77,7 +76,7 @@ class SerializerTest : TimeOutTest() {
 
     val op = PurchaseContentOperation(
         "ipfs:QmabU7WNHZwcojgJrCRwKhsJvfinLT9xffnKMFsrcCGGFP",
-        "1.2.30".toChainObject(),
+        "1.2.30".toObjectId(),
         AssetAmount(10000000),
         PubKey("9108409595926410618584909688806123815350070889187120060090262698305971998526501009804554058758289676257609340949615914583138841456997698133991004991473670")
     )
@@ -90,7 +89,7 @@ class SerializerTest : TimeOutTest() {
 
     val op = PurchaseContentOperation(
         "http://alax.io/?scheme=allax%3A%2F%2Fcom.example.helloworld%3A3&version=7f48b24e-8ab9-4810-8b9a-936146ad6ad2",
-        "1.2.30".toChainObject(),
+        "1.2.30".toObjectId(),
         AssetAmount(100000000),
         PubKey("5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437")
     )
@@ -151,7 +150,7 @@ class SerializerTest : TimeOutTest() {
   "top_n_control_flags": 0
 }
       """
-    val account = DCoreSdk.gsonBuilder.create().fromJson(json, Account::class.java)
+    val account = DCoreClient.gsonBuilder.create().fromJson(json, Account::class.java)
 
     val op = AccountUpdateOperation(
         account.id,
@@ -167,7 +166,7 @@ class SerializerTest : TimeOutTest() {
   @Test fun `serialize create account`() {
     val bytes = "010000000000000000001b086d696b656565656501000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010001000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010002a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd330300000000000000000000000000000000000000"
 
-    val op = AccountCreateOperation("1.2.27".toChainObject(), "mikeeeee", "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address())
+    val op = AccountCreateOperation("1.2.27".toObjectId(), "mikeeeee", "DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU".address())
 
     Serializer.serialize(op).hex() `should be equal to` bytes
   }
@@ -176,7 +175,7 @@ class SerializerTest : TimeOutTest() {
     val expected = "140000000000000000000100000000000000220016687474703a2f2f68656c6c6f2e696f2f776f726c6432000000000101000000e80300000000000000222222222222222222222222222222222222222200007238ed5c0000000000000000004c7b227469746c65223a2247616d65205469746c65222c226465736372697074696f6e223a224465736372697074696f6e222c22636f6e74656e745f747970655f6964223a22312e352e35227d00"
 
     val op = AddOrUpdateContentOperation(
-        author = ChainObject.parse("1.2.34"),
+        author = "1.2.34".toObjectId(),
         uri = "http://hello.io/world2",
         price = listOf(RegionalPrice(AssetAmount(1000), Regions.NONE.id)),
         expiration = LocalDateTime.parse("2019-05-28T13:32:34"),
@@ -191,7 +190,7 @@ class SerializerTest : TimeOutTest() {
     val expected = "200000000000000000002216687474703a2f2f68656c6c6f2e696f2f776f726c6432"
 
     val op = RemoveContentOperation(
-        ChainObject.parse("1.2.34"),
+        "1.2.34".toObjectId(),
         "http://hello.io/world2"
     )
 
@@ -200,7 +199,7 @@ class SerializerTest : TimeOutTest() {
 
   @Test fun `should serialize transfer op transaction`() {
     val expected = "3e322ef4e4170c88615b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000"
-    val gson = DCoreSdk.gsonBuilder.create()
+    val gson = DCoreClient.gsonBuilder.create()
     val rawOp = """{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7","nonce":735604672334802432},"fee":{"amount":500000,"asset_id":"1.3.0"}}"""
     val op = gson.fromJson(rawOp, TransferOperation::class.java)
     op.type = OperationType.TRANSFER2_OPERATION
@@ -225,10 +224,10 @@ class SerializerTest : TimeOutTest() {
 
     val keyPair = ECKeyPair.fromBase58(private)
     val memo = Memo("hello messaging api", keyPair, public2, 4764221389359926272.toBigInteger())
-    val payloadReceiver = MessagePayloadReceiver("1.2.28".toChainObject(), memo.message, public2, memo.nonce)
-    val payload = MessagePayload("1.2.27".toChainObject(), listOf(payloadReceiver), public)
-    val gson = DCoreSdk.gsonBuilder.create()
-    val op = SendMessageOperation(gson, payload, "1.2.27".toChainObject(), Fee(amount = 500002))
+    val payloadReceiver = MessagePayloadReceiver("1.2.28".toObjectId(), memo.message, public2, memo.nonce)
+    val payload = MessagePayload("1.2.27".toObjectId(), listOf(payloadReceiver), public)
+    val gson = DCoreClient.gsonBuilder.create()
+    val op = SendMessageOperation(gson, payload, "1.2.27".toObjectId(), Fee(amount = 500002))
 
     Serializer.serialize(op).hex() `should be equal to` bytes
   }
@@ -237,7 +236,7 @@ class SerializerTest : TimeOutTest() {
     val expected = "1600000000000000000033697066733a516d57426f52425975787a48356138643367737352624d53357363733666714c4b676170426671564e554655745a1b07636f6d6d656e740100000000000000"
 
     val op = LeaveRatingAndCommentOperation(
-        "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ", "1.2.27".toChainObject(), 1, "comment"
+        "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ", "1.2.27".toObjectId(), 1, "comment"
     )
 
     Serializer.serialize(op).hex() `should be equal to` expected
@@ -246,8 +245,8 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize create asset operation`() {
     val expected = "0320a1070000000000001b0353444b010968656c6c6f20617069fad456864c011a000100000000000000000100000000000000e70701010100000100"
 
-    val ex = ExchangeRate(AssetAmount(1), AssetAmount(1, ChainObject.parse("1.3.999")))
-    val op = AssetCreateOperation("1.2.27".toChainObject(), "SDK", 1, "hello api", AssetOptions(ex))
+    val ex = ExchangeRate(AssetAmount(1), AssetAmount(1, "1.3.999".toObjectId()))
+    val op = AssetCreateOperation("1.2.27".toObjectId(), "SDK", 1, "hello api", AssetOptions(ex))
     op.fee = AssetAmount(500000)
 
     Serializer.serialize(op).hex() `should be equal to` expected
@@ -257,7 +256,7 @@ class SerializerTest : TimeOutTest() {
     val expected = "03a086010000000000001b0453444b4d041368656c6c6f20617069206d6f6e69746f7265640000000000000000000000000000000000000000000000000000010101000100000000000000000000000000000000000000480fb65c80510100010100"
 
     val opt = MonitoredAssetOptions(currentFeedPublicationTime = LocalDateTime.parse("2019-04-16T17:22:16"))
-    val op = AssetCreateOperation("1.2.27".toChainObject(), "SDKM", 4, "hello api monitored", AssetOptions(ExchangeRate.EMPTY, 0), opt)
+    val op = AssetCreateOperation("1.2.27".toObjectId(), "SDKM", 4, "hello api monitored", AssetOptions(ExchangeRate.EMPTY, 0), opt)
     op.fee = AssetAmount(100000)
     Serializer.serialize(op).hex() `should be equal to` expected
   }
@@ -265,7 +264,7 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize issue asset operation`() {
     val expected = "040a00000000000000001b0a00000000000000241b0000"
 
-    val op = AssetIssueOperation("1.2.27".toChainObject(), AssetAmount(10, ChainObject.parse("1.3.36")), "1.2.27".toChainObject())
+    val op = AssetIssueOperation("1.2.27".toObjectId(), AssetAmount(10, "1.3.36".toObjectId()), "1.2.27".toObjectId())
     op.fee = AssetAmount(10)
     Serializer.serialize(op).hex() `should be equal to` expected
   }
@@ -273,7 +272,7 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize reserve asset operation`() {
     val expected = "220a00000000000000001b0a000000000000002400"
 
-    val op = AssetReserveOperation("1.2.27".toChainObject(), AssetAmount(10, ChainObject.parse("1.3.36")))
+    val op = AssetReserveOperation("1.2.27".toObjectId(), AssetAmount(10, "1.3.36".toObjectId()))
     op.fee = AssetAmount(10)
     Serializer.serialize(op).hex() `should be equal to` expected
   }
@@ -281,7 +280,7 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize fund asset pool operation`() {
     val expected = "210a00000000000000001b0a00000000000000240a000000000000000000"
 
-    val op = AssetFundPoolsOperation("1.2.27".toChainObject(), AssetAmount(10, ChainObject.parse("1.3.36")), AssetAmount(10))
+    val op = AssetFundPoolsOperation("1.2.27".toObjectId(), AssetAmount(10, "1.3.36".toObjectId()), AssetAmount(10))
     op.fee = AssetAmount(10)
     Serializer.serialize(op).hex() `should be equal to` expected
   }
@@ -289,7 +288,7 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize claim asset pool operation`() {
     val expected = "230a00000000000000001b0a00000000000000240a000000000000000000"
 
-    val op = AssetClaimFeesOperation("1.2.27".toChainObject(), AssetAmount(10, ChainObject.parse("1.3.36")), AssetAmount(10))
+    val op = AssetClaimFeesOperation("1.2.27".toObjectId(), AssetAmount(10, "1.3.36".toObjectId()), AssetAmount(10))
     op.fee = AssetAmount(10)
     Serializer.serialize(op).hex() `should be equal to` expected
   }
@@ -299,7 +298,7 @@ class SerializerTest : TimeOutTest() {
 
     val op = NftCreateOperation(
         "SDK.APPLE",
-        NftOptions("1.2.27".toChainObject(), 100, false, "an apple"),
+        NftOptions("1.2.27".toObjectId(), 100, false, "an apple"),
         NftModel.createDefinitions(NftApple::class),
         true
     )
@@ -310,9 +309,9 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize nft update operation`() {
     val expected = "2a20a1070000000000001b011b6400000001046465736300"
     val op = NftUpdateOperation(
-        "1.2.27".toChainObject(),
-        "1.10.1".toChainObject(),
-        NftOptions("1.2.27".toChainObject(), 100, true, "desc"),
+        "1.2.27".toObjectId(),
+        "1.10.1".toObjectId(),
+        NftOptions("1.2.27".toObjectId(), 100, true, "desc"),
         Fee(amount = 500000)
     )
 
@@ -322,9 +321,9 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize nft issue operation`() {
     val expected = "2b20a1070000000000001b1c0103020700000000000000050372656404000000"
     val op = NftIssueOperation(
-        "1.2.27".toChainObject(),
-        "1.10.1".toChainObject(),
-        "1.2.28".toChainObject(),
+        "1.2.27".toObjectId(),
+        "1.10.1".toObjectId(),
+        "1.2.28".toObjectId(),
         NftApple(7, "red", false).values(),
         fee = Fee(amount = 500000)
     )
@@ -335,9 +334,9 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize nft transfer operation`() {
     val expected = "2c20a1070000000000001b1c010000"
     val op = NftTransferOperation(
-        "1.2.27".toChainObject(),
-        "1.2.28".toChainObject(),
-        "1.11.1".toChainObject(),
+        "1.2.27".toObjectId(),
+        "1.2.28".toObjectId(),
+        "1.11.1".toObjectId(),
         fee = Fee(amount = 500000)
     )
 
@@ -347,8 +346,8 @@ class SerializerTest : TimeOutTest() {
   @Test fun `should serialize nft update data operation`() {
     val expected = "2d20a1070000000000001b01030473697a6502010000000000000005636f6c6f72050372656405656174656e040000"
     val op = NftUpdateDataOperation(
-        "1.2.27".toChainObject(),
-        "1.11.1".toChainObject(),
+        "1.2.27".toObjectId(),
+        "1.11.1".toObjectId(),
         mutableMapOf("size" to 1, "color" to "red", "eaten" to false),
         fee = Fee(amount = 500000)
     )
@@ -358,7 +357,7 @@ class SerializerTest : TimeOutTest() {
 
   private fun BaseOperation.expected() {
     val logger = LoggerFactory.getLogger("serializer")
-    val api = DCoreSdk.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
+    val api = DCoreClient.createForWebSocket(Helpers.client(logger), Helpers.dockerWs, logger)
     api.transactionApi.createTransaction(this)
         .flatMap { api.transactionApi.getHexDump(it) }
         .blockingGet()

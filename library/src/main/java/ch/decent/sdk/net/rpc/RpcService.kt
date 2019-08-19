@@ -1,6 +1,6 @@
 package ch.decent.sdk.net.rpc
 
-import ch.decent.sdk.DCoreSdk
+import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.net.model.request.BaseRequest
@@ -29,7 +29,7 @@ internal class RpcService(url: String, client: OkHttpClient, private val gson: G
   private val service = Retrofit.Builder()
       .baseUrl(url)
       .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
-      .addConverterFactory(GsonConverterFactory.create(DCoreSdk.gsonBuilder.create()))
+      .addConverterFactory(GsonConverterFactory.create(DCoreClient.gsonBuilder.create()))
       .client(client)
       .build()
       .create(RpcEndpoint::class.java)

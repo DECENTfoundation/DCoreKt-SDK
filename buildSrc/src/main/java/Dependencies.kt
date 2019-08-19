@@ -1,5 +1,6 @@
 object Modules {
   val sdk = "library"
+  val apiGen = "apiGen"
 }
 
 object Repos {
@@ -18,7 +19,7 @@ object Versions {
   val threeTen = "1.3.6"
   val slf4j = "1.7.25"
   val guava = "25.0-android" //jdk7 support
-  val kluent = "1.41"
+  val kluent = "1.49"
   val okio = "2.2.2"
 
   val bouncyProv = "1.59"
@@ -29,6 +30,8 @@ object Versions {
   val dokka = "0.9.16"
   val detekt = "1.0.0-RC14"
   val dockerCompose = "0.9.4"
+
+  val kpoet = "1.3.0"
 }
 
 object GradlePlugins {
@@ -61,6 +64,9 @@ object Libs {
 
   val errorProne = "com.google.errorprone:error_prone_core:${Versions.errorProne}"
   val errorProneJavac = "com.google.errorprone:javac:${Versions.errorProneJavac}"
+
+  val kpoet = "com.squareup:kotlinpoet:${Versions.kpoet}"
+
 }
 
 object TestLibs {

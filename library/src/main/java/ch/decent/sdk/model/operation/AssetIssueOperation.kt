@@ -1,10 +1,9 @@
 package ch.decent.sdk.model.operation
 
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.ChainObject
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
-import ch.decent.sdk.model.ObjectType
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -18,17 +17,12 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class AssetIssueOperation @JvmOverloads constructor(
-    @SerializedName("issuer") val issuer: ChainObject,
+    @SerializedName("issuer") val issuer: AccountObjectId,
     @SerializedName("asset_to_issue") val assetToIssue: AssetAmount,
-    @SerializedName("issue_to_account") val issueToAccount: ChainObject,
+    @SerializedName("issue_to_account") val issueToAccount: AccountObjectId,
     @SerializedName("memo") val memo: Memo? = null,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.ASSET_ISSUE_OPERATION, fee) {
-
-  init {
-    require(issuer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-    require(issueToAccount.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-  }
 
   override fun toString(): String {
     return "AssetIssueOperation(issuer=$issuer, assetToIssue=$assetToIssue, issueToAccount=$issueToAccount, memo=$memo)"

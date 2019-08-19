@@ -1,9 +1,9 @@
 package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.DCoreConstants
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
+import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.Fee
-import ch.decent.sdk.model.ObjectType
 import ch.decent.sdk.model.types.UInt8
 import com.google.gson.annotations.SerializedName
 
@@ -18,16 +18,14 @@ import com.google.gson.annotations.SerializedName
  * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
  */
 class AssetUpdateAdvancedOperation @JvmOverloads constructor(
-    @SerializedName("issuer") val issuer: ChainObject,
-    @SerializedName("asset_to_update") val assetToUpdate: ChainObject,
+    @SerializedName("issuer") val issuer: AccountObjectId,
+    @SerializedName("asset_to_update") val assetToUpdate: AssetObjectId,
     @SerializedName("new_precision") @UInt8 var precision: Byte,
     @SerializedName("set_fixed_max_supply") var fixedMaxSupply: Boolean,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.UPDATE_USER_ISSUED_ASSET_ADVANCED, fee) {
 
   init {
-    require(issuer.objectType == ObjectType.ACCOUNT_OBJECT) { "not a valid account object id" }
-    require(assetToUpdate.objectType == ObjectType.ASSET_OBJECT) { "not a valid asset object id" }
     require(precision in DCoreConstants.PRECISION_ALLOWED) { "precision must be in range of 0-12" }
   }
 

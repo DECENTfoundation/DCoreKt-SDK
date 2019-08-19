@@ -1,6 +1,6 @@
 package ch.decent.sdk.model.operation
 
-import ch.decent.sdk.model.ChainObject
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.utils.unhex
 import com.google.gson.annotations.SerializedName
@@ -17,8 +17,8 @@ import com.google.gson.annotations.SerializedName
  */
 open class CustomOperation @JvmOverloads constructor(
     @SerializedName("id") val id: Int,
-    @SerializedName("payer") val payer: ChainObject,
-    @SerializedName("required_auths") val requiredAuths: List<ChainObject>,
+    @SerializedName("payer") val payer: AccountObjectId,
+    @SerializedName("required_auths") val requiredAuths: List<AccountObjectId>,
     @SerializedName("data") val data: String,
     fee: Fee = Fee()
 ) : BaseOperation(OperationType.CUSTOM_OPERATION, fee) {
