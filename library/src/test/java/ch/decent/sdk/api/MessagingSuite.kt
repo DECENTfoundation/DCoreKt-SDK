@@ -34,11 +34,11 @@ class MessagingOperationsTest : BaseOperationsTest() {
 class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get message operations for receiver`() {
-    api.messagingApi.getAllOperations(receiver = Helpers.account2).testCheck()
+    api.messagingApi.findAllOperations(receiver = Helpers.account2).testCheck()
   }
 
   @Test fun `should get messages for account and decrypt for receiver`() {
-    api.messagingApi.getAll(receiver = Helpers.account2).cache().testCheck {
+    api.messagingApi.findAll(receiver = Helpers.account2).cache().testCheck {
       assertComplete()
       assertNoErrors()
 
@@ -61,7 +61,7 @@ class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get decrypted messages for sender account`() {
     val credentials = Credentials(Helpers.account, Helpers.private)
-    api.messagingApi.getAllDecryptedForSender(credentials).testCheck {
+    api.messagingApi.findAllDecryptedForSender(credentials).testCheck {
       assertComplete()
       assertNoErrors()
 
@@ -70,7 +70,7 @@ class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get fail decrypt messages for sender account with wrong credentials`() {
-    api.messagingApi.getAll(Helpers.account).testCheck {
+    api.messagingApi.findAll(Helpers.account).testCheck {
       assertComplete()
       assertNoErrors()
 
@@ -80,5 +80,15 @@ class MessagingApiTest(channel: Channel) : BaseApiTest(channel) {
           .map { it.decrypt(credentials) }
           .all { it.encrypted } `should equal` true
     }
+  }
+
+  @Test fun `should get messages by id`() {
+    api.messagingApi.getAll(listOf(Helpers.messageId1, Helpers.messageId2))
+        .testCheck()
+  }
+
+  @Test fun `should get message by id`() {
+    api.messagingApi.get(Helpers.messageId1)
+        .testCheck()
   }
 }
