@@ -7,6 +7,7 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.ExchangeRate
@@ -14,6 +15,7 @@ import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
+import ch.decent.sdk.model.MinerObjectId
 import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.NftApple
 import ch.decent.sdk.model.NftModel
@@ -33,6 +35,8 @@ import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.AssetReserveOperation
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.MinerCreateOperation
+import ch.decent.sdk.model.operation.MinerUpdateOperation
 import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.NftIssueOperation
 import ch.decent.sdk.model.operation.NftTransferOperation
@@ -349,6 +353,31 @@ class SerializerTest : TimeOutTest() {
         "1.2.27".toObjectId(),
         "1.11.1".toObjectId(),
         mutableMapOf("size" to 1, "color" to "red", "eaten" to false),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize miner create operation`() {
+    val expected = "0620a1070000000000001b11687474703a2f2f676f6f676c652e636f6d0242e0431837a5843252a0ecfab9565bdb20bdb0fc4c88398455f64589fdc7b93d"
+    val op = MinerCreateOperation(
+        AccountObjectId(27),
+        "http://google.com",
+        "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp".address(),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize miner update operation`() {
+    val expected = "0720a1070000000000001b1b0111687474703a2f2f676f6f676c652e636f6d010242e0431837a5843252a0ecfab9565bdb20bdb0fc4c88398455f64589fdc7b93d"
+    val op = MinerUpdateOperation(
+        MinerObjectId(27),
+        AccountObjectId(27),
+        "http://google.com",
+        "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp".address(),
         fee = Fee(amount = 500000)
     )
 

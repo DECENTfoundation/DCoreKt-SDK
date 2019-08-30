@@ -1,10 +1,30 @@
 package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
+import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
+import org.junit.FixMethodOrder
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
+import org.junit.runners.Suite
+
+@Suite.SuiteClasses(MiningOperationsTest::class, MiningApiTest::class)
+@RunWith(Suite::class)
+class MiningSuite
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+class MiningOperationsTest : BaseOperationsTest() {
+  @Test fun `mining-1 create miner`() {
+    api.miningApi.create(Helpers.credentials, "http://asdf.com").testCheck()
+  }
+
+  @Test fun `mining-2 update miner`() {
+    api.miningApi.update(Helpers.credentials, "http://qwertyuiop.com", Helpers.public2.address()).testCheck()
+  }
+}
 
 class MiningApiTest(channel: Channel) : BaseApiTest(channel) {
 

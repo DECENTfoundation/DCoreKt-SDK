@@ -193,5 +193,5 @@ class MessagingApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return message
    */
-  fun get(id: MessagingObjectId): Single<Message> = getAll(listOf(id)).map { it.first() }
+  fun get(id: MessagingObjectId): Single<Message> = getAll(listOf(id)).map { it.single() }
 }
