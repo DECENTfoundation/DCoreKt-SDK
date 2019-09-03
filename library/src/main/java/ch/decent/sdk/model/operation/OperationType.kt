@@ -10,8 +10,8 @@ enum class OperationType(val clazz: Class<*>? = null) {
   ASSET_CREATE_OPERATION(AssetCreateOperation::class.java),
   ASSET_ISSUE_OPERATION(AssetIssueOperation::class.java),
   ASSET_PUBLISH_FEED_OPERATION(AssetPublishFeedOperation::class.java),
-  MINER_CREATE_OPERATION,
-  MINER_UPDATE_OPERATION,
+  MINER_CREATE_OPERATION(MinerCreateOperation::class.java),
+  MINER_UPDATE_OPERATION(MinerUpdateOperation::class.java),
   MINER_UPDATE_GLOBAL_PARAMETERS_OPERATION,
   PROPOSAL_CREATE_OPERATION,
   PROPOSAL_UPDATE_OPERATION,      //10

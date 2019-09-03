@@ -10,6 +10,7 @@ import ch.decent.sdk.api.GeneralApiTest
 import ch.decent.sdk.api.HistoryApiTest
 import ch.decent.sdk.api.MessagingSuite
 import ch.decent.sdk.api.MiningApiTest
+import ch.decent.sdk.api.MiningSuite
 import ch.decent.sdk.api.PurchaseApiTest
 import ch.decent.sdk.api.SeederApiTest
 import ch.decent.sdk.api.SubscriptionApiTest
@@ -27,7 +28,7 @@ import org.junit.runners.Suite
     ContentSuite::class,
     GeneralApiTest::class,
     MessagingSuite::class,
-    MiningApiTest::class,
+    MiningSuite::class,
     PurchaseApiTest::class,
     SeederApiTest::class,
     SubscriptionApiTest::class,
