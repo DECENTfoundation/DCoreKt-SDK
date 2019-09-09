@@ -20,6 +20,7 @@ import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.NftApple
 import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.NftOptions
+import ch.decent.sdk.model.ProposalObjectId
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Regions
@@ -43,6 +44,9 @@ import ch.decent.sdk.model.operation.NftTransferOperation
 import ch.decent.sdk.model.operation.NftUpdateDataOperation
 import ch.decent.sdk.model.operation.NftUpdateOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.ProposalCreateOperation
+import ch.decent.sdk.model.operation.ProposalDeleteOperation
+import ch.decent.sdk.model.operation.ProposalUpdateOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
@@ -56,6 +60,7 @@ import org.junit.Test
 import org.slf4j.LoggerFactory
 import org.threeten.bp.LocalDateTime
 import java.math.BigInteger
+import java.security.SecureRandom
 
 class SerializerTest : TimeOutTest() {
 
@@ -378,6 +383,47 @@ class SerializerTest : TimeOutTest() {
         AccountObjectId(27),
         "http://google.com",
         "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp".address(),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize proposal create operation`() {
+    val expected = "0920a1070000000000001be39b775d000000"
+    val op = ProposalCreateOperation(
+        AccountObjectId(27),
+        emptyList(),
+        LocalDateTime.parse("2019-09-10T12:49:39.220"),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize proposal update operation`() {
+    val expected = "0a20a1070000000000001b0101010102010301040102cf2c986e78776c21e5a75d42dd858dfe8ef06cf663ee0e8363db89ad5999d84f010242e0431837a5843252a0ecfab9565bdb20bdb0fc4c88398455f64589fdc7b93d00"
+    val op = ProposalUpdateOperation(
+        AccountObjectId(27),
+        ProposalObjectId(1),
+        listOf(AccountObjectId(1)),
+        listOf(AccountObjectId(2)),
+        listOf(AccountObjectId(3)),
+        listOf(AccountObjectId(4)),
+        listOf(Helpers.public.address()),
+        listOf(Helpers.public2.address()),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize proposal delete operation`() {
+    val expected = "0b20a1070000000000001b010100"
+    val op = ProposalDeleteOperation(
+        AccountObjectId(27),
+        ProposalObjectId(1),
+        true,
         fee = Fee(amount = 500000)
     )
 

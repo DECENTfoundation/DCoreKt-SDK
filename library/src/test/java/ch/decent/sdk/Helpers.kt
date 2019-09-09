@@ -68,4 +68,5 @@ fun <T> Single<T>.testCheck(check: TestObserver<T>.() -> Unit = {
 
   test.awaitTerminalEvent()
   check(test)
+  test.values().print()
 }

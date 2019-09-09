@@ -8,16 +8,19 @@ import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetObjectId
 import ch.decent.sdk.model.ProcessedTransaction
+import ch.decent.sdk.model.RequiredFee
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.EmptyOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.ProposalCreateOperation
 import ch.decent.sdk.net.model.request.GetPotentialSignatures
 import ch.decent.sdk.net.model.request.GetRequiredFees
 import ch.decent.sdk.net.model.request.GetRequiredSignatures
 import ch.decent.sdk.net.model.request.ValidateTransaction
 import ch.decent.sdk.net.model.request.VerifyAccountAuthority
 import ch.decent.sdk.net.model.request.VerifyAuthority
+import com.google.gson.JsonElement
 import io.reactivex.Single
 
 class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
@@ -80,7 +83,7 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a list of fee asset amounts
    */
   @JvmOverloads
-  fun getFees(op: List<BaseOperation>, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<List<AssetAmount>> =
+  fun getFees(op: List<BaseOperation>, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<List<RequiredFee>> =
       GetRequiredFees(op, assetId).toRequest()
 
   /**
@@ -92,7 +95,7 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFee(op: BaseOperation, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<AssetAmount> =
+  fun getFee(op: BaseOperation, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<RequiredFee> =
       getFees(listOf(op), assetId).map { it.single() }
 
   /**
@@ -111,7 +114,7 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFeesForType(types: List<OperationType>, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<List<AssetAmount>> =
+  fun getFeesForType(types: List<OperationType>, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<List<RequiredFee>> =
       require(listOf(
           OperationType.ASSET_CREATE_OPERATION,
           OperationType.ASSET_ISSUE_OPERATION,
@@ -140,6 +143,6 @@ class ValidationApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @return a fee asset amount
    */
   @JvmOverloads
-  fun getFeeForType(type: OperationType, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<AssetAmount> =
+  fun getFeeForType(type: OperationType, assetId: AssetObjectId = DCoreConstants.DCT_ASSET_ID): Single<RequiredFee> =
       getFeesForType(listOf(type), assetId).map { it.single() }
 }
