@@ -13,7 +13,9 @@ import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.UnknownOperation
 import com.google.gson.Gson
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonNull
+import com.google.gson.JsonObject
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory
 import com.google.gson.internal.Streams
@@ -41,19 +43,62 @@ object AddressAdapter : TypeAdapter<Address>() {
   }
 }
 
-object AuthMapAdapter : TypeAdapter<AuthMap>() {
-  override fun read(reader: JsonReader): AuthMap {
+object KeyAuthAdapter : TypeAdapter<KeyAuth>() {
+  override fun read(reader: JsonReader): KeyAuth {
     reader.beginArray()
-    val f = AuthMap(reader.nextString().address(), reader.nextInt().toShort())
+    val f = KeyAuth(reader.nextString().address(), reader.nextInt().toShort())
     reader.endArray()
     return f
   }
 
-  override fun write(out: JsonWriter, value: AuthMap) {
+  override fun write(out: JsonWriter, value: KeyAuth) {
     out.beginArray()
     out.value(value.value.encode())
     out.value(value.weight)
     out.endArray()
+  }
+}
+
+object AccountAuthAdapter : TypeAdapter<AccountAuth>() {
+  override fun read(reader: JsonReader): AccountAuth {
+    reader.beginArray()
+    val f = AccountAuth(reader.nextString().toObjectId(), reader.nextInt().toShort())
+    reader.endArray()
+    return f
+  }
+
+  override fun write(out: JsonWriter, value: AccountAuth) {
+    out.beginArray()
+    out.value(value.value.toString())
+    out.value(value.weight)
+    out.endArray()
+  }
+}
+
+@Suppress("UNCHECKED_CAST")
+object RequiredFeeFactory : TypeAdapterFactory {
+  override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    if (RequiredFee::class.javaObjectType.isAssignableFrom(type.rawType)) {
+      return object : TypeAdapter<T>() {
+        private fun JsonElement.fee() = gson.fromJson(this, AssetAmount::class.java)
+
+        private fun read(el: JsonElement): RequiredFee =
+            if (el is JsonObject) RequiredFee(el.fee())
+            else {
+              val (top, inner) = el.asJsonArray[0] to el.asJsonArray[1]
+              RequiredFee(top.fee(), inner.asJsonArray.map { read(it) })
+            }
+
+        override fun write(out: JsonWriter, value: T?) {
+        }
+
+        override fun read(reader: JsonReader): T {
+          val obj = Streams.parse(reader)
+          return read(obj) as T
+        }
+      }
+    }
+    return null
   }
 }
 

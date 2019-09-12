@@ -2,8 +2,11 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.Helpers
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.address
+import ch.decent.sdk.model.AccountAuth
 import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.KeyAuth
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import org.junit.FixMethodOrder
@@ -41,6 +44,13 @@ class AccountOperationsTest : BaseOperationsTest() {
         .flatMap { api.miningApi.vote(it, listOf("1.4.4".toObjectId())) }
         .testCheck()
   }
+
+  @Test fun `accounts-1 should update credentials`() {
+    val keyAuths = listOf(KeyAuth(Helpers.public2.address(), 1))
+    val accAuths = listOf(AccountAuth(Helpers.account, 1))
+    api.accountApi.update(Credentials(Helpers.account2, Helpers.private2), active = Authority(2, accAuths, keyAuths))
+        .testCheck()
+  }
 }
 
 @RunWith(Parameterized::class)
@@ -51,7 +61,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `should get account by id`() {
-    api.accountApi.get(Helpers.account).testCheck()
+    api.accountApi.get(Helpers.account2).testCheck()
   }
 
   @Test fun `should get account by name`() {

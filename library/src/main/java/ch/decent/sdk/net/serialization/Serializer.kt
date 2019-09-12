@@ -3,10 +3,11 @@
 package ch.decent.sdk.net.serialization
 
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.model.AccountAuth
 import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.AuthMap
+import ch.decent.sdk.model.KeyAuth
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
@@ -42,6 +43,9 @@ import ch.decent.sdk.model.operation.NftIssueOperation
 import ch.decent.sdk.model.operation.NftTransferOperation
 import ch.decent.sdk.model.operation.NftUpdateDataOperation
 import ch.decent.sdk.model.operation.NftUpdateOperation
+import ch.decent.sdk.model.operation.ProposalCreateOperation
+import ch.decent.sdk.model.operation.ProposalDeleteOperation
+import ch.decent.sdk.model.operation.ProposalUpdateOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
@@ -114,7 +118,12 @@ object Serializer {
     append(buffer, obj.keyAuths)
   }
 
-  private val authorityMapAdapter: Adapter<AuthMap> = { buffer, obj ->
+  private val keyAuthAdapter: Adapter<KeyAuth> = { buffer, obj ->
+    append(buffer, obj.value)
+    buffer.writeShortLe(obj.weight.toInt())
+  }
+
+  private val accountAuthAdapter: Adapter<AccountAuth> = { buffer, obj ->
     append(buffer, obj.value)
     buffer.writeShortLe(obj.weight.toInt())
   }
@@ -165,7 +174,7 @@ object Serializer {
   }
 
   private val accountCreateOperationAdapter: Adapter<AccountCreateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.registrar)
     append(buffer, obj.name)
@@ -176,7 +185,7 @@ object Serializer {
   }
 
   private val accountUpdateOperationAdapter: Adapter<AccountUpdateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.accountId)
     append(buffer, obj.owner, true)
@@ -186,7 +195,7 @@ object Serializer {
   }
 
   private val purchaseContentOperationAdapter: Adapter<PurchaseContentOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.uri)
     append(buffer, obj.consumer)
@@ -196,7 +205,7 @@ object Serializer {
   }
 
   private val transferOperationAdapter: Adapter<TransferOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.from)
     buffer.writeLongLe(obj.to.fullInstance)
@@ -230,7 +239,7 @@ object Serializer {
   }
 
   private val addOrUpdateContentOperationAdapter: Adapter<AddOrUpdateContentOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     buffer.writeLongLe(obj.size.toLong())
     append(buffer, obj.author)
@@ -248,14 +257,14 @@ object Serializer {
   }
 
   private val removeContentOperationAdapter: Adapter<RemoveContentOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.author)
     append(buffer, obj.uri)
   }
 
   private val customOperationAdapter: Adapter<CustomOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.payer)
     append(buffer, obj.requiredAuths)
@@ -264,7 +273,7 @@ object Serializer {
   }
 
   private val rateAndCommentOperationAdapter: Adapter<LeaveRatingAndCommentOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.uri)
     append(buffer, obj.consumer)
@@ -297,7 +306,7 @@ object Serializer {
   }
 
   private val assetCreateAdapter: Adapter<AssetCreateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.symbol)
@@ -310,7 +319,7 @@ object Serializer {
   }
 
   private val assetUpdateAdapter: Adapter<AssetUpdateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.assetToUpdate)
@@ -323,7 +332,7 @@ object Serializer {
   }
 
   private val assetUpdateAdvAdapter: Adapter<AssetUpdateAdvancedOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.assetToUpdate)
@@ -333,7 +342,7 @@ object Serializer {
   }
 
   private val assetIssueAdapter: Adapter<AssetIssueOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.assetToIssue)
@@ -343,7 +352,7 @@ object Serializer {
   }
 
   private val assetFundAdapter: Adapter<AssetFundPoolsOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.from)
     append(buffer, obj.uia)
@@ -352,7 +361,7 @@ object Serializer {
   }
 
   private val assetReserveAdapter: Adapter<AssetReserveOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.payer)
     append(buffer, obj.amount)
@@ -360,7 +369,7 @@ object Serializer {
   }
 
   private val assetClaimAdapter: Adapter<AssetClaimFeesOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.uia)
@@ -383,7 +392,7 @@ object Serializer {
   }
 
   private val nftCreateAdapter: Adapter<NftCreateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.symbol)
     append(buffer, obj.options)
@@ -393,7 +402,7 @@ object Serializer {
   }
 
   private val nftUpdateAdapter: Adapter<NftUpdateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.id)
@@ -420,7 +429,7 @@ object Serializer {
   }
 
   private val nftIssueAdapter: Adapter<NftIssueOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.to)
@@ -432,7 +441,7 @@ object Serializer {
   }
 
   private val nftTransferAdapter: Adapter<NftTransferOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.from)
     append(buffer, obj.to)
@@ -442,7 +451,7 @@ object Serializer {
   }
 
   private val nftUpdateDataAdapter: Adapter<NftUpdateDataOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.modifier)
     append(buffer, obj.id)
@@ -455,7 +464,7 @@ object Serializer {
   }
 
   private val minerCreateAdapter: Adapter<MinerCreateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.account)
     append(buffer, obj.url)
@@ -463,7 +472,7 @@ object Serializer {
   }
 
   private val minerUpdateAdapter: Adapter<MinerUpdateOperation> = { buffer, obj ->
-    obj.writeType(buffer)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.miner)
     append(buffer, obj.account)
@@ -471,7 +480,40 @@ object Serializer {
     append(buffer, obj.signingKey, true)
   }
 
-  private fun BaseOperation.writeType(buffer: BufferedSink) = buffer.writeByte(this.type.ordinal)
+  private val proposalCreateAdapter: Adapter<ProposalCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.expirationTime)
+    append(buffer, obj.operations.map { it.op })
+    append(buffer, obj.reviewPeriodSeconds, true)
+    buffer.writeByte(0)
+  }
+
+  private val proposalUpdateAdapter: Adapter<ProposalUpdateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.proposal)
+    append(buffer, obj.activeApprovalsAdd)
+    append(buffer, obj.activeApprovalsRemove)
+    append(buffer, obj.ownerApprovalsAdd)
+    append(buffer, obj.ownerApprovalsRemove)
+    append(buffer, obj.keyApprovalsAdd)
+    append(buffer, obj.keyApprovalsRemove)
+    buffer.writeByte(0)
+  }
+
+  private val proposalDeleteAdapter: Adapter<ProposalDeleteOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.usingOwnerAuthority)
+    append(buffer, obj.proposal)
+    buffer.writeByte(0)
+  }
+
+  private fun BufferedSink.writeType(op: BaseOperation) = writeByte(op.type.ordinal)
 
   @Suppress("UNCHECKED_CAST")
   private fun <T : Any> append(buffer: BufferedSink, obj: T?, optional: Boolean = false) {
@@ -499,7 +541,8 @@ object Serializer {
       String::class to stringAdapter,
       Address::class to addressAdapter,
       Authority::class to authorityAdapter,
-      AuthMap::class to authorityMapAdapter,
+      KeyAuth::class to keyAuthAdapter,
+      AccountAuth::class to accountAuthAdapter,
       AssetAmount::class to assetAmountAdapter,
       Memo::class to memoAdapter,
       VoteId::class to voteAdapter,
@@ -539,7 +582,10 @@ object Serializer {
       NftTransferOperation::class to nftTransferAdapter,
       NftUpdateDataOperation::class to nftUpdateDataAdapter,
       MinerCreateOperation::class to minerCreateAdapter,
-      MinerUpdateOperation::class to minerUpdateAdapter
+      MinerUpdateOperation::class to minerUpdateAdapter,
+      ProposalCreateOperation::class to proposalCreateAdapter,
+      ProposalUpdateOperation::class to proposalUpdateAdapter,
+      ProposalDeleteOperation::class to proposalDeleteAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()

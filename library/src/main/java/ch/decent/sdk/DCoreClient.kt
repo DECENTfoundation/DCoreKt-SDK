@@ -2,15 +2,17 @@ package ch.decent.sdk
 
 import ch.decent.sdk.api.rx.DCoreApi
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.model.AccountAuth
+import ch.decent.sdk.model.AccountAuthAdapter
 import ch.decent.sdk.model.AddressAdapter
-import ch.decent.sdk.model.AuthMap
-import ch.decent.sdk.model.AuthMapAdapter
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CoAuthorsAdapter
 import ch.decent.sdk.model.DateTimeAdapter
 import ch.decent.sdk.model.DynamicGlobalProps
 import ch.decent.sdk.model.FeeParamAdapter
 import ch.decent.sdk.model.FeeParameter
+import ch.decent.sdk.model.KeyAuth
+import ch.decent.sdk.model.KeyAuthAdapter
 import ch.decent.sdk.model.MapAdapterFactory
 import ch.decent.sdk.model.MinerId
 import ch.decent.sdk.model.MinerIdAdapter
@@ -21,6 +23,7 @@ import ch.decent.sdk.model.OperationTypeFactory
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.PubKeyAdapter
 import ch.decent.sdk.model.RawNft
+import ch.decent.sdk.model.RequiredFeeFactory
 import ch.decent.sdk.model.StaticVariantFactory
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.VoteId
@@ -58,19 +61,26 @@ class DCoreClient internal constructor(
     require(restUrl?.isNotBlank() == true || webSocketUrl?.isNotBlank() == true) { "at least one url must be set" }
   }
 
+  @SuppressWarnings("NestedBlockDepth")
+  private fun prepareFees(operations: List<BaseOperation>): Single<List<BaseOperation>> = operations.partition { it.fetchFee }
+      .let { (noFees, fees) ->
+        if (noFees.isNotEmpty()) {
+          val requests = noFees.groupBy { it.fee.assetId }.map { (assetId, ops) ->
+            makeRequest(GetRequiredFees(ops, assetId)).map { fee -> ops.apply { forEachIndexed { idx, op -> op.setFee(fee[idx]) } } }
+          }
+          Single.merge(requests).toList().map { it.flatten() + fees }
+        } else {
+          Single.just(fees)
+        }
+      }
+
   internal fun prepareTransaction(operations: List<BaseOperation>, expiration: Duration): Single<Transaction> =
       chainId.flatMap { id ->
-        makeRequest(GetDynamicGlobalProps).zipWith(
-            operations.partition { it.fetchFee }.let { (noFees, fees) ->
-              if (noFees.isNotEmpty()) {
-                val feeRequests = noFees.groupBy { it.fee.assetId }.map { (assetId, ops) ->
-                  makeRequest(GetRequiredFees(ops, assetId)).map { ops.mapIndexed { idx, op -> op.apply { fee = it[idx] } } }
-                }
-                Single.merge(feeRequests).toList().map { it.flatten() + fees }
-              } else {
-                Single.just(fees)
-              }
-            }, BiFunction { props: DynamicGlobalProps, ops: List<BaseOperation> -> Transaction.create(ops, id, props, expiration) })
+        makeRequest(GetDynamicGlobalProps)
+            .zipWith(
+                prepareFees(operations),
+                BiFunction { props: DynamicGlobalProps, ops: List<BaseOperation> -> Transaction.create(ops, id, props, expiration) }
+            )
       }
 
   internal fun <T, R> makeRequestStream(request: T): Flowable<R> where T : BaseRequest<R>, T : WithCallback =
@@ -98,9 +108,11 @@ class DCoreClient internal constructor(
         .registerTypeAdapterFactory(StaticVariantFactory)
         .registerTypeAdapterFactory(ObjectIdFactory)
         .registerTypeAdapterFactory(MapAdapterFactory)
+        .registerTypeAdapterFactory(RequiredFeeFactory)
         .registerTypeAdapter(Address::class.java, AddressAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, DateTimeAdapter)
-        .registerTypeAdapter(AuthMap::class.java, AuthMapAdapter)
+        .registerTypeAdapter(KeyAuth::class.java, KeyAuthAdapter)
+        .registerTypeAdapter(AccountAuth::class.java, AccountAuthAdapter)
         .registerTypeAdapter(PubKey::class.java, PubKeyAdapter)
         .registerTypeAdapter(MinerId::class.java, MinerIdAdapter)
         .registerTypeAdapter(FeeParameter::class.java, FeeParamAdapter)
