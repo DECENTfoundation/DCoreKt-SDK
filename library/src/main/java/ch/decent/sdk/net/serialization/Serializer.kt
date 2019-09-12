@@ -7,11 +7,11 @@ import ch.decent.sdk.model.AccountAuth
 import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.KeyAuth
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.ExchangeRate
+import ch.decent.sdk.model.KeyAuth
 import ch.decent.sdk.model.KeyPart
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
@@ -50,6 +50,10 @@ import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.WithdrawalClaimOperation
+import ch.decent.sdk.model.operation.WithdrawalCreateOperation
+import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
+import ch.decent.sdk.model.operation.WithdrawalUpdateOperation
 import ch.decent.sdk.utils.SIZE_OF_POINT_ON_CURVE_COMPRESSED
 import ch.decent.sdk.utils.unhex
 import okio.Buffer
@@ -513,6 +517,47 @@ object Serializer {
     buffer.writeByte(0)
   }
 
+  private val withdrawalCreateAdapter: Adapter<WithdrawalCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.withdrawalLimit)
+    buffer.writeIntLe(obj.withdrawalPeriodSec.toInt())
+    buffer.writeIntLe(obj.periodsUntilExpiration.toInt())
+    append(buffer, obj.periodStartTime)
+  }
+
+  private val withdrawalUpdateAdapter: Adapter<WithdrawalUpdateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.withdrawalId)
+    append(buffer, obj.withdrawalLimit)
+    buffer.writeIntLe(obj.withdrawalPeriodSec.toInt())
+    append(buffer, obj.periodStartTime)
+    buffer.writeIntLe(obj.periodsUntilExpiration.toInt())
+  }
+
+  private val withdrawalClaimAdapter: Adapter<WithdrawalClaimOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.withdrawalId)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.amount)
+    append(buffer, obj.memo, true)
+  }
+
+  private val withdrawalDeleteAdapter: Adapter<WithdrawalDeleteOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.withdrawalId)
+  }
+
   private fun BufferedSink.writeType(op: BaseOperation) = writeByte(op.type.ordinal)
 
   @Suppress("UNCHECKED_CAST")
@@ -585,7 +630,11 @@ object Serializer {
       MinerUpdateOperation::class to minerUpdateAdapter,
       ProposalCreateOperation::class to proposalCreateAdapter,
       ProposalUpdateOperation::class to proposalUpdateAdapter,
-      ProposalDeleteOperation::class to proposalDeleteAdapter
+      ProposalDeleteOperation::class to proposalDeleteAdapter,
+      WithdrawalCreateOperation::class to withdrawalCreateAdapter,
+      WithdrawalUpdateOperation::class to withdrawalUpdateAdapter,
+      WithdrawalClaimOperation::class to withdrawalClaimAdapter,
+      WithdrawalDeleteOperation::class to withdrawalDeleteAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()

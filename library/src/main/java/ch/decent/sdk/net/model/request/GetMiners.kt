@@ -6,8 +6,8 @@ import ch.decent.sdk.model.MinerObjectId
 import com.google.gson.reflect.TypeToken
 
 internal class GetMiners(
-    contentIds: List<MinerObjectId>
+    ids: List<MinerObjectId>
 ) : GetObjects<List<Miner>>(
-    contentIds.map { it },
+    ids.map { it },
     TypeToken.getParameterized(List::class.java, Miner::class.java).type
 )

@@ -20,6 +20,7 @@ import ch.decent.sdk.model.SearchAccountsOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.TransactionDetail
 import ch.decent.sdk.model.TransactionDetailObjectId
+import ch.decent.sdk.model.WithdrawPermissionObjectId
 import ch.decent.sdk.model.isValidId
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
@@ -27,6 +28,10 @@ import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.NftIssueOperation
 import ch.decent.sdk.model.operation.NftTransferOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.WithdrawalClaimOperation
+import ch.decent.sdk.model.operation.WithdrawalCreateOperation
+import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
+import ch.decent.sdk.model.operation.WithdrawalUpdateOperation
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.model.request.GetAccountById
 import ch.decent.sdk.net.model.request.GetAccountByName
@@ -34,6 +39,7 @@ import ch.decent.sdk.net.model.request.GetAccountCount
 import ch.decent.sdk.net.model.request.GetAccountReferences
 import ch.decent.sdk.net.model.request.GetFullAccounts
 import ch.decent.sdk.net.model.request.GetKeyReferences
+import ch.decent.sdk.net.model.request.GetWithdrawals
 import ch.decent.sdk.net.model.request.LookupAccountNames
 import ch.decent.sdk.net.model.request.LookupAccounts
 import ch.decent.sdk.net.model.request.SearchAccountHistory
@@ -41,6 +47,8 @@ import ch.decent.sdk.net.model.request.SearchAccounts
 import ch.decent.sdk.utils.REQ_LIMIT_MAX
 import ch.decent.sdk.utils.REQ_LIMIT_MAX_1K
 import io.reactivex.Single
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalDateTime
 
 class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
@@ -202,7 +210,9 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
       getByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
 
+  fun getWithdrawals(ids: List<WithdrawPermissionObjectId>) = GetWithdrawals(ids).toRequest()
 
+  fun getWithdrawal(id: WithdrawPermissionObjectId) = getWithdrawals(listOf(id)).map { it.single() }
   /**
    * Create a memo. Can be used in [TransferOperation], [AssetIssueOperation], [NftIssueOperation], [NftTransferOperation]
    *
@@ -357,5 +367,83 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
         }
       }
       .broadcast(credentials)
+
+  fun createWithdrawalCreateOperation(
+      accountFrom: AccountObjectId,
+      accountTo: AccountObjectId,
+      withdrawalLimit: AssetAmount,
+      withdrawalPeriod: Duration = Duration.ofDays(1),
+      periodsUntilExpiration: Long = 1,
+      periodStartTime: LocalDateTime = LocalDateTime.now(),
+      fee: Fee = Fee()
+  ): Single<WithdrawalCreateOperation> = Single.just(
+      WithdrawalCreateOperation(accountFrom, accountTo, withdrawalLimit, withdrawalPeriod.seconds, periodsUntilExpiration, periodStartTime, fee)
+  )
+
+  fun createWithdrawal(
+      credentials: Credentials,
+      accountTo: AccountObjectId,
+      withdrawalLimit: AssetAmount,
+      withdrawalPeriod: Duration = Duration.ofDays(1),
+      periodsUntilExpiration: Long = 1,
+      periodStartTime: LocalDateTime = LocalDateTime.now(),
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> =
+      createWithdrawalCreateOperation(credentials.account, accountTo, withdrawalLimit, withdrawalPeriod, periodsUntilExpiration, periodStartTime, fee)
+          .broadcast(credentials)
+
+  fun createWithdrawalUpdateOperation(
+      id: WithdrawPermissionObjectId,
+      fee: Fee = Fee()
+  ): Single<WithdrawalUpdateOperation> = getWithdrawal(id).map {
+    val periods = Duration.between(it.periodStartTime, it.expiration).seconds / it.withdrawalPeriodSec
+    WithdrawalUpdateOperation(id, it.accountFrom, it.accountTo, it.withdrawalLimit, it.withdrawalPeriodSec, periods, it.periodStartTime, fee)
+  }
+
+  fun updateWithdrawal(
+      credentials: Credentials,
+      id: WithdrawPermissionObjectId,
+      withdrawalLimit: AssetAmount? = null,
+      withdrawalPeriod: Duration? = null,
+      periodsUntilExpiration: Long? = null,
+      periodStartTime: LocalDateTime? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createWithdrawalUpdateOperation(id, fee).map {
+    it.apply {
+      if (withdrawalLimit != null) this.withdrawalLimit = withdrawalLimit
+      if (withdrawalPeriod != null) this.withdrawalPeriodSec = withdrawalPeriod.seconds
+      if (periodsUntilExpiration != null) this.periodsUntilExpiration = periodsUntilExpiration
+      if (periodStartTime != null) this.periodStartTime = periodStartTime
+    }
+  }.broadcast(credentials)
+
+  fun createWithdrawalClaimOperation(
+      id: WithdrawPermissionObjectId,
+      amount: AssetAmount,
+      memo: Memo? = null,
+      fee: Fee = Fee()
+  ): Single<WithdrawalClaimOperation> = getWithdrawal(id).map {
+    WithdrawalClaimOperation(id, it.accountFrom, it.accountTo, amount, memo, fee)
+  }
+
+  fun claimWithdrawal(
+      credentials: Credentials,
+      id: WithdrawPermissionObjectId,
+      amount: AssetAmount,
+      memo: Memo? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createWithdrawalClaimOperation(id, amount, memo, fee)
+      .broadcast(credentials)
+
+  fun createWithdrawalDeleteOperation(
+      id: WithdrawPermissionObjectId,
+      fee: Fee = Fee()
+  ): Single<WithdrawalDeleteOperation> = getWithdrawal(id).map { WithdrawalDeleteOperation(id, it.accountFrom, it.accountTo) }
+
+  fun deleteWithdrawal(
+      credentials: Credentials,
+      id: WithdrawPermissionObjectId,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createWithdrawalDeleteOperation(id, fee).broadcast(credentials)
 
 }

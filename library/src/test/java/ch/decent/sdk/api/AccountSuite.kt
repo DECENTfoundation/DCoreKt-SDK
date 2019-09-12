@@ -4,9 +4,12 @@ import ch.decent.sdk.DCoreConstants
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.crypto.address
+import ch.decent.sdk.exception.DCoreException
 import ch.decent.sdk.model.AccountAuth
+import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Authority
 import ch.decent.sdk.model.KeyAuth
+import ch.decent.sdk.model.WithdrawPermissionObjectId
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import org.junit.FixMethodOrder
@@ -51,6 +54,37 @@ class AccountOperationsTest : BaseOperationsTest() {
     api.accountApi.update(Credentials(Helpers.account2, Helpers.private2), active = Authority(2, accAuths, keyAuths))
         .testCheck()
   }
+
+  @Test fun `accounts-1 should create withdrawal`() {
+    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10), periodsUntilExpiration = 5)
+        .testCheck()
+  }
+
+  @Test fun `accounts-1 should create withdrawal for delete`() {
+    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10))
+        .testCheck()
+  }
+
+  @Test fun `accounts-2 should delete withdrawal`() {
+    api.accountApi.deleteWithdrawal(Helpers.credentials, WithdrawPermissionObjectId(1))
+        .testCheck { assertError(DCoreException::class.java) }
+  }
+
+  @Test fun `accounts-2 should fail claim withdrawal`() {
+    api.accountApi.claimWithdrawal(Helpers.credentials2, WithdrawPermissionObjectId(), AssetAmount(100))
+        .testCheck { assertError(DCoreException::class.java) }
+  }
+
+  @Test fun `accounts-3 should update withdrawal`() {
+    api.accountApi.updateWithdrawal(Helpers.credentials, WithdrawPermissionObjectId(), AssetAmount(100))
+        .testCheck()
+  }
+
+  @Test fun `accounts-4 should claim withdrawal`() {
+    api.accountApi.claimWithdrawal(Helpers.credentials2, WithdrawPermissionObjectId(), AssetAmount(100))
+        .testCheck()
+  }
+
 }
 
 @RunWith(Parameterized::class)
@@ -111,5 +145,13 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should create credentials`() {
     api.accountApi.createCredentials(Helpers.accountName, Helpers.private).testCheck()
+  }
+
+  @Test fun `should get withdrawal`() {
+    api.accountApi.getWithdrawal(WithdrawPermissionObjectId()).testCheck {
+      assertComplete()
+      assertNoErrors()
+      assertValue { it.claimedThisPeriod == 100L }
+    }
   }
 }

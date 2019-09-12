@@ -16,10 +16,10 @@ enum class OperationType(val clazz: Class<*>? = null) {
   PROPOSAL_CREATE_OPERATION(ProposalCreateOperation::class.java),
   PROPOSAL_UPDATE_OPERATION(ProposalUpdateOperation::class.java),      //10
   PROPOSAL_DELETE_OPERATION(ProposalDeleteOperation::class.java),
-  WITHDRAW_PERMISSION_CREATE_OPERATION,
-  WITHDRAW_PERMISSION_UPDATE_OPERATION,
-  WITHDRAW_PERMISSION_CLAIM_OPERATION,
-  WITHDRAW_PERMISSION_DELETE_OPERATION,   //15
+  WITHDRAW_PERMISSION_CREATE_OPERATION(WithdrawalCreateOperation::class.java),
+  WITHDRAW_PERMISSION_UPDATE_OPERATION(WithdrawalUpdateOperation::class.java),
+  WITHDRAW_PERMISSION_CLAIM_OPERATION(WithdrawalClaimOperation::class.java),
+  WITHDRAW_PERMISSION_DELETE_OPERATION(WithdrawalDeleteOperation::class.java),   //15
   VESTING_BALANCE_CREATE_OPERATION,
   VESTING_BALANCE_WITHDRAW_OPERATION,
   CUSTOM_OPERATION(CustomOperation::class.java),

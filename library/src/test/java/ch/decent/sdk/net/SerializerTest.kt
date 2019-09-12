@@ -26,6 +26,7 @@ import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Regions
 import ch.decent.sdk.model.Synopsis
 import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.WithdrawPermissionObjectId
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
 import ch.decent.sdk.model.operation.AddOrUpdateContentOperation
@@ -51,6 +52,10 @@ import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.WithdrawalClaimOperation
+import ch.decent.sdk.model.operation.WithdrawalCreateOperation
+import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
+import ch.decent.sdk.model.operation.WithdrawalUpdateOperation
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.serialization.Serializer
 import ch.decent.sdk.print
@@ -424,6 +429,62 @@ class SerializerTest : TimeOutTest() {
         AccountObjectId(27),
         ProposalObjectId(1),
         true,
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal create operation`() {
+    val expected = "0c20a1070000000000001b1c64000000000000000064000000050000001b3f7a5d"
+    val op = WithdrawalCreateOperation(
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(100),
+        100,
+        5,
+        LocalDateTime.parse("2019-09-12T12:50:35.550"),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal update operation`() {
+    val expected = "0d20a1070000000000001b1c00640000000000000000640000001b3f7a5d05000000"
+    val op = WithdrawalUpdateOperation(
+        WithdrawPermissionObjectId(),
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(100),
+        100,
+        5,
+        LocalDateTime.parse("2019-09-12T12:50:35.550"),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal claim operation`() {
+    val expected = "0e20a107000000000000001b1c64000000000000000000"
+    val op = WithdrawalClaimOperation(
+        WithdrawPermissionObjectId(),
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(100),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal delete operation`() {
+    val expected = "0f20a1070000000000001b1c00"
+    val op = WithdrawalDeleteOperation(
+        WithdrawPermissionObjectId(),
+        AccountObjectId(27),
+        AccountObjectId(28),
         fee = Fee(amount = 500000)
     )
 
