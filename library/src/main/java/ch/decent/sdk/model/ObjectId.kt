@@ -48,36 +48,36 @@ open class ObjectId(
 
   companion object {
     private val klasses = mapOf(
-        ObjectType.BASE_OBJECT to BaseObjectId::class,
-        ObjectType.ACCOUNT_OBJECT to AccountObjectId::class,
-        ObjectType.ASSET_OBJECT to AssetObjectId::class,
-        ObjectType.MINER_OBJECT to MinerObjectId::class,
-        ObjectType.CUSTOM_OBJECT to CustomObjectId::class,
-        ObjectType.PROPOSAL_OBJECT to ProposalObjectId::class,
-        ObjectType.OPERATION_HISTORY_OBJECT to OperationHistoryObjectId::class,
-        ObjectType.WITHDRAW_PERMISSION_OBJECT to WithdrawPermissionObjectId::class,
-        ObjectType.VESTING_BALANCE_OBJECT to VestingBalanceObjectId::class,
-        ObjectType.NFT_OBJECT to NftObjectId::class,
-        ObjectType.NFT_DATA_OBJECT to NftDataObjectId::class,
-        ObjectType.GLOBAL_PROPERTY_OBJECT to GlobalPropertyObjectId::class,
-        ObjectType.DYNAMIC_GLOBAL_PROPERTY_OBJECT to DynamicGlobalPropertyObjectId::class,
-        ObjectType.RESERVED_OBJECT to ReservedObjectId::class,
-        ObjectType.ASSET_DYNAMIC_DATA to AssetDataObjectId::class,
-        ObjectType.ACCOUNT_BALANCE_OBJECT to AccountBalanceObjectId::class,
-        ObjectType.ACCOUNT_STATISTICS_OBJECT to AccountStatsObjectId::class,
-        ObjectType.TRANSACTION_OBJECT to TransactionObjectId::class,
-        ObjectType.BLOCK_SUMMARY_OBJECT to BlockSummaryObjectId::class,
-        ObjectType.ACCOUNT_TRANSACTION_HISTORY_OBJECT to AccountTransactionObjectId::class,
-        ObjectType.CHAIN_PROPERTY_OBJECT to ChainPropertyObjectId::class,
-        ObjectType.MINER_SCHEDULE_OBJECT to MinerScheduleObjectId::class,
-        ObjectType.BUDGET_RECORD_OBJECT to BudgetRecordObjectId::class,
-        ObjectType.PURCHASE_OBJECT to PurchaseObjectId::class,
-        ObjectType.CONTENT_OBJECT to ContentObjectId::class,
-        ObjectType.PUBLISHER_OBJECT to PublisherObjectId::class,
-        ObjectType.SUBSCRIPTION_OBJECT to SubscriptionObjectId::class,
-        ObjectType.SEEDING_STATISTICS_OBJECT to SeedingStatsObjectId::class,
-        ObjectType.TRANSACTION_DETAIL_OBJECT to TransactionDetailObjectId::class,
-        ObjectType.MESSAGING_OBJECT to MessagingObjectId::class
+        ObjectType.BASE_OBJECT to ::BaseObjectId,
+        ObjectType.ACCOUNT_OBJECT to ::AccountObjectId,
+        ObjectType.ASSET_OBJECT to ::AssetObjectId,
+        ObjectType.MINER_OBJECT to ::MinerObjectId,
+        ObjectType.CUSTOM_OBJECT to ::CustomObjectId,
+        ObjectType.PROPOSAL_OBJECT to ::ProposalObjectId,
+        ObjectType.OPERATION_HISTORY_OBJECT to ::OperationHistoryObjectId,
+        ObjectType.WITHDRAW_PERMISSION_OBJECT to ::WithdrawPermissionObjectId,
+        ObjectType.VESTING_BALANCE_OBJECT to ::VestingBalanceObjectId,
+        ObjectType.NFT_OBJECT to ::NftObjectId,
+        ObjectType.NFT_DATA_OBJECT to ::NftDataObjectId,
+        ObjectType.GLOBAL_PROPERTY_OBJECT to ::GlobalPropertyObjectId,
+        ObjectType.DYNAMIC_GLOBAL_PROPERTY_OBJECT to ::DynamicGlobalPropertyObjectId,
+        ObjectType.RESERVED_OBJECT to ::ReservedObjectId,
+        ObjectType.ASSET_DYNAMIC_DATA to ::AssetDataObjectId,
+        ObjectType.ACCOUNT_BALANCE_OBJECT to ::AccountBalanceObjectId,
+        ObjectType.ACCOUNT_STATISTICS_OBJECT to ::AccountStatsObjectId,
+        ObjectType.TRANSACTION_OBJECT to ::TransactionObjectId,
+        ObjectType.BLOCK_SUMMARY_OBJECT to ::BlockSummaryObjectId,
+        ObjectType.ACCOUNT_TRANSACTION_HISTORY_OBJECT to ::AccountTransactionObjectId,
+        ObjectType.CHAIN_PROPERTY_OBJECT to ::ChainPropertyObjectId,
+        ObjectType.MINER_SCHEDULE_OBJECT to ::MinerScheduleObjectId,
+        ObjectType.BUDGET_RECORD_OBJECT to ::BudgetRecordObjectId,
+        ObjectType.PURCHASE_OBJECT to ::PurchaseObjectId,
+        ObjectType.CONTENT_OBJECT to ::ContentObjectId,
+        ObjectType.PUBLISHER_OBJECT to ::PublisherObjectId,
+        ObjectType.SUBSCRIPTION_OBJECT to ::SubscriptionObjectId,
+        ObjectType.SEEDING_STATISTICS_OBJECT to ::SeedingStatsObjectId,
+        ObjectType.TRANSACTION_DETAIL_OBJECT to ::TransactionDetailObjectId,
+        ObjectType.MESSAGING_OBJECT to ::MessagingObjectId
     )
     private val regex = Regex("""(\d+)\.(\d+)\.(\d+)""")
 
@@ -93,7 +93,7 @@ open class ObjectId(
     @JvmStatic fun parseToType(id: String): ObjectId = parse(id).let {
       when {
         it.objectType == ObjectType.NULL_OBJECT -> NullObjectId
-        klasses.containsKey(it.objectType) -> klasses.getValue(it.objectType).constructors.single().call(it.instance)
+        klasses.containsKey(it.objectType) -> klasses.getValue(it.objectType)(it.instance)
         else -> it
       }
     }
