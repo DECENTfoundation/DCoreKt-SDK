@@ -20,6 +20,7 @@ import ch.decent.sdk.model.SearchAccountsOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.TransactionDetail
 import ch.decent.sdk.model.TransactionDetailObjectId
+import ch.decent.sdk.model.WithdrawPermission
 import ch.decent.sdk.model.WithdrawPermissionObjectId
 import ch.decent.sdk.model.isValidId
 import ch.decent.sdk.model.operation.AccountCreateOperation
@@ -210,9 +211,9 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun createCredentials(account: String, privateKey: String): Single<Credentials> =
       getByName(account).map { Credentials(it.id, ECKeyPair.fromBase58(privateKey)) }
 
-  fun getWithdrawals(ids: List<WithdrawPermissionObjectId>) = GetWithdrawals(ids).toRequest()
+  fun getWithdrawals(ids: List<WithdrawPermissionObjectId>): Single<List<WithdrawPermission>> = GetWithdrawals(ids).toRequest()
 
-  fun getWithdrawal(id: WithdrawPermissionObjectId) = getWithdrawals(listOf(id)).map { it.single() }
+  fun getWithdrawal(id: WithdrawPermissionObjectId): Single<WithdrawPermission> = getWithdrawals(listOf(id)).map { it.single() }
   /**
    * Create a memo. Can be used in [TransferOperation], [AssetIssueOperation], [NftIssueOperation], [NftTransferOperation]
    *
@@ -372,9 +373,9 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       accountFrom: AccountObjectId,
       accountTo: AccountObjectId,
       withdrawalLimit: AssetAmount,
-      withdrawalPeriod: Duration = Duration.ofDays(1),
-      periodsUntilExpiration: Long = 1,
-      periodStartTime: LocalDateTime = LocalDateTime.now(),
+      withdrawalPeriod: Duration,
+      periodsUntilExpiration: Long,
+      periodStartTime: LocalDateTime,
       fee: Fee = Fee()
   ): Single<WithdrawalCreateOperation> = Single.just(
       WithdrawalCreateOperation(accountFrom, accountTo, withdrawalLimit, withdrawalPeriod.seconds, periodsUntilExpiration, periodStartTime, fee)
@@ -384,9 +385,9 @@ class AccountApi internal constructor(api: DCoreApi) : BaseApi(api) {
       credentials: Credentials,
       accountTo: AccountObjectId,
       withdrawalLimit: AssetAmount,
-      withdrawalPeriod: Duration = Duration.ofDays(1),
-      periodsUntilExpiration: Long = 1,
-      periodStartTime: LocalDateTime = LocalDateTime.now(),
+      withdrawalPeriod: Duration,
+      periodsUntilExpiration: Long,
+      periodStartTime: LocalDateTime,
       fee: Fee = Fee()
   ): Single<TransactionConfirmation> =
       createWithdrawalCreateOperation(credentials.account, accountTo, withdrawalLimit, withdrawalPeriod, periodsUntilExpiration, periodStartTime, fee)

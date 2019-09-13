@@ -18,6 +18,8 @@ import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import org.junit.runners.Parameterized
 import org.junit.runners.Suite
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalDateTime
 
 @Suite.SuiteClasses(AccountOperationsTest::class, AccountApiTest::class)
 @RunWith(Suite::class)
@@ -56,12 +58,12 @@ class AccountOperationsTest : BaseOperationsTest() {
   }
 
   @Test fun `accounts-1 should create withdrawal`() {
-    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10), periodsUntilExpiration = 5)
+    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10), Duration.ofDays(1), 1, LocalDateTime.now())
         .testCheck()
   }
 
   @Test fun `accounts-1 should create withdrawal for delete`() {
-    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10))
+    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10), Duration.ofDays(1), 1, LocalDateTime.now())
         .testCheck()
   }
 
