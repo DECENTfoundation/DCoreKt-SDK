@@ -58,18 +58,32 @@ class AccountOperationsTest : BaseOperationsTest() {
   }
 
   @Test fun `accounts-1 should create withdrawal`() {
-    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10), Duration.ofDays(1), 1, LocalDateTime.now())
+    api.accountApi.createWithdrawal(
+        Helpers.credentials,
+        Helpers.account2,
+        AssetAmount(10),
+        Duration.ofDays(1),
+        1,
+        LocalDateTime.now().plusSeconds(1)
+    )
         .testCheck()
   }
 
   @Test fun `accounts-1 should create withdrawal for delete`() {
-    api.accountApi.createWithdrawal(Helpers.credentials, Helpers.account2, AssetAmount(10), Duration.ofDays(1), 1, LocalDateTime.now())
+    api.accountApi.createWithdrawal(
+        Helpers.credentials,
+        Helpers.account2,
+        AssetAmount(10),
+        Duration.ofDays(1),
+        1,
+        LocalDateTime.now().plusSeconds(1)
+    )
         .testCheck()
   }
 
   @Test fun `accounts-2 should delete withdrawal`() {
     api.accountApi.deleteWithdrawal(Helpers.credentials, WithdrawPermissionObjectId(1))
-        .testCheck { assertError(DCoreException::class.java) }
+        .testCheck()
   }
 
   @Test fun `accounts-2 should fail claim withdrawal`() {

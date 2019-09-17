@@ -6,7 +6,7 @@ import ch.decent.sdk.model.WithdrawPermissionObjectId
 import com.google.gson.annotations.SerializedName
 
 class WithdrawalDeleteOperation(
-    @SerializedName("permission_to_update") val withdrawalId: WithdrawPermissionObjectId,
+    @SerializedName("withdrawal_permission") val withdrawalId: WithdrawPermissionObjectId,
     @SerializedName("withdraw_from_account") val accountFrom: AccountObjectId,
     @SerializedName("authorized_account") val accountTo: AccountObjectId,
     fee: Fee = Fee()
