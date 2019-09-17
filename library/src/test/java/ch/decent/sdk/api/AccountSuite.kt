@@ -64,7 +64,7 @@ class AccountOperationsTest : BaseOperationsTest() {
         AssetAmount(10),
         Duration.ofDays(1),
         1,
-        LocalDateTime.now().plusSeconds(1)
+        LocalDateTime.now().plusDays(1)
     )
         .testCheck()
   }
@@ -76,7 +76,7 @@ class AccountOperationsTest : BaseOperationsTest() {
         AssetAmount(10),
         Duration.ofDays(1),
         1,
-        LocalDateTime.now().plusSeconds(1)
+        LocalDateTime.now().plusDays(1)
     )
         .testCheck()
   }
@@ -86,8 +86,8 @@ class AccountOperationsTest : BaseOperationsTest() {
         .testCheck()
   }
 
-  @Test fun `accounts-2 should fail claim withdrawal`() {
-    api.accountApi.claimWithdrawal(Helpers.credentials2, WithdrawPermissionObjectId(), AssetAmount(100))
+  @Test fun `accounts-2 should fail claim withdrawal - amount`() {
+    api.accountApi.claimWithdrawal(Helpers.credentials2, WithdrawPermissionObjectId(), AssetAmount(50))
         .testCheck { assertError(DCoreException::class.java) }
   }
 
@@ -102,10 +102,9 @@ class AccountOperationsTest : BaseOperationsTest() {
   }
 
   @Test fun `accounts-4 should claim withdrawal`() {
-    api.accountApi.claimWithdrawal(Helpers.credentials2, WithdrawPermissionObjectId(), AssetAmount(100))
+    api.accountApi.claimWithdrawal(Helpers.credentials2, WithdrawPermissionObjectId(), AssetAmount(50))
         .testCheck()
   }
-
 }
 
 @RunWith(Parameterized::class)
@@ -172,7 +171,7 @@ class AccountApiTest(channel: Channel) : BaseApiTest(channel) {
     api.accountApi.getWithdrawal(WithdrawPermissionObjectId()).testCheck {
       assertComplete()
       assertNoErrors()
-      assertValue { it.claimedThisPeriod == 100L }
+      assertValue { it.claimedThisPeriod == 50L }
     }
   }
 }
