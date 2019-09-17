@@ -92,7 +92,12 @@ class AccountOperationsTest : BaseOperationsTest() {
   }
 
   @Test fun `accounts-3 should update withdrawal`() {
-    api.accountApi.updateWithdrawal(Helpers.credentials, WithdrawPermissionObjectId(), AssetAmount(100))
+    api.accountApi.updateWithdrawal(
+        Helpers.credentials,
+        WithdrawPermissionObjectId(),
+        AssetAmount(100),
+        periodStartTime = LocalDateTime.now().plusSeconds(1)
+    )
         .testCheck()
   }
 
