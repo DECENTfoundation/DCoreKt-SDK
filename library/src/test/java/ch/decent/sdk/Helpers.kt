@@ -42,6 +42,7 @@ object Helpers {
   @JvmStatic val public = "DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb"
   @JvmStatic val public2 = "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp"
   @JvmStatic val credentials = Credentials(account, private)
+  @JvmStatic val credentials2 = Credentials(account2, private2)
 
   @JvmStatic val createAccount = "account-test"
   @JvmStatic val createAsset = "TEST"
