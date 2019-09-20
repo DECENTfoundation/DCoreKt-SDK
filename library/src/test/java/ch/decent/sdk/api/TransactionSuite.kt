@@ -9,9 +9,13 @@ import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.ProposalObjectId
 import ch.decent.sdk.model.TransactionConfirmation
+import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
+import ch.decent.sdk.utils.hash256
+import ch.decent.sdk.utils.hex
+import org.bouncycastle.jcajce.provider.digest.SHA256
 import org.junit.FixMethodOrder
 import org.junit.Ignore
 import org.junit.Test
@@ -19,6 +23,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import org.junit.runners.Suite
 import org.threeten.bp.LocalDateTime
+import java.security.MessageDigest
+import java.util.*
+import kotlin.random.Random
 
 @Suite.SuiteClasses(TransactionOperationsTest::class, TransactionApiTest::class)
 @RunWith(Suite::class)
@@ -56,6 +63,12 @@ class TransactionOperationsTest : BaseOperationsTest() {
         Credentials(Helpers.account2, Helpers.private2),
         ProposalObjectId(1)
     ).testCheck()
+  }
+
+  @Test fun `should publish generic custom op`() {
+    val hash = UUID.randomUUID().toString().toByteArray().hash256().hex()
+    api.broadcastApi.broadcast(Helpers.private, CustomOperation(42, Helpers.account, listOf(Helpers.account), hash))
+        .testCheck()
   }
 
 }
