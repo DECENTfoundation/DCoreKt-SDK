@@ -17,4 +17,9 @@ class WithdrawalUpdateOperation(
     @SerializedName("periods_until_expiration") @UInt32 var periodsUntilExpiration: Long,
     @SerializedName("period_start_time") var periodStartTime: LocalDateTime,
     fee: Fee = Fee()
-) : BaseOperation(OperationType.WITHDRAW_PERMISSION_UPDATE_OPERATION, fee)
+) : BaseOperation(OperationType.WITHDRAW_PERMISSION_UPDATE_OPERATION, fee) {
+
+  override fun toString(): String {
+    return "WithdrawalUpdateOperation(withdrawalId=$withdrawalId, accountFrom=$accountFrom, accountTo=$accountTo, withdrawalLimit=$withdrawalLimit, withdrawalPeriodSec=$withdrawalPeriodSec, periodsUntilExpiration=$periodsUntilExpiration, periodStartTime=$periodStartTime)"
+  }
+}

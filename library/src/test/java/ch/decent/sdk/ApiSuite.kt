@@ -3,6 +3,7 @@ package ch.decent.sdk
 import ch.decent.sdk.api.AccountSuite
 import ch.decent.sdk.api.AssetSuite
 import ch.decent.sdk.api.BalanceApiTest
+import ch.decent.sdk.api.BalanceSuite
 import ch.decent.sdk.api.BlockApiTest
 import ch.decent.sdk.api.CallbackApiTest
 import ch.decent.sdk.api.ContentSuite
@@ -23,7 +24,7 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     AccountSuite::class,
     AssetSuite::class,
-    BalanceApiTest::class,
+    BalanceSuite::class,
     BlockApiTest::class,
     CallbackApiTest::class,
     ContentSuite::class,

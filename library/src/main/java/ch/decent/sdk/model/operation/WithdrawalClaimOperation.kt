@@ -16,4 +16,9 @@ class WithdrawalClaimOperation(
     @SerializedName("amount_to_withdraw") val amount: AssetAmount,
     @SerializedName("memo") val memo: Memo? = null,
     fee: Fee = Fee()
-) : BaseOperation(OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION, fee)
+) : BaseOperation(OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION, fee) {
+
+  override fun toString(): String {
+    return "WithdrawalClaimOperation(withdrawalId=$withdrawalId, accountFrom=$accountFrom, accountTo=$accountTo, amount=$amount, memo=$memo)"
+  }
+}

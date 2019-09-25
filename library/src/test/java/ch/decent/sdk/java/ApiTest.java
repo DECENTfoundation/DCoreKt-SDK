@@ -92,7 +92,9 @@ public class ApiTest {
         api.getBalanceApi().getAll("account.name", Arrays.asList(new AssetObjectId(), new AssetObjectId()));
         api.getBalanceApi().getAll(new AccountObjectId());
         api.getBalanceApi().getAll(new AccountObjectId(), Arrays.asList(new AssetObjectId(), new AssetObjectId()));
-        api.getBalanceApi().getAllVesting(new AccountObjectId());
+        api.getBalanceApi().getAllVestingByAccount(new AccountObjectId());
+        api.getBalanceApi().getAllVesting(Arrays.asList(new VestingBalanceObjectId(), new VestingBalanceObjectId()));
+        api.getBalanceApi().getVesting(new VestingBalanceObjectId());
         api.getBalanceApi().getWithAsset(new AccountObjectId(), "DCT");
         api.getBalanceApi().getWithAsset("account.name", "DCT");
         api.getBalanceApi().getAllWithAsset(new AccountObjectId(), Arrays.asList("DCT", "DCT"));

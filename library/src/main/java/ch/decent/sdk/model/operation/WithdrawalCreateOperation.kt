@@ -15,4 +15,9 @@ class WithdrawalCreateOperation(
     @SerializedName("periods_until_expiration") @UInt32 val periodsUntilExpiration: Long,
     @SerializedName("period_start_time") val periodStartTime: LocalDateTime,
     fee: Fee = Fee()
-) : BaseOperation(OperationType.WITHDRAW_PERMISSION_CREATE_OPERATION, fee)
+) : BaseOperation(OperationType.WITHDRAW_PERMISSION_CREATE_OPERATION, fee) {
+
+  override fun toString(): String {
+    return "WithdrawalCreateOperation(accountFrom=$accountFrom, accountTo=$accountTo, withdrawalLimit=$withdrawalLimit, withdrawalPeriodSec=$withdrawalPeriodSec, periodsUntilExpiration=$periodsUntilExpiration, periodStartTime=$periodStartTime)"
+  }
+}

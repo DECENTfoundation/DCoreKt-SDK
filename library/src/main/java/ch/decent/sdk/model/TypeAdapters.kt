@@ -220,23 +220,22 @@ object StaticVariantFactory : TypeAdapterFactory {
         override fun write(out: JsonWriter, value: T?) {
           out.beginArray()
           delegates.map { (idx, adapter) ->
-            out.beginArray()
             out.value(idx)
             (adapter as TypeAdapter<Any>).write(out, (value as StaticVariantParametrized).objects[idx])
-            out.endArray()
           }
           out.endArray()
         }
 
         override fun read(reader: JsonReader): T? {
           val arr = Streams.parse(reader) as JsonArray
-          val vals = arr.map { it.asJsonArray[0].asInt to it.asJsonArray[1] }.toMap()
+          val vals = mapOf(arr[0].asInt to arr[1])
           val objs = types.map { (idx, t) ->
             if (Unit::class.javaObjectType == t.rawType) Unit
             else delegates[idx]?.fromJsonTree(vals.getOrDefault(idx, JsonNull.INSTANCE))
           }
+          val ctor = typeToken.rawType.constructors.find { it.parameterCount == objs.size }!!
           @Suppress("SpreadOperator")
-          return typeToken.rawType.constructors[0].newInstance(*objs.toTypedArray()) as T?
+          return ctor.newInstance(*objs.toTypedArray()) as T?
         }
       }
     } else {

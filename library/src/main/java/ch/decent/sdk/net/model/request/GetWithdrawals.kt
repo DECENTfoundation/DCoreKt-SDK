@@ -10,6 +10,6 @@ import com.google.gson.reflect.TypeToken
 internal class GetWithdrawals(
     ids: List<WithdrawPermissionObjectId>
 ) : GetObjects<List<WithdrawPermission>>(
-    ids.map { it },
+    ids,
     TypeToken.getParameterized(List::class.java, WithdrawPermission::class.java).type
 )

@@ -10,4 +10,9 @@ class WithdrawalDeleteOperation(
     @SerializedName("withdraw_from_account") val accountFrom: AccountObjectId,
     @SerializedName("authorized_account") val accountTo: AccountObjectId,
     fee: Fee = Fee()
-) : BaseOperation(OperationType.WITHDRAW_PERMISSION_DELETE_OPERATION, fee)
+) : BaseOperation(OperationType.WITHDRAW_PERMISSION_DELETE_OPERATION, fee) {
+
+  override fun toString(): String {
+    return "WithdrawalDeleteOperation(withdrawalId=$withdrawalId, accountFrom=$accountFrom, accountTo=$accountTo)"
+  }
+}

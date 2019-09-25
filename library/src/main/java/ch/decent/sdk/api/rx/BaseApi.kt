@@ -13,5 +13,8 @@ abstract class BaseApi internal constructor(protected val api: DCoreApi) {
   internal fun <R, T> T.callbacks(): Flowable<R> where T : BaseRequest<R>, T : WithCallback = api.core.makeRequestStream(this)
 
   internal fun <T : BaseOperation> Single<T>.broadcast(credentials: Credentials): Single<TransactionConfirmation> =
-      flatMap { api.broadcastApi.broadcastWithCallback(credentials.keyPair, it) }
+      flatMap { it.broadcast(credentials) }
+
+  internal fun <T : BaseOperation> T.broadcast(credentials: Credentials): Single<TransactionConfirmation> =
+      api.broadcastApi.broadcastWithCallback(credentials.keyPair, this)
 }
