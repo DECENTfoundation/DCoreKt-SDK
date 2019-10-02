@@ -12,6 +12,8 @@ import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.LinearVestingPolicy
+import ch.decent.sdk.model.LinearVestingPolicyCreate
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
@@ -24,8 +26,10 @@ import ch.decent.sdk.model.ProposalObjectId
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Regions
+import ch.decent.sdk.model.StaticVariant2
 import ch.decent.sdk.model.Synopsis
 import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.VestingBalanceObjectId
 import ch.decent.sdk.model.WithdrawPermissionObjectId
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
@@ -52,6 +56,8 @@ import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.VestingBalanceCreateOperation
+import ch.decent.sdk.model.operation.VestingBalanceWithdrawOperation
 import ch.decent.sdk.model.operation.WithdrawalClaimOperation
 import ch.decent.sdk.model.operation.WithdrawalCreateOperation
 import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
@@ -65,7 +71,6 @@ import org.junit.Test
 import org.slf4j.LoggerFactory
 import org.threeten.bp.LocalDateTime
 import java.math.BigInteger
-import java.security.SecureRandom
 
 class SerializerTest : TimeOutTest() {
 
@@ -486,6 +491,31 @@ class SerializerTest : TimeOutTest() {
         AccountObjectId(27),
         AccountObjectId(28),
         fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize vesting balance create operation`() {
+    val expected = "1020a1070000000000001b1ce803000000000000000085648b5d1e0000003c000000"
+    val op = VestingBalanceCreateOperation(
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(1000),
+        StaticVariant2(LinearVestingPolicyCreate(LocalDateTime.parse("2019-09-25T12:58:45.581"), 30L, 60L), null),
+        Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize vesting balance withdraw operation`() {
+    val expected = "1120a107000000000000001be80300000000000000"
+    val op = VestingBalanceWithdrawOperation(
+        VestingBalanceObjectId(),
+        AccountObjectId(27),
+        AssetAmount(1000),
+        Fee(amount = 500000)
     )
 
     Serializer.serialize(op).hex() `should be equal to` expected

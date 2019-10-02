@@ -20,8 +20,8 @@ enum class OperationType(val clazz: Class<*>? = null) {
   WITHDRAW_PERMISSION_UPDATE_OPERATION(WithdrawalUpdateOperation::class.java),
   WITHDRAW_PERMISSION_CLAIM_OPERATION(WithdrawalClaimOperation::class.java),
   WITHDRAW_PERMISSION_DELETE_OPERATION(WithdrawalDeleteOperation::class.java),   //15
-  VESTING_BALANCE_CREATE_OPERATION,
-  VESTING_BALANCE_WITHDRAW_OPERATION,
+  VESTING_BALANCE_CREATE_OPERATION(VestingBalanceCreateOperation::class.java),
+  VESTING_BALANCE_WITHDRAW_OPERATION(VestingBalanceWithdrawOperation::class.java),
   CUSTOM_OPERATION(CustomOperation::class.java),
   ASSERT_OPERATION,
   CONTENT_SUBMIT_OPERATION(AddOrUpdateContentOperation::class.java),       //20

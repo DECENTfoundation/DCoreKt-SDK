@@ -8,11 +8,15 @@ import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.CddVestingPolicy
+import ch.decent.sdk.model.CddVestingPolicyCreate
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.KeyAuth
 import ch.decent.sdk.model.KeyPart
+import ch.decent.sdk.model.LinearVestingPolicy
+import ch.decent.sdk.model.LinearVestingPolicyCreate
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.NftDataType
@@ -21,6 +25,7 @@ import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Publishing
 import ch.decent.sdk.model.RegionalPrice
+import ch.decent.sdk.model.StaticVariantParametrized
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.operation.AccountCreateOperation
@@ -50,6 +55,8 @@ import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.VestingBalanceCreateOperation
+import ch.decent.sdk.model.operation.VestingBalanceWithdrawOperation
 import ch.decent.sdk.model.operation.WithdrawalClaimOperation
 import ch.decent.sdk.model.operation.WithdrawalCreateOperation
 import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
@@ -558,7 +565,42 @@ object Serializer {
     append(buffer, obj.withdrawalId)
   }
 
+  private val linearVestingPolicyAdapter: Adapter<LinearVestingPolicyCreate> = { buffer, obj ->
+    append(buffer, obj.start)
+    buffer.writeIntLe(obj.cliffSeconds.toInt())
+    buffer.writeIntLe(obj.durationSeconds.toInt())
+  }
+
+  private val cddVestingPolicyAdapter: Adapter<CddVestingPolicyCreate> = { buffer, obj ->
+    append(buffer, obj.start)
+    buffer.writeIntLe(obj.durationSeconds.toInt())
+  }
+
+  private val vestingBalanceCreateAdapter: Adapter<VestingBalanceCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.creator)
+    append(buffer, obj.owner)
+    append(buffer, obj.amount)
+    obj.policy.append(buffer)
+  }
+
+  private val VestingBalanceWithdrawAdapter: Adapter<VestingBalanceWithdrawOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.id)
+    append(buffer, obj.owner)
+    append(buffer, obj.amount)
+  }
+
   private fun BufferedSink.writeType(op: BaseOperation) = writeByte(op.type.ordinal)
+
+  private fun StaticVariantParametrized.append(buffer: BufferedSink) = objects.withIndex().forEach {
+    if (it.value != null) {
+      buffer.writeByte(it.index)
+      append(buffer, it.value)
+    }
+  }
 
   @Suppress("UNCHECKED_CAST")
   private fun <T : Any> append(buffer: BufferedSink, obj: T?, optional: Boolean = false) {
@@ -634,7 +676,11 @@ object Serializer {
       WithdrawalCreateOperation::class to withdrawalCreateAdapter,
       WithdrawalUpdateOperation::class to withdrawalUpdateAdapter,
       WithdrawalClaimOperation::class to withdrawalClaimAdapter,
-      WithdrawalDeleteOperation::class to withdrawalDeleteAdapter
+      WithdrawalDeleteOperation::class to withdrawalDeleteAdapter,
+      LinearVestingPolicyCreate::class to linearVestingPolicyAdapter,
+      CddVestingPolicyCreate::class to cddVestingPolicyAdapter,
+      VestingBalanceCreateOperation::class to vestingBalanceCreateAdapter,
+      VestingBalanceWithdrawOperation::class to VestingBalanceWithdrawAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()
