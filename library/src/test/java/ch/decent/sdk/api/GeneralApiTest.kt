@@ -18,7 +18,7 @@ class GeneralApiTest(channel: Channel) : BaseApiTest(channel) {
   }
 
   @Test fun `get config`() {
-    api.generalApi.getConfig().testCheck()
+    api.generalApi.getConfiguration().testCheck()
   }
 
   @Test fun `get chain id`() {

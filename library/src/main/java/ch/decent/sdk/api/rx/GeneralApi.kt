@@ -9,7 +9,7 @@ import ch.decent.sdk.model.GlobalProperties
 import ch.decent.sdk.model.MinerRewardInput
 import ch.decent.sdk.net.model.request.GetChainId
 import ch.decent.sdk.net.model.request.GetChainProperties
-import ch.decent.sdk.net.model.request.GetConfig
+import ch.decent.sdk.net.model.request.GetConfiguration
 import ch.decent.sdk.net.model.request.GetDynamicGlobalProps
 import ch.decent.sdk.net.model.request.GetGlobalProperties
 import ch.decent.sdk.net.model.request.GetTimeToMaintenance
@@ -38,7 +38,7 @@ class GeneralApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return configured constants
    */
-  fun getConfig(): Single<Config> = GetConfig.toRequest()
+  fun getConfiguration(): Single<Config> = GetConfiguration.toRequest()
 
   /**
    * Get the chain ID.
