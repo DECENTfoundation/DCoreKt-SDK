@@ -2,11 +2,7 @@ package ch.decent.sdk.api
 
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.Credentials
-import ch.decent.sdk.crypto.address
-import ch.decent.sdk.exception.ObjectNotFoundException
-import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
-import ch.decent.sdk.model.Fee
 import ch.decent.sdk.model.ProposalObjectId
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.CustomOperation
@@ -15,17 +11,13 @@ import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.testCheck
 import ch.decent.sdk.utils.hash256
 import ch.decent.sdk.utils.hex
-import org.bouncycastle.jcajce.provider.digest.SHA256
 import org.junit.FixMethodOrder
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import org.junit.runners.Suite
 import org.threeten.bp.LocalDateTime
-import java.security.MessageDigest
 import java.util.*
-import kotlin.random.Random
 
 @Suite.SuiteClasses(TransactionOperationsTest::class, TransactionApiTest::class)
 @RunWith(Suite::class)
@@ -88,13 +80,6 @@ class TransactionApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get proposed transaction by id`() {
     api.transactionApi.getProposed(ProposalObjectId(0)).testCheck()
-  }
-
-  @Ignore //todo trx is found even after expiration for some time, we would need to wait for a while here  <1min
-  @Test fun `should get expired recent transaction by ID`() {
-    trx.flatMap { api.transactionApi.getRecent(it.id) }.testCheck {
-      assertError(ObjectNotFoundException::class.java)
-    }
   }
 
   @Test fun `should get a transaction by ID`() {

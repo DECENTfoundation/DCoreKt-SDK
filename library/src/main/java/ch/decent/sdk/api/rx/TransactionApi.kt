@@ -18,7 +18,6 @@ import ch.decent.sdk.model.operation.ProposalDeleteOperation
 import ch.decent.sdk.model.operation.ProposalUpdateOperation
 import ch.decent.sdk.net.model.request.GetProposalById
 import ch.decent.sdk.net.model.request.GetProposedTransactions
-import ch.decent.sdk.net.model.request.GetRecentTransactionById
 import ch.decent.sdk.net.model.request.GetTransaction
 import ch.decent.sdk.net.model.request.GetTransactionById
 import ch.decent.sdk.net.model.request.GetTransactionHex
@@ -63,16 +62,6 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
   fun getAllProposed(ids: List<ProposalObjectId>): Single<List<Proposal>> = GetProposalById(ids).toRequest()
 
   fun getProposed(id: ProposalObjectId): Single<Proposal> = getAllProposed(listOf(id)).map { it.single() }
-
-  /**
-   * If the transaction has not expired, this method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
-   * Just because it is not known does not mean it wasn't included in the DCore. The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
-   *
-   * @param trxId transaction id
-   *
-   * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
-   */
-  fun getRecent(trxId: String): Single<ProcessedTransaction> = GetRecentTransactionById(trxId).toRequest()
 
   /**
    * This method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].

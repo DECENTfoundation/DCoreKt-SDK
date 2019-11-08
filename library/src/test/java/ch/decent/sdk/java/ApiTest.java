@@ -12,7 +12,6 @@ import ch.decent.sdk.model.operation.BaseOperation;
 import ch.decent.sdk.model.operation.EmptyOperation;
 import ch.decent.sdk.model.operation.OperationType;
 import ch.decent.sdk.model.operation.TransferOperation;
-import ch.decent.sdk.utils.Utils;
 import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -203,7 +202,6 @@ public class ApiTest {
         byte[] id = new byte[20];
         Arrays.fill(id, (byte) 0);
         BaseOperation operation = new EmptyOperation(OperationType.TRANSFER2_OPERATION);
-        api.getTransactionApi().getRecent(Utils.hex(id));
         api.getTransactionApi().get(1, 1);
         api.getTransactionApi().get(new TransactionConfirmation("", 1, 1,
                 new ProcessedTransaction(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), LocalDateTime.now(), 1, 1, Collections.emptyList())));
