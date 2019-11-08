@@ -38,6 +38,12 @@ dependencies {
 
 If not using `gradle`, check [jitpack] site for instructions.
 
+Proguard rules
+``` 
+# DCore SDK
+-keep class ch.decent.sdk.model.ObjectId
+```
+
 Usage
 -----
 
