@@ -7,22 +7,30 @@ import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.ECKeyPair
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.Account
+import ch.decent.sdk.model.AccountObjectId
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
 import ch.decent.sdk.model.ExchangeRate
 import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.LinearVestingPolicy
+import ch.decent.sdk.model.LinearVestingPolicyCreate
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MessagePayload
 import ch.decent.sdk.model.MessagePayloadReceiver
+import ch.decent.sdk.model.MinerObjectId
 import ch.decent.sdk.model.MonitoredAssetOptions
 import ch.decent.sdk.model.NftApple
 import ch.decent.sdk.model.NftModel
 import ch.decent.sdk.model.NftOptions
+import ch.decent.sdk.model.ProposalObjectId
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.RegionalPrice
 import ch.decent.sdk.model.Regions
+import ch.decent.sdk.model.StaticVariant2
 import ch.decent.sdk.model.Synopsis
 import ch.decent.sdk.model.Transaction
+import ch.decent.sdk.model.VestingBalanceObjectId
+import ch.decent.sdk.model.WithdrawPermissionObjectId
 import ch.decent.sdk.model.operation.AccountCreateOperation
 import ch.decent.sdk.model.operation.AccountUpdateOperation
 import ch.decent.sdk.model.operation.AddOrUpdateContentOperation
@@ -33,16 +41,27 @@ import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.AssetReserveOperation
 import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.MinerCreateOperation
+import ch.decent.sdk.model.operation.MinerUpdateOperation
 import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.NftIssueOperation
 import ch.decent.sdk.model.operation.NftTransferOperation
 import ch.decent.sdk.model.operation.NftUpdateDataOperation
 import ch.decent.sdk.model.operation.NftUpdateOperation
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.ProposalCreateOperation
+import ch.decent.sdk.model.operation.ProposalDeleteOperation
+import ch.decent.sdk.model.operation.ProposalUpdateOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.VestingBalanceCreateOperation
+import ch.decent.sdk.model.operation.VestingBalanceWithdrawOperation
+import ch.decent.sdk.model.operation.WithdrawalClaimOperation
+import ch.decent.sdk.model.operation.WithdrawalCreateOperation
+import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
+import ch.decent.sdk.model.operation.WithdrawalUpdateOperation
 import ch.decent.sdk.model.toObjectId
 import ch.decent.sdk.net.serialization.Serializer
 import ch.decent.sdk.print
@@ -350,6 +369,153 @@ class SerializerTest : TimeOutTest() {
         "1.11.1".toObjectId(),
         mutableMapOf("size" to 1, "color" to "red", "eaten" to false),
         fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize miner create operation`() {
+    val expected = "0620a1070000000000001b11687474703a2f2f676f6f676c652e636f6d0242e0431837a5843252a0ecfab9565bdb20bdb0fc4c88398455f64589fdc7b93d"
+    val op = MinerCreateOperation(
+        AccountObjectId(27),
+        "http://google.com",
+        "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp".address(),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize miner update operation`() {
+    val expected = "0720a1070000000000001b1b0111687474703a2f2f676f6f676c652e636f6d010242e0431837a5843252a0ecfab9565bdb20bdb0fc4c88398455f64589fdc7b93d"
+    val op = MinerUpdateOperation(
+        MinerObjectId(27),
+        AccountObjectId(27),
+        "http://google.com",
+        "DCT5PwcSiigfTPTwubadt85enxMFC18TtVoti3gnTbG7TN9f9R3Fp".address(),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize proposal create operation`() {
+    val expected = "0920a1070000000000001be39b775d000000"
+    val op = ProposalCreateOperation(
+        AccountObjectId(27),
+        emptyList(),
+        LocalDateTime.parse("2019-09-10T12:49:39.220"),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize proposal update operation`() {
+    val expected = "0a20a1070000000000001b0101010102010301040102cf2c986e78776c21e5a75d42dd858dfe8ef06cf663ee0e8363db89ad5999d84f010242e0431837a5843252a0ecfab9565bdb20bdb0fc4c88398455f64589fdc7b93d00"
+    val op = ProposalUpdateOperation(
+        AccountObjectId(27),
+        ProposalObjectId(1),
+        listOf(AccountObjectId(1)),
+        listOf(AccountObjectId(2)),
+        listOf(AccountObjectId(3)),
+        listOf(AccountObjectId(4)),
+        listOf(Helpers.public.address()),
+        listOf(Helpers.public2.address()),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize proposal delete operation`() {
+    val expected = "0b20a1070000000000001b010100"
+    val op = ProposalDeleteOperation(
+        AccountObjectId(27),
+        ProposalObjectId(1),
+        true,
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal create operation`() {
+    val expected = "0c20a1070000000000001b1c64000000000000000064000000050000001b3f7a5d"
+    val op = WithdrawalCreateOperation(
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(100),
+        100,
+        5,
+        LocalDateTime.parse("2019-09-12T12:50:35.550"),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal update operation`() {
+    val expected = "0d20a1070000000000001b1c00640000000000000000640000001b3f7a5d05000000"
+    val op = WithdrawalUpdateOperation(
+        WithdrawPermissionObjectId(),
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(100),
+        100,
+        5,
+        LocalDateTime.parse("2019-09-12T12:50:35.550"),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal claim operation`() {
+    val expected = "0e20a107000000000000001b1c64000000000000000000"
+    val op = WithdrawalClaimOperation(
+        WithdrawPermissionObjectId(),
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(100),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize withdrawal delete operation`() {
+    val expected = "0f20a1070000000000001b1c00"
+    val op = WithdrawalDeleteOperation(
+        WithdrawPermissionObjectId(),
+        AccountObjectId(27),
+        AccountObjectId(28),
+        fee = Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize vesting balance create operation`() {
+    val expected = "1020a1070000000000001b1ce803000000000000000085648b5d1e0000003c000000"
+    val op = VestingBalanceCreateOperation(
+        AccountObjectId(27),
+        AccountObjectId(28),
+        AssetAmount(1000),
+        StaticVariant2(LinearVestingPolicyCreate(LocalDateTime.parse("2019-09-25T12:58:45.581"), 30L, 60L), null),
+        Fee(amount = 500000)
+    )
+
+    Serializer.serialize(op).hex() `should be equal to` expected
+  }
+
+  @Test fun `should serialize vesting balance withdraw operation`() {
+    val expected = "1120a107000000000000001be80300000000000000"
+    val op = VestingBalanceWithdrawOperation(
+        VestingBalanceObjectId(),
+        AccountObjectId(27),
+        AssetAmount(1000),
+        Fee(amount = 500000)
     )
 
     Serializer.serialize(op).hex() `should be equal to` expected

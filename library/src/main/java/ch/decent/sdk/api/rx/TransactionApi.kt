@@ -2,18 +2,28 @@
 
 package ch.decent.sdk.api.rx
 
+import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.model.AccountObjectId
+import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.OpWrapper
 import ch.decent.sdk.model.ProcessedTransaction
+import ch.decent.sdk.model.Proposal
+import ch.decent.sdk.model.ProposalObjectId
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.operation.BaseOperation
+import ch.decent.sdk.model.operation.ProposalCreateOperation
+import ch.decent.sdk.model.operation.ProposalDeleteOperation
+import ch.decent.sdk.model.operation.ProposalUpdateOperation
+import ch.decent.sdk.net.model.request.GetProposalById
 import ch.decent.sdk.net.model.request.GetProposedTransactions
-import ch.decent.sdk.net.model.request.GetRecentTransactionById
 import ch.decent.sdk.net.model.request.GetTransaction
 import ch.decent.sdk.net.model.request.GetTransactionById
 import ch.decent.sdk.net.model.request.GetTransactionHex
 import io.reactivex.Single
 import org.threeten.bp.Duration
+import org.threeten.bp.LocalDateTime
 
 class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
 
@@ -47,18 +57,11 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    *
    * @return a set of proposed transactions
    */
-  // todo model
-  fun getAllProposed(accountId: AccountObjectId): Single<List<Any>> = GetProposedTransactions(accountId).toRequest()
+  fun getAllProposed(accountId: AccountObjectId): Single<List<Proposal>> = GetProposedTransactions(accountId).toRequest()
 
-  /**
-   * If the transaction has not expired, this method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
-   * Just because it is not known does not mean it wasn't included in the DCore. The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
-   *
-   * @param trxId transaction id
-   *
-   * @return a transaction if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
-   */
-  fun getRecent(trxId: String): Single<ProcessedTransaction> = GetRecentTransactionById(trxId).toRequest()
+  fun getAllProposed(ids: List<ProposalObjectId>): Single<List<Proposal>> = GetProposalById(ids).toRequest()
+
+  fun getProposed(id: ProposalObjectId): Single<Proposal> = getAllProposed(listOf(id)).map { it.single() }
 
   /**
    * This method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
@@ -101,4 +104,63 @@ class TransactionApi internal constructor(api: DCoreApi) : BaseApi(api) {
    */
   fun getHexDump(transaction: Transaction): Single<String> = GetTransactionHex(transaction).toRequest()
 
+  fun createProposalCreateOperation(
+      payer: AccountObjectId,
+      ops: List<BaseOperation>,
+      expiration: LocalDateTime,
+      reviewPeriod: Duration? = null,
+      fee: Fee = Fee()
+  ): Single<ProposalCreateOperation> = Single.just(ProposalCreateOperation(payer, ops.map { OpWrapper(it) }, expiration, reviewPeriod?.seconds, fee))
+
+  fun createProposal(
+      credentials: Credentials,
+      ops: List<BaseOperation>,
+      expiration: LocalDateTime,
+      reviewPeriod: Duration? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createProposalCreateOperation(credentials.account, ops, expiration, reviewPeriod, fee)
+      .broadcast(credentials)
+
+  fun createProposalUpdateOperation(
+      payer: AccountObjectId,
+      proposal: ProposalObjectId,
+      activeApprovalsAdd: List<AccountObjectId> = emptyList(),
+      activeApprovalsRemove: List<AccountObjectId> = emptyList(),
+      ownerApprovalsAdd: List<AccountObjectId> = emptyList(),
+      ownerApprovalsRemove: List<AccountObjectId> = emptyList(),
+      keyApprovalsAdd: List<Address> = emptyList(),
+      keyApprovalsRemove: List<Address> = emptyList(),
+      fee: Fee = Fee()
+  ): Single<ProposalUpdateOperation> = Single.just(ProposalUpdateOperation(payer, proposal, activeApprovalsAdd, activeApprovalsRemove, ownerApprovalsAdd, ownerApprovalsRemove,
+      keyApprovalsAdd, keyApprovalsRemove, fee))
+
+  fun updateProposal(
+      credentials: Credentials,
+      proposal: ProposalObjectId,
+      activeApprovalsAdd: List<AccountObjectId> = emptyList(),
+      activeApprovalsRemove: List<AccountObjectId> = emptyList(),
+      ownerApprovalsAdd: List<AccountObjectId> = emptyList(),
+      ownerApprovalsRemove: List<AccountObjectId> = emptyList(),
+      keyApprovalsAdd: List<Address> = emptyList(),
+      keyApprovalsRemove: List<Address> = emptyList(),
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> =
+      createProposalUpdateOperation(credentials.account, proposal, activeApprovalsAdd, activeApprovalsRemove, ownerApprovalsAdd, ownerApprovalsRemove,
+          keyApprovalsAdd, keyApprovalsRemove, fee)
+          .broadcast(credentials)
+
+  fun createProposalDeleteOperation(
+      payer: AccountObjectId,
+      proposal: ProposalObjectId,
+      usingOwnerAuthority: Boolean = false,
+      fee: Fee = Fee()
+  ): Single<ProposalDeleteOperation> = Single.just(ProposalDeleteOperation(payer, proposal, usingOwnerAuthority, fee))
+
+  fun deleteProposal(
+      credentials: Credentials,
+      proposal: ProposalObjectId,
+      usingOwnerAuthority: Boolean = false,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createProposalDeleteOperation(credentials.account, proposal, usingOwnerAuthority, fee)
+      .broadcast(credentials)
 }

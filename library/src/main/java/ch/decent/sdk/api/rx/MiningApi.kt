@@ -2,6 +2,7 @@
 
 package ch.decent.sdk.api.rx
 
+import ch.decent.sdk.crypto.Address
 import ch.decent.sdk.crypto.Credentials
 import ch.decent.sdk.exception.ObjectNotFoundException
 import ch.decent.sdk.model.AccountObjectId
@@ -15,6 +16,8 @@ import ch.decent.sdk.model.SearchMinerVotingOrder
 import ch.decent.sdk.model.TransactionConfirmation
 import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.operation.AccountUpdateOperation
+import ch.decent.sdk.model.operation.MinerCreateOperation
+import ch.decent.sdk.model.operation.MinerUpdateOperation
 import ch.decent.sdk.net.model.request.GetActualVotes
 import ch.decent.sdk.net.model.request.GetAssetPerBlock
 import ch.decent.sdk.net.model.request.GetFeedsByMiner
@@ -152,7 +155,7 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
    * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
    * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
    *
-   * @return a transaction confirmation
+   * @return an account update operation
    */
   @JvmOverloads
   fun createVoteOperation(
@@ -179,8 +182,81 @@ class MiningApi internal constructor(api: DCoreApi) : BaseApi(api) {
       credentials: Credentials,
       minerIds: List<MinerObjectId>,
       fee: Fee = Fee()
-  ): Single<TransactionConfirmation> =
-      createVoteOperation(credentials.account, minerIds, fee).flatMap {
-        api.broadcastApi.broadcastWithCallback(credentials.keyPair, it)
-      }
+  ): Single<TransactionConfirmation> = createVoteOperation(credentials.account, minerIds, fee).broadcast(credentials)
+
+  /**
+   * Create miner create operation. Account primary public key is used as miner's public key. For more options see [MinerCreateOperation] constructor.
+   *
+   * @param accountId account object id, 1.2.*. The account which owns the miner. This account pays the fee for this operation.
+   * @param url url pointing to miner info web page
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return an account update operation
+   */
+  @JvmOverloads
+  fun createMinerCreateOperation(
+      accountId: AccountObjectId,
+      url: String,
+      fee: Fee = Fee()
+  ): Single<MinerCreateOperation> = api.accountApi.get(accountId).map { MinerCreateOperation(accountId, url, it.primaryAddress, fee) }
+
+  /**
+   * Create miner. Account primary public key is used as miner's signing key.
+   *
+   * @param credentials account credentials. The account which owns the miner. This account pays the fee for this operation.
+   * @param url url pointing to miner info web page
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return a transaction confirmation
+   */
+  @JvmOverloads
+  fun create(
+      credentials: Credentials,
+      url: String,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createMinerCreateOperation(credentials.account, url, fee).broadcast(credentials)
+
+  /**
+   * Create miner update operation. Fills model with actual account values. For more options see [MinerUpdateOperation] constructor.
+   *
+   * @param accountId account object id, 1.2.*. The account which owns the miner. This account pays the fee for this operation.
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return an account update operation
+   */
+  @JvmOverloads
+  fun createMinerUpdateOperation(
+      accountId: AccountObjectId,
+      fee: Fee = Fee()
+  ): Single<MinerUpdateOperation> = getMinerByAccount(accountId).map {
+    MinerUpdateOperation(it.id, it.minerAccount, it.url, it.signingKey, fee)
+  }
+
+  /**
+   * Update accounts's miner.
+   *
+   * @param credentials account credentials. The account which owns the miner. This account pays the fee for this operation.
+   * @param url an optional new url pointing to miner info web page
+   * @param signingKey an optional new public key address used to sign blocks by miner
+   * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+   * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+   *
+   * @return an account update operation
+   */
+  @JvmOverloads
+  fun update(
+      credentials: Credentials,
+      url: String? = null,
+      signingKey: Address? = null,
+      fee: Fee = Fee()
+  ): Single<TransactionConfirmation> = createMinerUpdateOperation(credentials.account, fee).map {
+    it.apply {
+      this.url = url
+      this.signingKey = signingKey
+    }
+  }.broadcast(credentials)
+
 }

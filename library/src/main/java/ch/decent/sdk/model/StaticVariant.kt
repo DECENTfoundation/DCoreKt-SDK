@@ -13,7 +13,7 @@ abstract class StaticVariantParametrized(val objects: List<Any?>) : StaticVarian
 
 data class StaticVariant1<T1 : Any?>(val obj: T1) : StaticVariantParametrized(listOf(obj))
 
-data class StaticVariant2<T1 : Any?, T2 : Any?>(val obj1: T1, val obj2: T2) : StaticVariantParametrized(listOf(obj1, obj2))
+data class StaticVariant2<T1 : Any?, T2 : Any?>(val obj1: T1? = null, val obj2: T2? = null) : StaticVariantParametrized(listOf(obj1, obj2))
 
 data class FixedMaxSupply(
     @SerializedName("is_fixed_max_supply") val isFixedMaxSupply: Boolean

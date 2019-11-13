@@ -1,8 +1,8 @@
 package ch.decent.sdk.api
 
-import ch.decent.sdk.api.rx.DCoreApi
 import ch.decent.sdk.DCoreClient
 import ch.decent.sdk.Helpers
+import ch.decent.sdk.api.rx.DCoreApi
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
@@ -35,16 +35,6 @@ class CallbackApiTest {
         .assertError(IllegalArgumentException::class.java)
   }
 
-  @Test fun `should cancel all subscriptions`() {
-    val test = api.callbackApi.cancelAll()
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-  }
-
   @Test fun `should set block applied callback`() {
     val test = api.callbackApi.onBlockApplied()
         .take(1)
@@ -68,17 +58,6 @@ class CallbackApiTest {
 
   @Test fun `should set pending transaction callback`() {
     val test = api.callbackApi.onPendingTransaction()
-        .take(1)
-        .subscribeOn(Schedulers.newThread())
-        .test()
-
-    test.awaitTerminalEvent()
-    test.assertComplete()
-        .assertNoErrors()
-  }
-
-  @Test fun `should set subscribe callback`() {
-    val test = api.callbackApi.onGlobal(false)
         .take(1)
         .subscribeOn(Schedulers.newThread())
         .test()

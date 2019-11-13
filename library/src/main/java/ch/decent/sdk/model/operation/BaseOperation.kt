@@ -2,6 +2,8 @@ package ch.decent.sdk.model.operation
 
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.Fee
+import ch.decent.sdk.model.OpWrapper
+import ch.decent.sdk.model.RequiredFee
 import ch.decent.sdk.net.serialization.Serializer
 import com.google.gson.annotations.SerializedName
 import java.util.*
@@ -24,6 +26,12 @@ abstract class BaseOperation(
    * Defines whether to fetch required fee for the operation when using the API methods to create transaction or broadcast operation
    */
   @Transient var fetchFee: Boolean = fee.amount == null
+
+  open fun setFee(fee: RequiredFee) {
+    this.fee = fee.fee
+  }
+
+  fun wrap() = OpWrapper(this)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

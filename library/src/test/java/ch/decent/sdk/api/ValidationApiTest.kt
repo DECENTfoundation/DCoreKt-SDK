@@ -3,10 +3,13 @@ package ch.decent.sdk.api
 import ch.decent.sdk.Helpers
 import ch.decent.sdk.crypto.address
 import ch.decent.sdk.model.AssetAmount
+import ch.decent.sdk.model.OpWrapper
 import ch.decent.sdk.model.operation.OperationType
+import ch.decent.sdk.model.operation.ProposalCreateOperation
 import ch.decent.sdk.model.operation.TransferOperation
 import ch.decent.sdk.testCheck
 import org.junit.Test
+import org.threeten.bp.LocalDateTime
 
 class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
 
@@ -43,6 +46,13 @@ class ValidationApiTest(channel: Channel) : BaseApiTest(channel) {
 
   @Test fun `should get fee for transfer OP`() {
     api.validationApi.getFeeForType(OperationType.TRANSFER2_OPERATION, Helpers.createAssetId).testCheck()
+  }
+
+  @Test fun `should get fee for proposal OP`() {
+    val proposed = TransferOperation(Helpers.account, Helpers.account2, AssetAmount(1)).wrap()
+    val proposal = ProposalCreateOperation(Helpers.account, listOf(proposed), LocalDateTime.now().plusDays(5)).wrap()
+    val op = ProposalCreateOperation(Helpers.account, listOf(proposal), LocalDateTime.now().plusDays(5))
+    api.validationApi.getFee(op).testCheck()
   }
 
 }

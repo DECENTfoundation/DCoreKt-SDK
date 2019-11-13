@@ -3,23 +3,29 @@
 package ch.decent.sdk.net.serialization
 
 import ch.decent.sdk.crypto.Address
+import ch.decent.sdk.model.AccountAuth
 import ch.decent.sdk.model.AccountOptions
 import ch.decent.sdk.model.AssetAmount
 import ch.decent.sdk.model.AssetOptions
-import ch.decent.sdk.model.AuthMap
 import ch.decent.sdk.model.Authority
+import ch.decent.sdk.model.CddVestingPolicy
+import ch.decent.sdk.model.CddVestingPolicyCreate
 import ch.decent.sdk.model.CoAuthors
 import ch.decent.sdk.model.CustodyData
 import ch.decent.sdk.model.ExchangeRate
+import ch.decent.sdk.model.KeyAuth
 import ch.decent.sdk.model.KeyPart
+import ch.decent.sdk.model.LinearVestingPolicy
+import ch.decent.sdk.model.LinearVestingPolicyCreate
 import ch.decent.sdk.model.Memo
 import ch.decent.sdk.model.MonitoredAssetOptions
-import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.NftDataType
 import ch.decent.sdk.model.NftOptions
+import ch.decent.sdk.model.ObjectId
 import ch.decent.sdk.model.PubKey
 import ch.decent.sdk.model.Publishing
 import ch.decent.sdk.model.RegionalPrice
+import ch.decent.sdk.model.StaticVariantParametrized
 import ch.decent.sdk.model.Transaction
 import ch.decent.sdk.model.VoteId
 import ch.decent.sdk.model.operation.AccountCreateOperation
@@ -32,17 +38,29 @@ import ch.decent.sdk.model.operation.AssetIssueOperation
 import ch.decent.sdk.model.operation.AssetReserveOperation
 import ch.decent.sdk.model.operation.AssetUpdateAdvancedOperation
 import ch.decent.sdk.model.operation.AssetUpdateOperation
+import ch.decent.sdk.model.operation.BaseOperation
 import ch.decent.sdk.model.operation.CustomOperation
 import ch.decent.sdk.model.operation.LeaveRatingAndCommentOperation
+import ch.decent.sdk.model.operation.MinerCreateOperation
+import ch.decent.sdk.model.operation.MinerUpdateOperation
 import ch.decent.sdk.model.operation.NftCreateOperation
 import ch.decent.sdk.model.operation.NftIssueOperation
 import ch.decent.sdk.model.operation.NftTransferOperation
 import ch.decent.sdk.model.operation.NftUpdateDataOperation
 import ch.decent.sdk.model.operation.NftUpdateOperation
+import ch.decent.sdk.model.operation.ProposalCreateOperation
+import ch.decent.sdk.model.operation.ProposalDeleteOperation
+import ch.decent.sdk.model.operation.ProposalUpdateOperation
 import ch.decent.sdk.model.operation.PurchaseContentOperation
 import ch.decent.sdk.model.operation.RemoveContentOperation
 import ch.decent.sdk.model.operation.SendMessageOperation
 import ch.decent.sdk.model.operation.TransferOperation
+import ch.decent.sdk.model.operation.VestingBalanceCreateOperation
+import ch.decent.sdk.model.operation.VestingBalanceWithdrawOperation
+import ch.decent.sdk.model.operation.WithdrawalClaimOperation
+import ch.decent.sdk.model.operation.WithdrawalCreateOperation
+import ch.decent.sdk.model.operation.WithdrawalDeleteOperation
+import ch.decent.sdk.model.operation.WithdrawalUpdateOperation
 import ch.decent.sdk.utils.SIZE_OF_POINT_ON_CURVE_COMPRESSED
 import ch.decent.sdk.utils.unhex
 import okio.Buffer
@@ -111,7 +129,12 @@ object Serializer {
     append(buffer, obj.keyAuths)
   }
 
-  private val authorityMapAdapter: Adapter<AuthMap> = { buffer, obj ->
+  private val keyAuthAdapter: Adapter<KeyAuth> = { buffer, obj ->
+    append(buffer, obj.value)
+    buffer.writeShortLe(obj.weight.toInt())
+  }
+
+  private val accountAuthAdapter: Adapter<AccountAuth> = { buffer, obj ->
     append(buffer, obj.value)
     buffer.writeShortLe(obj.weight.toInt())
   }
@@ -162,7 +185,7 @@ object Serializer {
   }
 
   private val accountCreateOperationAdapter: Adapter<AccountCreateOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.registrar)
     append(buffer, obj.name)
@@ -173,7 +196,7 @@ object Serializer {
   }
 
   private val accountUpdateOperationAdapter: Adapter<AccountUpdateOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.accountId)
     append(buffer, obj.owner, true)
@@ -183,7 +206,7 @@ object Serializer {
   }
 
   private val purchaseContentOperationAdapter: Adapter<PurchaseContentOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.uri)
     append(buffer, obj.consumer)
@@ -193,7 +216,7 @@ object Serializer {
   }
 
   private val transferOperationAdapter: Adapter<TransferOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.from)
     buffer.writeLongLe(obj.to.fullInstance)
@@ -227,7 +250,7 @@ object Serializer {
   }
 
   private val addOrUpdateContentOperationAdapter: Adapter<AddOrUpdateContentOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     buffer.writeLongLe(obj.size.toLong())
     append(buffer, obj.author)
@@ -245,14 +268,14 @@ object Serializer {
   }
 
   private val removeContentOperationAdapter: Adapter<RemoveContentOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.author)
     append(buffer, obj.uri)
   }
 
   private val customOperationAdapter: Adapter<CustomOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.payer)
     append(buffer, obj.requiredAuths)
@@ -261,7 +284,7 @@ object Serializer {
   }
 
   private val rateAndCommentOperationAdapter: Adapter<LeaveRatingAndCommentOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.uri)
     append(buffer, obj.consumer)
@@ -294,7 +317,7 @@ object Serializer {
   }
 
   private val assetCreateAdapter: Adapter<AssetCreateOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.symbol)
@@ -307,7 +330,7 @@ object Serializer {
   }
 
   private val assetUpdateAdapter: Adapter<AssetUpdateOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.assetToUpdate)
@@ -320,7 +343,7 @@ object Serializer {
   }
 
   private val assetUpdateAdvAdapter: Adapter<AssetUpdateAdvancedOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.assetToUpdate)
@@ -330,7 +353,7 @@ object Serializer {
   }
 
   private val assetIssueAdapter: Adapter<AssetIssueOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.assetToIssue)
@@ -340,7 +363,7 @@ object Serializer {
   }
 
   private val assetFundAdapter: Adapter<AssetFundPoolsOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.from)
     append(buffer, obj.uia)
@@ -349,7 +372,7 @@ object Serializer {
   }
 
   private val assetReserveAdapter: Adapter<AssetReserveOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.payer)
     append(buffer, obj.amount)
@@ -357,7 +380,7 @@ object Serializer {
   }
 
   private val assetClaimAdapter: Adapter<AssetClaimFeesOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.uia)
@@ -380,7 +403,7 @@ object Serializer {
   }
 
   private val nftCreateAdapter: Adapter<NftCreateOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.symbol)
     append(buffer, obj.options)
@@ -390,7 +413,7 @@ object Serializer {
   }
 
   private val nftUpdateAdapter: Adapter<NftUpdateOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.id)
@@ -417,7 +440,7 @@ object Serializer {
   }
 
   private val nftIssueAdapter: Adapter<NftIssueOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.issuer)
     append(buffer, obj.to)
@@ -429,7 +452,7 @@ object Serializer {
   }
 
   private val nftTransferAdapter: Adapter<NftTransferOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.from)
     append(buffer, obj.to)
@@ -439,7 +462,7 @@ object Serializer {
   }
 
   private val nftUpdateDataAdapter: Adapter<NftUpdateDataOperation> = { buffer, obj ->
-    buffer.writeByte(obj.type.ordinal)
+    buffer.writeType(obj)
     append(buffer, obj.fee)
     append(buffer, obj.modifier)
     append(buffer, obj.id)
@@ -449,6 +472,134 @@ object Serializer {
       variantAdapter(buffer, it.value)
     }
     buffer.writeByte(0)
+  }
+
+  private val minerCreateAdapter: Adapter<MinerCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.account)
+    append(buffer, obj.url)
+    append(buffer, obj.signingKey)
+  }
+
+  private val minerUpdateAdapter: Adapter<MinerUpdateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.miner)
+    append(buffer, obj.account)
+    append(buffer, obj.url, true)
+    append(buffer, obj.signingKey, true)
+  }
+
+  private val proposalCreateAdapter: Adapter<ProposalCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.expirationTime)
+    append(buffer, obj.operations.map { it.op })
+    append(buffer, obj.reviewPeriodSeconds, true)
+    buffer.writeByte(0)
+  }
+
+  private val proposalUpdateAdapter: Adapter<ProposalUpdateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.proposal)
+    append(buffer, obj.activeApprovalsAdd)
+    append(buffer, obj.activeApprovalsRemove)
+    append(buffer, obj.ownerApprovalsAdd)
+    append(buffer, obj.ownerApprovalsRemove)
+    append(buffer, obj.keyApprovalsAdd)
+    append(buffer, obj.keyApprovalsRemove)
+    buffer.writeByte(0)
+  }
+
+  private val proposalDeleteAdapter: Adapter<ProposalDeleteOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.payer)
+    append(buffer, obj.usingOwnerAuthority)
+    append(buffer, obj.proposal)
+    buffer.writeByte(0)
+  }
+
+  private val withdrawalCreateAdapter: Adapter<WithdrawalCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.withdrawalLimit)
+    buffer.writeIntLe(obj.withdrawalPeriodSec.toInt())
+    buffer.writeIntLe(obj.periodsUntilExpiration.toInt())
+    append(buffer, obj.periodStartTime)
+  }
+
+  private val withdrawalUpdateAdapter: Adapter<WithdrawalUpdateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.withdrawalId)
+    append(buffer, obj.withdrawalLimit)
+    buffer.writeIntLe(obj.withdrawalPeriodSec.toInt())
+    append(buffer, obj.periodStartTime)
+    buffer.writeIntLe(obj.periodsUntilExpiration.toInt())
+  }
+
+  private val withdrawalClaimAdapter: Adapter<WithdrawalClaimOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.withdrawalId)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.amount)
+    append(buffer, obj.memo, true)
+  }
+
+  private val withdrawalDeleteAdapter: Adapter<WithdrawalDeleteOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.accountFrom)
+    append(buffer, obj.accountTo)
+    append(buffer, obj.withdrawalId)
+  }
+
+  private val linearVestingPolicyAdapter: Adapter<LinearVestingPolicyCreate> = { buffer, obj ->
+    append(buffer, obj.start)
+    buffer.writeIntLe(obj.cliffSeconds.toInt())
+    buffer.writeIntLe(obj.durationSeconds.toInt())
+  }
+
+  private val cddVestingPolicyAdapter: Adapter<CddVestingPolicyCreate> = { buffer, obj ->
+    append(buffer, obj.start)
+    buffer.writeIntLe(obj.durationSeconds.toInt())
+  }
+
+  private val vestingBalanceCreateAdapter: Adapter<VestingBalanceCreateOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.creator)
+    append(buffer, obj.owner)
+    append(buffer, obj.amount)
+    obj.policy.append(buffer)
+  }
+
+  private val VestingBalanceWithdrawAdapter: Adapter<VestingBalanceWithdrawOperation> = { buffer, obj ->
+    buffer.writeType(obj)
+    append(buffer, obj.fee)
+    append(buffer, obj.id)
+    append(buffer, obj.owner)
+    append(buffer, obj.amount)
+  }
+
+  private fun BufferedSink.writeType(op: BaseOperation) = writeByte(op.type.ordinal)
+
+  private fun StaticVariantParametrized.append(buffer: BufferedSink) = objects.withIndex().forEach {
+    if (it.value != null) {
+      buffer.writeByte(it.index)
+      append(buffer, it.value)
+    }
   }
 
   @Suppress("UNCHECKED_CAST")
@@ -477,7 +628,8 @@ object Serializer {
       String::class to stringAdapter,
       Address::class to addressAdapter,
       Authority::class to authorityAdapter,
-      AuthMap::class to authorityMapAdapter,
+      KeyAuth::class to keyAuthAdapter,
+      AccountAuth::class to accountAuthAdapter,
       AssetAmount::class to assetAmountAdapter,
       Memo::class to memoAdapter,
       VoteId::class to voteAdapter,
@@ -515,7 +667,20 @@ object Serializer {
       NftUpdateOperation::class to nftUpdateAdapter,
       NftIssueOperation::class to nftIssueAdapter,
       NftTransferOperation::class to nftTransferAdapter,
-      NftUpdateDataOperation::class to nftUpdateDataAdapter
+      NftUpdateDataOperation::class to nftUpdateDataAdapter,
+      MinerCreateOperation::class to minerCreateAdapter,
+      MinerUpdateOperation::class to minerUpdateAdapter,
+      ProposalCreateOperation::class to proposalCreateAdapter,
+      ProposalUpdateOperation::class to proposalUpdateAdapter,
+      ProposalDeleteOperation::class to proposalDeleteAdapter,
+      WithdrawalCreateOperation::class to withdrawalCreateAdapter,
+      WithdrawalUpdateOperation::class to withdrawalUpdateAdapter,
+      WithdrawalClaimOperation::class to withdrawalClaimAdapter,
+      WithdrawalDeleteOperation::class to withdrawalDeleteAdapter,
+      LinearVestingPolicyCreate::class to linearVestingPolicyAdapter,
+      CddVestingPolicyCreate::class to cddVestingPolicyAdapter,
+      VestingBalanceCreateOperation::class to vestingBalanceCreateAdapter,
+      VestingBalanceWithdrawOperation::class to VestingBalanceWithdrawAdapter
   )
 
   fun serialize(obj: Any): ByteArray = Buffer().apply { append(this, obj) }.readByteArray()
