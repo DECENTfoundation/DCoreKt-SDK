@@ -13,4 +13,5 @@ ch.decent.sdk.model.operation
 ch.decent.sdk.model.types
 ch.decent.sdk.net
 ch.decent.sdk.net.serialization
+ch.decent.sdk.qr
 ch.decent.sdk.utils
